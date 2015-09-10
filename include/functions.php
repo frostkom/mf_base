@@ -1,5 +1,40 @@
 <?php
 
+function get_site_language($data)
+{
+	if(!isset($data['type'])){	$data['type'] = "";}
+	if(!isset($data['uc'])){	$data['uc'] = true;}
+
+	$arr_language = explode("_", $data['language']);
+
+	if($data['type'] == "first")
+	{
+		$out = $arr_language[0];
+
+		if($data['uc'] == true)
+		{
+			$out = strtoupper($out);
+		}
+	}
+
+	else if($data['type'] == "last")
+	{
+		$out = $arr_language[1];
+
+		if($data['uc'] == true)
+		{
+			$out = strtoupper($out);
+		}
+	}
+
+	else
+	{
+		$out = $data['language'];
+	}
+
+	return $out;
+}
+
 function get_current_user_role($id = 0)
 {
 	if(!($id > 0))
@@ -681,8 +716,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 ######################
 function show_textfield($data)
 {
-	//global $arrErrorField;
-
 	$arr_number_types = array('int', 'float');
 
 	if(isset($data['type']) && in_array($data['type'], $arr_number_types))
@@ -694,6 +727,7 @@ function show_textfield($data)
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
 	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
 	if(!isset($data['size'])){			$data['size'] = 0;}
 	if(!isset($data['required'])){		$data['required'] = 0;}
@@ -1468,5 +1502,17 @@ if(!function_exists('day_name'))
 		if($ucfirst == 0){$out = strtolower($out);}
 
 		return $out;
+	}
+}
+
+if(!function_exists('get_meta_image_url'))
+{
+	function get_meta_image_url($post_id, $meta_key)
+	{
+		$image_id = get_post_meta($post_id, $meta_key, true);
+
+		$image_array = wp_get_attachment_image_src($image_id, 'full');
+
+		return $image_array[0];
 	}
 }

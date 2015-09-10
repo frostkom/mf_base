@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-25 09:49+0100\n"
+"POT-Creation-Date: 2015-09-10 09:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -21,151 +21,155 @@ msgstr ""
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:258
+#: ../include/classes.php:341
 msgid "See DIBS test info"
 msgstr "Se DIBS testinfo"
 
-#: ../include/classes.php:259
-#: ../include/classes.php:326
+#: ../include/classes.php:342
+#: ../include/classes.php:491
 msgid "Send in test mode (No money will be charged)"
 msgstr "Skicka i testläge (Pengar kommer ej att dras)"
 
-#: ../include/classes.php:267
+#: ../include/classes.php:350
 msgid "Sent to payment"
 msgstr "Skickat till betalning"
 
-#: ../include/classes.php:373
-msgid "Processing..."
-msgstr "Bearbetar..."
-
-#: ../include/classes.php:386
-#: ../include/classes.php:504
-msgid "User has paid. Waiting for confirmation..."
-msgstr "Användaren har betalat. Väntar på kvitto..."
-
-#: ../include/classes.php:410
-#: ../include/classes.php:528
-msgid "User has paid & has been sent to confirmation page. Waiting for confirmation..."
-msgstr "Användaren har betalat & har skickats till tacksida. Väntar på kvitto..."
-
-#: ../include/classes.php:473
-msgid "Payment done"
-msgstr "Betalning genomförd"
-
-#: ../include/classes.php:487
-#: ../include/classes.php:601
+#: ../include/classes.php:506
 msgid "User canceled"
 msgstr "Användaren avbröt"
 
-#: ../include/classes.php:593
-msgid "But could not verify MD5 signature"
-msgstr "Men kunde inte verifiera MD5-signatur"
+#: ../include/classes.php:517
+msgid "User has paid. Waiting for confirmation..."
+msgstr "Användaren har betalat. Väntar på kvitto..."
 
-#: ../include/functions.php:24
+#: ../include/classes.php:541
+msgid "User has paid & has been sent to confirmation page. Waiting for confirmation..."
+msgstr "Användaren har betalat & har skickats till tacksida. Väntar på kvitto..."
+
+#: ../include/classes.php:622
+msgid "Processing..."
+msgstr "Bearbetar..."
+
+#: ../include/classes.php:746
+#: ../include/classes.php:755
+#: ../include/classes.php:845
+#: ../include/classes.php:850
+#: ../include/classes.php:862
+msgid "Payment done"
+msgstr "Betalning genomförd"
+
+#: ../include/classes.php:755
+#: ../include/classes.php:850
+#: ../include/classes.php:862
+#: ../include/classes.php:981
+msgid "But could not verify"
+msgstr "Men kunde inte verifiera"
+
+#: ../include/functions.php:59
 msgid "Basic info"
 msgstr "Information"
 
-#: ../include/functions.php:30
+#: ../include/functions.php:65
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:54
+#: ../include/functions.php:89
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:331
+#: ../include/functions.php:366
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/functions.php:1128
+#: ../include/functions.php:1162
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:1423
+#: ../include/functions.php:1457
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:1424
+#: ../include/functions.php:1458
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:1426
+#: ../include/functions.php:1460
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "April"
 msgstr ""
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "September"
 msgstr ""
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "November"
 msgstr ""
 
-#: ../include/functions.php:1450
+#: ../include/functions.php:1484
 msgid "December"
 msgstr ""
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:1464
+#: ../include/functions.php:1498
 msgid "Saturday"
 msgstr "Lördag"
 

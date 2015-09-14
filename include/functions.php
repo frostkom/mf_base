@@ -1,5 +1,29 @@
 <?php
 
+function require_plugin($required_path, $required_name, $current_path)
+{
+	if(!is_plugin_active($required_path))
+	{
+		deactivate_plugins($current_path);
+
+		br_trigger_error(sprintf(__("You need to install the plugin %s first", 'lang_base'), $required_name)." (<a href='".get_site_url()."/wp-admin/plugin-install.php?s=".$required_name."'>".__("Add new plugin", 'lang_base')."</a>)", E_USER_ERROR);
+	}
+}
+
+function br_trigger_error($message, $errno)
+{
+	if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
+	{
+		echo "<strong>".$message."</strong>";
+		exit;
+	}
+	
+	else
+	{
+		trigger_error($message, $errno);
+	}
+}
+
 function get_site_language($data)
 {
 	if(!isset($data['type'])){	$data['type'] = "";}
@@ -1411,24 +1435,21 @@ function get_post_children($data, &$arr_data = array())
 	return $out;
 }
 
-if(!function_exists('format_phone_no'))
+function format_phone_no($no)
 {
-	function format_phone_no($no)
+	$out = "";
+
+	/*if(is_user_logged_in() && function_exists('is_plugin_active') && is_plugin_active('mf_sms/index.php'))
 	{
-		$out = "";
-
-		if(is_user_logged_in() && function_exists('is_plugin_active') && is_plugin_active('mf_sms/index.php'))
-		{
-			$out = "/wp-admin/admin.php?page=mf_sms/list/index.php&strSmsTo=".$no;
-		}
-
-		else
-		{
-			$out = "tel:".str_replace(array(" ", "-", "/"), "", $no);
-		}
-
-		return $out;
+		$out = "/wp-admin/admin.php?page=mf_sms/list/index.php&strSmsTo=".$no;
 	}
+
+	else
+	{*/
+		$out = "tel:".str_replace(array(" ", "-", "/"), "", $no);
+	//}
+
+	return $out;
 }
 
 function get_font_awesome_icons_list()

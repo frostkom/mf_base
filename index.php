@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: 
-Version: 1.3.0
+Version: 1.4.0
 Author: Martin Fors
 Author URI: www.frostkom.se
 */
@@ -25,6 +25,7 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
+	wp_enqueue_style('font-awesome', plugins_url()."/mf_base/include/font-awesome.min.css");
 	wp_enqueue_style('style_base', plugins_url()."/mf_base/include/style.css");
 
 	if(is_user_logged_in() && current_user_can("update_core"))

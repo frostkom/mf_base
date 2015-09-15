@@ -160,11 +160,10 @@ class mf_form_payment
 		$this->query_id = $data['query_id'];
 		$this->base_callback_url = get_site_url().$_SERVER['REQUEST_URI'];
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT queryPaymentProvider, queryPaymentHmac, queryPaymentMerchant, queryPaymentPassword, queryPaymentCurrency, queryAnswerURL FROM ".$wpdb->base_prefix."query WHERE queryID = '%d'", $this->query_id)); //queryURL, 
+		$result = $wpdb->get_results($wpdb->prepare("SELECT queryPaymentProvider, queryPaymentHmac, queryPaymentMerchant, queryPaymentPassword, queryPaymentCurrency, queryAnswerURL FROM ".$wpdb->base_prefix."query WHERE queryID = '%d'", $this->query_id));
 
 		foreach($result as $r)
 		{
-			//$this->prefix = isset($r->queryURL) && $r->queryURL != '' ? $r->queryURL."_" : "field_";
 			$this->provider = $r->queryPaymentProvider;
 			$this->hmac = $r->queryPaymentHmac;
 			$this->merchant = $r->queryPaymentMerchant;

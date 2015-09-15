@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: MF Base
-Plugin URI: 
-Version: 1.4.0
+Plugin URI: www.github.com/frostkom/mf_base
+Version: 1.4.1
 Author: Martin Fors
 Author URI: www.frostkom.se
 */

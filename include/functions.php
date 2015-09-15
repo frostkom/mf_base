@@ -1,12 +1,47 @@
 <?php
 
-function require_plugin($required_path, $required_name, $current_path)
+function get_install_link_tags($required_name)
+{
+	$a_start = "<a href='".get_site_url()."/wp-admin".(is_multisite() ? "/network" : "")."/plugin-install.php?tab=search&s=".$required_name."'>";
+	$a_end = "</a>";
+
+	return array($a_start, $a_end);
+}
+
+function require_plugin($required_path, $required_name)
 {
 	if(!is_plugin_active($required_path))
 	{
-		deactivate_plugins($current_path);
+		list($a_start, $a_end) = get_install_link_tags($required_name);
 
-		br_trigger_error(sprintf(__("You need to install the plugin %s first", 'lang_base'), $required_name)." (<a href='".get_site_url()."/wp-admin/plugin-install.php?s=".$required_name."'>".__("Add new plugin", 'lang_base')."</a>)", E_USER_ERROR);
+		br_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
+	}
+}
+
+class recommend_plugin
+{
+	function recommend_plugin($required_path, $required_name)
+	{
+		global $pagenow;
+
+		if($pagenow == 'plugins.php' && !is_plugin_active($required_path))
+		{
+			list($a_start, $a_end) = get_install_link_tags($required_name);
+
+			$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $required_name, $a_end);
+
+			add_action('network_admin_notices', array($this, 'show_notice'));
+			add_action('admin_notices', array($this, 'show_notice'));
+		}
+	}
+
+	function show_notice()
+	{
+		global $notice_text;
+
+		$notice_text = $this->message;
+
+		echo get_notification();
 	}
 }
 
@@ -14,8 +49,7 @@ function br_trigger_error($message, $errno)
 {
 	if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
 	{
-		echo "<strong>".$message."</strong>";
-		exit;
+		echo $message;
 	}
 	
 	else
@@ -349,7 +383,7 @@ function get_url_content($url, $catch_head = false, $password = "", $post = "", 
 
 function get_notification()
 {
-	global $error_text, $done_text;
+	global $error_text, $notice_text, $done_text;
 
 	$out = "";
 
@@ -360,6 +394,13 @@ function get_notification()
 		</div>";
 
 		$error_text = "";
+	}
+
+	if(isset($notice_text) && $notice_text != '')
+	{
+		$out .= "<div class='update-nag'>".$notice_text."</div>";
+
+		$notice_text = "";
 	}
 
 	if(isset($done_text) && $done_text != '')
@@ -488,8 +529,6 @@ if(!function_exists('wp_date_format'))
 
 function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = false, $force_req_type = '')
 {
-	//global $arrErrorField;
-
 	$out = $temp = "";
 
 	if($v2 == true)
@@ -1493,47 +1532,38 @@ function the_content_protected_base($html)
 	return $html;
 }
 
-if(!function_exists('month_name'))
+function month_name($month_no, $ucfirst = 1)
 {
-	function month_name($month_no, $ucfirst = 1)
+	if($month_no < 1)
 	{
-		if($month_no < 1)
-		{
-			$month_no = 1;
-		}
-
-		$month_names = array(__('January', 'lang_base'), __('February', 'lang_base'), __('March', 'lang_base'), __('April', 'lang_base'), __('May', 'lang_base'), __('June', 'lang_base'), __('July', 'lang_base'), __('August', 'lang_base'), __('September', 'lang_base'), __('October', 'lang_base'), __('November', 'lang_base'), __('December', 'lang_base'));
-
-		$out = $month_names[$month_no - 1];
-
-		if($ucfirst == 0){$out = strtolower($out);}
-
-		return $out;
+		$month_no = 1;
 	}
+
+	$month_names = array(__('January', 'lang_base'), __('February', 'lang_base'), __('March', 'lang_base'), __('April', 'lang_base'), __('May', 'lang_base'), __('June', 'lang_base'), __('July', 'lang_base'), __('August', 'lang_base'), __('September', 'lang_base'), __('October', 'lang_base'), __('November', 'lang_base'), __('December', 'lang_base'));
+
+	$out = $month_names[$month_no - 1];
+
+	if($ucfirst == 0){$out = strtolower($out);}
+
+	return $out;
 }
 
-if(!function_exists('day_name'))
+function day_name($day_no, $ucfirst = 1)
 {
-	function day_name($day_no, $ucfirst = 1)
-	{
-		$day_names = array(__('Sunday', 'lang_base'), __('Monday', 'lang_base'), __('Tuesday', 'lang_base'), __('Wednesday', 'lang_base'), __('Thursday', 'lang_base'), __('Friday', 'lang_base'), __('Saturday', 'lang_base'));
+	$day_names = array(__('Sunday', 'lang_base'), __('Monday', 'lang_base'), __('Tuesday', 'lang_base'), __('Wednesday', 'lang_base'), __('Thursday', 'lang_base'), __('Friday', 'lang_base'), __('Saturday', 'lang_base'));
 
-		$out = $day_names[$day_no];
+	$out = $day_names[$day_no];
 
-		if($ucfirst == 0){$out = strtolower($out);}
+	if($ucfirst == 0){$out = strtolower($out);}
 
-		return $out;
-	}
+	return $out;
 }
 
-if(!function_exists('get_meta_image_url'))
+function get_meta_image_url($post_id, $meta_key)
 {
-	function get_meta_image_url($post_id, $meta_key)
-	{
-		$image_id = get_post_meta($post_id, $meta_key, true);
+	$image_id = get_post_meta($post_id, $meta_key, true);
 
-		$image_array = wp_get_attachment_image_src($image_id, 'full');
+	$image_array = wp_get_attachment_image_src($image_id, 'full');
 
-		return $image_array[0];
-	}
+	return $image_array[0];
 }

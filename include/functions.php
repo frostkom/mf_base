@@ -1,18 +1,18 @@
 <?php
 
-function get_install_link_tags($required_name)
+function get_install_link_tags($require_url, $required_name)
 {
-	$a_start = "<a href='".get_site_url()."/wp-admin".(is_multisite() ? "/network" : "")."/plugin-install.php?tab=search&s=".$required_name."'>";
+	$a_start = "<a href='".($require_url != '' ? $require_url : get_site_url()."/wp-admin".(is_multisite() ? "/network" : "")."/plugin-install.php?tab=search&s=".$required_name)."'>";
 	$a_end = "</a>";
 
 	return array($a_start, $a_end);
 }
 
-function require_plugin($required_path, $required_name)
+function require_plugin($required_path, $required_name, $require_url = "")
 {
 	if(!is_plugin_active($required_path))
 	{
-		list($a_start, $a_end) = get_install_link_tags($required_name);
+		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
 		br_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
 	}
@@ -20,13 +20,13 @@ function require_plugin($required_path, $required_name)
 
 class recommend_plugin
 {
-	function recommend_plugin($required_path, $required_name)
+	function recommend_plugin($required_path, $required_name, $require_url = "")
 	{
 		global $pagenow;
 
 		if($pagenow == 'plugins.php' && !is_plugin_active($required_path))
 		{
-			list($a_start, $a_end) = get_install_link_tags($required_name);
+			list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
 			$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $required_name, $a_end);
 

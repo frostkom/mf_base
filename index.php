@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: www.github.com/frostkom/mf_base
-Version: 1.4.3
+Version: 1.4.5
 Author: Martin Fors
 Author URI: www.frostkom.se
 */
@@ -11,6 +11,34 @@ add_action('init', 'init_base');
 add_action('admin_init', 'settings_base');
 add_filter('the_password_form', 'password_form_base');
 add_filter('the_content', 'the_content_protected_base');
+add_filter('plugin_action_links', 'disable_action_base', 10, 4);
+add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
+add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
+add_filter('network_admin_plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
+
+function disable_action_base($actions, $plugin_file, $plugin_data, $context)
+{
+	// Remove edit link for all
+	/*if(array_key_exists('edit', $actions))
+	{
+		unset($actions['edit']);
+	}*/
+
+	if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php', 'mf_form/index.php')))
+	{
+		unset($actions['deactivate']);
+	}
+
+	return $actions;
+}
+
+
+function add_action_base($links)
+{
+	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base')."'>".__("Settings", 'lang_base')."</a>";
+
+	return $links;
+}
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
 

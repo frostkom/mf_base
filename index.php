@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: www.github.com/frostkom/mf_base
-Version: 1.4.5
+Version: 1.4.6
 Author: Martin Fors
 Author URI: www.frostkom.se
 */
@@ -51,6 +51,14 @@ function init_base()
 	if($timezone_string != '')
 	{
 		date_default_timezone_set($timezone_string);
+	}
+
+	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
+
+	if($setting_base_auto_core_email != "yes")
+	{
+		apply_filters('auto_core_update_send_email', '__return_false');
+		//apply_filters('auto_core_update_send_email', false, $type, $core_update, $result);
 	}
 
 	wp_enqueue_style('font-awesome', plugins_url()."/mf_base/include/font-awesome.min.css");

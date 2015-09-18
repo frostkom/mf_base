@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-17 12:36+0100\n"
+"POT-Creation-Date: 2015-09-18 10:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -87,103 +87,119 @@ msgstr "Information"
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:147
+#: ../include/functions.php:124
+msgid "Update notification"
+msgstr "Meddelande om uppdatering"
+
+#: ../include/functions.php:148
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:431
+#: ../include/functions.php:157
+msgid "No"
+msgstr "Nej"
+
+#: ../include/functions.php:158
+msgid "Yes"
+msgstr "Ja"
+
+#: ../include/functions.php:161
+msgid "Send e-mail to admin after auto core update"
+msgstr "Skicka e-post till admin efter en automatisk uppdatering av Wordpress"
+
+#: ../include/functions.php:445
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/functions.php:1223
+#: ../include/functions.php:1237
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:1515
+#: ../include/functions.php:1529
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:1516
+#: ../include/functions.php:1530
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:1518
+#: ../include/functions.php:1532
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "April"
 msgstr ""
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "September"
 msgstr ""
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "November"
 msgstr ""
 
-#: ../include/functions.php:1540
+#: ../include/functions.php:1554
 msgid "December"
 msgstr ""
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:1551
+#: ../include/functions.php:1565
 msgid "Saturday"
 msgstr "Lördag"
 

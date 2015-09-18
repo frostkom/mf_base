@@ -121,6 +121,7 @@ function settings_base()
 
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
+			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 		);
 
 		foreach($arr_settings as $handle => $text)
@@ -145,6 +146,19 @@ function setting_base_info_callback()
 	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> PHP: ".$php_version."</p>
 	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> MySQL: ".$mysql_version."</p>
 	<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+}
+
+function setting_base_auto_core_email_callback()
+{
+	$option = get_option('setting_base_auto_core_email');
+
+	$arr_data = array();
+
+	$arr_data[] = array('no', __("No", 'lang_base'));
+	$arr_data[] = array('yes', __("Yes", 'lang_base'));
+
+	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_auto_core_email', 'compare' => $option))
+	."<span class='description'>".__("Send e-mail to admin after auto core update", 'lang_base')."</span>";
 }
 
 function mf_enqueue_script($handle, $file = "", $translation = array())

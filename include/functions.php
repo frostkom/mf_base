@@ -133,7 +133,10 @@ function settings_base()
 	}
 }
 
-function setting_base_callback(){}
+function setting_base_callback()
+{
+	echo "<div id='settings_base'></div>";
+}
 
 function setting_base_info_callback()
 {
@@ -403,7 +406,7 @@ function get_notification()
 
 	if(isset($error_text) && $error_text != '')
 	{
-		$out .= "<div class='error strong'>
+		$out .= "<div class='error'>
 			<p>".$error_text."</p>
 		</div>";
 
@@ -419,7 +422,7 @@ function get_notification()
 
 	if(isset($done_text) && $done_text != '')
 	{
-		$out .= "<div class='updated strong'>
+		$out .= "<div class='updated'>
 			<p>".$done_text."</p>
 		</div>";
 

@@ -2,9 +2,9 @@
 /*
 Plugin Name: MF Base
 Plugin URI: www.github.com/frostkom/mf_base
-Version: 1.4.6
+Version: 1.4.7
 Author: Martin Fors
-Author URI: www.frostkom.se
+Author URI: http://frostkom.se
 */
 
 add_action('init', 'init_base');
@@ -35,7 +35,7 @@ function disable_action_base($actions, $plugin_file, $plugin_data, $context)
 
 function add_action_base($links)
 {
-	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base')."'>".__("Settings", 'lang_base')."</a>";
+	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base#settings_base')."'>".__("Settings", 'lang_base')."</a>";
 
 	return $links;
 }

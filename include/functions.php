@@ -1,5 +1,29 @@
 <?php
 
+function disable_action_base($actions, $plugin_file, $plugin_data, $context)
+{
+	// Remove edit link for all
+	/*if(array_key_exists('edit', $actions))
+	{
+		unset($actions['edit']);
+	}*/
+
+	if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
+	{
+		unset($actions['deactivate']);
+	}
+
+	return $actions;
+}
+
+
+function add_action_base($links)
+{
+	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base#settings_base')."'>".__("Settings", 'lang_base')."</a>";
+
+	return $links;
+}
+
 function get_install_link_tags($require_url, $required_name)
 {
 	$a_start = "<a href='".($require_url != '' ? $require_url : get_site_url()."/wp-admin".(is_multisite() ? "/network" : "")."/plugin-install.php?tab=search&s=".$required_name)."'>";

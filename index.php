@@ -1,43 +1,27 @@
 <?php
 /*
 Plugin Name: MF Base
-Plugin URI: www.github.com/frostkom/mf_base
-Version: 1.4.7
+Plugin URI: http://github.com/frostkom/mf_base
+Version: 1.4.8
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
 
 add_action('init', 'init_base');
-add_action('admin_init', 'settings_base');
-add_filter('the_password_form', 'password_form_base');
-add_filter('the_content', 'the_content_protected_base');
-add_filter('plugin_action_links', 'disable_action_base', 10, 4);
-add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
-add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
-add_filter('network_admin_plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
 
-function disable_action_base($actions, $plugin_file, $plugin_data, $context)
+if(is_admin())
 {
-	// Remove edit link for all
-	/*if(array_key_exists('edit', $actions))
-	{
-		unset($actions['edit']);
-	}*/
-
-	if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php', 'mf_form/index.php')))
-	{
-		unset($actions['deactivate']);
-	}
-
-	return $actions;
+	add_action('admin_init', 'settings_base');
+	add_filter('plugin_action_links', 'disable_action_base', 10, 4);
+	add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
+	add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
+	add_filter('network_admin_plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
 }
 
-
-function add_action_base($links)
+else
 {
-	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base#settings_base')."'>".__("Settings", 'lang_base')."</a>";
-
-	return $links;
+	add_filter('the_password_form', 'password_form_base');
+	add_filter('the_content', 'the_content_protected_base');
 }
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
@@ -80,4 +64,7 @@ function init_base()
 include("include/classes.php");
 include("include/functions.php");
 
-$my_settings_page = new MySettingsPage();
+if(is_admin())
+{
+	$my_settings_page = new MySettingsPage();
+}

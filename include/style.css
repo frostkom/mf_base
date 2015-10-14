@@ -114,6 +114,11 @@
 			{
 				margin-right: 0;
 			}
+
+		.flex_flow.tight > *
+		{
+			flex: unset;
+		}
 }
 
 @media print

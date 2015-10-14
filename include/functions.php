@@ -1,5 +1,12 @@
 <?php
 
+function mf_get_post_content($id)
+{
+	global $wpdb;
+
+	return $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
+}
+
 function disable_action_base($actions, $plugin_file, $plugin_data, $context)
 {
 	// Remove edit link for all
@@ -75,7 +82,7 @@ function mf_trigger_error($message, $errno)
 	{
 		echo $message;
 	}
-	
+
 	else
 	{
 		trigger_error($message, $errno);
@@ -164,8 +171,8 @@ function setting_base_callback()
 
 function setting_base_info_callback()
 {
-	$php_version = phpversion();
-	$mysql_version = @mysql_get_server_info();
+	$php_version = explode("-", phpversion())[0];
+	$mysql_version = explode("-", @mysql_get_server_info())[0];
 
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
@@ -986,8 +993,6 @@ function show_select($data)
 	{
 		$label = "";
 
-		//$data['data'] = array_unique($data['data']);
-
 		$count_temp = count($data['data']);
 
 		$is_multiple = preg_match('/(\[\])/', $data['name']);
@@ -1007,7 +1012,7 @@ function show_select($data)
 
 		if($data['text'] != '')
 		{
-			$label = "<label for='".$data['name']."'>".$data['text']."</label>"; //.($data['required'] == 1 ? " *" : "")
+			$label = "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
 		if($count_temp == 1 && $data['required'] == 1 && $data['text'] != '')
@@ -1026,12 +1031,12 @@ function show_select($data)
 						$data_value = $data['data'][$i][0];
 						$data_text = $data['data'][$i][1];
 
-						if($data_value == "opt_start")
+						if($data_value."" == "opt_start")
 						{
 							$out .= "<optgroup label='".$data_text."'>";
 						}
 
-						else if($data_value == "opt_end")
+						else if($data_value."" == "opt_end")
 						{
 							$out .= "</optgroup>";
 						}
@@ -1119,7 +1124,7 @@ function show_checkbox($data)
 				{
 					$out .= " *";
 				}*/
-				
+
 			$out .= "</label>";
 		}
 
@@ -1137,7 +1142,7 @@ function show_radio_input($data)
 	if(!isset($data['compare'])){		$data['compare'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
-	
+
 	$checked = "";
 
 	if($data['compare'] != '' && $data['compare'] == $data['value'])
@@ -1498,7 +1503,7 @@ function get_post_children($data, &$arr_data = array())
 					{
 						$out .= "&nbsp;&nbsp;&nbsp;";
 					}
-				
+
 					$out .= $post_title
 				."</option>";
 			}

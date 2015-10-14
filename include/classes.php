@@ -183,7 +183,7 @@ class mf_form_payment
 		$API_UserName = urlencode($PayPalApiUsername);
 		$API_Password = urlencode($PayPalApiPassword);
 		$API_Signature = urlencode($PayPalApiSignature);
-		
+
 		$paypalmode = ($PayPalMode == 'sandbox') ? '.sandbox' : '';
 
 		$API_Endpoint = "https://api-3t".$paypalmode.".paypal.com/nvp";
@@ -311,7 +311,7 @@ class mf_form_payment
 			{
 				unset($instance['test']);
 			}
-			
+
 			if($instance['capturenow'] == 1)
 			{
 				$out .= "<input type='hidden' name='capturenow' value='".$instance['capturenow']."'>";
@@ -354,7 +354,7 @@ class mf_form_payment
 	function save_token_with_answer_id()
 	{
 		global $wpdb;
-		
+
 		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query2answer SET answerToken = %s WHERE answerID = '%d'", urldecode($this->token), $this->orderid));
 	}
 
@@ -371,13 +371,13 @@ class mf_form_payment
 		$PayPalCancelURL = $this->base_callback_url."?cancel";
 
 		$this->language = get_site_language(array('language' => get_bloginfo('language'), 'type' => "last"));
-		
+
 		//Parameters for SetExpressCheckout, which will be sent to PayPal
 		$padata = '&METHOD=SetExpressCheckout'.
 			'&RETURNURL='.urlencode($PayPalReturnURL).
 			'&CANCELURL='.urlencode($PayPalCancelURL).
 			'&PAYMENTREQUEST_0_PAYMENTACTION='.urlencode("SALE").
-			//'&L_PAYMENTREQUEST_0_AMT0='.urlencode($this->amount).			
+			//'&L_PAYMENTREQUEST_0_AMT0='.urlencode($this->amount).
 			'&NOSHIPPING=0'. //set 1 to hide buyer's shipping address, in-case products that does not require shipping
 			//'&PAYMENTREQUEST_0_ITEMAMT='.urlencode($this->amount).
 			'&PAYMENTREQUEST_0_AMT='.urlencode($this->amount).
@@ -390,7 +390,7 @@ class mf_form_payment
 
 		//We need to execute the "SetExpressCheckOut" method to obtain paypal token
 		$httpParsedResponseAr = $this->PPHttpPost('SetExpressCheckout', $padata, $this->merchant, $this->password, $this->hmac, $PayPalMode);
-		
+
 		//Respond according to message we receive from Paypal
 		if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"]))
 		{
@@ -414,7 +414,7 @@ class mf_form_payment
 				$out .= "<script>document.form_payment.submit();</script>";
 			}*/
 		}
-		
+
 		else
 		{
 			$out .= "<div class='error'>
@@ -460,7 +460,7 @@ class mf_form_payment
 		/*
 			<input type='hidden' name='merchant_fields' value='customer_number, session_id'>
 			<input type='hidden' name='customer_number' value='C1234'>
-			
+
 			<input type='hidden' name='pay_from_email' value='payer@skrill.com'>
 			<input type='hidden' name='amount2_description' value='Product Price: '>
 			<input type='hidden' name='amount2' value='29.90'>
@@ -748,7 +748,7 @@ class mf_form_payment
 
 				header("Status: 200 OK");*/
 			}
-			
+
 			else
 			{
 				$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", ".$mac." != ".$_POST['MAC'].")");
@@ -787,7 +787,7 @@ class mf_form_payment
 		global $wpdb;
 
 		$out = "";
-		
+
 		$this->token = check_var('token', 'char');
 		$payer_id = check_var('PayerID', 'char');
 
@@ -812,10 +812,10 @@ class mf_form_payment
 				'&PAYMENTREQUEST_0_AMT='.urlencode($this->amount).
 				//'&L_PAYMENTREQUEST_0_QTY0=1'.
 				'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($this->currency);
-			
+
 			//We need to execute the "DoExpressCheckoutPayment" at this point to Receive payment from user.
 			$httpParsedResponseAr = $this->PPHttpPost('DoExpressCheckoutPayment', $padata, $this->merchant, $this->password, $this->hmac, $PayPalMode);
-			
+
 			//Check if everything went ok..
 			if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) 
 			{
@@ -843,7 +843,7 @@ class mf_form_payment
 				{
 					$this->confirm_paid(__("Payment done", 'lang_base')." (".$this->amount.")");
 				}
-				
+
 				else
 				{
 					$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", Success - ".$this->token.")");
@@ -855,7 +855,7 @@ class mf_form_payment
 
 				}
 			}
-			
+
 			else
 			{
 				$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", ".$this->token.")");
@@ -951,11 +951,11 @@ class mf_form_payment
 			$mb_amount = check_var('mb_amount', 'char');
 			$mb_currency = check_var('mb_currency', 'char');
 			$status = check_var('status', 'char');
-			
+
 			$md5calc = strtoupper(md5($merchant_id.$transaction_id.strtoupper(md5($this->hmac)).$mb_amount.$mb_currency.$status));
 
 			$is_valid_mac = $md5sig == $md5calc;
-			
+
 			$payment_status_text = "";
 
 			switch($status)
@@ -974,7 +974,7 @@ class mf_form_payment
 
 				header("Status: 200 OK");*/
 			}
-			
+
 			else
 			{
 				$this->confirm_error($status.": ".$payment_status_text." (".__("But could not verify", 'lang_base').", ".$md5sig." != ".$md5calc.") (".$this->amount." ".$currency.")");

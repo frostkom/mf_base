@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
-Version: 1.4.8
+Version: 1.4.11
 Author: Martin Fors
 Author URI: http://frostkom.se
 */

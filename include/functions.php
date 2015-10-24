@@ -1,5 +1,47 @@
 <?php
 
+function get_post_filter($data, &$query_where)
+{
+	global $wpdb;
+
+	$db_value = check_var($data['db_field'], 'char', true, 'all');
+
+	$arr_filter = "";
+
+	foreach($data['types'] as $key => $value)
+	{
+		$amount = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->posts." WHERE post_type = '".$data['plugin']."'".$query_where." AND ".($key == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$key."'"));
+
+		$arr_filter .= "<li class='".$key."'>"
+			.($arr_filter != '' ? " | " : "")
+			."<a href='admin.php?page=".$data['plugin']."/list/index.php&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>
+		</li>";
+	}
+
+	$query_where .= " AND ".($db_value == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$db_value."'");
+
+	return "<ul class='subsubsub'>".$arr_filter."</ul>";
+}
+
+function mf_format_number($in, $dec = 2)
+{
+	$out = number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
+
+	return $out;
+}
+
+function upload_mimes_base($existing_mimes = array())
+{
+	// add your extension to the array
+	$existing_mimes['ico'] = "image/x-icon";
+	$existing_mimes['svg'] = "image/svg+xmln";
+
+	// removing existing file types
+	//unset($existing_mimes['exe']);
+
+	return $existing_mimes;
+}
+
 function mf_get_post_content($id)
 {
 	global $wpdb;
@@ -145,13 +187,14 @@ function settings_base()
 	{
 		add_settings_section(
 			$options_area,
-			__("Basic info", 'lang_base'),
+			"",
 			$options_area."_callback",
 			$options_page
 		);
 
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
+			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 		);
 
@@ -171,8 +214,10 @@ function setting_base_callback()
 
 function setting_base_info_callback()
 {
-	$php_version = explode("-", phpversion())[0];
-	$mysql_version = explode("-", @mysql_get_server_info())[0];
+	$php_version = explode("-", phpversion());
+	$php_version = $php_version[0];
+	$mysql_version = explode("-", @mysql_get_server_info());
+	$mysql_version = $mysql_version[0];
 
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
@@ -180,6 +225,19 @@ function setting_base_info_callback()
 	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> PHP: ".$php_version."</p>
 	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> MySQL: ".$mysql_version."</p>
 	<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+}
+
+function setting_base_auto_core_update_callback()
+{
+	$option = get_option('setting_base_auto_core_update', 'minor');
+
+	$arr_data = array();
+
+	$arr_data[] = array('none', __("None", 'lang_base'));
+	$arr_data[] = array('minor', __("Minor", 'lang_base')." (".__("default", 'lang_base').")");
+	$arr_data[] = array('all', __("All", 'lang_base'));
+
+	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_auto_core_update', 'compare' => $option));
 }
 
 function setting_base_auto_core_email_callback()
@@ -848,10 +906,11 @@ function show_textfield($data)
 
 	$label = $after = $color = "";
 
-	/*if($data['type'] == "range")
+	if($data['type'] == "date")
 	{
-		$after .= " (<span>".$data['value']."</span>)";
-	}*/
+		$data['type'] = "text";
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";
+	}
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 
@@ -1028,15 +1087,16 @@ function show_select($data)
 
 					for($i = 0; $i < $count_temp; $i++)
 					{
-						$data_value = $data['data'][$i][0];
-						$data_text = $data['data'][$i][1];
+						/*$data_value = $data['data'][$i][0];
+						$data_text = $data['data'][$i][1];*/
+						list($data_value, $data_text) = $data['data'][$i];
 
-						if($data_value."" == "opt_start")
+						if($data_value == "opt_start" && $data_value != $data_text)
 						{
-							$out .= "<optgroup label='".$data_text."'>";
+							$out .= "<optgroup label='".$data_text."' rel='".$data_value."'>";
 						}
 
-						else if($data_value."" == "opt_end")
+						else if($data_value == "opt_end" && $data_value != $data_text)
 						{
 							$out .= "</optgroup>";
 						}
@@ -1533,26 +1593,6 @@ function format_phone_no($no)
 	//}
 
 	return $out;
-}
-
-function get_font_awesome_icons_list()
-{
-	$transient_key = "fontawesome_transient";
-
-	$content = get_transient($transient_key);
-
-	if($content == "")
-	{
-		$content = get_url_content("http://fortawesome.github.io/Font-Awesome/icons/");
-
-		set_transient($transient_key, $content, WEEK_IN_SECONDS);
-	}
-
-	$arr_icons = get_match_all("/icon\/(.*?)\"/s", $content, false);
-	$arr_icons = array_unique($arr_icons[0]);
-	$arr_icons = array_sort(array('array' => $arr_icons, 'on' => 1));
-
-	return $arr_icons;
 }
 
 function password_form_base()

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-07 11:50+0100\n"
+"POT-Creation-Date: 2015-10-20 11:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -65,143 +65,162 @@ msgstr "Betalning genomförd"
 msgid "But could not verify"
 msgstr "Men kunde inte verifiera"
 
-#: ../include/functions.php:29
+#: ../include/functions.php:48
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/functions.php:48
+#: ../include/functions.php:67
 #, php-format
 msgid "You need to install the plugin %s%s%s first"
 msgstr "Du måste installera pluginet %s%s%s först"
 
-#: ../include/functions.php:62
+#: ../include/functions.php:81
 #, php-format
 msgid "We highly recommend that you install %s%s%s aswell"
 msgstr "Vi rekommenderar att du installerar %s%s%s också"
 
-#: ../include/functions.php:148
-msgid "Basic info"
-msgstr "Information"
-
-#: ../include/functions.php:154
+#: ../include/functions.php:173
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:155
+#: ../include/functions.php:174
+msgid "Update core automatically"
+msgstr "Uppdatera Wordpress automatiskt"
+
+#: ../include/functions.php:175
 msgid "Update notification"
 msgstr "Meddelande om uppdatering"
 
-#: ../include/functions.php:182
+#: ../include/functions.php:202
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:191
+#: ../include/functions.php:211
+msgid "None"
+msgstr "Inga"
+
+#: ../include/functions.php:212
+msgid "Minor"
+msgstr "Små"
+
+#: ../include/functions.php:212
+msgid "default"
+msgstr "standard"
+
+#: ../include/functions.php:213
+msgid "All"
+msgstr "Alla"
+
+#: ../include/functions.php:224
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:192
+#: ../include/functions.php:225
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:195
+#: ../include/functions.php:228
 msgid "Send e-mail to admin after auto core update"
 msgstr "Skicka e-post till admin efter en automatisk uppdatering av Wordpress"
 
-#: ../include/functions.php:479
+#: ../include/functions.php:512
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/functions.php:1271
+#: ../include/functions.php:1303
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:1563
+#: ../include/functions.php:1575
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:1564
+#: ../include/functions.php:1576
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:1566
+#: ../include/functions.php:1578
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "April"
 msgstr ""
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "September"
 msgstr ""
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "November"
 msgstr ""
 
-#: ../include/functions.php:1588
+#: ../include/functions.php:1600
 msgid "December"
 msgstr ""
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:1599
+#: ../include/functions.php:1611
 msgid "Saturday"
 msgstr "Lördag"
+
+#~ msgid "Basic info"
+#~ msgstr "Information"
 
 #~ msgid "Add new plugin"
 #~ msgstr "Lägg till nytt plugin"
@@ -319,9 +338,6 @@ msgstr "Lördag"
 
 #~ msgid "Max value"
 #~ msgstr "Högsta värde"
-
-#~ msgid "Default value"
-#~ msgstr "Standardvärde"
 
 #~ msgid "Value"
 #~ msgstr "Värde"

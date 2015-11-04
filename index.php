@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
-Version: 1.6.0
+Version: 1.6.2
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
@@ -23,6 +23,8 @@ else
 {
 	add_filter('the_password_form', 'password_form_base');
 	add_filter('the_content', 'the_content_protected_base');
+
+	add_action('wp_footer', 'footer_base');
 }
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');

@@ -119,6 +119,18 @@
 		{
 			flex: unset;
 		}
+
+	.is_phone .flex_flow
+	{
+		display: initial;
+	}
+
+		.is_phone .flex_flow > *
+		{
+			display: initial;
+			margin-right: 0;
+			margin-bottom: 1em;
+		}
 }
 
 @media print

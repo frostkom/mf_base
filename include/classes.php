@@ -1,5 +1,6 @@
 <?php
 
+//core.trac.wordpress.org/browser/tags/4.3.1/src//wp-admin/includes/class-wp-list-table.php#L0
 if(!class_exists('WP_List_Table'))
 {
 	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');
@@ -7,25 +8,114 @@ if(!class_exists('WP_List_Table'))
 
 class mf_list_table extends WP_List_Table
 {
+	var $arr_settings = array();
 	var $post_type = "";
+	var $orderby_default = "post_title";
+
+	var $views = array();
 	var $per_page = 10;
 	var $columns = array();
-	/*
-		'cb'		=> '<input type="checkbox">', //Render a checkbox instead of text
-		'title'	 => 'Title',
-		'rating'	=> 'Rating',
-		'director'  => 'Director'
-	*/
+	var $sortable_columns = array();
+	var $data = "";
 	var $total_items = 0;
+	var $query_join = "";
+	var $query_where = "";
+	var $search = "";
+	var $orderby = "";
+	var $order = "";
+	var $is_admin = false;
+	var $page = "";
 
 	function __construct()
 	{
+		global $wpdb;
+
 		//Set parent defaults
 		parent::__construct(array(
 			'singular' => '', //singular name of the listed records
 			'plural' => '',   //plural name of the listed records
 			'ajax' => false   //does this table support ajax?
 		));
+
+		$this->page = check_var('page', 'char');
+		$this->search = check_var('s', 'char', true);
+
+		$this->arr_settings = array(
+			'query_from' => $wpdb->posts,
+			'query_select_id' => "ID",
+			'query_all_id' => "all",
+			'query_trash_id' => "trash",
+		);
+
+		$this->set_default();
+
+		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
+		$this->order = check_var('order', 'char', true, 'asc');
+
+		$this->is_admin = current_user_can("update_core");
+	}
+
+	function set_default(){}
+
+	function set_columns($columns)
+	{
+		$this->columns = $columns;
+	}
+
+	function set_sortable_columns($columns)
+	{
+		foreach($columns as $column)
+		{
+			$this->sortable_columns[$column] = array($column, false);
+		}
+	}
+
+	function set_views($data)
+	{
+		global $wpdb;
+
+		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
+
+		$query = "SELECT COUNT(".$this->arr_settings['query_select_id'].") FROM ".$this->arr_settings['query_from'];
+
+		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
+
+		if($data['where_post_type'] != '' || $this->query_where != '') // || $data['where'] != ''
+		{
+			$query .= " WHERE ";
+
+			if($data['where_post_type'] != '')
+			{
+				$query .= $data['where_post_type'];
+			}
+
+			if($this->query_where != '')
+			{
+				$query .= ($data['where_post_type'] != '' ? " AND " : "").$this->query_where;
+			}
+
+			/*if($data['where'])
+			{
+				$query .= ($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : "").$data['where'];
+			}*/
+		}
+
+		foreach($data['types'] as $key => $value)
+		{
+			$query_this = $query.($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : " WHERE ")
+			.$this->get_views_trash_string($key, $data['db_field']);
+
+			$amount = $wpdb->get_var($query_this);
+
+			$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>"; //$this->post_type."/list/index.php
+		}
+
+		$this->query_where .= ($this->query_where != '' ? " AND " : "").$this->get_views_trash_string($db_value, $data['db_field']);
+	}
+
+	function get_views_trash_string($value, $field)
+	{
+		return ($value == $this->arr_settings['query_all_id'] ? $field." != '".$this->arr_settings['query_trash_id']."'" : $field." = '".$value."'");
 	}
 
 	/** ************************************************************************
@@ -63,7 +153,7 @@ class mf_list_table extends WP_List_Table
 
 				else
 				{
-					$out .= var_export($item, true);
+					$out .= $column_name." != ".var_export($item, true);
 				}
 			break;
 		}
@@ -71,7 +161,7 @@ class mf_list_table extends WP_List_Table
 		return $out;
 	}
 
-	function column_title($item)
+	/*function column_title($item)
 	{
 		//Build row actions
 		$actions = array(
@@ -81,11 +171,11 @@ class mf_list_table extends WP_List_Table
 		
 		//Return the title contents
 		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-			/*$1%s*/ $item['title'],
-			/*$2%s*/ $item['ID'],
-			/*$3%s*/ $this->row_actions($actions)
+			$item['title'],
+			$item['ID'],
+			$this->row_actions($actions)
 		);
-	}
+	}*/
 
 	/** ************************************************************************
 	 * REQUIRED if displaying checkboxes or using bulk actions! The 'cb' column
@@ -117,45 +207,14 @@ class mf_list_table extends WP_List_Table
 	* @see WP_List_Table::::single_row_columns()
 	* @return array An associative array containing column information: 'slugs'=>'Visible Titles'
 	**************************************************************************/
-
-	//function WP_List_Table::get_columns() must be over-ridden in a sub-class.
 	function get_columns()
 	{
 		return $this->columns;
 	}
 
-	function set_columns($columns)
+	function get_views()
 	{
-		$this->columns = $columns;
-	}
-
-	/** ************************************************************************
-	 * Optional. If you want one or more columns to be sortable (ASC/DESC toggle), 
-	 * you will need to register it here. This should return an array where the 
-	 * key is the column that needs to be sortable, and the value is db column to 
-	 * sort by. Often, the key and value will be the same, but this is not always
-	 * the case (as the value is a column name from the database, not the list table).
-	 * 
-	 * This method merely defines which columns should be sortable and makes them
-	 * clickable - it does not handle the actual sorting. You still need to detect
-	 * the ORDERBY and ORDER querystring variables within prepare_items() and sort
-	 * your data accordingly (usually by modifying your query).
-	 * 
-	 * @return array An associative array containing all the columns that should be sortable: 'slugs'=>array('data_values',bool)
-	 **************************************************************************/
-	function get_sortable_columns()
-	{
-		$sortable_columns = array();
-
-		foreach($this->columns as $key => $value)
-		{
-			if($key != 'cb')
-			{
-				$sortable_columns[$key] = array($key, false);
-			}
-		}
-
-		return $sortable_columns;
+		return $this->views;
 	}
 
 	/** ************************************************************************
@@ -215,7 +274,7 @@ class mf_list_table extends WP_List_Table
 	 * @uses $this->get_pagenum()
 	 * @uses $this->set_pagination_args()
 	 **************************************************************************/
-	function prepare_items($data)
+	function prepare_items()
 	{
 		global $wpdb; //This is used only if making any database queries		
 		
@@ -228,7 +287,7 @@ class mf_list_table extends WP_List_Table
 		 */
 		//$columns = $this->get_columns();
 		$hidden = array();
-		$sortable = $this->get_sortable_columns();
+		//$sortable = $this->get_sortable_columns();
 
 		/**
 		 * REQUIRED. Finally, we build an array to be used by the class for column 
@@ -236,7 +295,7 @@ class mf_list_table extends WP_List_Table
 		 * 3 other arrays. One for all columns, one for hidden columns, and one
 		 * for sortable columns.
 		 */
-		$this->_column_headers = array($this->columns, $hidden, $sortable);
+		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
 
 		/**
 		 * Optional. You can handle your bulk actions however you see fit. In this
@@ -244,31 +303,13 @@ class mf_list_table extends WP_List_Table
 		 */
 		$this->process_bulk_action();
 
-		/**
-		 * This checks for sorting input and sorts the data in our array accordingly.
-		 * 
-		 * In a real-world situation involving a database, you would probably want 
-		 * to handle sorting by passing the 'orderby' and 'order' values directly 
-		 * to a custom query. The returned data will be pre-sorted, and this array
-		 * sorting technique would be unnecessary.
-		 */
-		function usort_reorder($a,$b)
-		{
-			$orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : 'title'; //If no sort, default to title
-			$order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
-			$result = strcmp($a[$orderby], $b[$orderby]); //Determine sort order
-			return ($order==='asc') ? $result : -$result; //Send final sort direction to usort
-		}
-
-		usort($data, 'usort_reorder');
-
 		$current_page = $this->get_pagenum();
 
-		$this->total_items = count($data);
+		$this->total_items = count($this->data);
 
-		$data = array_slice($data, (($current_page - 1) * $this->per_page), $this->per_page);
+		$this->data = array_slice($this->data, (($current_page - 1) * $this->per_page), $this->per_page);
 
-		$this->items = $data;
+		$this->items = $this->data;
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total_items,
@@ -277,22 +318,94 @@ class mf_list_table extends WP_List_Table
 		) );
 	}
 
-	function get_search_form($search)
+	protected function get_table_classes()
 	{
-		if($this->total_items > $this->per_page || $search != '')
+		return array('widefat', 'striped'); //, 'fixed', $this->_args['plural']
+	}
+
+	function show_search_form()
+	{
+		echo "<form method='post'>";
+
+			$this->search_box(__("Search", 'lang_base'), 's');
+		
+		echo "</form>";
+	}
+
+	function select_data($data)
+	{
+		global $wpdb;
+
+		/*if(!isset($data['from']))
 		{
-			return "<form method='post'>
-				<p class='search-box'>
-					<input type='search' name='s' value='".$search."'>
-					<button type='submit' class='button'>".__("Search", 'lang_base')."</button>
-				</p>
-			</form>";
+			$data['from'] = $wpdb->posts;
+			$data['where_post_type'] = " post_type = '".$this->post_type."'";
+		}*/
+
+		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
+
+		if(!isset($data['join'])){		$data['join'] = "";}
+		if(!isset($data['where'])){		$data['where'] = "";}
+		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
+
+		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
+		
+		if($data['where_post_type'] != '' || $this->query_where != '' || $data['where'] != '')
+		{
+			$query .= " WHERE ";
+
+			if($data['where_post_type'] != '')
+			{
+				$query .= $data['where_post_type'];
+			}
+
+			if($this->query_where != '')
+			{
+				$query .= ($data['where_post_type'] != '' ? " AND " : "").$this->query_where;
+			}
+
+			if($data['where'])
+			{
+				$query .= ($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : "").$data['where'];
+			}
 		}
 
-		else
+		if($data['group_by'] != '')
 		{
-			return count($this->items)." > ".$this->per_page." || ".$search;
+			$query .= " GROUP BY ".$data['group_by'];
 		}
+
+		if($this->orderby != '')
+		{
+			$query .= " ORDER BY ".$this->orderby." ".$this->order;
+		}
+
+		$result = $wpdb->get_results($query);
+
+		$this->data = json_decode(json_encode($result), true);
+	}
+
+	function do_display()
+	{
+		$this->prepare_items();
+
+		$this->views();
+		$this->show_search_form();
+
+		$this->show_before_display();
+		$this->display();
+		$this->show_after_display();
+	}
+
+	function show_before_display()
+	{
+		echo "<form method='get'>
+			<input type='hidden' name='page' value='".$_REQUEST['page']."'>";
+	}
+	
+	function show_after_display()
+	{
+		echo "</form>";
 	}
 }
 

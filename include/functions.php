@@ -1197,7 +1197,6 @@ function show_checkbox($data)
 ################################
 function show_radio_input($data)
 {
-	if(!isset($data['label'])){			$data['label'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['compare'])){		$data['compare'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
@@ -1213,9 +1212,9 @@ function show_radio_input($data)
 	$out = "<div class='form_radio".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
 		<input type='radio' id='".$data['name']."_".$data['value']."' name='".$data['name']."' value='".$data['value']."'".$checked.$data['xtra'].">";
 
-		if($data['label'] != '')
+		if($data['text'] != '')
 		{
-			$out .= "<label for='".$data['name']."_".$data['value']."'>".$data['label']."</label>";
+			$out .= "<label for='".$data['name']."_".$data['value']."'>".$data['text']."</label>";
 		}
 
 	$out .= "</div>";
@@ -1650,4 +1649,22 @@ function get_meta_image_url($post_id, $meta_key)
 	$image_array = wp_get_attachment_image_src($image_id, 'full');
 
 	return $image_array[0];
+}
+
+function footer_base()
+{
+	/*if(get_option('setting_base_requests') == 1)
+	{
+		echo "<mf-debug>"
+			.var_export($_REQUEST, true)
+		."</mf-debug>";
+	}*/
+
+	/*if(get_option('setting_base_perfbar') == 1)
+	{
+		if(is_user_logged_in() && current_user_can("update_core"))
+		{
+			mf_enqueue_script('script_base_perfbar', plugins_url()."/mf_base/include/perfbar_script.js");
+		}
+	}*/
 }

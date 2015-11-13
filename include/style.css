@@ -131,6 +131,215 @@
 			margin-right: 0;
 			margin-bottom: 1em;
 		}
+
+	.mf_form_inline
+	{
+		background: #fff;
+		border: .2em solid #ccc;
+		border-radius: .3em;
+		display: none;
+		padding: .8em .8em 0;
+		position: absolute;
+		min-width: 400px;
+		max-width: 100%;
+		z-index: 1;
+	}
+
+    .mf_form
+    {
+        overflow: hidden;   
+    }
+    
+        .mf_form > div, .mf_form .clear.clear.clear
+        {
+            clear: both;
+        }
+    
+        .mf_form .left_col
+        {
+            clear: left;
+            float: left;
+			margin-right: 2%;
+            width: 48%;
+        }
+        
+        .mf_form .right_col
+        {
+            clear: right;
+            float: right;
+			margin-left: 2%;
+            width: 48%;
+        }
+        
+        .mf_form label
+        {
+			cursor: pointer;
+            display: block;
+			min-height: 2.3em;
+        }
+
+        .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input
+        {
+            background: #fff;
+			background: rgba(255, 255, 255, .8);
+            border: .2em solid #ccc;
+            border-radius: .3em;
+			box-sizing: border-box;
+            display: inline-block;
+			font: inherit;
+            height: auto;
+            margin: 0 0 .8em;
+            padding: .4em;
+			width: 100%;
+        }
+
+			.mf_form .form_textfield input, .mf_form select
+			{
+				min-height: 2.7em;
+			}
+
+			.mf_form select
+			{
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAQCAYAAABz9a1kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxOUE4MkIyNTg0ODUxMUU1QTVFNTkyNjZGREI0MEIyNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxOUE4MkIyNjg0ODUxMUU1QTVFNTkyNjZGREI0MEIyNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjE5QTgyQjIzODQ4NTExRTVBNUU1OTI2NkZEQjQwQjI2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjE5QTgyQjI0ODQ4NTExRTVBNUU1OTI2NkZEQjQwQjI2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+/iuuqQAAAHZJREFUeNpi/P//P8NgAEwMgwSMOmTUIYQACymKt2/fXgqk6qHcf9g8BcyFDV5eXj00dQgQ9AIxFxA34JAHiffRPESgodAIpZvQ5OqAuJneaaSZkZGxFsaBspvplkaQAdDyFiDFCWNTWkIzjhbxow4ZKg4BCDAA/b8bYMCxGJEAAAAASUVORK5CYII=');
+				background-position: right center;
+				background-repeat: no-repeat;
+				cursor: pointer;
+			}
+
+		.mf_form .wp-editor-wrap
+		{
+			margin: 0 0 .8em;
+		}
+
+			.mf_form .form_textfield input:focus, .mf_form select:focus, .mf_form textarea:focus, .mf_form .form_password input:focus
+			{
+				border-color: #999;
+				outline: none;
+			}
+
+			/*.mf_form .form_textfield input:valid, .mf_form select:valid, .mf_form textarea:valid, .mf_form .form_password input:valid
+			{
+				background: rgba(217, 241, 191, .3);
+			}
+
+				.mf_form .form_textfield input:valid:focus, .mf_form select:valid:focus, .mf_form textarea:valid:focus, .mf_form .form_password input:valid:focus
+				{
+					background: #d9f1bf;
+				}
+
+			.mf_form .form_textfield input:invalid, .mf_form select:invalid, .mf_form textarea:invalid, .mf_form .form_password input:invalid
+			{
+				background: rgba(251, 227, 228, .3);
+			}
+
+				.mf_form .form_textfield input:invalid:focus, .mf_form select:invalid:focus, .mf_form textarea:invalid:focus, .mf_form .form_password input:invalid:focus
+				{
+					background: #fbe3e4;
+				}*/
+
+			/*.mf_form .form_textfield input[type=date], .mf_form .form_textfield input[type=number]
+			{
+				max-width: 140px;
+			}*/
+
+		.mf_form .form_select .description
+		{
+			margin: -5px 0 10px;
+		}
+    
+		.mf_form .form_checkbox, .mf_form .form_radio
+        {
+            margin-bottom: 10px;
+        }
+    
+			.mf_form .form_checkbox label, .mf_form .form_radio label
+			{
+				display: inline;
+			}
+    
+            .mf_form .form_checkbox input, .mf_form .form_radio input
+            {
+				display: inline;
+                margin-right: 2%;
+            }
+    
+                .mf_form .input-buttons.input-button-size-2
+				{
+					margin-left: -43px;
+				}
+
+			/* ####################### */
+			.mf_form.mf_improve_ux > .form_checkbox, .mf_form.mf_improve_ux > .form_radio
+			{
+				clear: none;
+				float: left;
+			}
+
+				.mf_form.mf_improve_ux > .form_checkbox input[type=checkbox], .mf_form.mf_improve_ux > .form_radio input[type=radio]
+				{
+					display: none;
+				}
+
+				.mf_form.mf_improve_ux > .form_checkbox input[type=checkbox] + label, .mf_form.mf_improve_ux > .form_radio input[type=radio] + label
+				{
+					display: block;
+					cursor: pointer;
+					padding: 8px 14px;
+					background: #f5f5f5;
+					background: linear-gradient(to bottom, #fff, #e6e6e6);
+					border: 1px solid #e6e6e6;
+					border-bottom-color: #c3c3c3;
+					box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 1px 2px rgba(0, 0, 0, .05);
+				}
+
+					.mf_form.mf_improve_ux > .form_checkbox input[type=checkbox]:checked + label, .mf_form.mf_improve_ux > .form_radio input[type=radio]:checked + label
+					{
+						background: #e0e0e0;
+						box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05);
+					}
+			/* ####################### */
+
+			.mf_form .form_zipcode span
+			{
+				padding-left: 10px;
+			}
+
+		.mf_form .form_button > button, .mf_form .form_button > .button
+		{
+			border: .2em solid #ccc;
+			border-radius: .3em;
+			cursor: pointer;
+			display: inline-block;
+			font: inherit;
+			margin: 0 .7em .7em 0;
+			padding: .3em 1em .3em;
+		}
+
+	.mf_form_results .form_radio
+	{
+		position: relative;
+	}
+
+		.mf_form_results .form_radio > div
+		{
+			background: rgba(255, 255, 255, .2);
+			position: absolute;
+		}
+
+		.mf_form_results .form_radio p
+		{
+			margin: 0;
+			position: relative;
+		}
+
+		.mf_form_results .form_radio p span
+		{
+			position: absolute;
+			right: 0;
+		}
 }
 
 @media print

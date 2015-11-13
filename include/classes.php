@@ -1457,15 +1457,21 @@ class mf_font_icons
 		{
 			$this->fonts['icomoon'] = array(
 				"icon-accessible",
+				"icon-bed",
 				"icon-chair",
+				"icon-clock",
 				"icon-close",
 				"icon-drink",
 				"icon-exclusive",
 				"icon-food",
 				"icon-food-n-drink",
-				"icon-geotag",
+				"icon-home",
+				"icon-info",
 				"icon-music",
-				"icon-person"
+				"icon-parking",
+				"icon-person",
+				"icon-price",
+				"icon-transportation",
 			);
 		}
 

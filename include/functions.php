@@ -173,9 +173,9 @@ function get_current_user_role($id = 0)
 		$id = get_current_user_id();
 	}
 
-	$user_info = get_userdata($id);
+	$user_data = get_userdata($id);
 
-	return $user_info->roles[0];
+	return $user_data->roles[0];
 }
 
 function settings_base()
@@ -329,7 +329,6 @@ function get_role_first_capability($role)
 	$cap_keys = array_keys($capabilities);
 
 	return $cap_keys[0];
-	//return $role;
 }
 
 //Sortera array
@@ -1579,19 +1578,7 @@ function get_post_children($data, &$arr_data = array())
 
 function format_phone_no($no)
 {
-	$out = "";
-
-	/*if(is_user_logged_in() && function_exists('is_plugin_active') && is_plugin_active('mf_sms/index.php'))
-	{
-		$out = "/wp-admin/admin.php?page=mf_sms/list/index.php&strSmsTo=".$no;
-	}
-
-	else
-	{*/
-		$out = "tel:".str_replace(array(" ", "-", "/"), "", $no);
-	//}
-
-	return $out;
+	return "tel:".str_replace(array(" ", "-", "/"), "", $no);
 }
 
 function password_form_base()

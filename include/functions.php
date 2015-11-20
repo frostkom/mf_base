@@ -1,5 +1,94 @@
 <?php
 
+if(!function_exists("get_media_button"))
+{
+	function get_media_button($data = array())
+	{
+		$out = "";
+
+		if(!isset($data['name'])){	$data['name'] = "mf_media_urls";}
+		if(!isset($data['text'])){	$data['text'] = __("Add Attachment", 'lang_base');}
+		if(!isset($data['value'])){	$data['value'] = "";}
+
+		wp_enqueue_style('style_media_button', plugins_url()."/mf_base/include/style_media_button.css");
+		mf_enqueue_script('script_media_button', plugins_url()."/mf_base/include/script_media_button.js", array('delete' => __('Delete', 'lang_base')));
+
+		$out .= "<div class='mf_media_button'>
+			<div class='wp-media-buttons'>
+				<a href='#' class='button insert-media add_media'>
+					<span class='wp-media-buttons-icon'></span> <span>".$data['text']."</span>
+				</a>
+			</div>
+			<div class='mf_media_raw'></div>
+			<table class='mf_media_list widefat striped'></table>"
+			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => " class='mf_media_urls'"))
+			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
+		."</div>";
+
+		return $out;
+	}
+}
+
+if(!function_exists("get_attachment_to_send"))
+{
+	function get_attachment_to_send($string)
+	{
+		$arr_files = array();
+
+		if($string != '')
+		{
+			$arr_attachments = explode(",", $string);
+
+			foreach($arr_attachments as $attachment)
+			{
+				list($file_name, $file_url) = explode("|", $attachment);
+
+				if($file_url != '')
+				{
+					$file_url = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+
+					if(file_exists($file_url))
+					{
+						$arr_files[] = $file_url;
+					}
+				}
+			}
+		}
+
+		return $arr_files;
+	}
+}
+
+function get_attachment_id_by_url($url)
+{
+	global $wpdb;
+
+	$out = "";
+
+	list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
+
+	if($parsed_url != '')
+	{
+		$out = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid RLIKE %s", $parsed_url));
+	}
+	
+	return $out;
+}
+
+function get_attachment_data_by_id($id)
+{
+	global $wpdb;
+
+	$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND ID = '%d'", $id));
+
+	if($wpdb->num_rows > 0)
+	{
+		$r = $result[0];
+
+		return array($r->post_title, $r->guid);
+	}
+}
+
 function get_post_filter($data, &$query_where)
 {
 	global $wpdb;
@@ -12,15 +101,21 @@ function get_post_filter($data, &$query_where)
 	{
 		$amount = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->posts." WHERE post_type = '".$data['plugin']."'".$query_where." AND ".($key == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$key."'"));
 
-		$arr_filter .= "<li class='".$key."'>"
-			.($arr_filter != '' ? " | " : "")
-			."<a href='admin.php?page=".$data['plugin']."/list/index.php&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>
-		</li>";
+		if($amount > 0)
+		{
+			$arr_filter .= "<li class='".$key."'>"
+				.($arr_filter != '' ? " | " : "")
+				."<a href='admin.php?page=".$data['plugin']."/list/index.php&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>
+			</li>";
+		}
 	}
 
 	$query_where .= " AND ".($db_value == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$db_value."'");
 
-	return "<ul class='subsubsub'>".$arr_filter."</ul>";
+	if($arr_filter != '')
+	{
+		return "<ul class='subsubsub'>".$arr_filter."</ul>";
+	}
 }
 
 function mf_format_number($in, $dec = 2)
@@ -197,6 +292,21 @@ function settings_base()
 			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 		);
+
+		//Recommended plugins
+		/*
+			Admin Menu Tree Page View			admin-menu-tree-page-view/index.php
+			Adminer								adminer/adminer.php
+			Black Studio TinyMCE Widget			black-studio-tinymce-widget/black-studio-tinymce-widget.php
+			Email Log							email-log/email-log.php
+			Enable Media Replace				enable-media-replace/enable-media-replace.php
+			Quick Page/Post Redirect Plugin		quick-pagepost-redirect-plugin/page_post_redirect_plugin.php
+			Simple Page Ordering				simple-page-ordering/simple-page-ordering.php
+			User Role Editor					user-role-editor/user-role-editor.php
+			User Switching						user-switching/user-switching.php
+			WP Smush							wp-smushit/wp-smush.php
+			WP-Mail-SMTP						wp-mail-smtp/wp_mail_smtp.php
+		*/
 
 		foreach($arr_settings as $handle => $text)
 		{
@@ -903,8 +1013,6 @@ function show_textfield($data)
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['datalist'])){		$data['datalist'] = array();}
 
-	$label = $after = $color = "";
-
 	if($data['type'] == "date")
 	{
 		$data['type'] = "text";
@@ -915,7 +1023,6 @@ function show_textfield($data)
 
 	if($data['required'] == 1)
 	{
-		//$after .= " *";
 		$data['xtra'] .= " required";
 	}
 
@@ -949,16 +1056,6 @@ function show_textfield($data)
 		$data['xtra'] .= " step='any'";
 	}
 
-	/*if(count($arrErrorField) > 0 && preg_match('/('. implode('|', $arrErrorField) .')/', $data['name']))
-	{
-		$data['xtra_class'] .= " red_border";
-	}*/
-
-	if($data['text'] != '')
-	{
-		$label = "<label for='".$data['name']."'>".$data['text'].$after."</label>";
-	}
-
 	$count_temp = count($data['datalist']);
 
 	if($count_temp > 0)
@@ -966,9 +1063,14 @@ function show_textfield($data)
 		$data['xtra'] .= " list='".$data['name']."_list'";
 	}
 
-	$out = "<div class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>"
-		.$label
-		."<input type='".$data['type']."' name='".$data['name']."' value='".$data['value']."'".$data['xtra'].">";
+	$out = "<div class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
+
+		if($data['text'] != '')
+		{
+			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+		}
+		
+		$out .= "<input type='".$data['type']."' name='".$data['name']."' value='".$data['value']."'".$data['xtra'].">";
 
 		if($count_temp > 0)
 		{
@@ -1012,7 +1114,7 @@ function show_textarea($data)
 
 		if($data['text'] != '')
 		{
-			$out .= "<label for='".$data['name']."'>".$data['text']."</label>"; //.($data['required'] == 1 ? " *" : "")
+			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
 		if($data['wysiwyg'] == true)
@@ -1042,6 +1144,7 @@ function show_select($data)
 	if(!isset($data['compare'])){		$data['compare'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['minsize'])){		$data['minsize'] = 2;}
 	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = 0;}
 	if(!isset($data['class'])){			$data['class'] = "";}
@@ -1049,16 +1152,29 @@ function show_select($data)
 
 	if(isset($data['data']) && $data['data'] != '')
 	{
-		$label = "";
-
 		$count_temp = count($data['data']);
 
 		$is_multiple = preg_match('/(\[\])/', $data['name']);
 
 		if($is_multiple)
 		{
+			if($count_temp > $data['maxsize'])
+			{
+				$size = $data['maxsize'];
+			}
+
+			else if($count_temp < $data['minsize'])
+			{
+				$size = $data['minsize'];
+			}
+			
+			else
+			{
+				$size = $count_temp;
+			}
+
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			$data['xtra'] .= " multiple='multiple' size='".($count_temp > $data['maxsize'] ? $data['maxsize'] : $count_temp)."'";
+			$data['xtra'] .= " multiple='multiple' size='".$size."'";
 
 			$container_class = "form_select_multiple";
 		}
@@ -1068,9 +1184,9 @@ function show_select($data)
 			$container_class = "form_select";
 		}
 
-		if($data['text'] != '')
+		if($data['required'] == 1)
 		{
-			$label = "<label for='".$data['name']."'>".$data['text']."</label>";
+			$data['xtra'] .= " required";
 		}
 
 		if($count_temp == 1 && $data['required'] == 1 && $data['text'] != '')
@@ -1080,9 +1196,14 @@ function show_select($data)
 
 		else
 		{
-			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>"
-				.$label
-				."<select id='".str_replace("[]", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
+			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
+
+				if($data['text'] != '')
+				{
+					$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+				}
+
+				$out .= "<select id='".str_replace("[]", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
 
 					for($i = 0; $i < $count_temp; $i++)
 					{
@@ -1176,15 +1297,7 @@ function show_checkbox($data)
 
 		if($data['text'] != '')
 		{
-			$out .= "<label for='".$this_id."'>"
-				.$data['text'];
-
-				/*if($data['required'] == 1)
-				{
-					$out .= " *";
-				}*/
-
-			$out .= "</label>";
+			$out .= "<label for='".$this_id."'>".$data['text']."</label>";
 		}
 
 	$out .= "</div>";
@@ -1225,28 +1338,32 @@ function show_radio_input($data)
 ######################
 function show_file_field($data)
 {
+	$out = "";
+
 	if(!isset($data['text'])){		$data['text'] = "";}
 	if(!isset($data['class'])){		$data['class'] = "";}
-	//if(!isset($data['size'])){		$data['size'] = 0;}
 	if(!isset($data['multiple'])){	$data['multiple'] = false;}
+	if(!isset($data['required'])){	$data['required'] = false;}
 
-	$label = "";
+	$out .= "<div class='form_file_input".($data['class'] != '' ? " ".$data['class'] : "")."'>";
 
-	if($data['text'] != '')
-	{
-		$label = "<label for='".$data['name']."'>".$data['text']."</label>";
-	}
+		if($data['text'] != '')
+		{
+			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+		}
 
-	return "<div class='form_file_input".($data['class'] != '' ? " ".$data['class'] : "")."'>"
-		.$label
-		."<input type='file'".($data['multiple'] == true ? " multiple='true'" : "")." name='".$data['name'].($data['multiple'] == true ? "[]" : "")."' value=''/>
+		$out .= "<input type='file' name='".$data['name'].($data['multiple'] == true ? "[]" : "")."'".($data['multiple'] == true ? " multiple" : "").($data['required'] == true ? " required" : "").">
 	</div>";
+
+	return $out;
 }
 ######################
 
 ######################
 function show_password_field($data)
 {
+	$out = "";
+
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
@@ -1263,17 +1380,17 @@ function show_password_field($data)
 		$data['xtra'] .= " placeholder='".$data['placeholder']."'";
 	}
 
-	$label = "";
+	$out .= "<div class='form_password'>";
 
-	if($data['text'] != '')
-	{
-		$label .= "<label for='".$data['name']."'>".$data['text']."</label>";
-	}
+		if($data['text'] != '')
+		{
+			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+		}
 
-	return "<div class='form_password'>"
-		.$label
-		."<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['max_length'].$data['xtra'].">
+		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['max_length'].$data['xtra'].">
 	</div>";
+
+	return $out;
 }
 ######################
 

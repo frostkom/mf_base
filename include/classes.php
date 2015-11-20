@@ -76,7 +76,7 @@ class mf_list_table extends WP_List_Table
 
 		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
 
-		$query = "SELECT COUNT(".$this->arr_settings['query_select_id'].") FROM ".$this->arr_settings['query_from'];
+		$query = "SELECT COUNT(".$this->arr_settings['query_select_id'].") FROM ".$this->arr_settings['query_from'].$this->query_join;
 
 		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
 
@@ -107,7 +107,10 @@ class mf_list_table extends WP_List_Table
 
 			$amount = $wpdb->get_var($query_this);
 
-			$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>"; //$this->post_type."/list/index.php
+			if($amount > 0)
+			{
+				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>"; //$this->post_type."/list/index.php
+			}
 		}
 
 		$this->query_where .= ($this->query_where != '' ? " AND " : "").$this->get_views_trash_string($db_value, $data['db_field']);
@@ -408,28 +411,6 @@ class mf_list_table extends WP_List_Table
 		echo "</form>";
 	}
 }
-
-/*class mf_postboxes
-{
-	function mf_postboxes()
-	{
-		
-	}
-
-	function get($id, $data = array())
-	{
-		$out = "";
-
-		switch($id)
-		{
-			case 'wrap_start':
-				$out = "<div class='wrap'>";
-			break;
-		}
-
-		return $out;
-	}
-}*/
 
 class pagination
 {
@@ -1371,10 +1352,10 @@ class mf_form_payment
 
 			switch($status)
 			{
-				case -2:		$payment_status_text = "Failed";			break;
-				case 2:			$payment_status_text = "Processed";			break;
-				case 0:			$payment_status_text = "Pending";			break;
-				case -1:		$payment_status_text = "Cancelled";			break;
+				case -2:		$payment_status_text = __("Failed", 'lang_base');			break;
+				case 2:			$payment_status_text = __("Processed", 'lang_base');		break;
+				case 0:			$payment_status_text = __("Pending", 'lang_base');			break;
+				case -1:		$payment_status_text = __("Cancelled", 'lang_base');		break;
 			}
 
 			if($is_valid_mac)
@@ -1560,6 +1541,443 @@ class mf_font_icons
 				$out = "<i class='fa fa-".$symbol."'".($title != '' ? " title='".$title."'" : "")."></i>&nbsp;";
 			}
 		}
+
+		return $out;
+	}
+}
+
+class mf_import
+{
+	function __construct($data)
+	{
+		$this->table = $data['table'];
+		$this->actions = $data['actions'];
+		$this->columns = $data['columns'];
+		$this->unique_columns = $data['unique_columns'];
+
+		$this->row_separator = "
+";
+		$this->is_run = false;
+
+		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = 0;
+
+		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
+	}
+
+	function get_used_separator($data)
+	{
+		$str_separator = "";
+		$int_separator_count = 0;
+
+		$arr_separator = array(",", ";", "	");
+
+		$count_temp = count($arr_separator);
+
+		for($i = 0; $i < $count_temp; $i++)
+		{
+			$int_separator_count_temp = substr_count($data['string'], $arr_separator[$i]);
+
+			if($int_separator_count_temp > $int_separator_count)
+			{
+				$str_separator = $arr_separator[$i];
+				$int_separator_count = $int_separator_count_temp;
+			}
+		}
+
+		return $str_separator;
+	}
+
+	function fetch_request()
+	{
+		$this->data = array();
+
+		$this->action = check_var('strTableAction');
+		$this->skip_header = check_var('intImportSkipHeader', '', true, '0');
+		$this->text = isset($_POST['strImportText']) ? $_POST['strImportText'] : "";
+
+		if($this->text != '')
+		{
+			$this->text_filtered = $this->text;
+			$this->value_separator = $this->get_used_separator(array('string' => $this->text));
+
+			$this->text_filtered = preg_replace("/\".*?(\n).*?\"/s", "", $this->text_filtered);
+			$this->text_filtered = str_replace('"', "", $this->text_filtered);
+
+			$arr_rows = explode($this->row_separator, $this->text_filtered);
+			$count_temp_rows = count($arr_rows);
+
+			for($i = 0; $i < $count_temp_rows; $i++)
+			{
+				$row = trim($arr_rows[$i]);
+
+				$arr_values = explode($this->value_separator, $row);
+				$count_temp_values = count($arr_values);
+
+				for($j = 0; $j < $count_temp_values; $j++)
+				{
+					$value = $arr_values[$j];
+					$value = stripslashes($value);
+					$value = trim($value, '"');
+					$value = trim($value);
+					$value = addslashes($value);
+
+					$this->data[$i][$j] = $value;
+				}
+			}
+		}
+
+		else if($this->has_excel_support)
+		{
+			//$this->file = check_var('strImportFile');
+			$this->file_location = isset($_FILES['strImportFile']) ? $_FILES['strImportFile']['tmp_name'] : "";
+
+			if($this->file_location != '')
+			{
+				$objReader = PHPExcel_IOFactory::createReader('Excel2007');
+				$objReader->setReadDataOnly(TRUE);
+				$objPHPExcel = $objReader->load($this->file_location);
+
+				$objWorksheet = $objPHPExcel->getActiveSheet();
+
+				$i = 0;
+
+				foreach($objWorksheet->getRowIterator() as $row)
+				{
+					$cellIterator = $row->getCellIterator();
+					$cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells, even if a cell value is not set. By default, only cells that have a value set will be iterated.
+
+					$j = 0;
+
+					foreach($cellIterator as $cell)
+					{
+						$value = $cell->getValue();
+						$value = trim($value);
+
+						$this->data[$i][$j] = $value;
+
+						$j++;
+					}
+
+					$i++;
+				}
+			}
+		}
+
+		$this->is_run = isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce'], 'import_run') && $this->action != '' && count($this->data) > 0;
+	}
+
+	function do_import()
+	{
+		global $wpdb;
+
+		$out = "";
+
+		$count_temp_rows = count($this->data);
+
+		if($count_temp_rows > 0)
+		{
+			$out .= "<table class='widefat striped'>
+				<tbody>";
+
+					$i_start = $this->skip_header ? 1 : 0;
+
+					for($i = 0; $i < $count_temp_rows; $i++)
+					{
+						$query_search = $query_xtra = "";
+
+						$arr_values = $this->data[$i];
+						$count_temp_values = count($arr_values);
+
+						for($j = 0; $j < $count_temp_values; $j++)
+						{
+							$value = $arr_values[$j];
+
+							$strRowField = check_var('strRowCheck'.$j);
+
+							if($strRowField != '')
+							{
+								$this->get_external_value($strRowField, $value);
+
+								if(in_array($strRowField, $this->unique_columns))
+								{
+									$query_search .= ($query_search != '' ? " OR " : "").$strRowField." = '".$value."'";
+								}
+
+								$query_xtra .= ($query_xtra != '' ? ", " : "").$strRowField." = '".str_replace('"', '', $value)."'";
+							}
+						}
+
+						if($query_search != '')
+						{
+							if($query_xtra == '')
+							{
+								//$status_icon = "fa-ban";
+								//$text = __("The row was empty so nothing was inserted", 'lang_base');
+							}
+
+							else
+							{
+								$result = $wpdb->get_results("SELECT ".$this->table."ID FROM ".$wpdb->base_prefix.$this->table." WHERE ".$query_search." ORDER BY ".$this->table."Created ASC LIMIT 0, 5");
+								$rows = $wpdb->num_rows;
+
+								if($this->action == "import")
+								{
+									if($rows > 0)
+									{
+										$wpdb->query("UPDATE ".$wpdb->base_prefix.$this->table." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$query_xtra." WHERE ".$query_search);
+
+										if($wpdb->rows_affected > 0)
+										{
+											//$status_icon = "fa-check";
+											//$text = __("The row already existed and was updated", 'lang_base').($rows > 1 ? " (".$rows.")" : "");
+
+											$this->rows_updated++;
+										}
+
+										else
+										{
+											//$status_icon = "fa-cloud";
+											//$text = __("The row was already up to date", 'lang_base').($rows > 1 ? " (".$rows.")" : "");
+
+											$this->rows_up_to_date++;
+										}
+
+										if($rows > 1)
+										{
+											$this->if_more_than_one($result);
+										}
+									}
+
+									else
+									{
+										$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix.$this->table." SET ".$query_xtra.", ".$this->table."Created = NOW(), userID = '%d'", get_current_user_id()));
+
+										if($wpdb->rows_affected > 0)
+										{
+											//$status_icon = "fa-check";
+											//$text = __("The row was inserted", 'lang_base');
+
+											$this->rows_inserted++;
+										}
+
+										else
+										{
+											//$status_icon = "fa-ban";
+											//$text = __("The row should have been inserted but something went wrong", 'lang_base');
+
+											$this->rows_not_inserted++;
+										}
+									}
+								}
+
+								else if($this->action == "delete")
+								{
+									if($rows > 0)
+									{
+										$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix.$this->table." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$query_search, get_current_user_id()));
+
+										if($wpdb->rows_affected > 0)
+										{
+											//$status_icon = "fa-close";
+											//$text = __("The row existed so it was deleted", 'lang_base');
+
+											$this->rows_deleted++;
+										}
+
+										else
+										{
+											//$status_icon = "fa-ban";
+											//$text = __("The row should have been deleted but something went wrong", 'lang_base');
+
+											$this->rows_not_deleted++;
+										}
+									}
+
+									else
+									{
+
+										//$status_icon = "fa-ban";
+										//$text = __("The row did not exist", 'lang_base');
+
+										$this->rows_not_exists++;
+									}
+								}
+							}
+						}
+
+						if($i % 10 == 0)
+						{
+							sleep(0.1);
+							set_time_limit(60);
+						}
+					}
+
+					if($this->action == "import")
+					{
+						$out .= "<tr><td><i class='fa fa-lg fa-check'></i></td><td>".$this->rows_updated."</td><td>".__("Updated", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-cloud'></i></td><td>".$this->rows_up_to_date."</td><td>".__("Already up to date", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-check'></i></td><td>".$this->rows_inserted."</td><td>".__("Inserted", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_inserted."</td><td>".__("Not inserted", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-close'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+					}
+
+					else if($this->action == "delete")
+					{
+						$out .= "<tr><td><i class='fa fa-lg fa-close'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_deleted."</td><td>".__("Not deleted", 'lang_base')."</td></tr>
+						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_exists."</td><td>".__("Did not exist", 'lang_base')."</td></tr>";
+					}
+
+				$out .= "</tbody>
+			</table>";
+		}
+
+		return $out;
+	}
+
+	function get_external_value(&$strRowField, &$value){}
+
+	function if_more_than_one($result)
+	{
+		global $wpdb;
+
+		//Address Book
+		/*foreach($result as $r)
+		{
+			$intAddressID = $r->addressID;
+
+			$result = $wpdb->get_results($wpdb->prepare("SELECT addressID FROM ".$wpdb->base_prefix."address2group WHERE addressID = '%d'", $intAddressID));
+
+			if($wpdb->num_rows == 0)
+			{
+				$obj_address = new mf_address();
+				$obj_address->delete($intAddressID);
+
+				$text .= " (".__("An extra row was deleted", 'lang_base').") [".$intAddressID."]";
+
+				$this->rows_deleted++;
+			}
+		}*/
+	}
+
+	function get_form()
+	{
+		global $wpdb;
+
+		$out = "";
+
+		$out .= "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data'>
+			<div id='poststuff' class='postbox'>
+				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
+				<div class='inside'>";
+
+					if(count($this->actions) > 1)
+					{
+						$arr_data = array();
+
+						$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+						$arr_data[] = array("delete", __("Delete", 'lang_base'));
+						$arr_data[] = array("import", __("Import", 'lang_base'));
+
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'compare' => $this->action));
+					}
+
+					else
+					{
+						$out .= input_hidden(array('name' => "strTableAction", 'value' => $this->actions[0]));
+					}
+
+					if($this->file_location == '')
+					{
+						$out .= show_textarea(array('name' => 'strImportText', 'text' => __("Text", 'lang_base'), 'value' => $this->text, 'size' => 'huge', 'placeholder' => __("Value 1	Value 2	Value 3", 'lang_base')));
+					}
+
+					if($this->has_excel_support && $this->text == '')
+					{
+						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", 'lang_base'), 'required' => ($this->file_location != '' ? true : false)));
+					}
+
+					$arr_data = array();
+
+					$arr_data[] = array('1', __("Yes", 'lang_base'));
+					$arr_data[] = array('0', __("No", 'lang_base'));
+
+					$out .= show_select(array('data' => $arr_data, 'name' => 'intImportSkipHeader', 'compare' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
+					.show_submit(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
+				."</div>
+			</div>";
+
+			$count_temp_rows = count($this->data);
+
+			if($this->action != '' && $count_temp_rows > 0)
+			{
+				$out .= "<div id='poststuff' class='postbox'>
+					<h3 class='hndle'>".__("Run", 'lang_base')."</h3>
+					<div class='inside'>
+						<p>".__("Rows", 'lang_base').": ".$count_temp_rows."</p>";
+
+						$arr_values = $this->data[0];
+						$count_temp_values = count($arr_values);
+
+						for($i = 0; $i < $count_temp_values; $i++)
+						{
+							$value = $arr_values[$i];
+
+							$strRowField = check_var('strRowCheck'.$i);
+
+							$arr_data = array();
+
+							$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+
+							$result = $wpdb->get_results("SHOW FIELDS FROM ".$wpdb->base_prefix.$this->table);
+
+							foreach($result as $r)
+							{
+								$strTableField = $r->Field;
+
+								if(array_key_exists($strTableField, $this->columns))
+								{
+									$arr_data[] = array($strTableField, $this->columns[$strTableField]);
+								}
+							}
+
+							$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'compare' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$value.")</span>"));
+						}
+
+						$out .= "&nbsp;"
+						.show_submit(array('name' => "btnImportRun", 'text' => __("Run", 'lang_base')))
+						.wp_nonce_field('import_run', '_wpnonce', true, false)
+					."</div>
+				</div>";
+
+				$out .= "<div id='poststuff' class='postbox'>
+					<h3 class='hndle'>".__("Example", 'lang_base')."</h3>
+					<div class='inside'>
+						<table class='widefat striped'>";
+
+							for($i = 0; $i < $count_temp_rows && $i < 5; $i++)
+							{
+								$out .= "<tr>";
+
+									$cell_tag = $i == 0 && $this->skip_header ? "th" : "td";
+
+									$arr_values = $this->data[$i];
+									$count_temp_values = count($arr_values);
+
+									for($j = 0; $j < $count_temp_values; $j++)
+									{
+										$out .= "<".$cell_tag.">".$arr_values[$j]."</".$cell_tag.">";
+									}
+
+								$out .= "</tr>";
+							}
+
+						$out .= "</table>
+					</div>
+				</div>";
+			}
+
+		$out .= "</form>";
 
 		return $out;
 	}

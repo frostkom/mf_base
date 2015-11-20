@@ -98,6 +98,11 @@
 			padding: 0 6px;
 		}
 
+	.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date
+	{
+		width: 100%;
+	}
+
 	.flex_flow
 	{
 		display: flex;
@@ -175,7 +180,7 @@
         {
 			cursor: pointer;
             display: block;
-			min-height: 2.3em;
+			min-height: 1.8em;
         }
 
         .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input
@@ -198,7 +203,7 @@
 				min-height: 2.7em;
 			}
 
-			.mf_form select
+			.mf_form .form_select select
 			{
 				-webkit-appearance: none;
 				-moz-appearance: none;

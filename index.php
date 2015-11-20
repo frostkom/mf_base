@@ -2,7 +2,7 @@
 /*
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
-Version: 1.6.5
+Version: 1.7.1
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
@@ -63,6 +63,7 @@ function init_base()
 	// Add datepicker
 	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 	wp_enqueue_script('jquery-ui-datepicker');
+	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js");
 
 	if(is_user_logged_in() && current_user_can("update_core"))
 	{

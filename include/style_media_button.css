@@ -1,0 +1,12 @@
+@media all
+{
+	.mf_media_button .mf_media_raw
+	{
+		display: none;
+	}
+
+	.mf_media_button .mf_media_list
+	{
+		margin-bottom: 1em;
+	}
+}

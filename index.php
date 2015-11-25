@@ -2,10 +2,23 @@
 /*
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
-Version: 1.7.1
+Version: 1.9.0
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
+
+add_action('init', 'include_base', 1);
+
+function include_base()
+{
+	include_once("include/classes.php");
+	include_once("include/functions.php");
+
+	if(is_admin())
+	{
+		$my_settings_page = new MySettingsPage();
+	}
+}
 
 add_action('init', 'init_base');
 
@@ -76,12 +89,4 @@ function init_base()
 
 		$wpdb->show_errors();
 	}
-}
-
-include("include/classes.php");
-include("include/functions.php");
-
-if(is_admin())
-{
-	$my_settings_page = new MySettingsPage();
 }

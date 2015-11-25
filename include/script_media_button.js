@@ -2,35 +2,35 @@ var dom_urls,
 	dom_list,
 	arr_attachments = [];
 
-function render_attachment_list()
-{
-	var output_list = '',
-		output_urls = '';
-
-	jQuery.each(arr_attachments, function(index, value)
-	{
-		arr_value = value.split("|");
-
-		var file_name = arr_value[0],
-			file_url = arr_value[1];
-
-		if(file_name != '')
-		{
-			output_list += "<tr>"
-				+ "<td>" + file_name + "</td>"
-				+ "<td><a href='#' rel='" + index + "'>" + script_media_button.delete + "</a></td>"
-			+ "</tr>";
-
-			output_urls += (output_urls != '' ? "," : "") + value;
-		}
-	});
-
-	dom_list.html(output_list);
-	dom_urls.val(output_urls);
-}
-
 jQuery(function($)
 {
+	function render_attachment_list()
+	{
+		var output_list = '',
+			output_urls = '';
+
+		$.each(arr_attachments, function(index, value)
+		{
+			arr_value = value.split("|");
+
+			var file_name = arr_value[0],
+				file_url = arr_value[1];
+
+			if(file_name != '')
+			{
+				output_list += "<tr>"
+					+ "<td><a href='" + file_url + "'>" + file_name + "</a></td>"
+					+ "<td><a href='#' rel='" + index + "'>" + script_media_button.delete + "</a></td>"
+				+ "</tr>";
+
+				output_urls += (output_urls != '' ? "," : "") + value;
+			}
+		});
+
+		dom_list.html(output_list);
+		dom_urls.val(output_urls);
+	}
+
 	$('.mf_media_button').each(function()
 	{
 		var dom_obj = $(this);

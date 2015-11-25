@@ -1,5 +1,12 @@
 <?php
 
+function get_file_suffix($file)
+{
+	$arr_file_name = explode(".", $file);
+
+	return $arr_file_name[count($arr_file_name) - 1];
+}
+
 if(!function_exists("get_media_button"))
 {
 	function get_media_button($data = array())
@@ -66,6 +73,8 @@ function get_attachment_id_by_url($url)
 	$out = "";
 
 	list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
+
+	$parsed_url = preg_replace("/\-\d+x\d+\./", ".", $parsed_url);
 
 	if($parsed_url != '')
 	{
@@ -295,17 +304,19 @@ function settings_base()
 
 		//Recommended plugins
 		/*
-			Admin Menu Tree Page View			admin-menu-tree-page-view/index.php
-			Adminer								adminer/adminer.php
-			Black Studio TinyMCE Widget			black-studio-tinymce-widget/black-studio-tinymce-widget.php
-			Email Log							email-log/email-log.php
-			Enable Media Replace				enable-media-replace/enable-media-replace.php
-			Quick Page/Post Redirect Plugin		quick-pagepost-redirect-plugin/page_post_redirect_plugin.php
-			Simple Page Ordering				simple-page-ordering/simple-page-ordering.php
-			User Role Editor					user-role-editor/user-role-editor.php
-			User Switching						user-switching/user-switching.php
-			WP Smush							wp-smushit/wp-smush.php
-			WP-Mail-SMTP						wp-mail-smtp/wp_mail_smtp.php
+			Admin Menu Tree Page View						admin-menu-tree-page-view/index.php
+			Adminer											adminer/adminer.php
+			Black Studio TinyMCE Widget						black-studio-tinymce-widget/black-studio-tinymce-widget.php
+			Email Log										email-log/email-log.php
+			Enable Media Replace							enable-media-replace/enable-media-replace.php
+			Quick Page/Post Redirect Plugin					quick-pagepost-redirect-plugin/page_post_redirect_plugin.php
+			Simple Page Ordering							simple-page-ordering/simple-page-ordering.php
+			TablePress										tablepress/tablepress.php
+			User Role Editor								user-role-editor/user-role-editor.php
+			User Switching									user-switching/user-switching.php
+			View own posts and media library items only		view-own-posts-media-only/view-own-posts-media-only.php
+			WP Smush										wp-smushit/wp-smush.php
+			WP-Mail-SMTP									wp-mail-smtp/wp_mail_smtp.php
 		*/
 
 		foreach($arr_settings as $handle => $text)
@@ -387,12 +398,46 @@ function get_all_roles($data = array())
 {
 	global $wp_roles;
 
-	if(!isset($wp_roles))
+	if(!isset($data['orig'])){	$data['orig'] = false;}
+
+	if($data['orig'] == true)
 	{
-		$wp_roles = new WP_Roles();
+		$roles_temp = get_option('wp_user_roles');
+
+		/*array ( 
+			'administrator' => array ( 
+				'name' => 'Administrator', 
+				'capabilities' => array ( 
+					'switch_themes' => true,
+				), 
+			), 
+			'editor' => array ( 
+				'name' => 'Editor', 
+				'capabilities' => array ( 
+					'moderate_comments' => true, 
+				), 
+			), 
+			'author' => array ( 'name' => 'Author', 'capabilities' => array ( 'upload_files' => true,  ), ), 
+			'subscriber' => array ( 'name' => 'Subscriber', 'capabilities' => array ( 'read' => true, ), ), 
+		)*/
+
+		$roles = array();
+
+		foreach($roles_temp as $key => $value)
+		{
+			$roles[$key] = $value['name'];
+		}
 	}
 
-	$roles = $wp_roles->get_names();
+	else
+	{
+		if(!isset($wp_roles))
+		{
+			$wp_roles = new WP_Roles();
+		}
+
+		$roles = $wp_roles->get_names();
+	}
 
 	if(isset($data['allowed']))
 	{
@@ -1259,15 +1304,18 @@ function show_checkbox($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 
-	$checked = $data['value'] == $data['compare'] ? " checked" : "";
+	$data['xtra'] .= $data['value'] == $data['compare'] ? " checked" : "";
 
 	if(substr($data['name'], -1) == "]")
 	{
 		$is_array = true;
 
-		$this_id = substr($data['name'], 0, -2)."_".$data['value'];
+		//$new_class = substr($data['name'], 0, -2);
+		$new_class = preg_replace("/\[.*?\]/", "", $data['name']);
 
-		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."class='".substr($data['name'], 0, -2)."'";
+		$this_id = $new_class."_".$data['value'];
+
+		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."class='".$new_class."'";
 	}
 
 	else
@@ -1290,10 +1338,7 @@ function show_checkbox($data)
 				$out .= " name='".$data['name']."' id='".$this_id."'";
 			}
 
-			$out .= " value='".$data['value']."'"
-			.$checked
-			.($data['xtra'] != '' ? " ".$data['xtra'] : "")
-		.">";
+		$out .= " value='".$data['value']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
 
 		if($data['text'] != '')
 		{

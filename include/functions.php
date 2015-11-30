@@ -1,5 +1,114 @@
 <?php
 
+function do_log($data)
+{
+	if(class_exists("mf_log"))
+	{
+		$obj_log = new mf_log();
+		$obj_log->create($data);
+	}
+}
+
+function run_cron_base()
+{
+	apply_filters('run_cron_db_update');
+	apply_filters('run_cron_delete');
+}
+
+function delete_base($data)
+{
+	global $wpdb;
+
+	do_log("Has run delete_base()");
+
+	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
+
+	foreach($result as $r)
+	{
+		$intID = $r->ID;
+
+		$rows = 0;
+
+		foreach($data['child_table'] as $child_table => $child_table_type)
+		{
+			if($child_table_type['action'] == "trash")
+			{
+				$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
+				$rows_temp = $wpdb->num_rows;
+
+				if($rows_temp > 0)
+				{
+					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix.$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
+
+					$rows += $rows_temp;
+				}
+			}
+		}
+
+		if($rows == 0)
+		{
+			foreach($data['child_table'] as $child_table => $child_table_type)
+			{
+				if($child_table_type['action'] == "delete")
+				{
+					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+				}
+			}
+
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+		}
+
+		do_log("Trashed ".$rows." posts in ".$child_table);
+	}
+}
+
+function init_base()
+{
+	$timezone_string = get_option('timezone_string');
+
+	if($timezone_string != '')
+	{
+		date_default_timezone_set($timezone_string);
+	}
+
+	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
+	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
+
+	if($setting_base_auto_core_update != '')
+	{
+		if($setting_base_auto_core_update == "all"){		$setting_base_auto_core_update = true;}
+		else if($setting_base_auto_core_update == "none"){	$setting_base_auto_core_update = false;}
+
+		define('WP_AUTO_UPDATE_CORE', $setting_base_auto_core_update);
+	}
+
+	if($setting_base_auto_core_email != "yes")
+	{
+		apply_filters('auto_core_update_send_email', '__return_false');
+		//apply_filters('auto_core_update_send_email', false, $type, $core_update, $result);
+	}
+
+	wp_enqueue_style('font-awesome', plugins_url()."/mf_base/include/font-awesome.min.css");
+	wp_enqueue_style('style_base', plugins_url()."/mf_base/include/style.css");
+
+	// Add datepicker
+	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+	wp_enqueue_script('jquery-ui-datepicker');
+	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js");
+
+	if(is_user_logged_in() && current_user_can("update_core"))
+	{
+		global $wpdb;
+
+		if(!defined('DIEONDBERROR'))
+		{
+			define('DIEONDBERROR', true);
+		}
+
+		$wpdb->show_errors();
+	}
+}
+
 function get_file_suffix($file)
 {
 	$arr_file_name = explode(".", $file);
@@ -7,12 +116,12 @@ function get_file_suffix($file)
 	return $arr_file_name[count($arr_file_name) - 1];
 }
 
-if(!function_exists("get_media_button"))
+function get_media_button($data = array())
 {
-	function get_media_button($data = array())
-	{
-		$out = "";
+	$out = "";
 
+	if(IS_AUTHOR)
+	{
 		if(!isset($data['name'])){	$data['name'] = "mf_media_urls";}
 		if(!isset($data['text'])){	$data['text'] = __("Add Attachment", 'lang_base');}
 		if(!isset($data['value'])){	$data['value'] = "";}
@@ -31,39 +140,36 @@ if(!function_exists("get_media_button"))
 			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => " class='mf_media_urls'"))
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
 		."</div>";
-
-		return $out;
 	}
+
+	return $out;
 }
 
-if(!function_exists("get_attachment_to_send"))
+function get_attachment_to_send($string)
 {
-	function get_attachment_to_send($string)
+	$arr_files = array();
+
+	if($string != '')
 	{
-		$arr_files = array();
+		$arr_attachments = explode(",", $string);
 
-		if($string != '')
+		foreach($arr_attachments as $attachment)
 		{
-			$arr_attachments = explode(",", $string);
+			list($file_name, $file_url) = explode("|", $attachment);
 
-			foreach($arr_attachments as $attachment)
+			if($file_url != '')
 			{
-				list($file_name, $file_url) = explode("|", $attachment);
+				$file_url = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
 
-				if($file_url != '')
+				if(file_exists($file_url))
 				{
-					$file_url = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
-
-					if(file_exists($file_url))
-					{
-						$arr_files[] = $file_url;
-					}
+					$arr_files[] = $file_url;
 				}
 			}
 		}
-
-		return $arr_files;
 	}
+
+	return $arr_files;
 }
 
 function get_attachment_id_by_url($url)
@@ -300,6 +406,7 @@ function settings_base()
 			"setting_base_info" => __("Versions", 'lang_base'),
 			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
+			"setting_base_cron" => __("Scheduled to run", 'lang_base'),
 		);
 
 		//Recommended plugins
@@ -372,6 +479,52 @@ function setting_base_auto_core_email_callback()
 
 	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_auto_core_email', 'compare' => $option))
 	."<span class='description'>".__("Send e-mail to admin after auto core update", 'lang_base')."</span>";
+}
+
+function setting_base_cron_callback()
+{
+	global $wpdb;
+
+	$option = get_option('setting_base_cron', 'hourly');
+
+	//Re-schedule if value has changed
+	######################
+	$schedule = wp_get_schedule('cron_base');
+
+	if($schedule != $option)
+	{
+		wp_clear_scheduled_hook('cron_base');
+
+		wp_schedule_event(time(), $option, 'cron_base');
+	}
+	######################
+
+	$next_scheduled = wp_next_scheduled('cron_base');
+
+	$arr_data = array();
+
+	$arr_schedules = wp_get_schedules();
+
+	foreach($arr_schedules as $key => $value)
+	{
+		$arr_data[] = array($key, $value['display']);
+	}
+
+	echo "<label>"
+		.show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option))
+		."<span class='description'>"
+			.sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
+
+			if($option == "every_ten_seconds")
+			{
+				if(DISABLE_WP_CRON == true)
+				{
+					echo ". <a href='".get_site_url()."/wp-cron.php?doing_cron'>".__("Run schedule manually", 'lang_base')."</a>";
+				}
+			}
+
+		echo "</span>"
+	."</label>";
 }
 
 function mf_enqueue_script($handle, $file = "", $translation = array())

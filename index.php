@@ -2,7 +2,8 @@
 /*
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
-Version: 1.9.0
+Description: 
+Version: 2.0.2
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
@@ -11,6 +12,11 @@ add_action('init', 'include_base', 1);
 
 function include_base()
 {
+	define('DEFAULT_DATE', "1982-08-04 23:15:00");
+	define('IS_ADMIN', current_user_can('update_core'));
+	define('IS_EDITOR', current_user_can('edit_pages'));
+	define('IS_AUTHOR', current_user_can('upload_files'));
+
 	include_once("include/classes.php");
 	include_once("include/functions.php");
 
@@ -24,6 +30,9 @@ add_action('init', 'init_base');
 
 if(is_admin())
 {
+	register_activation_hook(__FILE__, 'activate_base');
+	register_deactivation_hook(__FILE__, 'deactivate_base');
+
 	add_action('admin_init', 'settings_base', 0);
 	add_filter('plugin_action_links', 'disable_action_base', 10, 4);
 	add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
@@ -40,53 +49,24 @@ else
 	add_action('wp_footer', 'footer_base');
 }
 
+add_action('cron_base', 'run_cron_base');
+
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
-define('DEFAULT_DATE', "1982-08-04 23:15:00");
-
-function init_base()
+function activate_base()
 {
-	$timezone_string = get_option('timezone_string');
-
-	if($timezone_string != '')
+	if(!wp_next_scheduled('cron_base'))
 	{
-		date_default_timezone_set($timezone_string);
+		//Can be set later in settings when needed
+		$setting_base_cron = get_option('setting_base_cron', 'hourly');
+
+		do_log("Set cron for MF Base ".$setting_base_cron);
+
+		wp_schedule_event(time(), $setting_base_cron, 'cron_base');
 	}
+}
 
-	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
-	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
-
-	if($setting_base_auto_core_update != '')
-	{
-		if($setting_base_auto_core_update == "all"){		$setting_base_auto_core_update = true;}
-		else if($setting_base_auto_core_update == "none"){	$setting_base_auto_core_update = false;}
-
-		define('WP_AUTO_UPDATE_CORE', $setting_base_auto_core_update);
-	}
-
-	if($setting_base_auto_core_email != "yes")
-	{
-		apply_filters('auto_core_update_send_email', '__return_false');
-		//apply_filters('auto_core_update_send_email', false, $type, $core_update, $result);
-	}
-
-	wp_enqueue_style('font-awesome', plugins_url()."/mf_base/include/font-awesome.min.css");
-	wp_enqueue_style('style_base', plugins_url()."/mf_base/include/style.css");
-
-	// Add datepicker
-	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-	wp_enqueue_script('jquery-ui-datepicker');
-	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js");
-
-	if(is_user_logged_in() && current_user_can("update_core"))
-	{
-		global $wpdb;
-
-		if(!defined('DIEONDBERROR'))
-		{
-			define('DIEONDBERROR', true);
-		}
-
-		$wpdb->show_errors();
-	}
+function deactivate_base()
+{
+	wp_clear_scheduled_hook('cron_base');
 }

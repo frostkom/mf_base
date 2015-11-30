@@ -3,6 +3,7 @@
 //core.trac.wordpress.org/browser/tags/4.3.1/src//wp-admin/includes/class-wp-list-table.php#L0
 if(!class_exists('WP_List_Table'))
 {
+	require_once(ABSPATH.'wp-admin/includes/template.php');
 	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');
 }
 
@@ -23,7 +24,6 @@ class mf_list_table extends WP_List_Table
 	var $search = "";
 	var $orderby = "";
 	var $order = "";
-	var $is_admin = false;
 	var $page = "";
 
 	function __construct()
@@ -58,9 +58,6 @@ class mf_list_table extends WP_List_Table
 
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
 		$this->order = check_var('order', 'char', true, 'asc');
-
-		$this->is_admin = current_user_can("update_core");
-		$this->is_editor = current_user_can("edit_pages");
 	}
 
 	function set_default(){}
@@ -82,20 +79,15 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		if(substr($db_field, -7) == "Deleted")
+		if(substr($db_field, -7) == "Deleted" && get_current_user_id() == 1)
 		{
-
-
 			$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
 
-			if(get_current_user_id() == 1)
-			{
-				$result = $wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
+			$result = $wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
-				if($wpdb->num_rows > 0)
-				{
-					echo "Use obj->delete() on ".$db_field."<br>";
-				}
+			if($wpdb->num_rows > 0)
+			{
+				echo "Use run_cron_delete() on ".$db_field."<br>";
 			}
 		}
 	}
@@ -371,17 +363,13 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		/*if(!isset($data['from']))
-		{
-			$data['from'] = $wpdb->posts;
-			$data['where_post_type'] = " post_type = '".$this->post_type."'";
-		}*/
-
 		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
 
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
+		if(!isset($data['limit'])){		$data['limit'] = "";}
+		if(!isset($data['amount'])){		$data['amount'] = "";}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
@@ -413,6 +401,11 @@ class mf_list_table extends WP_List_Table
 		if($this->orderby != '')
 		{
 			$query .= " ORDER BY ".$this->orderby." ".$this->order;
+		}
+
+		if($data['amount'] != '')
+		{
+			$query .= " LIMIT ".$data['limit'].", ".$data['amount'];
 		}
 
 		$result = $wpdb->get_results($query);

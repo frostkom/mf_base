@@ -9,6 +9,19 @@ jQuery(function($)
 		}
 	});
 
+	$(document).on('click', 'a[rel=confirm], .delete > a', function()
+	{
+		if(!confirm(script_base.confirm_question))
+		{
+			return false;
+		}
+	});
+
+	$('.mf_form').on('change', 'select[rel=submit_change]', function()
+	{
+		this.form.submit();
+	});
+
 	$('.mf_form :required').each(function()
 	{
 		$(this).siblings('label').append(' *');

@@ -2,24 +2,45 @@
 
 function do_log($data)
 {
-	if(class_exists("mf_log"))
+	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
+	{
+		require_once(ABSPATH.'wp-content/mf_log/include/classes.php');
+	}
+
+	if(class_exists('mf_log'))
 	{
 		$obj_log = new mf_log();
 		$obj_log->create($data);
 	}
 }
 
-function run_cron_base()
+function schedules_base($schedules)
 {
-	apply_filters('run_cron_db_update');
-	apply_filters('run_cron_delete');
+	$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
+	$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
+	$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
+
+	return $schedules;
+}
+
+function set_cron($hook, $option_key, $option_default = 'hourly')
+{
+	if(!wp_next_scheduled($hook))
+	{
+		$recurrance = get_option($option_key, $option_default);
+
+		wp_schedule_event(time(), $recurrance, $hook);
+	}
+}
+
+function unset_cron($hook)
+{
+	wp_clear_scheduled_hook($hook);
 }
 
 function delete_base($data)
 {
 	global $wpdb;
-
-	do_log("Has run delete_base()");
 
 	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
 
@@ -64,6 +85,11 @@ function delete_base($data)
 
 function init_base()
 {
+	define('DEFAULT_DATE', "1982-08-04 23:15:00");
+	define('IS_ADMIN', current_user_can('update_core'));
+	define('IS_EDITOR', current_user_can('edit_pages'));
+	define('IS_AUTHOR', current_user_can('upload_files'));
+
 	$timezone_string = get_option('timezone_string');
 
 	if($timezone_string != '')
@@ -94,9 +120,9 @@ function init_base()
 	// Add datepicker
 	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 	wp_enqueue_script('jquery-ui-datepicker');
-	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js");
+	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
-	if(is_user_logged_in() && current_user_can("update_core"))
+	if(is_user_logged_in() && IS_ADMIN)
 	{
 		global $wpdb;
 
@@ -120,22 +146,28 @@ function get_media_button($data = array())
 {
 	$out = "";
 
-	if(IS_AUTHOR)
-	{
-		if(!isset($data['name'])){	$data['name'] = "mf_media_urls";}
-		if(!isset($data['text'])){	$data['text'] = __("Add Attachment", 'lang_base');}
-		if(!isset($data['value'])){	$data['value'] = "";}
+	if(!isset($data['name'])){				$data['name'] = "mf_media_urls";}
+	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", 'lang_base');}
+	if(!isset($data['value'])){				$data['value'] = "";}
+	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
 
+	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
+	{
 		wp_enqueue_style('style_media_button', plugins_url()."/mf_base/include/style_media_button.css");
 		mf_enqueue_script('script_media_button', plugins_url()."/mf_base/include/script_media_button.js", array('delete' => __('Delete', 'lang_base')));
 
-		$out .= "<div class='mf_media_button'>
-			<div class='wp-media-buttons'>
-				<a href='#' class='button insert-media add_media'>
-					<span class='wp-media-buttons-icon'></span> <span>".$data['text']."</span>
-				</a>
-			</div>
-			<div class='mf_media_raw'></div>
+		$out .= "<div class='mf_media_button'>";
+
+			if(IS_AUTHOR && $data['show_add_button'] == true)
+			{
+				$out .= "<div class='wp-media-buttons'>
+					<a href='#' class='button insert-media add_media'>
+						<span class='wp-media-buttons-icon'></span> <span>".$data['text']."</span>
+					</a>
+				</div>";
+			}
+
+			$out .= "<div class='mf_media_raw'></div>
 			<table class='mf_media_list widefat striped'></table>"
 			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => " class='mf_media_urls'"))
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
@@ -278,7 +310,7 @@ function disable_action_base($actions, $plugin_file, $plugin_data, $context)
 
 function add_action_base($links)
 {
-	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base#settings_base')."'>".__("Settings", 'lang_base')."</a>";
+	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base')."'>".__("Settings", 'lang_base')."</a>";
 
 	return $links;
 }
@@ -293,38 +325,11 @@ function get_install_link_tags($require_url, $required_name)
 
 function require_plugin($required_path, $required_name, $require_url = "")
 {
-	if(!is_plugin_active($required_path))
+	if(function_exists('is_plugin_active') && !is_plugin_active($required_path))
 	{
 		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
 		mf_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
-	}
-}
-
-class recommend_plugin
-{
-	function recommend_plugin($required_path, $required_name, $require_url = "")
-	{
-		global $pagenow;
-
-		if($pagenow == 'plugins.php' && !is_plugin_active($required_path))
-		{
-			list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
-
-			$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $required_name, $a_end);
-
-			add_action('network_admin_notices', array($this, 'show_notice'));
-			add_action('admin_notices', array($this, 'show_notice'));
-		}
-	}
-
-	function show_notice()
-	{
-		global $notice_text;
-
-		$notice_text = $this->message;
-
-		echo get_notification();
 	}
 }
 
@@ -393,7 +398,7 @@ function settings_base()
 	$options_page = "settings_mf_base";
 	$options_area = "setting_base";
 
-	if(current_user_can("update_core"))
+	if(IS_ADMIN)
 	{
 		add_settings_section(
 			$options_area,
@@ -404,27 +409,11 @@ function settings_base()
 
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
+			"setting_base_recommend" => __("Recommendations", 'lang_base'),
 			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 			"setting_base_cron" => __("Scheduled to run", 'lang_base'),
 		);
-
-		//Recommended plugins
-		/*
-			Admin Menu Tree Page View						admin-menu-tree-page-view/index.php
-			Adminer											adminer/adminer.php
-			Black Studio TinyMCE Widget						black-studio-tinymce-widget/black-studio-tinymce-widget.php
-			Email Log										email-log/email-log.php
-			Enable Media Replace							enable-media-replace/enable-media-replace.php
-			Quick Page/Post Redirect Plugin					quick-pagepost-redirect-plugin/page_post_redirect_plugin.php
-			Simple Page Ordering							simple-page-ordering/simple-page-ordering.php
-			TablePress										tablepress/tablepress.php
-			User Role Editor								user-role-editor/user-role-editor.php
-			User Switching									user-switching/user-switching.php
-			View own posts and media library items only		view-own-posts-media-only/view-own-posts-media-only.php
-			WP Smush										wp-smushit/wp-smush.php
-			WP-Mail-SMTP									wp-mail-smtp/wp_mail_smtp.php
-		*/
 
 		foreach($arr_settings as $handle => $text)
 		{
@@ -435,10 +424,7 @@ function settings_base()
 	}
 }
 
-function setting_base_callback()
-{
-	echo "<div id='settings_base'></div>";
-}
+function setting_base_callback(){}
 
 function setting_base_info_callback()
 {
@@ -453,6 +439,34 @@ function setting_base_info_callback()
 	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> PHP: ".$php_version."</p>
 	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> MySQL: ".$mysql_version."</p>
 	<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+}
+
+function setting_base_recommend_callback()
+{
+	$arr_recommendations = array(
+		'admin-branding/admin-branding.php' => "Admin Branding",
+		//'admin-menu-tree-page-view/index.php' => "Admin Menu Tree Page View",
+		//'adminer/adminer.php' => "Adminer",
+		'black-studio-tinymce-widget/black-studio-tinymce-widget.php' => "Black Studio TinyMCE Widget",
+		//'email-log/email-log.php' => "Email Log",
+		'enable-media-replace/enable-media-replace.php' => "Enable Media Replace",
+		//'google-authenticator%2Fgoogle-authenticator.php' => "Google Authenticator",
+		//'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php' => "Quick Page/Post Redirect Plugin",
+		'simple-page-ordering/simple-page-ordering.php' => "Simple Page Ordering",
+		'tablepress/tablepress.php' => "TablePress",
+		//'user-role-editor/user-role-editor.php' => "User Role Editor",
+		'user-switching/user-switching.php' => "User Switching",
+		//'view-own-posts-media-only/view-own-posts-media-only.php' => "View own posts and media library items only",
+		'wp-users-media/index.php' => "WP Users Media",
+		'wp-smushit/wp-smush.php' => "WP Smush",
+		'wp-mail-smtp/wp_mail_smtp.php' => "WP-Mail-SMTP",
+		//'' => "",
+	);
+
+	foreach($arr_recommendations as $key => $value)
+	{
+		new recommend_plugin(array('path' => $key, 'name' => $value, 'show_notice' => false));
+	}
 }
 
 function setting_base_auto_core_update_callback()
@@ -493,9 +507,8 @@ function setting_base_cron_callback()
 
 	if($schedule != $option)
 	{
-		wp_clear_scheduled_hook('cron_base');
-
-		wp_schedule_event(time(), $option, 'cron_base');
+		deactivate_base();
+		activate_base();
 	}
 	######################
 
@@ -555,24 +568,12 @@ function get_all_roles($data = array())
 
 	if($data['orig'] == true)
 	{
-		$roles_temp = get_option('wp_user_roles');
+		$roles_temp = get_option('wp_user_roles_orig');
 
-		/*array ( 
-			'administrator' => array ( 
-				'name' => 'Administrator', 
-				'capabilities' => array ( 
-					'switch_themes' => true,
-				), 
-			), 
-			'editor' => array ( 
-				'name' => 'Editor', 
-				'capabilities' => array ( 
-					'moderate_comments' => true, 
-				), 
-			), 
-			'author' => array ( 'name' => 'Author', 'capabilities' => array ( 'upload_files' => true,  ), ), 
-			'subscriber' => array ( 'name' => 'Subscriber', 'capabilities' => array ( 'read' => true, ), ), 
-		)*/
+		if($roles_temp == '')
+		{
+			$roles_temp = get_option('wp_user_roles');
+		}
 
 		$roles = array();
 
@@ -1964,7 +1965,7 @@ function footer_base()
 
 	/*if(get_option('setting_base_perfbar') == 1)
 	{
-		if(is_user_logged_in() && current_user_can("update_core"))
+		if(is_user_logged_in() && IS_ADMIN)
 		{
 			mf_enqueue_script('script_base_perfbar', plugins_url()."/mf_base/include/perfbar_script.js");
 		}

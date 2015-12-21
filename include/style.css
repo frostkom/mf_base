@@ -10,6 +10,21 @@
 		display: block;
 	}
 
+	.inline
+	{
+		display: inline;
+	}
+
+	.floatleft
+	{
+		float: left;
+	}
+
+	.floatright
+	{
+		float: right;
+	}
+
 	.nowrap
 	{
 		white-space: nowrap;
@@ -212,6 +227,7 @@
 				background-position: right center;
 				background-repeat: no-repeat;
 				cursor: pointer;
+				padding-right: 2.5em;
 			}
 
 		.mf_form .wp-editor-wrap
@@ -318,7 +334,7 @@
 
 @media print
 {
-	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .postbox, #wpfooter, .row-actions, .error, .update-nag, .updated
+	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated/*, .postbox*/
 	{
 		display: none;
 	}

@@ -3,27 +3,19 @@
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
 Description: 
-Version: 2.0.2
+Version: 2.3.4
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
 
-add_action('init', 'include_base', 1);
+include_once("include/classes.php");
+include_once("include/functions.php");
 
-function include_base()
+add_filter('cron_schedules', 'schedules_base');
+
+if(is_admin())
 {
-	define('DEFAULT_DATE', "1982-08-04 23:15:00");
-	define('IS_ADMIN', current_user_can('update_core'));
-	define('IS_EDITOR', current_user_can('edit_pages'));
-	define('IS_AUTHOR', current_user_can('upload_files'));
-
-	include_once("include/classes.php");
-	include_once("include/functions.php");
-
-	if(is_admin())
-	{
-		$my_settings_page = new MySettingsPage();
-	}
+	$my_settings_page = new MySettingsPage();
 }
 
 add_action('init', 'init_base');
@@ -49,24 +41,14 @@ else
 	add_action('wp_footer', 'footer_base');
 }
 
-add_action('cron_base', 'run_cron_base');
-
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
 
 function activate_base()
 {
-	if(!wp_next_scheduled('cron_base'))
-	{
-		//Can be set later in settings when needed
-		$setting_base_cron = get_option('setting_base_cron', 'hourly');
-
-		do_log("Set cron for MF Base ".$setting_base_cron);
-
-		wp_schedule_event(time(), $setting_base_cron, 'cron_base');
-	}
+	set_cron('cron_base', 'setting_base_cron');
 }
 
 function deactivate_base()
 {
-	wp_clear_scheduled_hook('cron_base');
+	unset_cron('cron_base');
 }

@@ -1,6 +1,50 @@
 <?php
 
-//core.trac.wordpress.org/browser/tags/4.3.1/src//wp-admin/includes/class-wp-list-table.php#L0
+class recommend_plugin
+{
+	function recommend_plugin($data) //$required_path, $required_name, $require_url = "", $recommend_notice = true
+	{
+		global $pagenow;
+
+		if(!isset($data['url'])){			$data['url'] = "";}
+		if(!isset($data['show_notice'])){	$data['show_notice'] = true;}
+		
+		if(!is_plugin_active($data['path']))
+		{
+			list($a_start, $a_end) = get_install_link_tags($data['url'], $data['name']);
+
+			if($pagenow == 'plugins.php' && $data['show_notice'] == true)
+			{
+				$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $data['name'], $a_end);
+
+				add_action('network_admin_notices', array($this, 'show_notice'));
+				add_action('admin_notices', array($this, 'show_notice'));
+			}
+
+			else if($pagenow == 'options-general.php' && $data['show_notice'] == false)
+			{
+				$this->message = $a_start.$data['name'].$a_end;
+
+				echo $this->show_info();
+			}
+		}
+	}
+
+	function show_notice()
+	{
+		global $notice_text;
+
+		$notice_text = $this->message;
+
+		echo get_notification();
+	}
+
+	function show_info()
+	{
+		return "<p>".$this->message."</p>";
+	}
+}
+
 if(!class_exists('WP_List_Table'))
 {
 	require_once(ABSPATH.'wp-admin/includes/template.php');
@@ -12,13 +56,13 @@ class mf_list_table extends WP_List_Table
 	var $arr_settings = array();
 	var $post_type = "";
 	var $orderby_default = "post_title";
+	var $orderby_default_order = "asc";
 
 	var $views = array();
-	var $per_page = 10;
 	var $columns = array();
 	var $sortable_columns = array();
 	var $data = "";
-	var $total_items = 0;
+	var $num_rows = 0;
 	var $query_join = "";
 	var $query_where = "";
 	var $search = "";
@@ -41,6 +85,7 @@ class mf_list_table extends WP_List_Table
 		$this->search = check_var('s', 'char', true);
 
 		$this->arr_settings = array(
+			'per_page' => 10,
 			'query_from' => $wpdb->posts,
 			'query_select_id' => "ID",
 			'query_all_id' => "all",
@@ -52,12 +97,15 @@ class mf_list_table extends WP_List_Table
 
 		if($this->arr_settings['has_autocomplete'] == true)
 		{
+			wp_enqueue_style('style_base_table', plugins_url()."/mf_base/include/style_table.css");
+
 			wp_enqueue_script('jquery-ui-autocomplete');
-			mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url(), 'plugin_name' => $this->arr_settings['plugin_name']));
+			wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
+			mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
 		}
 
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
-		$this->order = check_var('order', 'char', true, 'asc');
+		$this->order = check_var('order', 'char', true, $this->orderby_default_order);
 	}
 
 	function set_default(){}
@@ -98,42 +146,30 @@ class mf_list_table extends WP_List_Table
 
 		$this->empty_trash($data['db_field']);
 
+		if($this->post_type != '')
+		{
+			$this->query_where .= ($this->query_where != '' ? " AND " : "")."post_type = '".$this->post_type."'";
+		}
+
 		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
 
 		$query = "SELECT COUNT(".$this->arr_settings['query_select_id'].") FROM ".$this->arr_settings['query_from'].$this->query_join;
 
-		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
-
-		if($data['where_post_type'] != '' || $this->query_where != '') // || $data['where'] != ''
+		if($this->query_where != '')
 		{
-			$query .= " WHERE ";
-
-			if($data['where_post_type'] != '')
-			{
-				$query .= $data['where_post_type'];
-			}
-
-			if($this->query_where != '')
-			{
-				$query .= ($data['where_post_type'] != '' ? " AND " : "").$this->query_where;
-			}
-
-			/*if($data['where'])
-			{
-				$query .= ($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : "").$data['where'];
-			}*/
+			$query .= " WHERE ".$this->query_where;
 		}
 
 		foreach($data['types'] as $key => $value)
 		{
-			$query_this = $query.($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : " WHERE ")
+			$query_this = $query.($this->query_where != '' ? " AND " : " WHERE ")
 			.$this->get_views_trash_string($key, $data['db_field']);
 
 			$amount = $wpdb->get_var($query_this);
 
 			if($amount > 0)
 			{
-				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>"; //$this->post_type."/list/index.php
+				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
 			}
 		}
 
@@ -187,22 +223,6 @@ class mf_list_table extends WP_List_Table
 
 		return $out;
 	}
-
-	/*function column_title($item)
-	{
-		//Build row actions
-		$actions = array(
-			'edit' => sprintf("<a href='?page=%s&action=%s&movie=%s'>".__("Edit", 'lang_base')."</a>", $_REQUEST['page'], 'edit', $item['ID']),
-			'delete' => sprintf("<a href='?page=%s&action=%s&movie=%s'>".__("Delete", 'lang_base')."</a>", $_REQUEST['page'], 'delete', $item['ID']),
-		);
-		
-		//Return the title contents
-		return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',
-			$item['title'],
-			$item['ID'],
-			$this->row_actions($actions)
-		);
-	}*/
 
 	/** ************************************************************************
 	 * REQUIRED if displaying checkboxes or using bulk actions! The 'cb' column
@@ -332,17 +352,13 @@ class mf_list_table extends WP_List_Table
 
 		$current_page = $this->get_pagenum();
 
-		$this->total_items = count($this->data);
+		$this->items = $this->data = array_slice($this->data, (($current_page - 1) * $this->arr_settings['per_page']), $this->arr_settings['per_page']);
 
-		$this->data = array_slice($this->data, (($current_page - 1) * $this->per_page), $this->per_page);
-
-		$this->items = $this->data;
-
-		$this->set_pagination_args( array(
-			'total_items' => $this->total_items,
-			'per_page'	=> $this->per_page,
-			'total_pages' => ceil($this->total_items / $this->per_page)
-		) );
+		$this->set_pagination_args(array(
+			'total_items' => $this->num_rows,
+			'per_page'	=> $this->arr_settings['per_page'],
+			'total_pages' => ceil($this->num_rows / $this->arr_settings['per_page'])
+		));
 	}
 
 	protected function get_table_classes()
@@ -352,44 +368,38 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		echo "<form method='post'>";
+		echo "<form action='?page=".$this->page."' method='post'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
 			$this->search_box(__("Search", 'lang_base'), 's');
 		
 		echo "</form>";
 	}
 
-	function select_data($data)
+	function select_data($data = array())
 	{
 		global $wpdb;
 
-		$data['where_post_type'] = ($this->post_type != '' ? "post_type = '".$this->post_type."'" : "");
-
+		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 		if(!isset($data['limit'])){		$data['limit'] = "";}
-		if(!isset($data['amount'])){		$data['amount'] = "";}
+		if(!isset($data['amount'])){	$data['amount'] = "";}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
-		if($data['where_post_type'] != '' || $this->query_where != '' || $data['where'] != '')
+		if($this->query_where != '' || $data['where'] != '')
 		{
 			$query .= " WHERE ";
 
-			if($data['where_post_type'] != '')
-			{
-				$query .= $data['where_post_type'];
-			}
-
 			if($this->query_where != '')
 			{
-				$query .= ($data['where_post_type'] != '' ? " AND " : "").$this->query_where;
+				$query .= $this->query_where;
 			}
 
 			if($data['where'])
 			{
-				$query .= ($data['where_post_type'] != '' || $this->query_where != '' ? " AND " : "").$data['where'];
+				$query .= ($this->query_where != '' ? " AND " : "").$data['where'];
 			}
 		}
 
@@ -411,7 +421,18 @@ class mf_list_table extends WP_List_Table
 		$result = $wpdb->get_results($query);
 
 		$this->data = json_decode(json_encode($result), true);
+
+		$this->num_rows = count($this->data);
 	}
+
+	/*public function single_row($item)
+	{
+		echo "<tr".(isset($item['tr_class']) && $item['tr_class'] != '' ? " class='".$item['tr_class']."'" : "").">";
+
+			$this->single_row_columns($item);
+		
+		echo "</tr>";
+	}*/
 
 	function do_display()
 	{
@@ -448,9 +469,7 @@ class pagination
 
 	function show($data)
 	{
-		global $intLimitStart; //$globals, 
-
-		//$this->search = isset($globals['pag_data']) ? $globals['pag_data'] : "";
+		global $intLimitStart;
 
 		if(!is_array($data['result']) && $data['result'] > 0)
 		{

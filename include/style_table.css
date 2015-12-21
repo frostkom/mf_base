@@ -1,0 +1,41 @@
+@media all
+{
+	.wp-list-table tr.swipe2edit, .wp-list-table tr.swipe2del
+	{
+		position: relative;
+	}
+
+		.wp-list-table tr > div
+		{
+			bottom: 0;
+			color: #fff;
+			overflow: hidden;
+			padding: 1.5em 0;
+			position: absolute;
+			top: 0;
+			width: .3%;
+		}
+
+			.wp-list-table tr.swipe2edit > .from_left
+			{
+				background: rgba(0, 255, 0, .3);
+				left: 0;
+			}
+			
+				.wp-list-table tr.swipe2edit > .from_left i
+				{
+					float: right;
+					margin-right: 1.5em;
+				}
+
+			.wp-list-table tr.swipe2del > .from_right
+			{
+				background: rgba(255, 0, 0, .3);
+				right: 0;
+			}
+			
+				.wp-list-table tr.swipe2del > .from_right i
+				{
+					margin-left: 1.5em;
+				}
+}

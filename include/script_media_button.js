@@ -33,10 +33,10 @@ jQuery(function($)
 
 	$('.mf_media_button').each(function()
 	{
-		var dom_obj = $(this);
+		var self = $(this);
 
-		dom_list = dom_obj.children('.mf_media_list');
-		dom_urls = dom_obj.children('.mf_media_urls');
+		dom_list = self.children('.mf_media_list');
+		dom_urls = self.children('.mf_media_urls');
 		arr_attachments = dom_urls.val().split(",");
 
 		render_attachment_list();
@@ -45,14 +45,14 @@ jQuery(function($)
 	$('.mf_media_button').on('click', function()
 	{
 		var restore_send_to_editor = window.send_to_editor,
-			dom_obj = $(this);
+			self = $(this);
 
 		window.send_to_editor = function(html)
 		{
-			var dom_raw = dom_obj.children('.mf_media_raw');
+			var dom_raw = self.children('.mf_media_raw');
 
-			dom_list = dom_obj.children('.mf_media_list');
-			dom_urls = dom_obj.children('.mf_media_urls');
+			dom_list = self.children('.mf_media_list');
+			dom_urls = self.children('.mf_media_urls');
 			arr_attachments = dom_urls.val().split(",");
 
 			dom_raw.html(html);
@@ -78,6 +78,15 @@ jQuery(function($)
 				arr_attachments.push(file_name + "|" + file_url);
 			});
 
+			dom_raw.children('img').each(function()
+			{
+				var dom_img = $(this),
+					file_name = dom_img.attr('alt'),
+					file_url = dom_img.attr('src');
+
+				arr_attachments.push(file_name + "|" + file_url);
+			});
+
 			dom_raw.empty();
 
 			render_attachment_list();
@@ -90,9 +99,9 @@ jQuery(function($)
 
 	$('.mf_media_button .mf_media_list').on('click', 'a', function()
 	{
-		var dom_obj = $(this),
-			dom_urls = dom_obj.parents('.mf_media_list').siblings('.mf_media_urls'),
-			dom_rel = parseInt(dom_obj.attr('rel'));
+		var self = $(this),
+			dom_urls = self.parents('.mf_media_list').siblings('.mf_media_urls'),
+			dom_rel = parseInt(self.attr('rel'));
 
 		arr_attachments = dom_urls.val().split(",");
 

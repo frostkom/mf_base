@@ -9,7 +9,7 @@ jQuery(function($)
 		}
 	});
 
-	$(document).on('click', 'a[rel=confirm], .delete > a', function()
+	$(document).on('click', 'a[rel=confirm], button[rel=confirm], .delete > a', function()
 	{
 		if(!confirm(script_base.confirm_question))
 		{

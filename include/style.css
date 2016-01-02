@@ -12,7 +12,7 @@
 
 	.inline
 	{
-		display: inline;
+		display: inline-block;
 	}
 
 	.floatleft
@@ -30,6 +30,11 @@
 		white-space: nowrap;
 	}
 
+	.row-actions
+	{
+		color: #999;
+	}
+
 	.fa
 	{
 		cursor: pointer;
@@ -45,10 +50,30 @@
 			color: #840606;
 		}
 
-		.fa.yellow, .color_active
+		.fa.yellow
+		{
+			color: #f4f1c6;
+		}
+
+		/*.color_active
 		{
 			background: #f4f1c6 !important;
-		}
+		}*/
+
+	.green > td
+	{
+		background: rgba(211, 255, 204, .3);
+	}
+
+	.red > td
+	{
+		background: rgba(255, 204, 204, .3);
+	}
+
+	.yellow > td
+	{
+		background: rgba(255, 254, 204, .3);
+	}
 
 	.strong, .bold
 	{
@@ -133,6 +158,14 @@
 			.flex_flow > *:last-child
 			{
 				margin-right: 0;
+			}
+
+			.flex_flow > button
+			{
+				align-self: flex-end;
+				height: auto !important;
+				line-height: 2.3em !important;
+				margin-bottom: .9em !important;
 			}
 
 		.flex_flow.tight > *
@@ -330,6 +363,58 @@
 			position: absolute;
 			right: 0;
 		}
+
+	.switch
+	{
+		margin-right: .5em;
+	}
+
+		.switch input[type=checkbox]
+		{
+			display: none;
+		}
+
+			.switch .fa-lg
+			{
+				line-height: 0;
+			}
+
+			.switch input[type=checkbox] + label .checked
+			{
+				display: none;
+			}
+
+			.switch input[type=checkbox] + label .unchecked
+			{
+				display: inline-block;
+			}
+
+			/* Checked */
+			.switch input[type=checkbox]:checked + label .unchecked
+			{
+				display: none;
+			}
+
+			.switch input[type=checkbox]:checked + label .checked
+			{
+				display: inline-block;
+			}
+
+			/* Loading */
+			.switch input[type=checkbox] + label .loading
+			{
+				display: none;
+			}
+			
+			.switch.loading input[type=checkbox] + label .checked, .switch.loading input[type=checkbox] + label .unchecked
+			{
+				display: none !important;
+			}
+
+			.switch.loading input[type=checkbox] + label .loading
+			{
+				display: inline-block;
+			}
 }
 
 @media print

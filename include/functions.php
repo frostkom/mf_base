@@ -54,7 +54,7 @@ function delete_base($data)
 		{
 			if($child_table_type['action'] == "trash")
 			{
-				$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
+				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
 				$rows_temp = $wpdb->num_rows;
 
 				if($rows_temp > 0)
@@ -79,7 +79,10 @@ function delete_base($data)
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 		}
 
-		do_log("Trashed ".$rows." posts in ".$child_table);
+		if($rows > 0)
+		{
+			do_log("Trashed ".$rows." posts in ".$child_table);
+		}
 	}
 }
 
@@ -395,6 +398,12 @@ function get_current_user_role($id = 0)
 
 function settings_base()
 {
+	wp_enqueue_style('style_base_table', plugins_url()."/mf_base/include/style_table.css");
+
+	wp_enqueue_script('jquery-ui-autocomplete');
+	wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
+	mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
+
 	$options_page = "settings_mf_base";
 	$options_area = "setting_base";
 
@@ -451,6 +460,7 @@ function setting_base_recommend_callback()
 		//'email-log/email-log.php' => "Email Log",
 		'enable-media-replace/enable-media-replace.php' => "Enable Media Replace",
 		//'google-authenticator%2Fgoogle-authenticator.php' => "Google Authenticator",
+		//'wp-media-library-categories%2Findex.php' => "Media Library Categories",
 		//'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php' => "Quick Page/Post Redirect Plugin",
 		'simple-page-ordering/simple-page-ordering.php' => "Simple Page Ordering",
 		'tablepress/tablepress.php' => "TablePress",
@@ -1457,6 +1467,7 @@ function show_checkbox($data)
 	if(!isset($data['compare'])){		$data['compare'] = 0;}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
+	if(!isset($data['switch'])){		$data['switch'] = 0;}
 
 	$data['xtra'] .= $data['value'] == $data['compare'] ? " checked" : "";
 
@@ -1464,7 +1475,6 @@ function show_checkbox($data)
 	{
 		$is_array = true;
 
-		//$new_class = substr($data['name'], 0, -2);
 		$new_class = preg_replace("/\[.*?\]/", "", $data['name']);
 
 		$this_id = $new_class."_".$data['value'];
@@ -1484,6 +1494,12 @@ function show_checkbox($data)
 		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."required";
 	}
 
+	if($data['switch'] == 1 && $data['text'] == '')
+	{
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."switch";
+		$data['text'] = "<i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i>";
+	}
+
 	$out = "<div class='form_checkbox".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
 		<input type='checkbox'";
 
@@ -1496,7 +1512,7 @@ function show_checkbox($data)
 
 		if($data['text'] != '')
 		{
-			$out .= "<label for='".$this_id."'>".$data['text']."</label>";
+			$out .= "<label".($this_id != '' ? " for='".$this_id."'" : "").">".$data['text']."</label>";
 		}
 
 	$out .= "</div>";

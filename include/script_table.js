@@ -28,14 +28,29 @@ jQuery(function($)
 
 	$('.wp-list-table tr').each(function()
 	{
-		if($(this).find('.row-actions > .edit').length > 0)
+		var self = $(this);
+
+		if(self.find('.row-actions > .edit').length > 0)
 		{
-			$(this).addClass('swipe2edit').append("<div class='swipe_bar from_left'><i class='fa fa-lg fa-wrench'></i></div>");
+			self.addClass('swipe2edit').append("<div class='swipe_bar from_left'><i class='fa fa-lg fa-wrench'></i></div>");
 		}
 
-		if($(this).find('.row-actions > .delete, .row-actions > .trash').length > 0)
+		if(self.find('.row-actions > .delete, .row-actions > .trash').length > 0)
 		{
-			$(this).addClass('swipe2del').append("<div class='swipe_bar from_right'><i class='fa fa-lg fa-close'></i></div>");
+			self.addClass('swipe2del').append("<div class='swipe_bar from_right'><i class='fa fa-lg fa-close'></i></div>");
+		}
+
+		if(self.find('.set_tr_color').length > 0)
+		{
+			self.find('.set_tr_color').each(function()
+			{
+				var add_class = $(this).attr('rel');
+
+				if(add_class != '')
+				{
+					self.addClass(add_class);
+				}
+			});
 		}
 	});
 
@@ -53,58 +68,61 @@ jQuery(function($)
 			//Reset
 			dom_child.css({'width': '.3%'});
 
-			//if(phase == "start"){}
-
-			if(phase == "move")
+			if(direction == "left" || direction == "right")
 			{
-				if(direction == "left")
+				//if(phase == "start"){}
+
+				if(phase == "move")
 				{
-					var from_direction = "from_right",
-						bg_addClass = "red";
+					if(direction == "left")
+					{
+						var from_direction = "from_right",
+							bg_addClass = "red";
+					}
+
+					else
+					{
+						var from_direction = "from_left",
+							bg_addClass = "green";
+					}
+
+					dom_child = $(this).children('div.' + from_direction);
+					dom_icon = dom_child.children('i');
+
+					progress = (distance / dom_width * 100);
+
+					if(distance > threshold)
+					{
+						dom_icon.addClass(bg_addClass);
+					}
+
+					else
+					{
+						dom_icon.removeClass(bg_addClass);
+					}
 				}
 
-				else
+				else if(phase == "end")
 				{
-					var from_direction = "from_left",
-						bg_addClass = "green";
+					if(direction == "right")
+					{
+						$(this).find('.row-actions > .edit > a')[0].click();
+					}
+
+					else
+					{
+						$(this).find('.row-actions > .delete > a, .row-actions > .trash > a')[0].click();
+					}
 				}
 
-				dom_child = $(this).children('div.' + from_direction);
-				dom_icon = dom_child.children('i');
-
-				progress = (distance / dom_width * 100);
-
-				if(distance > threshold)
+				if(progress > 0)
 				{
-					dom_icon.addClass(bg_addClass);
+					dom_child.css({'width': progress + '%'}).show();
 				}
-
-				else
-				{
-					dom_icon.removeClass(bg_addClass);
-				}
-			}
-
-			else if(phase == "end")
-			{
-				if(direction == "right")
-				{
-					$(this).find('.row-actions > .edit > a')[0].click();
-				}
-
-				else
-				{
-					$(this).find('.row-actions > .delete > a, .row-actions > .trash > a')[0].click();
-				}
-			}
-
-			if(progress > 0)
-			{
-				dom_child.css({'width': progress + '%'}).show();
 			}
 		},
 		threshold: threshold,
 		fingers: 1,
-		allowPageScroll: "vertical"
+		allowPageScroll: 'vertical'
 	});
 });

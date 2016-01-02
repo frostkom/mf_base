@@ -95,14 +95,14 @@ class mf_list_table extends WP_List_Table
 
 		$this->set_default();
 
-		if($this->arr_settings['has_autocomplete'] == true)
+		/*if($this->arr_settings['has_autocomplete'] == true)
 		{
 			wp_enqueue_style('style_base_table', plugins_url()."/mf_base/include/style_table.css");
 
 			wp_enqueue_script('jquery-ui-autocomplete');
 			wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
 			mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
-		}
+		}*/
 
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
 		$this->order = check_var('order', 'char', true, $this->orderby_default_order);
@@ -1522,8 +1522,6 @@ class mf_font_icons
 
 		else
 		{
-			//echo var_export($this->fonts, true);
-
 			foreach($this->fonts as $key => $fonts)
 			{
 				if($data['allow_optgroup'] == true)

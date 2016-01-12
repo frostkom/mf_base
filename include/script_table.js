@@ -3,7 +3,7 @@ jQuery(function($)
 	var dom_form = $("form .search-box input[name='s']"),
 		plugin_name = dom_form.parents('form').attr('rel');
 
-	if(plugin_name != '')
+	if(plugin_name && plugin_name != '')
 	{
 		dom_form.autocomplete(
 		{

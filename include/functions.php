@@ -1,5 +1,59 @@
 <?php
 
+function get_uploads_folder($subfolder = "")
+{
+	$upload_dir = wp_upload_dir();
+
+	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
+	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");
+
+	return array($upload_path, $upload_url);
+}
+
+function insert_attachment($data)
+{
+	global $wpdb, $done_text, $error_text;
+
+	$intFileID = false;
+
+	if(strlen($data['content']) > 0 && $data['name'] != '')
+	{
+		$upload_dir = wp_upload_dir();
+
+		$temp_file = $upload_dir['path']."/".$data['name'];
+		$file_url = $upload_dir['url']."/".basename($data['name']);
+
+		$intFileID = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid = %s", validate_url($file_url)));
+
+		if(!($intFileID > 0))
+		{
+			set_file_content(array('file' => $temp_file, 'mode' => 'w', 'content' => $data['content']));
+
+			$attachment = array(
+				'post_mime_type' => $data['mime'],
+				'post_title' => preg_replace('/\.[^.]+$/', '', basename($data['name'])),
+				'post_content' => '',
+				'post_status' => 'inherit',
+				'guid' => $file_url,
+			);
+
+			$intFileID = wp_insert_attachment($attachment, $file_url);
+
+			if(!($intFileID > 0))
+			{
+				$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", 'lang_base').": ".$temp_file;
+			}
+		}
+
+		else
+		{
+			//$error_text = __("The file already exists", 'lang_base').": ".$file_url;
+		}
+	}
+
+	return $intFileID;
+}
+
 function do_log($data)
 {
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
@@ -157,7 +211,7 @@ function get_media_button($data = array())
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
 		wp_enqueue_style('style_media_button', plugins_url()."/mf_base/include/style_media_button.css");
-		mf_enqueue_script('script_media_button', plugins_url()."/mf_base/include/script_media_button.js", array('delete' => __('Delete', 'lang_base')));
+		mf_enqueue_script('script_media_button', plugins_url()."/mf_base/include/script_media_button.js", array('delete' => __('Delete', 'lang_base'), 'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base')));
 
 		$out .= "<div class='mf_media_button'>";
 
@@ -454,17 +508,17 @@ function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
 		'admin-branding/admin-branding.php' => "Admin Branding",
-		//'admin-menu-tree-page-view/index.php' => "Admin Menu Tree Page View",
-		//'adminer/adminer.php' => "Adminer",
+		'admin-menu-tree-page-view/index.php' => "Admin Menu Tree Page View",
+		'adminer/adminer.php' => "Adminer",
 		'black-studio-tinymce-widget/black-studio-tinymce-widget.php' => "Black Studio TinyMCE Widget",
-		//'email-log/email-log.php' => "Email Log",
+		'email-log/email-log.php' => "Email Log",
 		'enable-media-replace/enable-media-replace.php' => "Enable Media Replace",
-		//'google-authenticator%2Fgoogle-authenticator.php' => "Google Authenticator",
-		//'wp-media-library-categories%2Findex.php' => "Media Library Categories",
-		//'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php' => "Quick Page/Post Redirect Plugin",
+		'google-authenticator%2Fgoogle-authenticator.php' => "Google Authenticator",
+		'wp-media-library-categories%2Findex.php' => "Media Library Categories",
+		'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php' => "Quick Page/Post Redirect Plugin",
 		'simple-page-ordering/simple-page-ordering.php' => "Simple Page Ordering",
 		'tablepress/tablepress.php' => "TablePress",
-		//'user-role-editor/user-role-editor.php' => "User Role Editor",
+		'user-role-editor/user-role-editor.php' => "User Role Editor",
 		'user-switching/user-switching.php' => "User Switching",
 		//'view-own-posts-media-only/view-own-posts-media-only.php' => "View own posts and media library items only",
 		'wp-users-media/index.php' => "WP Users Media",
@@ -1786,29 +1840,49 @@ function set_file_content($data)
 
 function get_file_info($data)
 {
-	$dp = opendir($data['path']);
+	if(!isset($data['callback'])){			$data['callback'] = "";}
+	if(!isset($data['folder_callback'])){	$data['folder_callback'] = "";}
+	if(!isset($data['limit'])){				$data['limit'] = 0;}
 
-	while(($child = readdir($dp)) !== false)
+	if($dp = opendir($data['path']))
 	{
-		if($child == '.' || $child == '..') continue;
+		$count = 0;
 
-		$file = str_replace("//", "/", $data['path'].'/'.$child);
-
-		if(is_dir($file))
+		while(($child = readdir($dp)) !== false && ($data['limit'] == 0 || $count < $data['limit']))
 		{
-			get_file_info(array('path' => $file, 'callback' => $data['callback']));
-		}
+			if($child == '.' || $child == '..') continue;
 
-		else
-		{
-			if(is_callable($data['callback']))
+			$file = str_replace("//", "/", $data['path'].'/'.$child);
+
+			if(is_dir($file))
 			{
-				call_user_func($data['callback'], array('path' => $data['path'], 'file' => $file));
-			}
-		}
-	}
+				if($data['folder_callback'] != '')
+				{
+					if(is_callable($data['folder_callback']))
+					{
+						call_user_func($data['folder_callback'], array('path' => $data['path'], 'child' => $child));
+					}
+				}
 
-	closedir($dp);
+				else
+				{
+					get_file_info(array('path' => $file, 'callback' => $data['callback']));
+				}
+			}
+
+			else
+			{
+				if(is_callable($data['callback']))
+				{
+					call_user_func($data['callback'], array('path' => $data['path'], 'file' => $file));
+				}
+			}
+
+			$count++;
+		}
+
+		closedir($dp);
+	}
 }
 
 ########################################

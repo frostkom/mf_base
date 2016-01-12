@@ -95,15 +95,6 @@ class mf_list_table extends WP_List_Table
 
 		$this->set_default();
 
-		/*if($this->arr_settings['has_autocomplete'] == true)
-		{
-			wp_enqueue_style('style_base_table', plugins_url()."/mf_base/include/style_table.css");
-
-			wp_enqueue_script('jquery-ui-autocomplete');
-			wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
-			mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
-		}*/
-
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
 		$this->order = check_var('order', 'char', true, $this->orderby_default_order);
 	}
@@ -382,9 +373,11 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
-		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 		if(!isset($data['limit'])){		$data['limit'] = "";}
 		if(!isset($data['amount'])){	$data['amount'] = "";}
+
+		//if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
+		$data['group_by'] = $this->arr_settings['query_select_id'];
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
@@ -1035,13 +1028,13 @@ class mf_form_payment
 
 		//Debug
 		##################
-		$folder = str_replace("plugins/mf_base/include", "", dirname(__FILE__));
+		//$folder = str_replace("plugins/mf_base/include", "", dirname(__FILE__));
 
 		$file_suffix = "unknown";
 
 		if($this->is_accept){			$file_suffix = "accept";}
 		else if($this->is_callback){	$file_suffix = "callback";}
-		else if($this->is_cancel){	$file_suffix = "cancel";}
+		else if($this->is_cancel){		$file_suffix = "cancel";}
 
 		$file = date("YmdHis")."_".$file_suffix;
 		$debug = "URI: ".$_SERVER['REQUEST_URI']."\n\n"
@@ -1049,7 +1042,9 @@ class mf_form_payment
 			."POST: ".var_export($_POST, true)."\n\n"
 			."THIS: ".var_export($this, true)."\n\n";
 
-		$success = set_file_content(array('file' => $folder."/uploads/".$file, 'mode' => 'a', 'content' => trim($debug)));
+		list($upload_path, $upload_url) = get_uploads_folder();
+
+		$success = set_file_content(array('file' => $upload_path.$file, 'mode' => 'a', 'content' => trim($debug)));
 		##################
 
 		$this->amount = check_var('amount', 'int');
@@ -1088,61 +1083,6 @@ class mf_form_payment
 		if($this->is_accept)
 		{
 			$this->confirm_accept();
-
-			/*if($this->answer_id > 0)
-			{
-				$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '104: ".__("User has paid. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-				if($this->answer_url != '' && preg_match("/_/", $this->answer_url))
-				{
-					list($blog_id, $intQueryAnswerURL) = explode("_", $this->answer_url);
-				}
-
-				else
-				{
-					$blog_id = 0;
-					$intQueryAnswerURL = $this->answer_url;
-				}
-
-				if($intQueryAnswerURL > 0)
-				{
-					//Switch to temp site
-					####################
-					$wpdbobj = clone $wpdb;
-					$wpdb->blogid = $blog_id;
-					$wpdb->set_prefix($wpdb->base_prefix);
-					####################
-
-					if($intQueryAnswerURL != $wp_query->post->ID)
-					{
-						$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '105: ".__("User has paid & has been sent to confirmation page. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-						$strQueryAnswerURL = get_permalink($intQueryAnswerURL);
-
-						mf_redirect($strQueryAnswerURL);
-					}
-
-					else
-					{
-						header("Status: 400 Bad Request");
-					}
-
-					//Switch back to orig site
-					###################
-					$wpdb = clone $wpdbobj;
-					###################
-				}
-
-				else
-				{
-					header("Status: 400 Bad Request");
-				}
-			}
-
-			else
-			{
-				header("Status: 400 Bad Request");
-			}*/
 		}
 
 		else if($this->is_callback)
@@ -1179,17 +1119,11 @@ class mf_form_payment
 			if($is_valid_mac)
 			{
 				$this->confirm_paid(__("Payment done", 'lang_base')." (".($this->amount / 100).")");
-
-				/*$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '116: ".__("Payment done", 'lang_base')." (".($this->amount / 100).")' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-				header("Status: 200 OK");*/
 			}
 
 			else
 			{
 				$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", ".$mac." != ".$_POST['MAC'].")");
-
-				//header("Status: 400 Bad Request");
 			}
 		}
 
@@ -1197,10 +1131,6 @@ class mf_form_payment
 		{
 			//Is the ID really sent with the cancel request?
 			$this->confirm_cancel();
-
-			/*$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '103: ".__("User canceled", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-			mf_redirect(get_site_url());*/
 		}
 
 		return $out;
@@ -1232,10 +1162,6 @@ class mf_form_payment
 		if($this->is_cancel)
 		{
 			$this->confirm_cancel();
-
-			/*$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '103: ".__("User canceled", 'lang_base')."' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-			mf_redirect(get_site_url());*/
 		}
 
 		else if($this->is_accept)
@@ -1319,61 +1245,6 @@ class mf_form_payment
 		if($this->is_accept)
 		{
 			$this->confirm_accept();
-
-			/*if($this->answer_id > 0)
-			{
-				$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '104: ".__("User has paid. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-				if($this->answer_url != '' && preg_match("/_/", $this->answer_url))
-				{
-					list($blog_id, $intQueryAnswerURL) = explode("_", $this->answer_url);
-				}
-
-				else
-				{
-					$blog_id = 0;
-					$intQueryAnswerURL = $this->answer_url;
-				}
-
-				if($intQueryAnswerURL > 0)
-				{
-					//Switch to temp site
-					####################
-					$wpdbobj = clone $wpdb;
-					$wpdb->blogid = $blog_id;
-					$wpdb->set_prefix($wpdb->base_prefix);
-					####################
-
-					if($intQueryAnswerURL != $wp_query->post->ID)
-					{
-						$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '105: ".__("User has paid & has been sent to confirmation page. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-						$strQueryAnswerURL = get_permalink($intQueryAnswerURL);
-
-						mf_redirect($strQueryAnswerURL);
-					}
-
-					else
-					{
-						header("Status: 400 Bad Request");
-					}
-
-					//Switch back to orig site
-					###################
-					$wpdb = clone $wpdbobj;
-					###################
-				}
-
-				else
-				{
-					header("Status: 400 Bad Request");
-				}
-			}
-
-			else
-			{
-				header("Status: 400 Bad Request");
-			}*/
 		}
 
 		else if($this->is_callback)
@@ -1405,29 +1276,17 @@ class mf_form_payment
 			if($is_valid_mac)
 			{
 				$this->confirm_paid($status.": ".$payment_status_text." (".$this->amount." ".$currency.")");
-
-				/*$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '116: ".$status.": ".$payment_status_text." (".$this->amount." ".$currency.")' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-				header("Status: 200 OK");*/
 			}
 
 			else
 			{
 				$this->confirm_error($status.": ".$payment_status_text." (".__("But could not verify", 'lang_base').", ".$md5sig." != ".$md5calc.") (".$this->amount." ".$currency.")");
-
-				/*$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '115: ".$status.": ".$payment_status_text." (".__("But could not verify MD5 signature", 'lang_base').", ".$md5sig." != ".$md5calc.") (".$this->amount." ".$currency.")' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-				header("Status: 400 Bad Request");*/
 			}
 		}
 
 		else if($this->is_cancel)
 		{
 			$this->confirm_cancel();
-
-			/*$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '103: ".__("User canceled", 'lang_base')."' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-			mf_redirect(get_site_url());*/
 		}
 
 		return $out;

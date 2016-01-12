@@ -37,7 +37,11 @@ jQuery(function($)
 
 		dom_list = self.children('.mf_media_list');
 		dom_urls = self.children('.mf_media_urls');
-		arr_attachments = dom_urls.val().split(",");
+
+		if(dom_urls.val() != '')
+		{
+			arr_attachments = dom_urls.val().split(",");
+		}
 
 		render_attachment_list();
 	});
@@ -53,39 +57,54 @@ jQuery(function($)
 
 			dom_list = self.children('.mf_media_list');
 			dom_urls = self.children('.mf_media_urls');
-			arr_attachments = dom_urls.val().split(",");
+
+			if(dom_urls.val() != '')
+			{
+				arr_attachments = dom_urls.val().split(",");
+			}
 
 			dom_raw.html(html);
 
-			dom_raw.children('a').each(function()
+			self.siblings('.error').remove();
+
+			if(dom_raw.find('a').length > 0)
 			{
-				var dom_a = $(this),
-					file_name = '',
-					file_url = '';
-
-				if(dom_a.children('img').length > 0)
+				dom_raw.find('a').each(function()
 				{
-					file_name = dom_a.children('img').attr('alt');
-					file_url = dom_a.children('img').attr('src');
-				}
+					var dom_a = $(this),
+						file_name = '',
+						file_url = '';
 
-				else
-				{
-					file_name = dom_a.text();
-					file_url = dom_a.attr('href');
-				}
+					if(dom_a.children('img').length > 0)
+					{
+						file_name = dom_a.children('img').attr('alt');
+						file_url = dom_a.children('img').attr('src');
+					}
 
-				arr_attachments.push(file_name + "|" + file_url);
-			});
+					else
+					{
+						file_name = dom_a.text();
+						file_url = dom_a.attr('href');
+					}
 
-			dom_raw.children('img').each(function()
+					arr_attachments.push(file_name + "|" + file_url);
+				});
+			}
+
+			else if(dom_raw.find('img').length > 0)
 			{
-				var dom_img = $(this),
-					file_name = dom_img.attr('alt'),
-					file_url = dom_img.attr('src');
+				dom_raw.find('img').each(function()
+				{
+					var dom_img = $(this);
 
-				arr_attachments.push(file_name + "|" + file_url);
-			});
+					arr_attachments.push(dom_img.attr('alt') + "|" + dom_img.attr('src'));
+				});
+			}
+
+			else
+			{
+				self.after("<div class='error'><p>" + script_media_button.no_attachment_link + "</p></div>");
+			}
 
 			dom_raw.empty();
 

@@ -1,5 +1,64 @@
 <?php
 
+function format_date($in)
+{
+	$out = "";
+
+	if($in > DEFAULT_DATE)
+	{
+		$date_now = date("Y-m-d");
+		$one_day_ago = date("Y-m-d", strtotime("-1 day"));
+		$one_week_ago = date("Y-m-d", strtotime("-6 day"));
+
+		$date_short = date("Y-m-d", strtotime($in));
+
+		$date_year = date("Y", strtotime($in));
+		$date_month = date("m", strtotime($in));
+		$date_day = date("d", strtotime($in));
+		$date_hour = date("G", strtotime($in));
+		$date_minute = date("i", strtotime($in));
+
+		if($one_week_ago > $date_short)
+		{
+			$out = $date_short;
+		}
+
+		else
+		{
+			if($one_day_ago > $date_short)
+			{
+				$firstday_ts = mktime(0, 0, 0, $date_month, $date_day, $date_year);
+				$date_weekday = day_name(date("w", $firstday_ts));
+				//$date_weekday = day_name(date("w", $date_short));
+
+				$out .= $date_weekday."&nbsp;";
+			}
+
+			else if($one_day_ago == $date_short)
+			{
+				$out .= __("Yesterday", 'lang_base')."&nbsp;";
+			}
+
+			if($date_year != date("Y") && $in < $one_week_ago)
+			{
+				$out .= $date_year;
+			}
+
+			else if($date_short > $date_now)
+			{
+				$out .= $date_short;
+			}
+
+			else
+			{
+				$out .= $date_hour.":".$date_minute;
+			}
+		}
+	}
+
+	return $out;
+}
+
 function get_uploads_folder($subfolder = "")
 {
 	$upload_dir = wp_upload_dir();
@@ -520,8 +579,6 @@ function setting_base_recommend_callback()
 		'tablepress/tablepress.php' => "TablePress",
 		'user-role-editor/user-role-editor.php' => "User Role Editor",
 		'user-switching/user-switching.php' => "User Switching",
-		//'view-own-posts-media-only/view-own-posts-media-only.php' => "View own posts and media library items only",
-		'wp-users-media/index.php' => "WP Users Media",
 		'wp-smushit/wp-smush.php' => "WP Smush",
 		'wp-mail-smtp/wp_mail_smtp.php' => "WP-Mail-SMTP",
 		//'' => "",
@@ -993,13 +1050,15 @@ if(!function_exists('wp_date_format'))
 {
 	function wp_date_format($data)
 	{
-		global $wpdb;
+		/*global $wpdb;
 
 		if(!isset($data['full_datetime'])){		$data['full_datetime'] = false;}
 
 		$date_format = $wpdb->get_var("SELECT option_value FROM ".$wpdb->options." WHERE option_name = '".($data['full_datetime'] == true ? "links_updated_date_format" : "date_format")."'");
 
-		return date($date_format, strtotime($data['date']));
+		return date($date_format, strtotime($data['date']));*/
+
+		return format_date($data['date']);
 	}
 }
 

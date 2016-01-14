@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-12 10:01+0100\n"
+"POT-Creation-Date: 2016-01-14 13:33+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -21,7 +21,7 @@ msgid "We highly recommend that you install %s%s%s aswell"
 msgstr "Vi rekommenderar att du installerar %s%s%s också"
 
 #: ../include/classes.php:364
-#: ../include/functions.php:909
+#: ../include/functions.php:966
 msgid "Search"
 msgstr "Sök"
 
@@ -131,7 +131,7 @@ msgid "Choose here"
 msgstr "Välj här"
 
 #: ../include/classes.php:1807
-#: ../include/functions.php:214
+#: ../include/functions.php:273
 msgid "Delete"
 msgstr "Radera"
 
@@ -156,12 +156,12 @@ msgid "File"
 msgstr "Fil"
 
 #: ../include/classes.php:1830
-#: ../include/functions.php:556
+#: ../include/functions.php:613
 msgid "Yes"
 msgstr "Ja"
 
 #: ../include/classes.php:1831
-#: ../include/functions.php:555
+#: ../include/functions.php:612
 msgid "No"
 msgstr "Nej"
 
@@ -186,185 +186,193 @@ msgstr "Kolumn"
 msgid "Example"
 msgstr "Exempel"
 
-#: ../include/functions.php:44
+#: ../include/functions.php:34
+msgid "This"
+msgstr "I"
+
+#: ../include/functions.php:39
+msgid "Yesterday"
+msgstr "Igår"
+
+#: ../include/functions.php:103
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:73
+#: ../include/functions.php:132
 msgid "Manually"
 msgstr "Manuellt"
 
-#: ../include/functions.php:74
+#: ../include/functions.php:133
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
 
-#: ../include/functions.php:75
+#: ../include/functions.php:134
 msgid "Every 10 Minutes"
 msgstr "Var tionde minut"
 
-#: ../include/functions.php:180
+#: ../include/functions.php:239
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/functions.php:207
+#: ../include/functions.php:266
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-#: ../include/functions.php:214
+#: ../include/functions.php:273
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
 
-#: ../include/functions.php:370
+#: ../include/functions.php:429
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/functions.php:389
+#: ../include/functions.php:448
 #, php-format
 msgid "You need to install the plugin %s%s%s first"
 msgstr "Du måste installera pluginet %s%s%s först"
 
-#: ../include/functions.php:474
+#: ../include/functions.php:533
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:475
+#: ../include/functions.php:534
 msgid "Recommendations"
 msgstr "Rekommendationer"
 
-#: ../include/functions.php:476
+#: ../include/functions.php:535
 msgid "Update core automatically"
 msgstr "Uppdatera Wordpress automatiskt"
 
-#: ../include/functions.php:477
+#: ../include/functions.php:536
 msgid "Update notification"
 msgstr "Meddelande om uppdatering"
 
-#: ../include/functions.php:478
+#: ../include/functions.php:537
 msgid "Scheduled to run"
 msgstr "Schemalagd att köras"
 
-#: ../include/functions.php:504
+#: ../include/functions.php:563
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:542
+#: ../include/functions.php:599
 msgid "None"
 msgstr "Inga"
 
-#: ../include/functions.php:543
+#: ../include/functions.php:600
 msgid "Minor"
 msgstr "Små"
 
-#: ../include/functions.php:543
+#: ../include/functions.php:600
 msgid "default"
 msgstr "standard"
 
-#: ../include/functions.php:544
+#: ../include/functions.php:601
 msgid "All"
 msgstr "Alla"
 
-#: ../include/functions.php:559
+#: ../include/functions.php:616
 msgid "Send e-mail to admin after auto core update"
 msgstr "Skicka e-post till admin efter en automatisk uppdatering av Wordpress"
 
-#: ../include/functions.php:593
+#: ../include/functions.php:650
 #, php-format
 msgid "Next scheduled %s"
 msgstr "Nästa schemaläggning %s"
 
-#: ../include/functions.php:599
+#: ../include/functions.php:656
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/functions.php:1713
+#: ../include/functions.php:1770
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:1993
+#: ../include/functions.php:2050
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:1994
+#: ../include/functions.php:2051
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:1996
+#: ../include/functions.php:2053
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:2018
+#: ../include/functions.php:2075
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:2029
+#: ../include/functions.php:2086
 msgid "Saturday"
 msgstr "Lördag"
 

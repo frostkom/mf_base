@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-14 13:33+0100\n"
+"POT-Creation-Date: 2016-01-15 12:39+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -127,6 +127,7 @@ msgstr "Kolla"
 
 #: ../include/classes.php:1806
 #: ../include/classes.php:1871
+#: ../include/classes.php:1936
 msgid "Choose here"
 msgstr "Välj här"
 
@@ -171,6 +172,7 @@ msgstr "Hoppa över första raden"
 
 #: ../include/classes.php:1856
 #: ../include/classes.php:1889
+#: ../include/classes.php:2102
 msgid "Run"
 msgstr "Kör"
 
@@ -186,9 +188,36 @@ msgstr "Kolumn"
 msgid "Example"
 msgstr "Exempel"
 
-#: ../include/functions.php:34
-msgid "This"
-msgstr "I"
+#: ../include/classes.php:1969
+#, php-format
+msgid "Could not create the folder %s in uploads. Please add the correct rights for the script to create a new subfolder"
+msgstr "Det gick inte att skapa mappen %s i uploads. Lägg till rätt behörigheter för mappen uploads så att det går att skapa en undermapp"
+
+#: ../include/classes.php:2020
+#: ../include/classes.php:2066
+msgid "Download the exported file here"
+msgstr "Ladda ner den exporterade filen här"
+
+#: ../include/classes.php:2025
+msgid "It was not possible to export"
+msgstr "Det gick inte att exportera"
+
+#: ../include/classes.php:2072
+msgid "There was nothing to export"
+msgstr "Det finns inget att exportera"
+
+#: ../include/classes.php:2078
+msgid "You have to choose a file type to export to"
+msgstr "Du måste välja en filtyp att exportera till"
+
+#: ../include/classes.php:2089
+#: ../include/functions.php:429
+msgid "Settings"
+msgstr "Inställningar"
+
+#: ../include/classes.php:2099
+msgid "File type"
+msgstr "Filtyp"
 
 #: ../include/functions.php:39
 msgid "Yesterday"
@@ -221,10 +250,6 @@ msgstr "Bifoga fil"
 #: ../include/functions.php:273
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
-
-#: ../include/functions.php:429
-msgid "Settings"
-msgstr "Inställningar"
 
 #: ../include/functions.php:448
 #, php-format
@@ -284,97 +309,100 @@ msgstr "Nästa schemaläggning %s"
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/functions.php:1770
+#: ../include/functions.php:1772
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:2050
+#: ../include/functions.php:2052
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:2051
+#: ../include/functions.php:2053
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:2053
+#: ../include/functions.php:2055
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2077
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:2086
+#: ../include/functions.php:2088
 msgid "Saturday"
 msgstr "Lördag"
+
+#~ msgid "This"
+#~ msgstr "I"
 
 #~ msgid "Add"
 #~ msgstr "Lägg till"
@@ -610,13 +638,6 @@ msgstr "Lördag"
 #~ msgid "Back"
 #~ msgstr "Bakåt"
 
-#~ msgid ""
-#~ "Could not create a folder in uploads. Please add the correct rights for "
-#~ "the script to create a new subfolder"
-#~ msgstr ""
-#~ "Det gick inte att skapa en mapp i uploads. Lägg till rätt behörigheter "
-#~ "för mappen uploads så att det går att skapa en undermapp"
-
 #~ msgid "There were no answers to export"
 #~ msgstr "Det fanns inga svar att exportera"
 
@@ -626,9 +647,6 @@ msgstr "Lördag"
 #~ msgid "Date"
 #~ msgstr "Datum"
 
-#~ msgid "It was not possible to export all answers from"
-#~ msgstr "Det gick inte att exportera alla svar från"
-
 #~ msgid "All forms"
 #~ msgstr "Alla formulär"
 
@@ -637,9 +655,6 @@ msgstr "Lördag"
 
 #~ msgid "Answers"
 #~ msgstr "Svar"
-
-#~ msgid "There is nothing to show"
-#~ msgstr "Det finns inget att visa"
 
 #~ msgid "Copy"
 #~ msgstr "Kopiera"

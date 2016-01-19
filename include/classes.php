@@ -1921,3 +1921,198 @@ class mf_import
 		return $out;
 	}
 }
+
+class mf_export
+{
+	function __construct()
+	{
+		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
+		$this->dir_exists = true;
+
+		$this->upload_path = $this->upload_url = $this->plugin = $this->type_name = $this->name = "";
+		$this->types = $this->data = array();
+
+		$this->actions = array(
+			array('', "-- ".__("Choose here", 'lang_base')." --"),
+			array('csv', "CSV"),
+		);
+
+		if($this->has_excel_support)
+		{
+			$this->actions[] = array('xls', "XLS");
+		}
+
+		$this->get_defaults();
+		$this->create_dir();
+		$this->fetch_request();
+		echo $this->save_data();
+	}
+
+	function get_defaults(){}
+
+	function create_dir()
+	{
+		global $error_text;
+
+		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
+
+		if(!is_dir($this->upload_path))
+		{
+			if(!mkdir($this->upload_path, 0755, true))
+			{
+				$this->dir_exists = false;
+			}
+		}
+
+		if($this->dir_exists == false)
+		{
+			$error_text = __("Could not create the folder %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base');
+		}
+	}
+
+	function fetch_request()
+	{
+		$this->type = check_var('intExportType');
+		$this->action = check_var('strExportAction');
+	}
+
+	function get_export_data(){}
+
+	function save_data()
+	{
+		global $wpdb, $error_text, $done_text;
+
+		$out = "";
+
+		if(isset($_REQUEST['btnExportRun']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'export_run'))
+		{
+			if($this->action != '')
+			{
+				$this->get_export_data();
+
+				if(count($this->data) > 0)
+				{
+					$file = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("YmdHis").".".$this->action;
+
+					if($this->action == 'csv')
+					{
+						$field_separator = ",";
+						$row_separator = "\n";
+
+						$out_temp = "";
+
+						foreach($this->data as $row)
+						{
+							$out_temp .= ($out_temp != '' ? $row_separator : "");
+
+							$count_temp = count($row);
+
+							for($i = 0; $i < $count_temp; $i++)
+							{
+								$row_value = preg_replace("/(\r\n|\r|\n|".$field_separator.")/", " ", $row[$i]);
+
+								$out_temp .= ($i > 0 ? $field_separator : "").$row_value;
+							}
+						}
+
+						$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
+
+						if($success == true)
+						{
+							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+						}
+
+						else
+						{
+							$error_text = __("It was not possible to export", 'lang_base');
+						}
+					}
+
+					else if($this->action == 'xls')
+					{
+						$arr_alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
+						$objPHPExcel = new PHPExcel();
+
+						//$objPHPExcel->getProperties()->setCreator("")->setLastModifiedBy("")->setTitle("")->setSubject("")->setDescription("")->setKeywords("")->setCategory("");
+
+						foreach($this->data as $row_key => $row_value)
+						{
+							foreach($row_value as $col_key => $col_value)
+							{
+								$cell = "";
+
+								$count_temp = count($arr_alphabet);
+
+								while($col_key >= $count_temp)
+								{
+									$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
+
+									$col_key = $col_key % $count_temp;
+								}
+
+								$cell .= $arr_alphabet[$col_key].($row_key + 1);
+
+								if($col_value != '')
+								{
+									$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, $col_value);
+								}
+							}
+						}
+
+						/*$objPHPExcel->getActiveSheet()->getRowDimension(8)->setRowHeight(-1);
+						$objPHPExcel->getActiveSheet()->getStyle('A8')->getAlignment()->setWrapText(true);*/
+
+						//$objPHPExcel->getActiveSheet()->setTitle($strQueryName);
+
+						$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
+						$objWriter->save($this->upload_path.$file);
+
+						$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+					}
+				}
+
+				else
+				{
+					$error_text = __("There was nothing to export", 'lang_base');
+				}
+
+				get_file_info(array('path' => $this->upload_path, 'callback' => "delete_old_files"));
+			}
+
+			else
+			{
+				$error_text = __("You have to choose a file type to export to", 'lang_base');
+			}
+		}
+	}
+
+	function get_form()
+	{
+		global $wpdb, $error_text;
+
+		$out = get_notification()
+		."<form action='#' method='post' class='mf_form mf_settings'>"
+			."<div id='poststuff' class='postbox'>
+				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
+				<div class='inside'>";
+
+					if(count($this->types) > 1)
+					{
+						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'compare' => $this->type));
+					}
+
+					if(count($this->actions) > 1)
+					{
+						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'compare' => $this->action));
+					}
+
+					$out .= show_submit(array('name' => "btnExportRun", 'text' => __("Run", 'lang_base')))
+					.wp_nonce_field('export_run', '_wpnonce', true, false)
+				."</div>
+			</div>
+		</form>";
+
+		return $out;
+	}
+}

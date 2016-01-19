@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
 Description: 
-Version: 2.5.0
+Version: 2.5.3
 Author: Martin Fors
 Author URI: http://frostkom.se
 */

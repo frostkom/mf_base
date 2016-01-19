@@ -1,5 +1,17 @@
 <?php
 
+function delete_old_files($data)
+{
+	$time = time();
+
+	$file = $data['file'];
+
+	if($time - filemtime($file) >= 60 * 60 * 24 * 2) // 2 days
+	{
+		unlink($file);
+	}
+}
+
 function format_date($in)
 {
 	$out = "";
@@ -115,6 +127,11 @@ function insert_attachment($data)
 
 function do_log($data)
 {
+	if(IS_ADMIN)
+	{
+		echo $data."<br>";
+	}
+
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
 	{
 		require_once(ABSPATH.'wp-content/mf_log/include/classes.php');
@@ -215,6 +232,11 @@ function init_base()
 
 	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
 	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
+
+	if(wp_get_schedule('cron_base') == "every_ten_seconds" && !defined('DISABLE_WP_CRON'))
+	{
+		define('DISABLE_WP_CRON', true);
+	}
 
 	if($setting_base_auto_core_update != '')
 	{
@@ -620,7 +642,7 @@ function setting_base_cron_callback()
 {
 	global $wpdb;
 
-	$option = get_option('setting_base_cron', 'hourly');
+	$option = get_option('setting_base_cron', 'every_ten_minutes');
 
 	//Re-schedule if value has changed
 	######################
@@ -651,7 +673,7 @@ function setting_base_cron_callback()
 
 			if($option == "every_ten_seconds")
 			{
-				if(DISABLE_WP_CRON == true)
+				if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 				{
 					echo ". <a href='".get_site_url()."/wp-cron.php?doing_cron'>".__("Run schedule manually", 'lang_base')."</a>";
 				}

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-15 12:39+0100\n"
+"POT-Creation-Date: 2016-02-08 13:22+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -20,386 +20,382 @@ msgstr ""
 msgid "We highly recommend that you install %s%s%s aswell"
 msgstr "Vi rekommenderar att du installerar %s%s%s också"
 
-#: ../include/classes.php:364
-#: ../include/functions.php:966
+#: ../include/classes.php:129
+#, php-format
+msgid "Use run_cron_delete() on %s"
+msgstr "Använd run_cron_delete() på %s"
+
+#: ../include/classes.php:366
+#: ../include/functions.php:1091
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:554
-#: ../include/classes.php:555
-#: ../include/classes.php:571
+#: ../include/classes.php:551
+#: ../include/classes.php:552
+#: ../include/classes.php:565
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:769
-msgid "See DIBS test info"
-msgstr "Se DIBS testinfo"
-
-#: ../include/classes.php:770
-#: ../include/classes.php:919
-msgid "Send in test mode (No money will be charged)"
-msgstr "Skicka i testläge (Pengar kommer ej att dras)"
-
-#: ../include/classes.php:778
-msgid "Sent to payment"
-msgstr "Skickat till betalning"
-
-#: ../include/classes.php:934
-msgid "User canceled"
-msgstr "Användaren avbröt"
-
-#: ../include/classes.php:945
-msgid "User has paid. Waiting for confirmation..."
-msgstr "Användaren har betalat. Väntar på kvitto..."
-
-#: ../include/classes.php:969
-msgid "User has paid & has been sent to confirmation page. Waiting for confirmation..."
-msgstr "Användaren har betalat & har skickats till tacksida. Väntar på kvitto..."
-
-#: ../include/classes.php:1052
-msgid "Processing..."
-msgstr "Bearbetar..."
-
-#: ../include/classes.php:1121
-#: ../include/classes.php:1126
-#: ../include/classes.php:1206
-#: ../include/classes.php:1211
-#: ../include/classes.php:1223
-msgid "Payment done"
-msgstr "Betalning genomförd"
-
-#: ../include/classes.php:1126
-#: ../include/classes.php:1211
-#: ../include/classes.php:1223
-#: ../include/classes.php:1283
-msgid "But could not verify"
-msgstr "Men kunde inte verifiera"
-
-#: ../include/classes.php:1270
-msgid "Failed"
-msgstr "Misslyckad"
-
-#: ../include/classes.php:1271
-msgid "Processed"
-msgstr "Bearbetad"
-
-#: ../include/classes.php:1272
-msgid "Pending"
-msgstr "Väntande"
-
-#: ../include/classes.php:1273
-msgid "Cancelled"
-msgstr "Avbruten"
-
-#: ../include/classes.php:1753
+#: ../include/classes.php:1179
 msgid "Updated"
 msgstr "Uppdaterade"
 
-#: ../include/classes.php:1754
+#: ../include/classes.php:1184
 msgid "Already up to date"
 msgstr "Redan uppdaterade"
 
-#: ../include/classes.php:1755
+#: ../include/classes.php:1189
 msgid "Inserted"
 msgstr "Inlagda"
 
-#: ../include/classes.php:1756
+#: ../include/classes.php:1194
 msgid "Not inserted"
 msgstr "Inte inlagda"
 
-#: ../include/classes.php:1757
-#: ../include/classes.php:1762
+#: ../include/classes.php:1199
+#: ../include/classes.php:1207
 msgid "Deleted"
 msgstr "Borttagen"
 
-#: ../include/classes.php:1763
+#: ../include/classes.php:1212
 msgid "Not deleted"
 msgstr "Inte borttagna"
 
-#: ../include/classes.php:1764
+#: ../include/classes.php:1217
 msgid "Did not exist"
 msgstr "Fanns inte"
 
-#: ../include/classes.php:1799
-#: ../include/classes.php:1834
+#: ../include/classes.php:1270
+#: ../include/classes.php:1305
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:1806
-#: ../include/classes.php:1871
-#: ../include/classes.php:1936
+#: ../include/classes.php:1277
+#: ../include/classes.php:1342
+#: ../include/classes.php:1413
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../include/classes.php:1807
-#: ../include/functions.php:273
+#: ../include/classes.php:1278
+#: ../include/functions.php:341
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:1808
+#: ../include/classes.php:1279
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:1810
+#: ../include/classes.php:1281
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:1820
+#: ../include/classes.php:1291
 msgid "Text"
 msgstr "Text"
 
-#: ../include/classes.php:1820
+#: ../include/classes.php:1291
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:1825
+#: ../include/classes.php:1296
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:1830
-#: ../include/functions.php:613
+#: ../include/classes.php:1301
+#: ../include/functions.php:723
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/classes.php:1831
-#: ../include/functions.php:612
+#: ../include/classes.php:1302
+#: ../include/functions.php:722
 msgid "No"
 msgstr "Nej"
 
-#: ../include/classes.php:1833
+#: ../include/classes.php:1304
 msgid "Skip first row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:1856
-#: ../include/classes.php:1889
-#: ../include/classes.php:2102
+#: ../include/classes.php:1327
+#: ../include/classes.php:1366
+#: ../include/classes.php:1587
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:1858
+#: ../include/classes.php:1329
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:1885
+#: ../include/classes.php:1362
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:1895
+#: ../include/classes.php:1372
 msgid "Example"
 msgstr "Exempel"
 
-#: ../include/classes.php:1969
+#: ../include/classes.php:1446
 #, php-format
 msgid "Could not create the folder %s in uploads. Please add the correct rights for the script to create a new subfolder"
 msgstr "Det gick inte att skapa mappen %s i uploads. Lägg till rätt behörigheter för mappen uploads så att det går att skapa en undermapp"
 
-#: ../include/classes.php:2020
-#: ../include/classes.php:2066
+#: ../include/classes.php:1499
+#: ../include/classes.php:1548
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:2025
+#: ../include/classes.php:1504
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:2072
+#: ../include/classes.php:1554
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:2078
+#: ../include/classes.php:1562
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:2089
-#: ../include/functions.php:429
+#: ../include/classes.php:1574
+#: ../include/functions.php:500
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:2099
+#: ../include/classes.php:1584
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/functions.php:39
+#: ../include/functions.php:99
 msgid "Yesterday"
 msgstr "Igår"
 
-#: ../include/functions.php:103
+#: ../include/functions.php:163
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:132
+#: ../include/functions.php:197
 msgid "Manually"
 msgstr "Manuellt"
 
-#: ../include/functions.php:133
+#: ../include/functions.php:198
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
 
-#: ../include/functions.php:134
+#: ../include/functions.php:199
 msgid "Every 10 Minutes"
 msgstr "Var tionde minut"
 
-#: ../include/functions.php:239
+#: ../include/functions.php:307
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/functions.php:266
+#: ../include/functions.php:334
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-#: ../include/functions.php:273
+#: ../include/functions.php:341
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
 
-#: ../include/functions.php:448
+#: ../include/functions.php:519
 #, php-format
 msgid "You need to install the plugin %s%s%s first"
 msgstr "Du måste installera pluginet %s%s%s först"
 
-#: ../include/functions.php:533
+#: ../include/functions.php:604
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:534
+#: ../include/functions.php:605
 msgid "Recommendations"
 msgstr "Rekommendationer"
 
-#: ../include/functions.php:535
+#: ../include/functions.php:606
 msgid "Update core automatically"
 msgstr "Uppdatera Wordpress automatiskt"
 
-#: ../include/functions.php:536
+#: ../include/functions.php:607
 msgid "Update notification"
 msgstr "Meddelande om uppdatering"
 
-#: ../include/functions.php:537
+#: ../include/functions.php:608
 msgid "Scheduled to run"
 msgstr "Schemalagd att köras"
 
-#: ../include/functions.php:563
+#: ../include/functions.php:622
+msgid "Common"
+msgstr "Gemensam"
+
+#: ../include/functions.php:673
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:599
+#: ../include/functions.php:709
 msgid "None"
 msgstr "Inga"
 
-#: ../include/functions.php:600
+#: ../include/functions.php:710
 msgid "Minor"
 msgstr "Små"
 
-#: ../include/functions.php:600
+#: ../include/functions.php:710
 msgid "default"
 msgstr "standard"
 
-#: ../include/functions.php:601
+#: ../include/functions.php:711
 msgid "All"
 msgstr "Alla"
 
-#: ../include/functions.php:616
+#: ../include/functions.php:726
 msgid "Send e-mail to admin after auto core update"
 msgstr "Skicka e-post till admin efter en automatisk uppdatering av Wordpress"
 
-#: ../include/functions.php:650
+#: ../include/functions.php:757
 #, php-format
 msgid "Next scheduled %s"
 msgstr "Nästa schemaläggning %s"
 
-#: ../include/functions.php:656
+#: ../include/functions.php:761
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/functions.php:1772
+#: ../include/functions.php:773
+#, php-format
+msgid "Make sure that %s is added to wp-config.php"
+msgstr "Se till så att %s är med i wp-config.php"
+
+#: ../include/functions.php:1904
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:2052
+#: ../include/functions.php:2184
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:2053
+#: ../include/functions.php:2185
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:2055
+#: ../include/functions.php:2187
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:2077
+#: ../include/functions.php:2209
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:2088
+#: ../include/functions.php:2220
 msgid "Saturday"
 msgstr "Lördag"
+
+#~ msgid "See DIBS test info"
+#~ msgstr "Se DIBS testinfo"
+
+#~ msgid "Send in test mode (No money will be charged)"
+#~ msgstr "Skicka i testläge (Pengar kommer ej att dras)"
+
+#~ msgid "Sent to payment"
+#~ msgstr "Skickat till betalning"
+
+#~ msgid "User canceled"
+#~ msgstr "Användaren avbröt"
+
+#~ msgid "User has paid. Waiting for confirmation..."
+#~ msgstr "Användaren har betalat. Väntar på kvitto..."
+
+#~ msgid ""
+#~ "User has paid & has been sent to confirmation page. Waiting for "
+#~ "confirmation..."
+#~ msgstr ""
+#~ "Användaren har betalat & har skickats till tacksida. Väntar på kvitto..."
+
+#~ msgid "Processing..."
+#~ msgstr "Bearbetar..."
+
+#~ msgid "Payment done"
+#~ msgstr "Betalning genomförd"
+
+#~ msgid "But could not verify"
+#~ msgstr "Men kunde inte verifiera"
+
+#~ msgid "Failed"
+#~ msgstr "Misslyckad"
+
+#~ msgid "Processed"
+#~ msgstr "Bearbetad"
+
+#~ msgid "Pending"
+#~ msgstr "Väntande"
+
+#~ msgid "Cancelled"
+#~ msgstr "Avbruten"
 
 #~ msgid "This"
 #~ msgstr "I"

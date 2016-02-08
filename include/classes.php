@@ -2,7 +2,7 @@
 
 class recommend_plugin
 {
-	function recommend_plugin($data) //$required_path, $required_name, $require_url = "", $recommend_notice = true
+	function recommend_plugin($data)
 	{
 		global $pagenow;
 
@@ -126,7 +126,9 @@ class mf_list_table extends WP_List_Table
 
 			if($wpdb->num_rows > 0)
 			{
-				echo "Use run_cron_delete() on ".$db_field."<br>";
+				$error_text = sprintf(__("Use run_cron_delete() on %s"), $db_field);
+
+				echo get_notification();
 			}
 		}
 	}
@@ -376,8 +378,7 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['limit'])){		$data['limit'] = "";}
 		if(!isset($data['amount'])){	$data['amount'] = "";}
 
-		//if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
-		$data['group_by'] = $this->arr_settings['query_select_id'];
+		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
@@ -409,6 +410,11 @@ class mf_list_table extends WP_List_Table
 		if($data['amount'] != '')
 		{
 			$query .= " LIMIT ".$data['limit'].", ".$data['amount'];
+		}
+
+		if(isset($data['debug']) && $data['debug'] == true)
+		{
+			echo "mf_list_table->select_data() query: ".$query;
 		}
 
 		$result = $wpdb->get_results($query);
@@ -528,16 +534,10 @@ class pagination
 	}
 }
 
-class MySettingsPage
+class settings_page
 {
-	/**
-	 * Holds the values to be used in the fields callbacks
-	 */
-	private $options;
+	//private $options;
 
-	/**
-	 * Start up
-	 */
 	public function __construct()
 	{
 		$this->options_page = "settings_mf_base";
@@ -545,9 +545,6 @@ class MySettingsPage
 		add_action('admin_menu', array($this, 'add_plugin_page'));
 	}
 
-	/**
-	 * Add options page
-	 */
 	public function add_plugin_page()
 	{
 		add_options_page(
@@ -559,16 +556,14 @@ class MySettingsPage
 		);
 	}
 
-	/**
-	 * Options page callback
-	 */
 	public function create_admin_page()
 	{
-		// Set class property
-		//$this->options = get_option('my_option_name');
+		wp_enqueue_style('style_base_settings', plugins_url()."/mf_base/include/style_settings.css");
+		mf_enqueue_script('script_base_settings', plugins_url()."/mf_base/include/script_settings.js");
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
+			<ul></ul>
 			<form method='post' action='options.php'>";
 
 				settings_fields($this->options_page);
@@ -577,719 +572,6 @@ class MySettingsPage
 
 			echo "</form>
 		</div>";
-	}
-}
-
-class mf_form_payment
-{
-	function mf_form_payment($data = array())
-	{
-		global $wpdb;
-
-		$this->query_id = $data['query_id'];
-		$this->base_callback_url = get_site_url().$_SERVER['REQUEST_URI'];
-
-		$result = $wpdb->get_results($wpdb->prepare("SELECT queryPaymentProvider, queryPaymentHmac, queryPaymentMerchant, queryPaymentPassword, queryPaymentCurrency, queryAnswerURL FROM ".$wpdb->base_prefix."query WHERE queryID = '%d'", $this->query_id));
-
-		foreach($result as $r)
-		{
-			$this->provider = $r->queryPaymentProvider;
-			$this->hmac = $r->queryPaymentHmac;
-			$this->merchant = $r->queryPaymentMerchant;
-			$this->password = $r->queryPaymentPassword;
-			$this->currency = $r->queryPaymentCurrency;
-			$this->answer_url = $r->queryAnswerURL;
-
-			$obj_form = new mf_form($this->query_id);
-
-			$this->prefix = $obj_form->get_post_name()."_";
-		}
-	}
-
-	function PPHttpPost($methodName_, $nvpStr_, $PayPalApiUsername, $PayPalApiPassword, $PayPalApiSignature, $PayPalMode)
-	{
-		// Set up your API credentials, PayPal end point, and API version.
-		$API_UserName = urlencode($PayPalApiUsername);
-		$API_Password = urlencode($PayPalApiPassword);
-		$API_Signature = urlencode($PayPalApiSignature);
-
-		$paypalmode = ($PayPalMode == 'sandbox') ? '.sandbox' : '';
-
-		$API_Endpoint = "https://api-3t".$paypalmode.".paypal.com/nvp";
-		$version = urlencode('109.0');
-
-		// Set the curl parameters.
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $API_Endpoint);
-		curl_setopt($ch, CURLOPT_VERBOSE, 1);
-
-		// Turn off the server and peer verification (TrustManager Concept).
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_POST, 1);
-
-		// Set the API operation, version, and API signature in the request.
-		$nvpreq = "METHOD=$methodName_&VERSION=$version&PWD=$API_Password&USER=$API_UserName&SIGNATURE=$API_Signature$nvpStr_";
-
-		// Set the request as a POST FIELD for curl.
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $nvpreq);
-
-		// Get response from the server.
-		$httpResponse = curl_exec($ch);
-
-		if(!$httpResponse) {
-			exit("$methodName_ failed: ".curl_error($ch).'('.curl_errno($ch).')');
-		}
-
-		// Extract the response details.
-		$httpResponseAr = explode("&", $httpResponse);
-
-		$httpParsedResponseAr = array();
-		foreach ($httpResponseAr as $i => $value) {
-			$tmpAr = explode("=", $value);
-			if(sizeof($tmpAr) > 1) {
-				$httpParsedResponseAr[$tmpAr[0]] = $tmpAr[1];
-			}
-		}
-
-		if((0 == sizeof($httpParsedResponseAr)) || !array_key_exists('ACK', $httpParsedResponseAr)) {
-			exit("Invalid HTTP Response for POST request($nvpreq) to $API_Endpoint.");
-		}
-
-		return $httpParsedResponseAr;
-	}
-
-	function process_passthru($data)
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$this->amount = $data['amount'];
-		$this->orderid = $data['orderid'];
-
-		$this->test = $data['test'];
-
-		if($this->provider == 1)
-		{
-			$out .= $this->process_passthru_dibs();
-		}
-
-		else if($this->provider == 3)
-		{
-			$out .= $this->process_passthru_paypal();
-		}
-
-		else
-		{
-			$out .= $this->process_passthru_skrill();
-		}
-
-		return $out;
-
-		exit;
-	}
-
-	function process_passthru_dibs()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		if(!($this->currency > 0)){	$this->currency = 752;}
-
-		$instance = array();
-
-		$instance['amount'] = $this->amount * 100;
-		$instance['orderid'] = $this->orderid;
-		$instance['test'] = $this->test;
-
-		$hmac = $this->hmac;
-		$instance['merchant'] = $this->merchant;
-
-		$instance['currency'] = $this->currency;
-		$instance['paytype'] = "MC,VISA,MTRO,DIN,AMEX,DK,V-DK,ELEC"; //FFK,JCB
-		$instance['language'] = get_bloginfo('language');
-
-		$instance['acceptreturnurl'] = $this->base_callback_url."?accept";
-		$instance['callbackurl'] = $this->base_callback_url."?callback";
-		$instance['cancelreturnurl'] = $this->base_callback_url."?cancel";
-
-		$instance['capturenow'] = 1;
-		$dibs_action = "https://sat1.dibspayment.com/dibspaymentwindow/entrypoint";
-
-		$out .= "<form name='form_payment' method='post' action='".$dibs_action."'>
-			<input type='hidden' name='acceptreturnurl' value='".$instance['acceptreturnurl']."'>
-			<input type='hidden' name='amount' value='".$instance['amount']."'>
-			<input type='hidden' name='callbackurl' value='".$instance['callbackurl']."'>
-			<input type='hidden' name='cancelreturnurl' value='".$instance['cancelreturnurl']."'>
-			<input type='hidden' name='currency' value='".$instance['currency']."'>
-			<input type='hidden' name='language' value='".$instance['language']."'>
-			<input type='hidden' name='merchant' value='".$instance['merchant']."'>
-			<input type='hidden' name='orderid' value='".$instance['orderid']."'>
-			<input type='hidden' name='paytype' value='".$instance['paytype']."'>";
-
-			if($instance['test'] == 1)
-			{
-				$out .= "<input type='hidden' name='test' value='".$instance['test']."'>";
-			}
-
-			else
-			{
-				unset($instance['test']);
-			}
-
-			if($instance['capturenow'] == 1)
-			{
-				$out .= "<input type='hidden' name='capturenow' value='".$instance['capturenow']."'>";
-			}
-
-			else
-			{
-				unset($instance['capturenow']);
-			}
-
-			//Calculate HMAC
-			########
-			$k = hextostr($hmac);
-
-			$string = get_hmac_prepared_string($instance);
-
-			$instance['mac'] = hash_hmac("sha256", $string, $k);
-
-			$out .= "<input type='hidden' name='MAC' value='".$instance['mac']."' rel='".$string."'>";
-			########
-
-		$out .= "</form>";
-
-		if(isset($instance['test']) && $instance['test'] == 1)
-		{
-			$out .= "<a href='http://tech.dibspayment.com/toolbox/test_information_cards'>".__("See DIBS test info", 'lang_base')."</a><br>
-			<button type='button' onclick='document.form_payment.submit();'>".__("Send in test mode (No money will be charged)", 'lang_base')."</button>";
-		}
-
-		else
-		{
-			$out .= "<script>document.form_payment.submit();</script>";
-		}
-
-		$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '102: ".__("Sent to payment", 'lang_base')."' WHERE answerID = '".$this->orderid."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-		return $out;
-	}
-
-	function save_token_with_answer_id()
-	{
-		global $wpdb;
-
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query2answer SET answerToken = %s WHERE answerID = '%d'", urldecode($this->token), $this->orderid));
-	}
-
-	//https://developer.paypal.com/webapps/developer/docs/classic/express-checkout/integration-guide/ECCustomizing/
-	function process_passthru_paypal()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$PayPalMode = $this->test == 1 ? 'sandbox' : 'live';
-
-		$PayPalReturnURL = $this->base_callback_url."?accept";
-		$PayPalCancelURL = $this->base_callback_url."?cancel";
-
-		$this->language = get_site_language(array('language' => get_bloginfo('language'), 'type' => "last"));
-
-		//Parameters for SetExpressCheckout, which will be sent to PayPal
-		$padata = '&METHOD=SetExpressCheckout'.
-			'&RETURNURL='.urlencode($PayPalReturnURL).
-			'&CANCELURL='.urlencode($PayPalCancelURL).
-			'&PAYMENTREQUEST_0_PAYMENTACTION='.urlencode("SALE").
-			//'&L_PAYMENTREQUEST_0_AMT0='.urlencode($this->amount).
-			'&NOSHIPPING=0'. //set 1 to hide buyer's shipping address, in-case products that does not require shipping
-			//'&PAYMENTREQUEST_0_ITEMAMT='.urlencode($this->amount).
-			'&PAYMENTREQUEST_0_AMT='.urlencode($this->amount).
-			//'&L_PAYMENTREQUEST_0_QTY0=1'.
-			'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($this->currency).
-			'&LOCALECODE='.$this->language; //PayPal pages to match the language on your website.
-			//'&LOGOIMG='."http://". //site logo
-			//'&CARTBORDERCOLOR=FFFFFF'. //border color of cart
-			//'&ALLOWNOTE=1';
-
-		//We need to execute the "SetExpressCheckOut" method to obtain paypal token
-		$httpParsedResponseAr = $this->PPHttpPost('SetExpressCheckout', $padata, $this->merchant, $this->password, $this->hmac, $PayPalMode);
-
-		//Respond according to message we receive from Paypal
-		if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"]))
-		{
-			$this->token = $httpParsedResponseAr["TOKEN"];
-
-		 	$this->action = 'https://www'.$paypalmode.'.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='.$this->token;
-
-			$this->save_token_with_answer_id();
-
-			mf_redirect($this->action);
-
-			/*$out .= "<form name='form_payment' action='".$this->action."' method='get'></form>";
-
-			if(isset($this->test) && $this->test == 1)
-			{
-				$out .= "<button type='button' onclick='document.form_payment.submit();'>".__("Send in test mode (No money will be charged)", 'lang_base')."</button>";
-			}
-
-			else
-			{
-				$out .= "<script>document.form_payment.submit();</script>";
-			}*/
-		}
-
-		else
-		{
-			$out .= "<div class='error'>
-				<p>Passthru: ".urldecode($httpParsedResponseAr["L_LONGMESSAGE0"])."</p>
-				<p>".$padata."</p>
-				<p>".var_export($httpParsedResponseAr, true)."</p>
-			</div>";
-		}
-
-		return $out;
-	}
-
-	function process_passthru_skrill()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		if($this->currency == ''){	$this->currency = "USD";}
-
-		$instance = array();
-
-		$this->action = "https://pay.skrill.com";
-		$this->language = get_site_language(array('language' => get_bloginfo('language'), 'type' => "first")); //"EN"; //get_bloginfo('language') [sv_SE, en_US etc]
-
-		$this->sid = get_url_content($this->action."/?pay_to_email=".$this->merchant."&amount=".$this->amount."&currency=".$this->currency."&language=".$this->language."&prepare_only=1");
-
-		$transaction_id = $this->prefix.$this->orderid;
-
-		$out .= "<form name='form_payment' action='".$this->action."' method='post'>
-			<input type='hidden' name='session_ID' value='".$this->sid."'>
-			<input type='hidden' name='pay_to_email' value='".$this->merchant."'>
-			<input type='hidden' name='recipient_description' value='".get_bloginfo('name')."'>
-			<input type='hidden' name='transaction_id' value='".$transaction_id."'>
-			<input type='hidden' name='return_url' value='".$this->base_callback_url."?accept'>
-			<input type='hidden' name='cancel_url' value='".$this->base_callback_url."?cancel&transaction_id=".$transaction_id."'>
-			<input type='hidden' name='status_url' value='".$this->base_callback_url."?callback'>
-			<input type='hidden' name='language' value='".$this->language."'>
-			<input type='hidden' name='amount' value='".$this->amount."'>
-			<input type='hidden' name='currency' value='".$this->currency."'>
-		</form>";
-
-		/*
-			<input type='hidden' name='merchant_fields' value='customer_number, session_id'>
-			<input type='hidden' name='customer_number' value='C1234'>
-
-			<input type='hidden' name='pay_from_email' value='payer@skrill.com'>
-			<input type='hidden' name='amount2_description' value='Product Price: '>
-			<input type='hidden' name='amount2' value='29.90'>
-			<input type='hidden' name='amount3_description' value='Handling Fees & Charges: '>
-			<input type='hidden' name='amount3' value='3.10'>
-			<input type='hidden' name='amount4_description' value='VAT (20%): '>
-			<input type='hidden' name='amount4' value='6.60'>
-			<input type='hidden' name='firstname' value='John'>
-			<input type='hidden' name='lastname' value='Payer'>
-			<input type='hidden' name='address' value='Payerstreet'>
-			<input type='hidden' name='postal_code' value='EC45MQ'>
-			<input type='hidden' name='city' value='Payertown'>
-			<input type='hidden' name='country' value='GBR'>
-			<input type='hidden' name='detail1_description' value='Product ID: '>
-			<input type='hidden' name='detail1_text' value='4509334'>
-			<input type='hidden' name='detail2_description' value='Description: '>
-			<input type='hidden' name='detail2_text' value='Romeo and Juliet (W.
-			Shakespeare) '>
-			<input type='hidden' name='detail3_description' value='Special Conditions: '>
-			<input type='hidden' name='detail3_text' value='5-6 days for delivery'>
-			<input type='hidden' name='confirmation_note' value='Sample merchant wishes you
-			pleasure reading your new book! '>
-		*/
-
-		if(isset($this->test) && $this->test == 1)
-		{
-			$out .= "<button type='button' onclick='document.form_payment.submit();'>".__("Send in test mode (No money will be charged)", 'lang_base')."</button>";
-		}
-
-		else
-		{
-			$out .= "<script>document.form_payment.submit();</script>";
-		}
-
-		return $out;
-	}
-
-	function confirm_cancel()
-	{
-		global $wpdb;
-
-		$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '103: ".__("User canceled", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-		mf_redirect(get_site_url());
-	}
-
-	function confirm_accept()
-	{
-		global $wpdb;
-
-		if($this->answer_id > 0)
-		{
-			$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '104: ".__("User has paid. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-			if($this->answer_url != '' && preg_match("/_/", $this->answer_url))
-			{
-				list($blog_id, $intQueryAnswerURL) = explode("_", $this->answer_url);
-			}
-
-			else
-			{
-				$blog_id = 0;
-				$intQueryAnswerURL = $this->answer_url;
-			}
-
-			if($intQueryAnswerURL > 0)
-			{
-				//Switch to temp site
-				####################
-				$wpdbobj = clone $wpdb;
-				$wpdb->blogid = $blog_id;
-				$wpdb->set_prefix($wpdb->base_prefix);
-				####################
-
-				if($intQueryAnswerURL != $wp_query->post->ID)
-				{
-					$wpdb->query("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '105: ".__("User has paid & has been sent to confirmation page. Waiting for confirmation...", 'lang_base')."' WHERE answerID = '".$this->answer_id."' AND query2TypeID = '0' AND answerText LIKE '10%'");
-
-					$strQueryAnswerURL = get_permalink($intQueryAnswerURL);
-
-					mf_redirect($strQueryAnswerURL);
-				}
-
-				/*else
-				{
-					header("Status: 400 Bad Request");
-				}*/
-
-				//Switch back to orig site
-				###################
-				$wpdb = clone $wpdbobj;
-				###################
-			}
-
-			/*else
-			{
-				header("Status: 400 Bad Request");
-			}*/
-		}
-
-		else
-		{
-			header("Status: 400 Bad Request");
-		}
-	}
-
-	function confirm_paid($message)
-	{
-		global $wpdb;
-
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '116: ".$message."' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-		header("Status: 200 OK");
-	}
-
-	function confirm_error($message)
-	{
-		global $wpdb;
-
-		$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix."query_answer SET answerText = '115: ".$message."' WHERE answerID = '%d' AND query2TypeID = '0'", $this->answer_id));
-
-		header("Status: 400 Bad Request");
-	}
-
-	function process_callback()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$request_type = substr($_SERVER['REQUEST_URI'], 15);
-
-		$this->is_accept = isset($_GET['accept']) || $request_type == "accept";
-		$this->is_callback = isset($_GET['callback']) || $request_type == "callback";
-		$this->is_cancel = isset($_GET['cancel']) || $request_type == "cancel";
-
-		//Debug
-		##################
-		//$folder = str_replace("plugins/mf_base/include", "", dirname(__FILE__));
-
-		$file_suffix = "unknown";
-
-		if($this->is_accept){			$file_suffix = "accept";}
-		else if($this->is_callback){	$file_suffix = "callback";}
-		else if($this->is_cancel){		$file_suffix = "cancel";}
-
-		$file = date("YmdHis")."_".$file_suffix;
-		$debug = "URI: ".$_SERVER['REQUEST_URI']."\n\n"
-			."GET: ".var_export($_GET, true)."\n\n"
-			."POST: ".var_export($_POST, true)."\n\n"
-			."THIS: ".var_export($this, true)."\n\n";
-
-		list($upload_path, $upload_url) = get_uploads_folder();
-
-		$success = set_file_content(array('file' => $upload_path.$file, 'mode' => 'a', 'content' => trim($debug)));
-		##################
-
-		$this->amount = check_var('amount', 'int');
-
-		$out .= __("Processing...", 'lang_base');
-
-		if($this->provider == 1)
-		{
-			$out .= $this->process_callback_dibs();
-		}
-
-		else if($this->provider == 3)
-		{
-			$out .= $this->process_callback_paypal();
-		}
-
-		else
-		{
-			$out .= $this->process_callback_skrill();
-		}
-
-		return $out;
-	}
-
-	function process_callback_dibs()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$this->answer_id = check_var('orderid', 'char');
-
-		$hmac = $this->hmac;
-		$instance['merchant'] = $this->merchant;
-
-		if($this->is_accept)
-		{
-			$this->confirm_accept();
-		}
-
-		else if($this->is_callback)
-		{
-			$k = hextostr($hmac);
-
-			if(isset($_POST['mobilelib']) && $_POST['mobilelib'] == "android")
-			{
-				$arr_from_post = array('lang', 'orderid', 'merchantid');
-
-				$post_selection = array();
-
-				foreach($arr_from_post as $str_from_post)
-				{
-					$post_selection[$str_from_post] = $_POST[$str_from_post];
-				}
-
-				$string = get_hmac_prepared_string($post_selection);
-			}
-
-			else
-			{
-				$string = get_hmac_prepared_string($_POST);
-			}
-
-			$mac = hash_hmac("sha256", $string, $k);
-			$is_valid_mac = isset($_POST['MAC']) && $_POST['MAC'] == $mac;
-
-			$arr_confirm_type = explode("_", $this->answer_id);
-
-			$strConfirmType = $arr_confirm_type[0];
-			$strConfirmTypeID = $arr_confirm_type[1];
-
-			if($is_valid_mac)
-			{
-				$this->confirm_paid(__("Payment done", 'lang_base')." (".($this->amount / 100).")");
-			}
-
-			else
-			{
-				$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", ".$mac." != ".$_POST['MAC'].")");
-			}
-		}
-
-		else if($this->is_cancel)
-		{
-			//Is the ID really sent with the cancel request?
-			$this->confirm_cancel();
-		}
-
-		return $out;
-	}
-
-	function get_info_from_token()
-	{
-		global $wpdb;
-
-		$result = $wpdb->get_results($wpdb->prepare("SELECT answerID, queryPaymentAmount FROM ".$wpdb->base_prefix."query INNER JOIN ".$wpdb->base_prefix."query2answer USING (queryID) WHERE answerToken = %s", $this->token));
-		$r = $result[0];
-		$this->answer_id = $r->answerID;
-		$intQueryPaymentAmount = $r->queryPaymentAmount;
-
-		$this->amount = $wpdb->get_var($wpdb->prepare("SELECT answerText FROM ".$wpdb->base_prefix."query_answer WHERE answerID = '%d' AND query2TypeID = '%d'", $this->answer_id, $intQueryPaymentAmount));
-	}
-
-	function process_callback_paypal()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$this->token = check_var('token', 'char');
-		$payer_id = check_var('PayerID', 'char');
-
-		$this->get_info_from_token();
-
-		if($this->is_cancel)
-		{
-			$this->confirm_cancel();
-		}
-
-		else if($this->is_accept)
-		{
-			$padata = '&TOKEN='.urlencode($this->token).
-				'&PAYERID='.urlencode($payer_id).
-				'&PAYMENTREQUEST_0_PAYMENTACTION='.urlencode("SALE").
-				//'&L_PAYMENTREQUEST_0_AMT0='.urlencode($this->amount).
-				//'&PAYMENTREQUEST_0_ITEMAMT='.urlencode($this->amount).
-				'&PAYMENTREQUEST_0_AMT='.urlencode($this->amount).
-				//'&L_PAYMENTREQUEST_0_QTY0=1'.
-				'&PAYMENTREQUEST_0_CURRENCYCODE='.urlencode($this->currency);
-
-			//We need to execute the "DoExpressCheckoutPayment" at this point to Receive payment from user.
-			$httpParsedResponseAr = $this->PPHttpPost('DoExpressCheckoutPayment', $padata, $this->merchant, $this->password, $this->hmac, $PayPalMode);
-
-			//Check if everything went ok..
-			if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) 
-			{
-				$this->confirm_accept();
-
-				/*if('Completed' == $httpParsedResponseAr["PAYMENTINFO_0_PAYMENTSTATUS"])
-				{
-					$out .= "<div class='updated'><p>Payment Received! Your product will be sent to you very soon!</p></div>";
-				}
-
-				else if('Pending' == $httpParsedResponseAr["PAYMENTINFO_0_PAYMENTSTATUS"])
-				{
-					$out .= "<div class='error'>
-						<p>Transaction Complete, but payment is still pending!</p>
-						<p>You need to manually authorize this payment in your <a target='_new' href='//paypal.com'>Paypal Account</a></p>
-					</div>";
-				}*/
-
-				// GetTransactionDetails requires a Transaction ID, and GetExpressCheckoutDetails requires Token returned by SetExpressCheckOut
-				$padata = '&TOKEN='.urlencode($this->token);
-
-				$httpParsedResponseAr = $this->PPHttpPost('GetExpressCheckoutDetails', $padata, $this->merchant, $this->password, $this->hmac, $PayPalMode);
-
-				if("SUCCESS" == strtoupper($httpParsedResponseAr["ACK"]) || "SUCCESSWITHWARNING" == strtoupper($httpParsedResponseAr["ACK"])) 
-				{
-					$this->confirm_paid(__("Payment done", 'lang_base')." (".$this->amount.")");
-				}
-
-				else
-				{
-					$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", Success - ".$this->token.")");
-
-					/*$out .= "<div class='error'>
-						<p>GetTransactionDetails failed: ".urldecode($httpParsedResponseAr["L_LONGMESSAGE0"])."</p>
-						<p>".var_export($httpParsedResponseAr, true)."</p>
-					</div>";*/
-
-				}
-			}
-
-			else
-			{
-				$this->confirm_error(__("Payment done", 'lang_base')." (".__("But could not verify", 'lang_base').", ".$this->token.")");
-
-				/*$out .= "<div class='error'>
-					<p>Callback: ".urldecode($httpParsedResponseAr["L_LONGMESSAGE0"])."</p>
-					<p>".$padata."</p>
-					<p>".var_export($httpParsedResponseAr, true)."</p>
-				</div>";*/
-			}
-		}
-
-		return $out;
-	}
-
-	function process_callback_skrill()
-	{
-		global $wpdb;
-
-		$out = "";
-
-		$transaction_id = check_var('transaction_id', 'char');
-		$this->answer_id = str_replace($this->prefix, "", $transaction_id);
-
-		if($this->is_accept)
-		{
-			$this->confirm_accept();
-		}
-
-		else if($this->is_callback)
-		{
-			//pay_to_email, pay_from_email, amount
-
-			$md5sig = check_var('md5sig', 'char');
-			$currency = check_var('currency', 'char');
-
-			$merchant_id = check_var('merchant_id', 'char');
-			$mb_amount = check_var('mb_amount', 'char');
-			$mb_currency = check_var('mb_currency', 'char');
-			$status = check_var('status', 'char');
-
-			$md5calc = strtoupper(md5($merchant_id.$transaction_id.strtoupper(md5($this->hmac)).$mb_amount.$mb_currency.$status));
-
-			$is_valid_mac = $md5sig == $md5calc;
-
-			$payment_status_text = "";
-
-			switch($status)
-			{
-				case -2:		$payment_status_text = __("Failed", 'lang_base');			break;
-				case 2:			$payment_status_text = __("Processed", 'lang_base');		break;
-				case 0:			$payment_status_text = __("Pending", 'lang_base');			break;
-				case -1:		$payment_status_text = __("Cancelled", 'lang_base');		break;
-			}
-
-			if($is_valid_mac)
-			{
-				$this->confirm_paid($status.": ".$payment_status_text." (".$this->amount." ".$currency.")");
-			}
-
-			else
-			{
-				$this->confirm_error($status.": ".$payment_status_text." (".__("But could not verify", 'lang_base').", ".$md5sig." != ".$md5calc.") (".$this->amount." ".$currency.")");
-			}
-		}
-
-		else if($this->is_cancel)
-		{
-			$this->confirm_cancel();
-		}
-
-		return $out;
 	}
 }
 
@@ -1453,7 +735,8 @@ class mf_import
 	{
 		//mf_enqueue_script('script_base_wp', plugins_url()."/mf_base/include/script_import.js", array('plugins_url' => plugins_url()));
 
-		$this->table = $this->actions = $this->columns = $this->unique_columns = "";
+		$this->table = $this->post_type = $this->actions = "";
+		$this->columns = $this->unique_columns = $this->validate_columns = $this->result = array();
 
 		$this->row_separator = "
 ";
@@ -1468,12 +751,10 @@ class mf_import
 	}
 
 	function get_defaults(){}
-
 	function get_external_value(&$strRowField, &$value){}
-
-	function if_more_than_one($result){}
-
+	function if_more_than_one($id){}
 	function inserted_new($id){}
+	function updated_new($id){}
 
 	function get_used_separator($data)
 	{
@@ -1505,7 +786,7 @@ class mf_import
 
 		$this->action = check_var('strTableAction');
 		$this->skip_header = check_var('intImportSkipHeader', '', true, '0');
-		$this->text = isset($_POST['strImportText']) ? $_POST['strImportText'] : "";
+		$this->text = isset($_POST['strImportText']) ? trim($_POST['strImportText']) : "";
 
 		if($this->text != '')
 		{
@@ -1600,6 +881,14 @@ class mf_import
 		$this->is_run = isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce'], 'import_run') && $this->action != '' && count($this->data) > 0;
 	}
 
+	function update_options($id)
+	{
+		foreach($this->query_option as $key => $value)
+		{
+			update_post_meta($id, $key, $value);
+		}
+	}
+
 	function do_import()
 	{
 		global $wpdb;
@@ -1615,9 +904,10 @@ class mf_import
 
 					$i_start = $this->skip_header ? 1 : 0;
 
-					for($i = 0; $i < $count_temp_rows; $i++)
+					for($i = $i_start; $i < $count_temp_rows; $i++)
 					{
 						$query_search = $query_xtra = "";
+						$this->query_option = array();
 
 						$arr_values = $this->data[$i];
 						$count_temp_values = count($arr_values);
@@ -1630,6 +920,13 @@ class mf_import
 
 							if($strRowField != '')
 							{
+								$value = str_replace('"', '', $value);
+
+								if(isset($this->validate_columns[$strRowField]))
+								{
+									$value = check_var($value, $this->validate_columns[$strRowField], false, '', true);
+								}
+
 								$this->get_external_value($strRowField, $value);
 
 								if(in_array($strRowField, $this->unique_columns))
@@ -1637,111 +934,238 @@ class mf_import
 									$query_search .= ($query_search != '' ? " OR " : "").$strRowField." = '".$value."'";
 								}
 
-								$query_xtra .= ($query_xtra != '' ? ", " : "").$strRowField." = '".str_replace('"', '', $value)."'";
+								if($value != '')
+								{
+									$query_xtra .= ($query_xtra != '' ? ", " : "").$strRowField." = '".$value."'";
+								}
 							}
 						}
 
-						if($query_search != '')
+						if($query_xtra != '' && $query_search != '')
 						{
-							if($query_xtra == '')
+							$table_name = $wpdb->base_prefix.$this->table;
+
+							if($this->table == "posts")
 							{
-								//$status_icon = "fa-ban";
-								//$text = __("The row was empty so nothing was inserted", 'lang_base');
+								$table_id = "ID";
+								$table_created = "post_date";
+								$table_user = "post_author";
+
+								$query_search .= " AND post_type = '".$this->post_type."'";
+								$query_xtra .= ($query_xtra != '' ? ", " : "")."post_type = '".$this->post_type."'";
 							}
 
 							else
 							{
-								$result = $wpdb->get_results("SELECT ".$this->table."ID FROM ".$wpdb->base_prefix.$this->table." WHERE ".$query_search." ORDER BY ".$this->table."Created ASC LIMIT 0, 5");
-								$rows = $wpdb->num_rows;
+								$table_id = $this->table."ID";
+								$table_created = $this->table."Created";
+								$table_user = "userID";
+							}
 
-								if($this->action == "import")
+							$query_select = "SELECT ".$table_id." AS ID FROM ".$table_name." WHERE ".$query_search." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+
+							$result = $wpdb->get_results($query_select);
+							$rows = $wpdb->num_rows;
+
+							if($this->action == "import")
+							{
+								if($rows > 0)
 								{
-									if($rows > 0)
+									$k = 0;
+
+									foreach($result as $r)
 									{
-										$wpdb->query("UPDATE ".$wpdb->base_prefix.$this->table." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$query_xtra." WHERE ".$query_search);
-
-										if($wpdb->rows_affected > 0)
+										if($k == 0)
 										{
-											//$status_icon = "fa-check";
-											//$text = __("The row already existed and was updated", 'lang_base').($rows > 1 ? " (".$rows.")" : "");
+											$id = $r->ID;
 
-											$this->rows_updated++;
+											if($this->table == "posts")
+											{
+												$query_update = "UPDATE ".$table_name." SET post_status = 'publish', ".$query_xtra." WHERE ".$table_id." = '".$id."'";
+
+												$wpdb->query($query_update);
+
+												/*$post_data = array(
+													'ID' => $id,
+													'post_type' => $this->post_type,
+													'post_status' => 'publish',
+													//$query_xtra?
+												);
+
+												wp_update_post($post_data);*/
+											}
+
+											else
+											{
+												$query_update = "UPDATE ".$table_name." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$query_xtra." WHERE ".$table_id." = '".$id."'"; //$query_search
+
+												$wpdb->query($query_update);
+											}
+
+											$this->updated_new($id);
+
+											if($wpdb->rows_affected > 0)
+											{
+												$this->update_options($id);
+
+												$this->rows_updated++;
+
+												$this->result[] = array(
+													'action' => 'fa-check green',
+													'value' => $query_update,
+												);
+											}
+
+											else
+											{
+												$this->rows_up_to_date++;
+
+												$this->result[] = array(
+													'action' => 'fa-cloud',
+													'value' => $query_update,
+												);
+											}
 										}
 
 										else
 										{
-											//$status_icon = "fa-cloud";
-											//$text = __("The row was already up to date", 'lang_base').($rows > 1 ? " (".$rows.")" : "");
+											$this->if_more_than_one($r->ID);
 
-											$this->rows_up_to_date++;
+											$this->result[] = array(
+												'action' => 'fa-copy',
+												'value' => $query_select,
+											);
 										}
 
-										if($rows > 1)
-										{
-											$this->if_more_than_one($result);
-										}
+										$k++;
 									}
 
-									else
+									/*if($rows > 1)
 									{
-										$wpdb->query($wpdb->prepare("INSERT INTO ".$wpdb->base_prefix.$this->table." SET ".$query_xtra.", ".$this->table."Created = NOW(), userID = '%d'", get_current_user_id()));
-
-										if($wpdb->rows_affected > 0)
-										{
-											$this->inserted_new($wpdb->insert_id);
-
-											//$status_icon = "fa-check";
-											//$text = __("The row was inserted", 'lang_base');
-
-											$this->rows_inserted++;
-										}
-
-										else
-										{
-											//$status_icon = "fa-ban";
-											//$text = __("The row should have been inserted but something went wrong", 'lang_base');
-
-											$this->rows_not_inserted++;
-										}
-									}
+										$this->if_more_than_one($result);
+									}*/
 								}
 
-								else if($this->action == "delete")
+								else
 								{
-									if($rows > 0)
+									$query_insert = $wpdb->prepare("INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'", get_current_user_id());
+
+									/*if($this->table == "posts")
 									{
-										$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix.$this->table." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$query_search, get_current_user_id()));
+										$post_data = array(
+											'post_type' => $this->post_type,
+											'post_status' => 'publish',
+											//$query_xtra?
+										);
+
+										wp_insert_post($post_data);
+									}*/
+
+									if($query_insert != '')
+									{
+										$wpdb->query($query_insert);
 
 										if($wpdb->rows_affected > 0)
 										{
-											//$status_icon = "fa-close";
-											//$text = __("The row existed so it was deleted", 'lang_base');
+											$id = $wpdb->insert_id;
 
-											$this->rows_deleted++;
+											$this->update_options($id);
+
+											$this->inserted_new($id);
+
+											$this->rows_inserted++;
+
+											$this->result[] = array(
+												'action' => 'fa-plus',
+												'value' => $query_insert,
+											);
 										}
 
 										else
 										{
-											//$status_icon = "fa-ban";
-											//$text = __("The row should have been deleted but something went wrong", 'lang_base');
+											$this->rows_not_inserted++;
 
-											$this->rows_not_deleted++;
+											$this->result[] = array(
+												'action' => 'fa-chain-broken',
+												'value' => $query_insert,
+											);
 										}
 									}
 
 									else
 									{
-
-										//$status_icon = "fa-ban";
-										//$text = __("The row did not exist", 'lang_base');
-
-										$this->rows_not_exists++;
+										do_log("wpdb->prepare made this query empty: INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'");
 									}
 								}
 							}
+
+							else if($this->action == "delete")
+							{
+								if($rows > 0)
+								{
+									if($this->table == "posts")
+									{
+										$id = $wpdb->get_var("SELECT ".$table_id." FROM ".$table_name." WHERE ".$query_search);
+
+										wp_trash_post($id);
+									}
+
+									else
+									{
+										$query_delete = $wpdb->prepare("UPDATE ".$table_name." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$query_search, get_current_user_id());
+
+										$wpdb->query($query_delete);
+									}
+
+									if($wpdb->rows_affected > 0)
+									{
+										$this->rows_deleted++;
+
+										$this->result[] = array(
+											'action' => 'fa-close',
+											'value' => $query_delete,
+										);
+									}
+
+									else
+									{
+										$this->rows_not_deleted++;
+
+										$this->result[] = array(
+											'action' => 'fa-chain-broken',
+											'value' => $query_delete,
+										);
+									}
+								}
+
+								else
+								{
+									$this->rows_not_exists++;
+
+									$this->result[] = array(
+										'action' => 'fa-question',
+										'value' => $query_select,
+									);
+								}
+							}
+
+							else
+							{
+								$this->result[] = array(
+									'action' => 'fa-question',
+								);
+							}
 						}
 
-						if($i % 10 == 0)
+						else
+						{
+							$this->result[] = array(
+								'action' => 'fa-heartbeat',
+								'value' => var_export($arr_values, true),
+							);
+						}
+
+						if($i % 100 == 0)
 						{
 							sleep(0.1);
 							set_time_limit(60);
@@ -1750,22 +1174,69 @@ class mf_import
 
 					if($this->action == "import")
 					{
-						$out .= "<tr><td><i class='fa fa-lg fa-check'></i></td><td>".$this->rows_updated."</td><td>".__("Updated", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-cloud'></i></td><td>".$this->rows_up_to_date."</td><td>".__("Already up to date", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-check'></i></td><td>".$this->rows_inserted."</td><td>".__("Inserted", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_inserted."</td><td>".__("Not inserted", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-close'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+						if($this->rows_updated > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-check green'></i></td><td>".$this->rows_updated."</td><td>".__("Updated", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_up_to_date > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-cloud'></i></td><td>".$this->rows_up_to_date."</td><td>".__("Already up to date", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_inserted > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-plus green'></i></td><td>".$this->rows_inserted."</td><td>".__("Inserted", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_not_inserted > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-chain-broken red'></i></td><td>".$this->rows_not_inserted."</td><td>".__("Not inserted", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_deleted > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-close red'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+						}
 					}
 
 					else if($this->action == "delete")
 					{
-						$out .= "<tr><td><i class='fa fa-lg fa-close'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_deleted."</td><td>".__("Not deleted", 'lang_base')."</td></tr>
-						<tr><td><i class='fa fa-lg fa-ban'></i></td><td>".$this->rows_not_exists."</td><td>".__("Did not exist", 'lang_base')."</td></tr>";
+						if($this->rows_deleted > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-close red'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_not_deleted > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-chain-broken red'></i></td><td>".$this->rows_not_deleted."</td><td>".__("Not deleted", 'lang_base')."</td></tr>";
+						}
+
+						if($this->rows_not_exists > 0)
+						{
+							$out .= "<tr><td><i class='fa fa-lg fa-question'></i></td><td>".$this->rows_not_exists."</td><td>".__("Did not exist", 'lang_base')."</td></tr>";
+						}
+					}
+
+					if(count($this->result) > 0 && IS_ADMIN)
+					{
+						$out .= "<tr><td colspan='3'></td></tr>";
+
+						foreach($this->result as $row)
+						{
+							$action = $row['action'];
+							$value = isset($row['value']) ? $row['value'] : "";
+
+							$out .= "<tr>
+								<td><i class='fa fa-lg ".$action."'></i></td>
+								<td colspan='2'>".$value."</td>
+							</tr>";
+						}
 					}
 
 				$out .= "</tbody>
-			</table>";
+			</table>
+			<br>";
 		}
 
 		return $out;
@@ -1780,7 +1251,7 @@ class mf_import
 			$out .= $this->do_import();
 		}
 
-		else
+		if(!$this->is_run || IS_ADMIN)
 		{
 			$out .= $this->get_form();
 		}
@@ -1862,7 +1333,7 @@ class mf_import
 
 					for($i = 0; $i < $count_temp_values; $i++)
 					{
-						$value = $arr_values[$i];
+						$import_text = $arr_values[$i];
 
 						$strRowField = check_var('strRowCheck'.$i);
 
@@ -1870,7 +1341,7 @@ class mf_import
 
 						$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
 
-						$result = $wpdb->get_results("SHOW FIELDS FROM ".$wpdb->base_prefix.$this->table);
+						/*$result = $wpdb->get_results("SHOW FIELDS FROM ".$wpdb->base_prefix.$this->table);
 
 						foreach($result as $r)
 						{
@@ -1880,9 +1351,15 @@ class mf_import
 							{
 								$arr_data[] = array($strTableField, $this->columns[$strTableField]);
 							}
+						}*/
+
+						//Works with wp_posts options
+						foreach($this->columns as $key => $value)
+						{
+							$arr_data[] = array($key, $value);
 						}
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'compare' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$value.")</span>"));
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'compare' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
 					}
 
 					$out .= "&nbsp;"
@@ -2063,7 +1540,7 @@ class mf_export
 						/*$objPHPExcel->getActiveSheet()->getRowDimension(8)->setRowHeight(-1);
 						$objPHPExcel->getActiveSheet()->getStyle('A8')->getAlignment()->setWrapText(true);*/
 
-						//$objPHPExcel->getActiveSheet()->setTitle($strQueryName);
+						//$objPHPExcel->getActiveSheet()->setTitle($strFormName);
 
 						$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
 						$objWriter->save($this->upload_path.$file);
@@ -2097,12 +1574,12 @@ class mf_export
 				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
 				<div class='inside'>";
 
-					if(count($this->types) > 1)
+					if(count($this->types) > 0)
 					{
 						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'compare' => $this->type));
 					}
 
-					if(count($this->actions) > 1)
+					if(count($this->actions) > 0)
 					{
 						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'compare' => $this->action));
 					}

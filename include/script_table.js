@@ -26,6 +26,8 @@ jQuery(function($)
 		});
 	}
 
+	$('.wp-list-table').removeClass('fixed');
+
 	$('.wp-list-table tr').each(function()
 	{
 		var self = $(this);

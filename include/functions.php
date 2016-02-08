@@ -1,5 +1,53 @@
 <?php
 
+function get_option_or_default($key, $default = '')
+{
+	$option = get_option($key);
+
+	if($option == '' && $default != '')
+	{
+		$option = $default;
+	}
+
+	return $option;
+}
+
+function is_between($data)
+{
+	$out = false;
+
+	$value_min = $data['value'][0];
+	$compare_min = $data['compare'][0];
+	$compare_max = $data['compare'][1];
+
+	if($value_min >= $compare_min && $value_min <= $compare_max)
+	{
+		$out = true;
+	}
+
+	else if($value_max >= $compare_min && $value_max <= $compare_max)
+	{
+		$out = true;
+	}
+
+	if(isset($data['value'][1]))
+	{
+		$value_max = $data['value'][1];
+
+		if($compare_min >= $value_min && $compare_min <= $value_max)
+		{
+			$out = true;
+		}
+
+		else if($compare_max >= $value_min && $compare_max <= $value_max)
+		{
+			$out = true;
+		}
+	}
+
+	return $out;
+}
+
 function delete_old_files($data)
 {
 	$time = time();
@@ -125,13 +173,8 @@ function insert_attachment($data)
 	return $intFileID;
 }
 
-function do_log($data)
+function do_log($data, $action = "insert")
 {
-	if(IS_ADMIN)
-	{
-		echo $data."<br>";
-	}
-
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
 	{
 		require_once(ABSPATH.'wp-content/mf_log/include/classes.php');
@@ -140,7 +183,12 @@ function do_log($data)
 	if(class_exists('mf_log'))
 	{
 		$obj_log = new mf_log();
-		$obj_log->create($data);
+		$obj_log->create($data, $action);
+	}
+
+	else if(IS_ADMIN)
+	{
+		echo $data."<br>";
 	}
 }
 
@@ -172,7 +220,9 @@ function delete_base($data)
 {
 	global $wpdb;
 
-	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL 1 MONTH)");
+	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+
+	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
 	foreach($result as $r)
 	{
@@ -180,7 +230,7 @@ function delete_base($data)
 
 		$rows = 0;
 
-		foreach($data['child_table'] as $child_table => $child_table_type)
+		foreach($data['child_tables'] as $child_table => $child_table_type)
 		{
 			if($child_table_type['action'] == "trash")
 			{
@@ -198,7 +248,7 @@ function delete_base($data)
 
 		if($rows == 0)
 		{
-			foreach($data['child_table'] as $child_table => $child_table_type)
+			foreach($data['child_tables'] as $child_table => $child_table_type)
 			{
 				if($child_table_type['action'] == "delete")
 				{
@@ -219,7 +269,8 @@ function delete_base($data)
 function init_base()
 {
 	define('DEFAULT_DATE', "1982-08-04 23:15:00");
-	define('IS_ADMIN', current_user_can('update_core'));
+	//define('IS_SUPER_ADMIN', current_user_can('update_core'));
+	define('IS_ADMIN', current_user_can('manage_options'));
 	define('IS_EDITOR', current_user_can('edit_pages'));
 	define('IS_AUTHOR', current_user_can('upload_files'));
 
@@ -232,11 +283,6 @@ function init_base()
 
 	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
 	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
-
-	if(wp_get_schedule('cron_base') == "every_ten_seconds" && !defined('DISABLE_WP_CRON'))
-	{
-		define('DISABLE_WP_CRON', true);
-	}
 
 	if($setting_base_auto_core_update != '')
 	{
@@ -413,8 +459,11 @@ function mf_format_number($in, $dec = 2)
 function upload_mimes_base($existing_mimes = array())
 {
 	// add your extension to the array
+	$existing_mimes['eot'] = "font/opentype";
 	$existing_mimes['ico'] = "image/x-icon";
 	$existing_mimes['svg'] = "image/svg+xmln";
+	$existing_mimes['ttf'] = "font/truetype";
+	$existing_mimes['woff'] = "application/font-woff";
 
 	// removing existing file types
 	//unset($existing_mimes['exe']);
@@ -553,10 +602,10 @@ function settings_base()
 
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
-			"setting_base_recommend" => __("Recommendations", 'lang_base'),
 			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 			"setting_base_cron" => __("Scheduled to run", 'lang_base'),
+			"setting_base_recommend" => __("Recommendations", 'lang_base'),
 		);
 
 		foreach($arr_settings as $handle => $text)
@@ -568,14 +617,53 @@ function settings_base()
 	}
 }
 
-function setting_base_callback(){}
+function setting_base_callback()
+{
+	echo settings_header('settings_base', __("Common", 'lang_base'));
+}
+
+//main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
+function int2point($in)
+{
+	$out = "";
+	$in_orig = $in;
+
+	$main_version = floor($in / 10000);
+
+	$in -= $main_version * 10000;
+
+	$minor_version = floor($in / 100);
+
+	$in -= $minor_version * 100;
+
+	$sub_version = $in;
+
+	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
+}
+
+function settings_header($id, $title)
+{
+	return "<div id='".$id."'>
+		&nbsp;
+		<a href='#".$id."'><h3>".$title."</h3></a>
+	</div>";
+}
 
 function setting_base_info_callback()
 {
+	//global $wpdb;
+
+	//wp_check_php_mysql_versions()
+
 	$php_version = explode("-", phpversion());
 	$php_version = $php_version[0];
 	$mysql_version = explode("-", @mysql_get_server_info());
 	$mysql_version = $mysql_version[0];
+
+	if($mysql_version == '')
+	{
+		$mysql_version = int2point(mysqli_get_client_version()); //$wpdb
+	}
 
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
@@ -666,21 +754,28 @@ function setting_base_cron_callback()
 		$arr_data[] = array($key, $value['display']);
 	}
 
-	echo "<label>"
-		.show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option))
-		."<span class='description'>"
-			.sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
+	$next_scheduled_text = sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
 
-			if($option == "every_ten_seconds")
-			{
-				if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
+	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
+	{
+		echo $next_scheduled_text.". <a href='".get_site_url()."/wp-cron.php?doing_cron'>".__("Run schedule manually", 'lang_base')."</a>";
+	}
+
+	else
+	{
+		echo "<label>"
+			.show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option))
+			."<span class='description'>"
+				.$next_scheduled_text;
+
+				if($option == "every_ten_seconds")
 				{
-					echo ". <a href='".get_site_url()."/wp-cron.php?doing_cron'>".__("Run schedule manually", 'lang_base')."</a>";
+					echo ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
 				}
-			}
 
-		echo "</span>"
-	."</label>";
+			echo "</span>"
+		."</label>";
+	}
 }
 
 function mf_enqueue_script($handle, $file = "", $translation = array())
@@ -791,7 +886,8 @@ function get_role_first_capability($role)
 #########################
 function array_sort($data)
 {
-	if(!isset($data['order'])){		$data['order'] = "asc";}
+	if(!isset($data['order'])){			$data['order'] = "asc";}
+	if(!isset($data['keep_index'])){	$data['keep_index'] = false;}
 
 	$array = $data['array'];
 	$on = $data['on'];
@@ -832,10 +928,17 @@ function array_sort($data)
 			break;
 		}
 
-		//This changes the index...to keep index but change order use $array as output instead
 		foreach($sortable_array as $k => $v)
 		{
-			$new_array[] = $array[$k];
+			if($data['keep_index'] == true)
+			{
+				$new_array[$k] = $array[$k];
+			}
+
+			else
+			{
+				$new_array[] = $array[$k];
+			}
 		}
 	}
 
@@ -1052,11 +1155,23 @@ function run_queries($array)
 	}
 }
 
-function mf_redirect($location)
+function mf_redirect($location, $arr_vars = array())
 {
-	if(headers_sent() == true)
+	$count_temp = count($arr_vars);
+
+	if(headers_sent() == true || $count_temp > 0)
 	{
-		echo "<form name='reload' action='".$location."' method='post'></form>
+		echo "<form name='reload' action='".$location."' method='post'>";
+
+			if($count_temp > 0)
+			{
+				foreach($arr_vars as $key => $value)
+				{
+					echo input_hidden(array('name' => $key, 'value' => $value));
+				}
+			}
+		
+		echo "</form>
 		<script>document.reload.submit();</script>";
 	}
 
@@ -1443,7 +1558,7 @@ function show_textarea($data)
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['required'])){		$data['required'] = 0;}
-	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
+	//if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 
 	if($data['required'] == 1){		$data['xtra'] .= " required";}
 
@@ -1461,20 +1576,15 @@ function show_textarea($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		if($data['wysiwyg'] == true)
+		/*if($data['wysiwyg'] == true)
 		{
-			$settings = array(
-				//'media_buttons' => false,
-				'textarea_rows' => 5
-			);
-
-			$out .= wp_editor(stripslashes($data['value']), $data['name'], $settings);
+			$out .= wp_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
 		}
 
 		else
-		{
+		{*/
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">".stripslashes($data['value'])."</textarea>";
-		}
+		//}
 
 	$out .= "</div>";
 
@@ -1754,7 +1864,7 @@ function show_submit($data)
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")
-		.($data['class'] != '' ? " class='".$data['class']."'" : " class='button button-primary button-large'")
+		.($data['class'] != '' ? " class='".$data['class']."'" : " class='button-primary'")
 		.$data['xtra']
 	.">"
 		.$data['text']

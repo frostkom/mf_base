@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MF Base\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-08 13:22+0100\n"
+"POT-Creation-Date: 2016-02-09 14:53+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: Martin Fors\n"
@@ -26,7 +26,7 @@ msgid "Use run_cron_delete() on %s"
 msgstr "Använd run_cron_delete() på %s"
 
 #: ../include/classes.php:366
-#: ../include/functions.php:1091
+#: ../include/functions.php:1087
 msgid "Search"
 msgstr "Sök"
 
@@ -102,12 +102,12 @@ msgid "File"
 msgstr "Fil"
 
 #: ../include/classes.php:1301
-#: ../include/functions.php:723
+#: ../include/functions.php:719
 msgid "Yes"
 msgstr "Ja"
 
 #: ../include/classes.php:1302
-#: ../include/functions.php:722
+#: ../include/functions.php:718
 msgid "No"
 msgstr "Nej"
 
@@ -201,157 +201,157 @@ msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la 
 msgid "You need to install the plugin %s%s%s first"
 msgstr "Du måste installera pluginet %s%s%s först"
 
-#: ../include/functions.php:604
+#: ../include/functions.php:600
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:605
-msgid "Recommendations"
-msgstr "Rekommendationer"
-
-#: ../include/functions.php:606
+#: ../include/functions.php:601
 msgid "Update core automatically"
 msgstr "Uppdatera Wordpress automatiskt"
 
-#: ../include/functions.php:607
+#: ../include/functions.php:602
 msgid "Update notification"
 msgstr "Meddelande om uppdatering"
 
-#: ../include/functions.php:608
+#: ../include/functions.php:603
 msgid "Scheduled to run"
 msgstr "Schemalagd att köras"
 
-#: ../include/functions.php:622
-msgid "Common"
-msgstr "Gemensam"
+#: ../include/functions.php:604
+msgid "Recommendations"
+msgstr "Rekommendationer"
 
-#: ../include/functions.php:673
+#: ../include/functions.php:618
+msgid "Common"
+msgstr "Gemensamt"
+
+#: ../include/functions.php:669
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:709
+#: ../include/functions.php:705
 msgid "None"
 msgstr "Inga"
 
-#: ../include/functions.php:710
+#: ../include/functions.php:706
 msgid "Minor"
 msgstr "Små"
 
-#: ../include/functions.php:710
+#: ../include/functions.php:706
 msgid "default"
 msgstr "standard"
 
-#: ../include/functions.php:711
+#: ../include/functions.php:707
 msgid "All"
 msgstr "Alla"
 
-#: ../include/functions.php:726
+#: ../include/functions.php:722
 msgid "Send e-mail to admin after auto core update"
 msgstr "Skicka e-post till admin efter en automatisk uppdatering av Wordpress"
 
-#: ../include/functions.php:757
+#: ../include/functions.php:753
 #, php-format
 msgid "Next scheduled %s"
 msgstr "Nästa schemaläggning %s"
 
-#: ../include/functions.php:761
+#: ../include/functions.php:757
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/functions.php:773
+#: ../include/functions.php:769
 #, php-format
 msgid "Make sure that %s is added to wp-config.php"
 msgstr "Se till så att %s är med i wp-config.php"
 
-#: ../include/functions.php:1904
+#: ../include/functions.php:1895
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:2184
+#: ../include/functions.php:2175
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:2185
+#: ../include/functions.php:2176
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:2187
+#: ../include/functions.php:2178
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:2209
+#: ../include/functions.php:2200
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:2220
+#: ../include/functions.php:2211
 msgid "Saturday"
 msgstr "Lördag"
 

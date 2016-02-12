@@ -220,6 +220,8 @@ function delete_base($data)
 {
 	global $wpdb;
 
+	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
+
 	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
 
 	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
@@ -588,17 +590,13 @@ function settings_base()
 	wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
 	mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
 
-	$options_page = "settings_mf_base";
+	define('BASE_OPTIONS_PAGE', "settings_mf_base");
+
 	$options_area = "setting_base";
 
 	if(IS_ADMIN)
 	{
-		add_settings_section(
-			$options_area,
-			"",
-			$options_area."_callback",
-			$options_page
-		);
+		add_settings_section($options_area, "",	$options_area."_callback", BASE_OPTIONS_PAGE);
 
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
@@ -610,9 +608,9 @@ function settings_base()
 
 		foreach($arr_settings as $handle => $text)
 		{
-			add_settings_field($handle, $text, $handle."_callback", $options_page, $options_area);
+			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $options_area);
 
-			register_setting($options_page, $handle);
+			register_setting(BASE_OPTIONS_PAGE, $handle);
 		}
 	}
 }
@@ -1246,7 +1244,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = $temp;}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1268,7 +1265,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = $temp;}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1285,7 +1281,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = $temp;}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1301,7 +1296,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = $temp;}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1317,13 +1311,12 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = $temp;}
-			//$arrErrorField[] = $in;
 		}
 	}
 
-	else if($type == 'date' || $type == 'shortDate' || $type == 'shortDate2' || $type2 == 'dte')
+	else if($type == 'date' || $type2 == 'dte') // || $type == 'shortDate' || $type == 'shortDate2'
 	{
-		if($type == 'shortDate')
+		/*if($type == 'shortDate')
 		{
 			if($temp == '' || (preg_match('/^\d{4}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
 			{
@@ -1340,12 +1333,11 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 				else
 				{
 					if($return_empty == false){$out = trim($temp);}
-					//$arrErrorField[] = $in;
 				}
 			}
 		}
 
-		else if($type == 'shortDate2') //Används av formulär för Securitas
+		else if($type == 'shortDate2')
 		{
 			if($temp == '' || preg_match('/^\d{6}$/', $temp))
 			{
@@ -1362,13 +1354,12 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 				else
 				{
 					if($return_empty == false){$out = trim($temp);}
-					//$arrErrorField[] = $in;
 				}
 			}
 		}
 
 		else
-		{
+		{*/
 			if($temp == '' || (preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
 			{
 				$out = $temp;
@@ -1384,17 +1375,21 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 				else
 				{
 					if($return_empty == false){$out = trim($temp);}
-					//$arrErrorField[] = $in;
 				}
 			}
-		}
+		//}
 	}
 
 	else if(is_array($temp) || $type == 'array' || $type2 == 'arr')
 	{
-		if(is_array($temp) || $temp == '')
+		if(is_array($temp))
 		{
 			$out = $temp; //Får aldrig köras addslashes() på detta
+		}
+
+		else if($temp == '')
+		{
+			$out = array();
 		}
 	}
 
@@ -1420,7 +1415,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = trim(trim($temp), "&nbsp;");}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1436,7 +1430,6 @@ function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = f
 		else
 		{
 			if($return_empty == false){$out = trim($temp);}
-			//$arrErrorField[] = $in;
 		}
 	}
 
@@ -1458,7 +1451,7 @@ function show_textfield($data)
 		$data['type'] = "number";
 	}
 
-	$arr_accepted_types = array('text', 'email', 'url', 'date', 'number', 'range');
+	$arr_accepted_types = array('text', 'email', 'url', 'date', 'number', 'range', 'color');
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
 	if(!isset($data['text'])){			$data['text'] = "";}

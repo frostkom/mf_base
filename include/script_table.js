@@ -24,6 +24,17 @@ jQuery(function($)
 			},
 			minLength: 3
 		});
+
+		dom_form.bind("autocompleteopen", function(e, ui)
+		{
+			var dom_result = $('.ui-autocomplete'),
+				search_width = $(e.target).outerWidth(),
+				result_width = dom_result.outerWidth(),
+				result_left = parseInt(dom_result.css('left')),
+				result_left_new = result_left - (result_width - search_width);
+
+			dom_result.css({'left': result_left_new + 'px'});
+		});
 	}
 
 	$('.wp-list-table').removeClass('fixed');

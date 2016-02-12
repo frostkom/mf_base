@@ -372,6 +372,16 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
+		/*if(!isset($data['select']))
+		{
+			$data['select'] = "";
+
+			foreach($this->columns as $key => $value)
+			{
+				$data['select'] .= ($data['select'] != '' ? ", " : "").$key;
+			}
+		}*/
+
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
@@ -741,6 +751,7 @@ class mf_import
 		$this->row_separator = "
 ";
 		$this->is_run = false;
+		$this->unique_check = "OR";
 
 		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = 0;
 
@@ -931,7 +942,7 @@ class mf_import
 
 								if(in_array($strRowField, $this->unique_columns))
 								{
-									$query_search .= ($query_search != '' ? " OR " : "").$strRowField." = '".$value."'";
+									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").$strRowField." = '".$value."'";
 								}
 
 								if($value != '')
@@ -1048,7 +1059,7 @@ class mf_import
 
 								else
 								{
-									$query_insert = $wpdb->prepare("INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'", get_current_user_id());
+									$query_insert = "INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '".get_current_user_id()."'";
 
 									/*if($this->table == "posts")
 									{

@@ -1,5 +1,12 @@
 <?php
 
+function is_domain_valid($email, $record = 'MX')
+{
+	list($user, $domain) = explode('@', $email);
+
+	return checkdnsrr($domain, $record);
+}
+
 function get_option_or_default($key, $default = '')
 {
 	$option = get_option($key);
@@ -12,11 +19,56 @@ function get_option_or_default($key, $default = '')
 	return $option;
 }
 
+function get_post_meta_file_src($data)
+{
+	if(!isset($data['is_image'])){		$data['is_image'] = true;}
+	if(!isset($data['image_size'])){	$data['image_size'] = "full";} //thumbnail, medium, large, or full
+	if(!isset($data['single'])){		$data['single'] = true;}
+
+	$file_ids = get_post_meta($data['post_id'], $data['meta_key'], $data['single']);
+
+	if($data['single'])
+	{
+		if($data['is_image'] == true)
+		{
+			$file_url = wp_get_attachment_image_src($file_ids, $data['image_size']);
+			$file_url = $file_url[0];
+		}
+
+		else
+		{
+			$file_url = wp_get_attachment_url($file_ids);
+		}
+	}
+
+	else
+	{
+		$file_url = array();
+
+		foreach($file_ids as $file_id)
+		{
+			if($data['is_image'] == true)
+			{
+				$file_url_temp = wp_get_attachment_image_src($file_id, $data['image_size']);
+				$file_url[] = $file_url_temp[0];
+			}
+
+			else
+			{
+				$file_url[] = wp_get_attachment_url($file_id);
+			}
+		}
+	}
+
+	return $file_url;
+}
+
 function is_between($data)
 {
 	$out = false;
 
 	$value_min = $data['value'][0];
+	$value_max = isset($data['value'][1]) ? $data['value'][1] : "";
 	$compare_min = $data['compare'][0];
 	$compare_max = $data['compare'][1];
 
@@ -25,7 +77,7 @@ function is_between($data)
 		$out = true;
 	}
 
-	else if($value_max >= $compare_min && $value_max <= $compare_max)
+	else if($value_max != '' && $value_max >= $compare_min && $value_max <= $compare_max)
 	{
 		$out = true;
 	}
@@ -197,6 +249,9 @@ function schedules_base($schedules)
 	$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
 	$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
 	$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
+
+	$schedules['weekly'] = array('interval' => 60 * 60 * 24 * 7, 'display' => __("Weekly", 'lang_base'));
+	$schedules['monthly'] = array('interval' => 60 * 60 * 24 * 7 * 4, 'display' => __("Monthly", 'lang_base'));
 
 	return $schedules;
 }
@@ -584,11 +639,11 @@ function get_current_user_role($id = 0)
 
 function settings_base()
 {
-	wp_enqueue_style('style_base_table', plugins_url()."/mf_base/include/style_table.css");
+	wp_enqueue_style('style_base_wp', plugins_url()."/mf_base/include/style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
 	wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
-	mf_enqueue_script('script_base_table', plugins_url()."/mf_base/include/script_table.js", array('plugins_url' => plugins_url()));
+	mf_enqueue_script('script_base_wp', plugins_url()."/mf_base/include/script_wp.js", array('plugins_url' => plugins_url()));
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
@@ -649,10 +704,6 @@ function settings_header($id, $title)
 
 function setting_base_info_callback()
 {
-	//global $wpdb;
-
-	//wp_check_php_mysql_versions()
-
 	$php_version = explode("-", phpversion());
 	$php_version = $php_version[0];
 	$mysql_version = explode("-", @mysql_get_server_info());
@@ -660,7 +711,7 @@ function setting_base_info_callback()
 
 	if($mysql_version == '')
 	{
-		$mysql_version = int2point(mysqli_get_client_version()); //$wpdb
+		$mysql_version = int2point(mysqli_get_client_version());
 	}
 
 	$php_required = "5.2.4";
@@ -677,6 +728,7 @@ function setting_base_recommend_callback()
 		'admin-branding/admin-branding.php' => "Admin Branding",
 		'admin-menu-tree-page-view/index.php' => "Admin Menu Tree Page View",
 		'adminer/adminer.php' => "Adminer",
+		'backwpup/backwpup.php' => "BackWPup",
 		'black-studio-tinymce-widget/black-studio-tinymce-widget.php' => "Black Studio TinyMCE Widget",
 		'email-log/email-log.php' => "Email Log",
 		'enable-media-replace/enable-media-replace.php' => "Enable Media Replace",
@@ -944,6 +996,43 @@ function array_sort($data)
 }
 #########################
 
+function array_remove($data) //$remove, $array, $strict = true
+{
+	if(!isset($data['on'])){		$data['on'] = 'key';}
+
+	if(!is_array($data['remove']))
+	{
+		$data['remove'][] = $data['remove'];
+	}
+
+	foreach($data['array'] as $key => $value)
+	{
+		if($data['on'] == 'key')
+		{
+			foreach($data['remove'] as $remove)
+			{
+				if($remove == $key)
+				{
+					unset($data['array'][$key]);
+				}
+			}
+		}
+
+		else if($data['on'] == 'value')
+		{
+			foreach($data['remove'] as $remove)
+			{
+				if(is_array($value) && in_array($remove, $value) || $remove == $value)
+				{
+					unset($data['array'][$key]);
+				}
+			}
+		}
+	}
+
+	return $data['array'];
+}
+
 #################
 function validate_url($value, $link = true, $http = true)
 {
@@ -1185,15 +1274,15 @@ if(!function_exists('wp_date_format'))
 {
 	function wp_date_format($data)
 	{
-		/*global $wpdb;
+		global $wpdb;
 
 		if(!isset($data['full_datetime'])){		$data['full_datetime'] = false;}
 
 		$date_format = $wpdb->get_var("SELECT option_value FROM ".$wpdb->options." WHERE option_name = '".($data['full_datetime'] == true ? "links_updated_date_format" : "date_format")."'");
 
-		return date($date_format, strtotime($data['date']));*/
+		return date($date_format, strtotime($data['date']));
 
-		return format_date($data['date']);
+		//return format_date($data['date']);
 	}
 }
 
@@ -1454,6 +1543,7 @@ function show_textfield($data)
 	$arr_accepted_types = array('text', 'email', 'url', 'date', 'number', 'range', 'color');
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
+	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
@@ -1522,7 +1612,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 		
-		$out .= "<input type='".$data['type']."' name='".$data['name']."' value='".$data['value']."'".$data['xtra'].">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
 
 		if($count_temp > 0)
 		{
@@ -1650,13 +1740,13 @@ function show_select($data)
 					$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 				}
 
-				$out .= "<select id='".str_replace("[]", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
+				$out .= "<select id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
 
-					for($i = 0; $i < $count_temp; $i++)
+					//for($i = 0; $i < $count_temp; $i++)
+					foreach($data['data'] as $option)
 					{
-						/*$data_value = $data['data'][$i][0];
-						$data_text = $data['data'][$i][1];*/
-						list($data_value, $data_text) = $data['data'][$i];
+						//list($data_value, $data_text) = $data['data'][$i];
+						list($data_value, $data_text) = $option;
 
 						if($data_value == "opt_start" && $data_value != $data_text)
 						{

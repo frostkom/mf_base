@@ -1,29 +1,5 @@
 @media all
 {
-	.wrap > ul li
-	{
-		border-radius: .5em;
-		display: inline-block;
-		margin-right: .5em;
-	}
-
-		.wrap > ul li:hover
-		{
-			background: rgba(0, 0, 0, .05);
-		}
-
-		.wrap > ul li.active
-		{
-			background: rgba(0, 0, 0, .1);
-		}
-
-			.wrap > ul li a
-			{
-				display: block;
-				padding: .5em 1em;
-				text-decoration: none;
-			}
-
 	.wrap > form
 	{
 		margin-top: -3em;

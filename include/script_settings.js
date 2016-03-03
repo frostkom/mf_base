@@ -13,7 +13,7 @@ jQuery(function($)
 		{
 			var dom_section = $('.wrap > form > div#' + hash);
 
-			$('.wrap > ul').children('li#' + hash + '_li').addClass('active').siblings('li').removeClass('active');
+			$('#nav-tab-wrapper').children('a#tab_' + hash).addClass('nav-tab-active').siblings('a').removeClass('nav-tab-active');
 
 			dom_section.show().siblings('div').hide();
 			dom_section.next('table').show().siblings('table').hide();
@@ -26,7 +26,7 @@ jQuery(function($)
 			dom_id = $(this).attr('href').replace('#', ''),
 			dom_name = $(this).children('h3').text();
 
-		$('.wrap > ul').append("<li id='" + dom_id + "_li'><a href='#" + dom_id + "'>" + dom_name + "</a></li>");
+		$('#nav-tab-wrapper').append("<a href='#" + dom_id + "' id='tab_" + dom_id + "' class='nav-tab'>" + dom_name + "</a>");
 
 		dom_obj.hide();
 	});

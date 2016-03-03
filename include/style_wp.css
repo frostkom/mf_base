@@ -1,5 +1,15 @@
 @media all
 {
+	.tablenav .alignleft > div
+	{
+		display: inline-block;
+	}
+
+	.wp-list-table
+	{
+		margin-bottom: 20px;
+	}
+
 	.wp-list-table tr.swipe2edit, .wp-list-table tr.swipe2del
 	{
 		position: relative;
@@ -38,4 +48,12 @@
 				{
 					margin-left: 1.5em;
 				}
+}
+
+@media print
+{
+	.toggle_item
+	{
+		display: block !important;
+	}
 }

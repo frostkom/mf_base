@@ -100,6 +100,7 @@ class mf_list_table extends WP_List_Table
 	}
 
 	function set_default(){}
+	function sort_data(){}
 
 	function set_columns($columns)
 	{
@@ -226,7 +227,8 @@ class mf_list_table extends WP_List_Table
 	 * @param array $item A singular item (one full row's worth of data)
 	 * @return string Text to be placed inside the column <td> (movie title only)
 	 **************************************************************************/
-	function column_cb($item){
+	function column_cb($item)
+	{
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
 			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
@@ -431,6 +433,8 @@ class mf_list_table extends WP_List_Table
 
 		$this->data = json_decode(json_encode($result), true);
 
+		$this->sort_data();
+
 		$this->num_rows = count($this->data);
 	}
 
@@ -573,7 +577,7 @@ class settings_page
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
-			<ul></ul>
+			<h3 id='nav-tab-wrapper' class='nav-tab-wrapper'></h3>
 			<form method='post' action='options.php'>";
 
 				settings_fields($this->options_page);

@@ -1,5 +1,31 @@
 <?php
 
+class mf_cron
+{
+	function __construct()
+	{
+		$this->schedules = wp_get_schedules();
+		
+		$this->date_start = date("Y-m-d H:i:s");
+	}
+
+	function has_expired($data = array())
+	{
+		if(!isset($data['margin'])){		$data['margin'] = 1;}
+
+		$setting_base_cron = get_option('setting_base_cron');
+
+		$cron_interval_seconds = $this->schedules[$setting_base_cron]['interval'];
+
+		$date_now = date("Y-m-d H:i:s");
+		$date_difference = time_between_dates(array('start' => $this->date_start, 'end' => $date_now, 'type' => "ceil", 'return' => "seconds"));
+
+		do_log("Has expired? ".$date_difference." >= (".$cron_interval_seconds." * ".$data['margin'].") -> ".($date_difference >= ($cron_interval_seconds * $data['margin'])));
+
+		return $date_difference >= ($cron_interval_seconds * $data['margin']);
+	}
+}
+
 class recommend_plugin
 {
 	function recommend_plugin($data)

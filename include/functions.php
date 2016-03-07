@@ -100,6 +100,35 @@ function is_between($data)
 	return $out;
 }
 
+function time_between_dates($data) //$start, $end, $type = "round", $divide = 86400
+{
+	if(!isset($data['type'])){		$data['type'] = "round";}
+	if(!isset($data['return'])){	$data['return'] = "days";}
+
+	$arr_return_types = array(
+		'days' => 60 * 60 * 24,
+		'hours' => 60 * 60,
+		'minutes' => 60,
+		'seconds' => 1,
+	);
+
+	$out = strtotime($data['end']) - strtotime($data['start']);
+
+	if(isset($arr_return_types[$data['return']]))
+	{
+		$out /= $arr_return_types[$data['return']];
+	}
+
+	switch($data['type'])
+	{
+		case 'ceil':	$out = ceil($out);		break;
+		case 'round':	$out = round($out);		break;
+		case 'floor':	$out = floor($out);		break;
+	}
+
+	return $out;
+}
+
 function delete_old_files($data)
 {
 	$time = time();

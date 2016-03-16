@@ -35,7 +35,7 @@
 		color: #999;
 	}
 
-	.fa
+	.fa, .pointer
 	{
 		cursor: pointer;
 	}

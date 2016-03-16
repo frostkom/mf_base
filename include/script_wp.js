@@ -45,12 +45,12 @@ jQuery(function($)
 
 		if(self.find('.row-actions > .edit').length > 0)
 		{
-			self.addClass('swipe2edit').append("<div class='swipe_bar from_left'><i class='fa fa-lg fa-wrench'></i></div>");
+			self.append("<div class='swipe_bar from_left'><i class='fa fa-lg fa-wrench'></i></div>").parents('table').addClass('swipe_action');
 		}
 
 		if(self.find('.row-actions > .delete, .row-actions > .trash').length > 0)
 		{
-			self.addClass('swipe2del').append("<div class='swipe_bar from_right'><i class='fa fa-lg fa-close'></i></div>");
+			self.append("<div class='swipe_bar from_right'><i class='fa fa-lg fa-close'></i></div>").parents('table').addClass('swipe_action');
 		}
 
 		if(self.find('.set_tr_color').length > 0)

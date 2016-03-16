@@ -18,9 +18,27 @@ jQuery(function($)
 
 			if(file_name != '')
 			{
+				if(script_media_button.multiple == false)
+				{
+					output_list = "";
+					output_urls = "";
+				}
+
 				output_list += "<tr>"
-					+ "<td><a href='" + file_url + "'>" + file_name + "</a></td>"
-					+ "<td><a href='#' rel='" + index + "'>" + script_media_button.delete + "</a></td>"
+					+ "<td>";
+					
+						if(file_url.match(/(\.[png|gif|jpg|jpeg])/))
+						{
+							output_list += "<div><img src='" + file_url + "' alt='" + file_name + "'></div>";
+						}
+
+						else
+						{
+							output_list += "<a href='" + file_url + "'>" + file_name + "</a>";
+						}
+						
+					output_list += "</td>"
+					+ "<td><a href='#' rel='" + index + "'><i class='fa fa-lg fa-trash red'></i></a></td>"
 				+ "</tr>";
 
 				output_urls += (output_urls != '' ? "," : "") + value;

@@ -1,5 +1,81 @@
 <?php
 
+function mf_uninstall_plugin($data)
+{
+	global $wpdb;
+
+	if(!isset($data['uploads'])){			$data['uploads'] = "";}
+	if(!isset($data['options'])){			$data['options'] = array();}
+	if(!isset($data['tables'])){			$data['tables'] = array();}
+
+	if($data['uploads'] != '')
+	{
+		list($upload_path, $upload_url) = get_uploads_folder($data['uploads']);
+
+		get_file_info(array('path' => $this->upload_path, 'callback' => "delete_files", 'time_limit' => 0));
+
+		rmdir($upload_path);
+	}
+
+	foreach($data['options'] as $option)
+	{
+		delete_option($option);
+		delete_site_option($option);
+	}
+
+	foreach($data['tables'] as $table)
+	{
+		$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
+	}
+}
+
+function mf_editor($content, $editor_id, $settings = array())
+{
+	if(!isset($settings['class'])){			$settings['class'] = "";}
+	if(!isset($settings['text'])){			$settings['text'] = "";}
+
+	if(isset($settings['statusbar']))
+	{
+		$settings['tinymce']['statusbar'] = $settings['statusbar'];
+		
+		unset($settings['statusbar']);
+	}
+
+	if(isset($settings['mini_toolbar']) && $settings['mini_toolbar'] == true)
+	{
+		$settings['tinymce']['toolbar1'] = 'bold,italic,bullist,numlist,link,unlink';
+	}
+
+	if($settings['class'] != '')
+	{
+		echo "<div class='mf_wp_editor ".$settings['class']."'>";
+	}
+
+		if($settings['text'] != '')
+		{
+			echo "<label>".$settings['text']."</label>";
+		}
+
+		//'toolbar1' => 'strikethrough,alignleft,aligncenter,alignright,wp_more,spellchecker,wp_fullscreen,wp_adv,blockquote,hr',
+		//'toolbar2' => 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
+		//'block_formats' => 'Paragraph=p; Heading 3=h3; Heading 4=h4',
+		//'quicktags' => array('buttons' => 'em,strong,link'), //false //Does not work
+		//'editor_height' => '',
+		//'wp_autoresize_on' => false,
+
+		wp_editor($content, $editor_id, $settings);
+
+	if($settings['class'] != '')
+	{
+		echo "</div>";
+	}
+}
+
+function get_setting_key($function_name)
+{
+	return str_replace("_callback", "", $function_name);
+}
+
 function is_domain_valid($email, $record = 'MX')
 {
 	list($user, $domain) = explode('@', $email);
@@ -129,15 +205,16 @@ function time_between_dates($data) //$start, $end, $type = "round", $divide = 86
 	return $out;
 }
 
-function delete_old_files($data)
+function delete_files($data)
 {
-	$time = time();
+	if(!isset($data['time_limit'])){	$data['time_limit'] = 60 * 60 * 24 * 2;} //2 days
 
-	$file = $data['file'];
+	$time_now = time();
+	$time_file = filemtime($data['file']);
 
-	if($time - filemtime($file) >= 60 * 60 * 24 * 2) // 2 days
+	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
 	{
-		unlink($file);
+		unlink($data['file']);
 	}
 }
 
@@ -384,13 +461,13 @@ function init_base()
 		//apply_filters('auto_core_update_send_email', false, $type, $core_update, $result);
 	}
 
-	wp_enqueue_style('font-awesome', plugins_url()."/mf_base/include/font-awesome.min.css");
-	wp_enqueue_style('style_base', plugins_url()."/mf_base/include/style.css");
+	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
+	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
 	// Add datepicker
 	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 	wp_enqueue_script('jquery-ui-datepicker');
-	mf_enqueue_script('script_base', plugins_url()."/mf_base/include/script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
 	if(is_user_logged_in() && IS_ADMIN)
 	{
@@ -420,11 +497,15 @@ function get_media_button($data = array())
 	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", 'lang_base');}
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
+	if(!isset($data['multiple'])){			$data['multiple'] = true;}
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
-		wp_enqueue_style('style_media_button', plugins_url()."/mf_base/include/style_media_button.css");
-		mf_enqueue_script('script_media_button', plugins_url()."/mf_base/include/script_media_button.js", array('delete' => __('Delete', 'lang_base'), 'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base')));
+		wp_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css");
+		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
+			'multiple' => $data['multiple'],
+			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
+		)); //'delete' => __('Delete', 'lang_base'), 
 
 		$out .= "<div class='mf_media_button'>";
 
@@ -445,6 +526,32 @@ function get_media_button($data = array())
 	}
 
 	return $out;
+}
+
+function get_attachment_callback($in, $callback)
+{
+	$arr_files = get_attachment_to_send($in);
+
+	if(count($arr_files) > 0)
+	{
+		foreach($arr_files as $file_url)
+		{
+			$file_id = get_attachment_id_by_url($file_url);
+
+			if($file_id > 0)
+			{
+				if(is_callable($callback))
+				{
+					call_user_func($callback, $file_id);
+				}
+			}
+
+			else
+			{
+				$error_text = __("The file couldn't be saved", 'lang_base')." (".$file_url.")";
+			}
+		}
+	}
 }
 
 function get_attachment_to_send($string)
@@ -506,17 +613,19 @@ function get_attachment_data_by_id($id)
 	}
 }
 
-function get_post_filter($data, &$query_where)
+/*function get_post_filter($data, &$query_where)
 {
 	global $wpdb;
 
 	$db_value = check_var($data['db_field'], 'char', true, 'all');
 
+	$query_trash = $data['db_field']." != 'trash' AND ".$data['db_field']." != 'ignore'";
+
 	$arr_filter = "";
 
 	foreach($data['types'] as $key => $value)
 	{
-		$amount = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->posts." WHERE post_type = '".$data['plugin']."'".$query_where." AND ".($key == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$key."'"));
+		$amount = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->posts." WHERE post_type = '".$data['plugin']."'".$query_where." AND ".($key == 'all' ? $query_trash : $data['db_field']." = '".$key."'"));
 
 		if($amount > 0)
 		{
@@ -527,13 +636,13 @@ function get_post_filter($data, &$query_where)
 		}
 	}
 
-	$query_where .= " AND ".($db_value == 'all' ? $data['db_field']." != 'trash'" : $data['db_field']." = '".$db_value."'");
+	$query_where .= " AND ".($db_value == 'all' ? $query_trash : $data['db_field']." = '".$db_value."'");
 
 	if($arr_filter != '')
 	{
 		return "<ul class='subsubsub'>".$arr_filter."</ul>";
 	}
-}
+}*/
 
 function mf_format_number($in, $dec = 2)
 {
@@ -578,14 +687,6 @@ function disable_action_base($actions, $plugin_file, $plugin_data, $context)
 	}
 
 	return $actions;
-}
-
-
-function add_action_base($links)
-{
-	$links[] = "<a href='".admin_url('options-general.php?page=settings_mf_base')."'>".__("Settings", 'lang_base')."</a>";
-
-	return $links;
 }
 
 function get_install_link_tags($require_url, $required_name)
@@ -668,11 +769,11 @@ function get_current_user_role($id = 0)
 
 function settings_base()
 {
-	wp_enqueue_style('style_base_wp', plugins_url()."/mf_base/include/style_wp.css");
+	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
-	wp_enqueue_script('script_swipe', plugins_url()."/mf_base/include/jquery.touchSwipe.min.js");
-	mf_enqueue_script('script_base_wp', plugins_url()."/mf_base/include/script_wp.js", array('plugins_url' => plugins_url()));
+	wp_enqueue_script('script_swipe', plugin_dir_url(__FILE__)."jquery.touchSwipe.min.js");
+	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url()));
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
@@ -859,6 +960,8 @@ function setting_base_cron_callback()
 
 function mf_enqueue_script($handle, $file = "", $translation = array())
 {
+	//$file = str_replace(get_site_url(), "", $file); Doesn't have any affect
+
 	if(count($translation) > 0)
 	{
 		wp_register_script($handle, $file, array('jquery'), '1.0', true);
@@ -1031,7 +1134,7 @@ function array_remove($data) //$remove, $array, $strict = true
 
 	if(!is_array($data['remove']))
 	{
-		$data['remove'][] = $data['remove'];
+		$data['remove'] = array($data['remove']);
 	}
 
 	foreach($data['array'] as $key => $value)
@@ -1203,9 +1306,10 @@ function get_list_navigation($resultPagination)
 	{
 		$out .= "<form method='post' action='".preg_replace("/\&paged\=\d+/", "", $_SERVER['REQUEST_URI'])."'>
 			<p class='search-box'>
-				<input type='search' name='s' value='".$strSearch."'>
-				<button type='submit' class='button'>".__("Search", 'lang_base')."</button>
-			</p>
+				<input type='search' name='s' value='".$strSearch."'>"
+				.show_submit(array('text' => __("Search", 'lang_base'), 'class' => "button"))
+				//."<button type='submit' class='button'>".__("Search", 'lang_base')."</button>
+			."</p>
 		</form>";
 	}
 
@@ -1315,7 +1419,7 @@ if(!function_exists('wp_date_format'))
 	}
 }
 
-function check_var($in, $type = '', $v2 = true, $default = '', $return_empty = false, $force_req_type = '')
+function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty = false, $force_req_type = '')
 {
 	$out = $temp = "";
 
@@ -1583,6 +1687,7 @@ function show_textfield($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['datalist'])){		$data['datalist'] = array();}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	if($data['type'] == "date")
 	{
@@ -1643,6 +1748,11 @@ function show_textfield($data)
 		
 		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
 
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
+		}
+
 		if($count_temp > 0)
 		{
 			$out .= "<datalist id='".$data['name']."_list'>";
@@ -1690,7 +1800,8 @@ function show_textarea($data)
 
 		/*if($data['wysiwyg'] == true)
 		{
-			$out .= wp_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
+			//$out .= 
+			mf_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
 		}
 
 		else
@@ -1740,7 +1851,7 @@ function show_select($data)
 			}
 
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			$data['xtra'] .= " multiple='multiple' size='".$size."'";
+			$data['xtra'] .= " multiple size='".$size."'"; //='multiple'
 
 			$container_class = "form_select_multiple";
 		}
@@ -2163,13 +2274,19 @@ function get_file_info($data)
 				{
 					if(is_callable($data['folder_callback']))
 					{
-						call_user_func($data['folder_callback'], array('path' => $data['path'], 'child' => $child));
+						$data_temp = $data;
+						$data_temp['child'] = $child;
+
+						call_user_func($data['folder_callback'], $data_temp); //array('path' => $data['path'], 'child' => $child)
 					}
 				}
 
 				else
 				{
-					get_file_info(array('path' => $file, 'callback' => $data['callback']));
+					$data_temp = $data;
+					$data_temp['path'] = $file;
+
+					get_file_info($data_temp); //array('path' => $file, 'callback' => $data['callback'])
 				}
 			}
 
@@ -2177,7 +2294,10 @@ function get_file_info($data)
 			{
 				if(is_callable($data['callback']))
 				{
-					call_user_func($data['callback'], array('path' => $data['path'], 'file' => $file));
+					$data_temp = $data;
+					$data_temp['file'] = $file;
+
+					call_user_func($data['callback'], $data_temp); //array('path' => $data['path'], 'file' => $file)
 				}
 			}
 
@@ -2360,7 +2480,7 @@ function footer_base()
 	{
 		if(is_user_logged_in() && IS_ADMIN)
 		{
-			mf_enqueue_script('script_base_perfbar', plugins_url()."/mf_base/include/perfbar_script.js");
+			mf_enqueue_script('script_base_perfbar', plugin_dir_url(__FILE__)."perfbar_script.js");
 		}
 	}*/
 }

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: http://github.com/frostkom/mf_base
 Description: 
-Version: 3.1.0
+Version: 4.3.3
 Author: Martin Fors
 Author URI: http://frostkom.se
 */
@@ -24,12 +24,11 @@ if(is_admin())
 {
 	register_activation_hook(__FILE__, 'activate_base');
 	register_deactivation_hook(__FILE__, 'deactivate_base');
+	register_uninstall_hook(__FILE__, 'uninstall_base');
 
 	add_action('admin_init', 'settings_base', 0);
 	add_filter('plugin_action_links', 'disable_action_base', 10, 4);
 	add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
-	add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
-	add_filter('network_admin_plugin_action_links_'.plugin_basename(__FILE__), 'add_action_base');
 	add_filter('upload_mimes', 'upload_mimes_base');
 }
 
@@ -51,4 +50,11 @@ function activate_base()
 function deactivate_base()
 {
 	unset_cron('cron_base');
+}
+
+function uninstall_base()
+{
+	mf_uninstall_plugin(array(
+		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email', 'setting_base_cron'),
+	));
 }

@@ -7,7 +7,7 @@ jQuery(function($)
 
 		$.ajax(
 		{
-			url: script_base_wp.plugins_url + '/mf_base/include/ajax.php?type=' + type,
+			url: script_base_import.plugin_url + 'ajax.php?type=' + type,
 			type: 'post',
 			data: form_data,
 			dataType: 'json',

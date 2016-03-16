@@ -20,7 +20,7 @@ class mf_cron
 		$date_now = date("Y-m-d H:i:s");
 		$date_difference = time_between_dates(array('start' => $this->date_start, 'end' => $date_now, 'type' => "ceil", 'return' => "seconds"));
 
-		do_log("Has expired? ".$date_difference." >= (".$cron_interval_seconds." * ".$data['margin'].") -> ".($date_difference >= ($cron_interval_seconds * $data['margin'])));
+		//do_log("Has expired? ".$date_difference." >= (".$cron_interval_seconds." * ".$data['margin'].") -> ".($date_difference >= ($cron_interval_seconds * $data['margin'])));
 
 		return $date_difference >= ($cron_interval_seconds * $data['margin']);
 	}
@@ -100,7 +100,6 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		//Set parent defaults
 		parent::__construct(array(
 			'singular' => '', //singular name of the listed records
 			'plural' => '', //plural name of the listed records
@@ -115,11 +114,22 @@ class mf_list_table extends WP_List_Table
 			'query_from' => $wpdb->posts,
 			'query_select_id' => "ID",
 			'query_all_id' => "all",
-			'query_trash_id' => "trash",
+			'query_trash_id' => array('trash', 'ignore'),
 			'has_autocomplete' => false,
 		);
 
 		$this->set_default();
+
+		if($this->post_type != '')
+		{
+			$this->_args['singular'] = $this->post_type;
+		}
+
+		/**
+		 * Optional. You can handle your bulk actions however you see fit. In this
+		 * case, we'll handle them within our package just to keep things clean.
+		 */
+		$this->process_bulk_action();
 
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
 		$this->order = check_var('order', 'char', true, $this->orderby_default_order);
@@ -198,7 +208,30 @@ class mf_list_table extends WP_List_Table
 
 	function get_views_trash_string($value, $field)
 	{
-		return ($value == $this->arr_settings['query_all_id'] ? $field." != '".$this->arr_settings['query_trash_id']."'" : $field." = '".$value."'");
+		if($value == $this->arr_settings['query_all_id'])
+		{
+			if(is_array($this->arr_settings['query_trash_id']))
+			{
+				$out = "";
+
+				foreach($this->arr_settings['query_trash_id'] as $query_trash_id)
+				{
+					$out .= ($out != '' ? " AND " : "").$field." != '".$query_trash_id."'";
+				}
+			}
+
+			else
+			{
+				$out = $field." != '".$this->arr_settings['query_trash_id']."'";
+			}
+		}
+
+		else
+		{
+			$out = $field." = '".$value."'";
+		}
+
+		return $out;
 	}
 
 	/** ************************************************************************
@@ -255,11 +288,7 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function column_cb($item)
 	{
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
-			/*$2%s*/ $item['ID']				//The value of the checkbox should be the record's id
-		);
+		return "<input type='checkbox' name='".$this->_args['singular']."[]' value='".$item['ID']."'>";
 	}
 
 	/** ************************************************************************
@@ -305,7 +334,7 @@ class mf_list_table extends WP_List_Table
 
 		if(isset($this->columns['cb']))
 		{
-			$actions['delete'] = 'Delete';
+			$actions['delete'] = __("Delete", 'lang_base');
 		}
 
 		return $actions;
@@ -318,12 +347,32 @@ class mf_list_table extends WP_List_Table
 	 * 
 	 * @see $this->prepare_items()
 	 **************************************************************************/
-	function process_bulk_action()
-	{		
-		//Detect when a bulk action is being triggered...
-		if('delete' === $this->current_action())
+	function bulk_delete()
+	{
+		if(isset($_GET[$this->post_type]))
 		{
-			wp_die('Items deleted (or they would be if we had items to delete)!');
+			foreach($_GET[$this->post_type] as $id)
+			{
+				wp_trash_post($id);
+			}
+		}
+
+		else
+		{
+			do_log("Bulk delete: ".var_export($_GET, true));
+		}
+
+
+	}
+
+	function process_bulk_action()
+	{
+		if(isset($_GET['_wpnonce']) && !empty($_GET['_wpnonce']))
+		{
+			if('delete' === $this->current_action())
+			{
+				$this->bulk_delete();
+			}
 		}
 	}
 
@@ -344,7 +393,7 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function prepare_items()
 	{
-		global $wpdb; //This is used only if making any database queries		
+		global $wpdb; //This is used only if making any database queries
 		
 		/**
 		 * REQUIRED. Now we need to define our column headers. This includes a complete
@@ -364,12 +413,6 @@ class mf_list_table extends WP_List_Table
 		 * for sortable columns.
 		 */
 		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
-
-		/**
-		 * Optional. You can handle your bulk actions however you see fit. In this
-		 * case, we'll handle them within our package just to keep things clean.
-		 */
-		$this->process_bulk_action();
 
 		$current_page = $this->get_pagenum();
 
@@ -415,8 +458,9 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['where'])){		$data['where'] = "";}
 		if(!isset($data['limit'])){		$data['limit'] = "";}
 		if(!isset($data['amount'])){	$data['amount'] = "";}
-
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
+		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
+		if(!isset($data['order'])){		$data['order'] = $this->order;}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
@@ -440,9 +484,9 @@ class mf_list_table extends WP_List_Table
 			$query .= " GROUP BY ".$data['group_by'];
 		}
 
-		if($this->orderby != '')
+		if($data['order_by'] != '')
 		{
-			$query .= " ORDER BY ".$this->orderby." ".$this->order;
+			$query .= " ORDER BY ".$data['order_by']." ".$data['order'];
 		}
 
 		if($data['amount'] != '')
@@ -598,8 +642,8 @@ class settings_page
 
 	public function create_admin_page()
 	{
-		wp_enqueue_style('style_base_settings', plugins_url()."/mf_base/include/style_settings.css");
-		mf_enqueue_script('script_base_settings', plugins_url()."/mf_base/include/script_settings.js");
+		wp_enqueue_style('style_base_settings', plugin_dir_url(__FILE__)."style_settings.css");
+		mf_enqueue_script('script_base_settings', plugin_dir_url(__FILE__)."script_settings.js");
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
@@ -654,7 +698,7 @@ class mf_encryption
 
 class mf_font_icons
 {
-	function mf_font_icons($id = "")
+	function __construct($id = "")
 	{
 		$this->id = $id;
 		$this->fonts = array();
@@ -727,21 +771,26 @@ class mf_font_icons
 
 	function get_font_awesome_icon_list()
 	{
-		$transient_key = "fontawesome_transient";
+		$arr_icons = array('500px', 'adjust', 'adn', 'align-center', 'align-justify', 'align-left', 'align-right', 'amazon', 'ambulance', 'anchor', 'android', 'angellist', 'angle-double-down', 'angle-double-left', 'angle-double-right', 'angle-double-up', 'angle-down', 'angle-left', 'angle-right', 'angle-up', 'apple', 'archive', 'area-chart', 'arrow-circle-down', 'arrow-circle-left', 'arrow-circle-o-down', 'arrow-circle-o-left', 'arrow-circle-o-right', 'arrow-circle-o-up', 'arrow-circle-right', 'arrow-circle-up', 'arrow-down', 'arrow-left', 'arrow-right', 'arrow-up', 'arrows', 'arrows-alt', 'arrows-h', 'arrows-v', 'asterisk', 'at', 'automobile', 'backward', 'balance-scale', 'ban', 'bank', 'bar-chart', 'bar-chart-o', 'barcode', 'bars', 'battery-0', 'battery-1', 'battery-2', 'battery-3', 'battery-4', 'battery-empty', 'battery-full', 'battery-half', 'battery-quarter', 'battery-three-quarters', 'bed', 'beer', 'behance', 'behance-square', 'bell', 'bell-o', 'bell-slash', 'bell-slash-o', 'bicycle', 'binoculars', 'birthday-cake', 'bitbucket', 'bitbucket-square', 'bitcoin', 'black-tie', 'bluetooth', 'bluetooth-b', 'bold', 'bolt', 'bomb', 'book', 'bookmark', 'bookmark-o', 'briefcase', 'btc', 'bug', 'building', 'building-o', 'bullhorn', 'bullseye', 'bus', 'buysellads', 'cab', 'calculator', 'calendar', 'calendar-check-o', 'calendar-minus-o', 'calendar-o', 'calendar-plus-o', 'calendar-times-o', 'camera', 'camera-retro', 'car', 'caret-down', 'caret-left', 'caret-right', 'caret-square-o-down', 'caret-square-o-left', 'caret-square-o-right', 'caret-square-o-up', 'caret-up', 'cart-arrow-down', 'cart-plus', 'cc', 'cc-amex', 'cc-diners-club', 'cc-discover', 'cc-jcb', 'cc-mastercard', 'cc-paypal', 'cc-stripe', 'cc-visa', 'certificate', 'chain', 'chain-broken', 'check', 'check-circle', 'check-circle-o', 'check-square', 'check-square-o', 'chevron-circle-down', 'chevron-circle-left', 'chevron-circle-right', 'chevron-circle-up', 'chevron-down', 'chevron-left', 'chevron-right', 'chevron-up', 'child', 'chrome', 'circle', 'circle-o', 'circle-o-notch', 'circle-thin', 'clipboard', 'clock-o', 'clone', 'close', 'cloud', 'cloud-download', 'cloud-upload', 'cny', 'code', 'code-fork', 'codepen', 'codiepie', 'coffee', 'cog', 'cogs', 'columns', 'comment', 'comment-o', 'commenting', 'commenting-o', 'comments', 'comments-o', 'compass', 'compress', 'connectdevelop', 'contao', 'copy', 'copyright', 'creative-commons', 'credit-card', 'credit-card-alt', 'crop', 'crosshairs', 'css3', 'cube', 'cubes', 'cut', 'cutlery', 'dashboard', 'dashcube', 'database', 'dedent', 'delicious', 'desktop', 'deviantart', 'diamond', 'digg', 'dollar', 'dot-circle-o', 'download', 'dribbble', 'dropbox', 'drupal', 'edge', 'edit', 'eject', 'ellipsis-h', 'ellipsis-v', 'empire', 'envelope', 'envelope-o', 'envelope-square', 'eraser', 'eur', 'euro', 'exchange', 'exclamation', 'exclamation-circle', 'exclamation-triangle', 'expand', 'expeditedssl', 'external-link', 'external-link-square', 'eye', 'eye-slash', 'eyedropper', 'facebook', 'facebook-f', 'facebook-official', 'facebook-square', 'fast-backward', 'fast-forward', 'fax', 'feed', 'female', 'fighter-jet', 'file', 'file-archive-o', 'file-audio-o', 'file-code-o', 'file-excel-o', 'file-image-o', 'file-movie-o', 'file-o', 'file-pdf-o', 'file-photo-o', 'file-picture-o', 'file-powerpoint-o', 'file-sound-o', 'file-text', 'file-text-o', 'file-video-o', 'file-word-o', 'file-zip-o', 'files-o', 'film', 'filter', 'fire', 'fire-extinguisher', 'firefox', 'flag', 'flag-checkered', 'flag-o', 'flash', 'flask', 'flickr', 'floppy-o', 'folder', 'folder-o', 'folder-open', 'folder-open-o', 'font', 'fonticons', 'fort-awesome', 'forumbee', 'forward', 'foursquare', 'frown-o', 'futbol-o', 'fw', 'gamepad', 'gavel', 'gbp', 'ge', 'gear', 'gears', 'genderless', 'get-pocket', 'gg', 'gg-circle', 'gift', 'git', 'git-square', 'github', 'github-alt', 'github-square', 'gittip', 'glass', 'globe', 'google', 'google-plus', 'google-plus-square', 'google-wallet', 'graduation-cap', 'gratipay', 'group', 'h-square', 'hacker-news', 'hand-grab-o', 'hand-lizard-o', 'hand-o-down', 'hand-o-left', 'hand-o-right', 'hand-o-up', 'hand-paper-o', 'hand-peace-o', 'hand-pointer-o', 'hand-rock-o', 'hand-scissors-o', 'hand-spock-o', 'hand-stop-o', 'hashtag', 'hdd-o', 'header', 'headphones', 'heart', 'heart-o', 'heartbeat', 'history', 'home', 'hospital-o', 'hotel', 'hourglass', 'hourglass-1', 'hourglass-2', 'hourglass-3', 'hourglass-end', 'hourglass-half', 'hourglass-o', 'hourglass-start', 'houzz', 'hover', 'html5', 'i-cursor', 'ils', 'image', 'inbox', 'indent', 'industry', 'info', 'info-circle', 'inr', 'instagram', 'institution', 'internet-explorer', 'intersex', 'ioxhost', 'italic', 'joomla', 'jpy', 'jsfiddle', 'key', 'keyboard-o', 'krw', 'language', 'laptop', 'lastfm', 'lastfm-square', 'leaf', 'leanpub', 'legal', 'lemon-o', 'level-down', 'level-up', 'lg', 'li', 'life-bouy', 'life-buoy', 'life-ring', 'life-saver', 'lightbulb-o', 'line-chart', 'link', 'linkedin', 'linkedin-square', 'linux', 'list', 'list-alt', 'list-ol', 'list-ul', 'location-arrow', 'lock', 'long-arrow-down', 'long-arrow-left', 'long-arrow-right', 'long-arrow-up', 'magic', 'magnet', 'mail-forward', 'mail-reply', 'mail-reply-all', 'male', 'map', 'map-marker', 'map-o', 'map-pin', 'map-signs', 'mars', 'mars-double', 'mars-stroke', 'mars-stroke-h', 'mars-stroke-v', 'maxcdn', 'meanpath', 'medium', 'medkit', 'meh-o', 'mercury', 'microphone', 'microphone-slash', 'minus', 'minus-circle', 'minus-square', 'minus-square-o', 'mixcloud', 'mobile', 'mobile-phone', 'modx', 'money', 'moon-o', 'mortar-board', 'motorcycle', 'mouse-pointer', 'music', 'navicon', 'neuter', 'newspaper-o', 'object-group', 'object-ungroup', 'odnoklassniki', 'odnoklassniki-square', 'opencart', 'openid', 'opera', 'optin-monster', 'outdent', 'pagelines', 'paint-brush', 'paper-plane', 'paper-plane-o', 'paperclip', 'paragraph', 'paste', 'pause', 'pause-circle', 'pause-circle-o', 'paw', 'paypal', 'pencil', 'pencil-square', 'pencil-square-o', 'percent', 'phone', 'phone-square', 'photo', 'picture-o', 'pie-chart', 'pied-piper', 'pied-piper-alt', 'pinterest', 'pinterest-p', 'pinterest-square', 'plane', 'play', 'play-circle', 'play-circle-o', 'plug', 'plus', 'plus-circle', 'plus-square', 'plus-square-o', 'power-off', 'print', 'product-hunt', 'puzzle-piece', 'qq', 'qrcode', 'question', 'question-circle', 'quote-left', 'quote-right', 'ra', 'random', 'rebel', 'recycle', 'reddit', 'reddit-alien', 'reddit-square', 'refresh', 'registered', 'remove', 'renren', 'reorder', 'repeat', 'reply', 'reply-all', 'retweet', 'rmb', 'road', 'rocket', 'rotate-left', 'rotate-right', 'rouble', 'rss', 'rss-square', 'rub', 'ruble', 'rupee', 'safari', 'save', 'scissors', 'scribd', 'search', 'search-minus', 'search-plus', 'sellsy', 'send', 'send-o', 'server', 'share', 'share-alt', 'share-alt-square', 'share-square', 'share-square-o', 'shekel', 'sheqel', 'shield', 'ship', 'shirtsinbulk', 'shopping-bag', 'shopping-basket', 'shopping-cart', 'sign-in', 'sign-out', 'signal', 'simplybuilt', 'sitemap', 'skyatlas', 'skype', 'slack', 'sliders', 'slideshare', 'smile-o', 'soccer-ball-o', 'sort', 'sort-alpha-asc', 'sort-alpha-desc', 'sort-amount-asc', 'sort-amount-desc', 'sort-asc', 'sort-desc', 'sort-down', 'sort-numeric-asc', 'sort-numeric-desc', 'sort-up', 'soundcloud', 'space-shuttle', 'spin</code>', 'spinner', 'spoon', 'spotify', 'square', 'square-o', 'stack-exchange', 'stack-overflow', 'star', 'star-half', 'star-half-empty', 'star-half-full', 'star-half-o', 'star-o', 'steam', 'steam-square', 'step-backward', 'step-forward', 'stethoscope', 'sticky-note', 'sticky-note-o', 'stop', 'stop-circle', 'stop-circle-o', 'street-view', 'strikethrough', 'stumbleupon', 'stumbleupon-circle', 'subscript', 'subway', 'suitcase', 'sun-o', 'superscript', 'support', 'table', 'tablet', 'tachometer', 'tag', 'tags', 'tasks', 'taxi', 'television', 'tencent-weibo', 'terminal', 'text-height', 'text-width', 'th', 'th-large', 'th-list', 'thumb-tack', 'thumbs-down', 'thumbs-o-down', 'thumbs-o-up', 'thumbs-up', 'ticket', 'times', 'times-circle', 'times-circle-o', 'tint', 'toggle-down', 'toggle-left', 'toggle-off', 'toggle-on', 'toggle-right', 'toggle-up', 'trademark', 'train', 'transgender', 'transgender-alt', 'trash', 'trash-o', 'tree', 'trello', 'tripadvisor', 'trophy', 'truck', 'try', 'tty', 'tumblr', 'tumblr-square', 'turkish-lira', 'tv', 'twitch', 'twitter', 'twitter-square', 'ul', 'umbrella', 'underline', 'undo', 'university', 'unlink', 'unlock', 'unlock-alt', 'unsorted', 'upload', 'usb', 'usd', 'user', 'user-md', 'user-plus', 'user-secret', 'user-times', 'users', 'venus', 'venus-double', 'venus-mars', 'viacoin', 'video-camera', 'vimeo', 'vimeo-square', 'vine', 'vk', 'volume-down', 'volume-off', 'volume-up', 'warning', 'wechat', 'weibo', 'weixin', 'whatsapp', 'wheelchair', 'wifi', 'wikipedia-w', 'windows', 'won', 'wordpress', 'wrench', 'xing', 'xing-square', 'y-combinator', 'y-combinator-square', 'yahoo', 'yc', 'yc-square', 'yelp', 'yen', 'youtube', 'youtube-play', 'youtube-square');
 
-		$content = get_transient($transient_key);
+		/*$transient_key = "fontawesome_transient_2";
+
+		$str_icons = get_transient($transient_key);
+		$arr_icons = explode("|", $str_icons);
 
 		if($content == "")
 		{
 			$content = get_url_content("http://fortawesome.github.io/Font-Awesome/icons/");
 
-			set_transient($transient_key, $content, WEEK_IN_SECONDS);
-		}
+			//$arr_icons = get_match_all("/icon\/(.*?)\"/s", $content, false);
+			$arr_icons = get_match_all("/fa-(.*?)[ |\"]/s", $content, false);
+			$arr_icons = array_unique($arr_icons[0]);
+			$arr_icons = array_sort(array('array' => $arr_icons, 'on' => 1));
 
-		//$arr_icons = get_match_all("/icon\/(.*?)\"/s", $content, false);
-		$arr_icons = get_match_all("/fa-(.*?)[ |\"]/s", $content, false);
-		$arr_icons = array_unique($arr_icons[0]);
-		$arr_icons = array_sort(array('array' => $arr_icons, 'on' => 1));
+			$str_icons = implode("|", $arr_icons);
+
+			set_transient($transient_key, $str_icons, WEEK_IN_SECONDS);
+		}*/
 
 		return $arr_icons;
 	}
@@ -754,7 +803,7 @@ class mf_font_icons
 		{
 			if(substr($symbol, 0, 5) == "icon-")
 			{
-				wp_enqueue_style('style_icomoon', plugins_url()."/mf_base/include/style_icomoon.css");
+				wp_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css");
 
 				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>&nbsp;";
 			}
@@ -773,7 +822,7 @@ class mf_import
 {
 	function __construct()
 	{
-		//mf_enqueue_script('script_base_wp', plugins_url()."/mf_base/include/script_import.js", array('plugins_url' => plugins_url()));
+		//mf_enqueue_script('script_base_import', plugin_dir_url(__FILE__)."script_import.js", array('plugin_url' => plugin_dir_url(__FILE__)));
 
 		$this->table = $this->post_type = $this->actions = "";
 		$this->columns = $this->unique_columns = $this->validate_columns = $this->result = array();
@@ -1595,7 +1644,7 @@ class mf_export
 					$error_text = __("There was nothing to export", 'lang_base');
 				}
 
-				get_file_info(array('path' => $this->upload_path, 'callback' => "delete_old_files"));
+				get_file_info(array('path' => $this->upload_path, 'callback' => "delete_files"));
 			}
 
 			else

@@ -1,5 +1,12 @@
 @media all
 {
+	#poststuff .add-new-h2
+	{
+		display: inline-block;
+		margin-bottom: .3em;
+		top: auto !important;
+	}
+
 	.tablenav .alignleft > div
 	{
 		display: inline-block;
@@ -8,14 +15,15 @@
 	.wp-list-table
 	{
 		margin-bottom: 20px;
+		overflow: hidden;
 	}
 
-	.wp-list-table tr.swipe2edit, .wp-list-table tr.swipe2del
+	.swipe_action, .swipe_action tr
 	{
 		position: relative;
 	}
 
-		.wp-list-table tr > div
+		.swipe_action tr > div
 		{
 			bottom: 0;
 			color: #fff;
@@ -26,28 +34,38 @@
 			width: .3%;
 		}
 
-			.wp-list-table tr.swipe2edit > .from_left
+			.swipe_action tr > .from_left
 			{
 				background: rgba(0, 255, 0, .3);
 				left: 0;
 			}
 			
-				.wp-list-table tr.swipe2edit > .from_left i
+				.swipe_action tr > .from_left i
 				{
 					float: right;
 					margin-right: 1.5em;
 				}
 
-			.wp-list-table tr.swipe2del > .from_right
+			.swipe_action tr > .from_right
 			{
 				background: rgba(255, 0, 0, .3);
 				right: 0;
 			}
 			
-				.wp-list-table tr.swipe2del > .from_right i
+				.swipe_action tr > .from_right i
 				{
 					margin-left: 1.5em;
 				}
+
+	.mf_wp_editor.hide_media_button .wp-media-buttons
+	{
+		display: none;
+	}
+
+	.mf_wp_editor.hide_tabs .wp-editor-tabs
+	{
+		display: none;
+	}
 }
 
 @media print

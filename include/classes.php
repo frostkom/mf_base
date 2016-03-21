@@ -34,6 +34,7 @@ class recommend_plugin
 
 		if(!isset($data['url'])){			$data['url'] = "";}
 		if(!isset($data['show_notice'])){	$data['show_notice'] = true;}
+		if(!isset($data['text'])){			$data['text'] = "";}
 		
 		if(!is_plugin_active($data['path']))
 		{
@@ -49,7 +50,7 @@ class recommend_plugin
 
 			else if($pagenow == 'options-general.php' && $data['show_notice'] == false)
 			{
-				$this->message = $a_start.$data['name'].$a_end;
+				$this->message = $a_start.$data['name'].$a_end.($data['text'] != '' ? " <span class='description'>".$data['text']."</span>" : "");
 
 				echo $this->show_info();
 			}

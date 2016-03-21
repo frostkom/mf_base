@@ -57,12 +57,12 @@
 					margin-left: 1.5em;
 				}
 
-	.mf_wp_editor.hide_media_button .wp-media-buttons
+	.mf_editor.hide_media_button .wp-media-buttons
 	{
 		display: none;
 	}
 
-	.mf_wp_editor.hide_tabs .wp-editor-tabs
+	.mf_editor.hide_tabs .wp-editor-tabs
 	{
 		display: none;
 	}

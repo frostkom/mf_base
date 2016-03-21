@@ -17,6 +17,8 @@ jQuery(function($)
 
 			dom_section.show().siblings('div').hide();
 			dom_section.next('table').show().siblings('table').hide();
+
+			$('.wrap form input[name=_wp_http_referer]').val(location.href);
 		}
 	}
 

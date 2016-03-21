@@ -48,7 +48,7 @@ function mf_editor($content, $editor_id, $settings = array())
 
 	if($settings['class'] != '')
 	{
-		echo "<div class='mf_wp_editor ".$settings['class']."'>";
+		echo "<div class='mf_editor ".$settings['class']."'>";
 	}
 
 		if($settings['text'] != '')
@@ -505,7 +505,7 @@ function get_media_button($data = array())
 		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
-		)); //'delete' => __('Delete', 'lang_base'), 
+		));
 
 		$out .= "<div class='mf_media_button'>";
 
@@ -526,6 +526,36 @@ function get_media_button($data = array())
 	}
 
 	return $out;
+}
+
+function get_file_button($data)
+{
+	wp_enqueue_style('thickbox');
+	wp_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css");
+
+	$add_file_text = __("Add Image", 'lang_base');
+	$change_file_text = __("Change Image", 'lang_base');
+	$insert_file_text = __("Insert Image", 'lang_base');
+
+	wp_enqueue_script('media-upload');
+	wp_enqueue_script('thickbox');
+	mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
+		'multiple' => false,
+		'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
+		'adminurl' => get_admin_url(), 'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text
+	));
+
+	return "<div class='mf_image_button'>
+		<div".($data['option'] != '' ? "" : " class='hide'").">
+			<img src='".$data['option']."'>
+			<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
+		</div>
+		<div>"
+			.show_submit(array('text' => ($data['option'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))
+			.input_hidden(array('name' => $data['setting_key'], 'value' => $data['option']))
+		."</div>
+		<div class='mf_file_raw'></div>
+	</div>";
 }
 
 function get_attachment_callback($in, $callback)
@@ -789,6 +819,7 @@ function settings_base()
 			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
 			"setting_base_cron" => __("Scheduled to run", 'lang_base'),
 			"setting_base_recommend" => __("Recommendations", 'lang_base'),
+			//"setting_all_options" => __("All options", 'lang_base'),
 		);
 
 		foreach($arr_settings as $handle => $text)
@@ -826,10 +857,7 @@ function int2point($in)
 
 function settings_header($id, $title)
 {
-	return "<div id='".$id."'>
-		&nbsp;
-		<a href='#".$id."'><h3>".$title."</h3></a>
-	</div>";
+	return "<div id='".$id."'><a href='#".$id."'><h3>".$title."</h3></a></div>"; //&nbsp;
 }
 
 function setting_base_info_callback()
@@ -855,28 +883,31 @@ function setting_base_info_callback()
 function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
-		'admin-branding/admin-branding.php' => "Admin Branding",
-		'admin-menu-tree-page-view/index.php' => "Admin Menu Tree Page View",
-		'adminer/adminer.php' => "Adminer",
-		'backwpup/backwpup.php' => "BackWPup",
-		'black-studio-tinymce-widget/black-studio-tinymce-widget.php' => "Black Studio TinyMCE Widget",
-		'email-log/email-log.php' => "Email Log",
-		'enable-media-replace/enable-media-replace.php' => "Enable Media Replace",
-		'google-authenticator%2Fgoogle-authenticator.php' => "Google Authenticator",
-		'wp-media-library-categories%2Findex.php' => "Media Library Categories",
-		'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php' => "Quick Page/Post Redirect Plugin",
-		'simple-page-ordering/simple-page-ordering.php' => "Simple Page Ordering",
-		'tablepress/tablepress.php' => "TablePress",
-		'user-role-editor/user-role-editor.php' => "User Role Editor",
-		'user-switching/user-switching.php' => "User Switching",
-		'wp-smushit/wp-smush.php' => "WP Smush",
-		'wp-mail-smtp/wp_mail_smtp.php' => "WP-Mail-SMTP",
-		//'' => "",
+		array('admin-branding/admin-branding.php', "Admin Branding", __("to brand the login and admin area", 'lang_base')),
+		array('admin-menu-tree-page-view/index.php', "Admin Menu Tree Page View"),
+		array('adminer/adminer.php', "Adminer", __("to get a graphical interface to the database", 'lang_base')),
+		array('backwpup/backwpup.php', "BackWPup", __("to backup all files and database to an external source", 'lang_base')),
+		array('black-studio-tinymce-widget/black-studio-tinymce-widget.php', "Black Studio TinyMCE Widget", __("to get a WYSIWYG widget editor", 'lang_base')),
+		array('email-log/email-log.php', "Email Log", __("to log all outgoing e-mails", 'lang_base')),
+		array('enable-media-replace/enable-media-replace.php', "Enable Media Replace", __("to be able to replace existing files by uploading a replacement", 'lang_base')),
+		array('google-authenticator%2Fgoogle-authenticator.php', "Google Authenticator", __("to use 2-step verification when logging in", 'lang_base')),
+		array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
+		array('profile-picture/profile-picture.php', "Profile Picture", __("to upload a profile picture", 'lang_base')),
+		array('quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', "Quick Page/Post Redirect Plugin", __("to redirect pages to internal or external URLs", 'lang_base')),
+		array('simple-page-ordering/simple-page-ordering.php', "Simple Page Ordering", __("to reorder posts with drag & drop", 'lang_base')),
+		array('tablepress/tablepress.php', "TablePress", __("to be able to add tables to posts", 'lang_base')),
+		array('user-role-editor/user-role-editor.php', "User Role Editor", __("to be able to edit roles", 'lang_base')),
+		array('user-switching/user-switching.php', "User Switching", __("to be able to switch to another user without their credentials", 'lang_base')),
+		array('wp-smushit/wp-smush.php', "WP Smush", __("to losslessly compress all uploaded images", 'lang_base')),
+		array('wp-mail-smtp/wp_mail_smtp.php', "WP-Mail-SMTP", __("to setup custom SMTP settings", 'lang_base')),
+		array('favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', "Favicon by RealFaviconGenerator", __("to add all the favicons needed", 'lang_base')),
 	);
 
-	foreach($arr_recommendations as $key => $value)
+	foreach($arr_recommendations as $value)
 	{
-		new recommend_plugin(array('path' => $key, 'name' => $value, 'show_notice' => false));
+		$text = isset($value[2]) ? $value[2] : "";
+
+		new recommend_plugin(array('path' => $value[0], 'name' => $value[1], 'text' => $text, 'show_notice' => false));
 	}
 }
 
@@ -897,12 +928,7 @@ function setting_base_auto_core_email_callback()
 {
 	$option = get_option('setting_base_auto_core_email');
 
-	$arr_data = array();
-
-	$arr_data[] = array('no', __("No", 'lang_base'));
-	$arr_data[] = array('yes', __("Yes", 'lang_base'));
-
-	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_auto_core_email', 'compare' => $option))
+	echo show_select(array('data' => get_yes_no_for_select(), 'name' => 'setting_base_auto_core_email', 'compare' => $option))
 	."<span class='description'>".__("Send e-mail to admin after auto core update", 'lang_base')."</span>";
 }
 
@@ -958,10 +984,13 @@ function setting_base_cron_callback()
 	}
 }
 
+function setting_all_options_callback()
+{
+	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
+}
+
 function mf_enqueue_script($handle, $file = "", $translation = array())
 {
-	//$file = str_replace(get_site_url(), "", $file); Doesn't have any affect
-
 	if(count($translation) > 0)
 	{
 		wp_register_script($handle, $file, array('jquery'), '1.0', true);
@@ -992,6 +1021,7 @@ function get_all_roles($data = array())
 
 		if($roles_temp == '')
 		{
+			//$roles_temp = $wp_roles->roles;
 			$roles_temp = get_option('wp_user_roles');
 		}
 
@@ -1052,12 +1082,56 @@ function get_role_first_capability($role)
 {
 	global $wp_roles;
 
-	//echo var_export($wp_roles->roles[$role]['capabilities'], true);
-
-	$capabilities = $wp_roles->roles[$role]['capabilities'];
+	$capabilities = is_array($wp_roles->roles[$role]['capabilities']) ? $wp_roles->roles[$role]['capabilities'] : array();
 	$cap_keys = array_keys($capabilities);
 
 	return $cap_keys[0];
+}
+
+function get_yes_no_for_select($add_choose_here = false)
+{
+	$arr_data = array();
+	
+	if($add_choose_here == true)
+	{
+		$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+	}
+
+	$arr_data[] = array('yes', __("Yes", 'lang_base'));
+	$arr_data[] = array('no', __("No", 'lang_base'));
+
+	return $arr_data;
+}
+
+function get_roles_for_select(&$arr_data, $add_choose_here = false, $strict_key = false)
+{
+	if($add_choose_here == true)
+	{
+		$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+	}
+
+	$roles = get_all_roles();
+
+	foreach($roles as $key => $value)
+	{
+		$key = get_role_first_capability($key);
+
+		if($check_key == true)
+		{
+			if(!isset($arr_data[$key]) && $key != '')
+			{
+				$arr_data[$key] = array($key, $value);
+			}
+		}
+
+		else
+		{
+			if($key != '')
+			{
+				$arr_data[] = array($key, $value);
+			}
+		}
+	}
 }
 
 //Sortera array
@@ -1687,6 +1761,7 @@ function show_textfield($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['datalist'])){		$data['datalist'] = array();}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
 	if($data['type'] == "date")
@@ -1747,6 +1822,11 @@ function show_textfield($data)
 		}
 		
 		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
+
+		if($data['suffix'] != '')
+		{
+			$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+		}
 
 		if($data['description'] != '')
 		{
@@ -1825,6 +1905,7 @@ function show_select($data)
 	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = 0;}
 	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
 	if(isset($data['data']) && $data['data'] != '')
@@ -1912,6 +1993,11 @@ function show_select($data)
 					}
 
 				$out .= "</select>";
+
+				if($data['suffix'] != '')
+				{
+					$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+				}
 
 				if($data['description'] != '')
 				{

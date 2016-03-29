@@ -807,7 +807,7 @@ function settings_base()
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
-	$options_area = "setting_base";
+	$options_area = __FUNCTION__;
 
 	if(IS_ADMIN)
 	{
@@ -816,11 +816,16 @@ function settings_base()
 		$arr_settings = array(
 			"setting_base_info" => __("Versions", 'lang_base'),
 			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
-			"setting_base_auto_core_email" => __("Update notification", 'lang_base'),
-			"setting_base_cron" => __("Scheduled to run", 'lang_base'),
-			"setting_base_recommend" => __("Recommendations", 'lang_base'),
-			//"setting_all_options" => __("All options", 'lang_base'),
 		);
+
+		if(get_option('setting_base_auto_core_update') != 'none')
+		{
+			$arr_settings["setting_base_auto_core_email"] = __("Update notification", 'lang_base');
+		}
+
+		$arr_settings["setting_base_cron"] = __("Scheduled to run", 'lang_base');
+		$arr_settings["setting_base_recommend"] = __("Recommendations", 'lang_base');
+		//$arr_settings["setting_all_options"] = __("All options", 'lang_base');
 
 		foreach($arr_settings as $handle => $text)
 		{
@@ -831,9 +836,11 @@ function settings_base()
 	}
 }
 
-function setting_base_callback()
+function settings_base_callback()
 {
-	echo settings_header('settings_base', __("Common", 'lang_base'));
+	$setting_key = get_setting_key(__FUNCTION__);
+
+	echo settings_header($setting_key, __("Common", 'lang_base'));
 }
 
 //main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
@@ -892,7 +899,7 @@ function setting_base_recommend_callback()
 		array('enable-media-replace/enable-media-replace.php', "Enable Media Replace", __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array('google-authenticator%2Fgoogle-authenticator.php', "Google Authenticator", __("to use 2-step verification when logging in", 'lang_base')),
 		array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
-		array('profile-picture/profile-picture.php', "Profile Picture", __("to upload a profile picture", 'lang_base')),
+		//array('profile-picture/profile-picture.php', "Profile Picture", __("to upload a profile picture", 'lang_base')), //Should not be used because it messes up other Media Buttons
 		array('quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', "Quick Page/Post Redirect Plugin", __("to redirect pages to internal or external URLs", 'lang_base')),
 		array('simple-page-ordering/simple-page-ordering.php', "Simple Page Ordering", __("to reorder posts with drag & drop", 'lang_base')),
 		array('tablepress/tablepress.php', "TablePress", __("to be able to add tables to posts", 'lang_base')),
@@ -913,30 +920,31 @@ function setting_base_recommend_callback()
 
 function setting_base_auto_core_update_callback()
 {
-	$option = get_option('setting_base_auto_core_update', 'minor');
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key, 'minor');
 
-	$arr_data = array();
+	$arr_data = array(
+		'none' => __("None", 'lang_base'),
+		'minor' => __("Minor", 'lang_base')." (".__("default", 'lang_base').")",
+		'all' => __("All", 'lang_base'),
+	);
 
-	$arr_data[] = array('none', __("None", 'lang_base'));
-	$arr_data[] = array('minor', __("Minor", 'lang_base')." (".__("default", 'lang_base').")");
-	$arr_data[] = array('all', __("All", 'lang_base'));
-
-	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_auto_core_update', 'compare' => $option));
+	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'compare' => $option));
 }
 
 function setting_base_auto_core_email_callback()
 {
-	$option = get_option('setting_base_auto_core_email');
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
 
-	echo show_select(array('data' => get_yes_no_for_select(), 'name' => 'setting_base_auto_core_email', 'compare' => $option))
+	echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'compare' => $option))
 	."<span class='description'>".__("Send e-mail to admin after auto core update", 'lang_base')."</span>";
 }
 
 function setting_base_cron_callback()
 {
-	global $wpdb;
-
-	$option = get_option('setting_base_cron', 'every_ten_minutes');
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key, 'every_ten_minutes');
 
 	//Re-schedule if value has changed
 	######################
@@ -951,13 +959,13 @@ function setting_base_cron_callback()
 
 	$next_scheduled = wp_next_scheduled('cron_base');
 
-	$arr_data = array();
-
 	$arr_schedules = wp_get_schedules();
+
+	$arr_data = array();
 
 	foreach($arr_schedules as $key => $value)
 	{
-		$arr_data[] = array($key, $value['display']);
+		$arr_data[$key] = $value['display'];
 	}
 
 	$next_scheduled_text = sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
@@ -969,18 +977,12 @@ function setting_base_cron_callback()
 
 	else
 	{
-		echo "<label>"
-			.show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option))
-			."<span class='description'>"
-				.$next_scheduled_text;
+		if($option == "every_ten_seconds")
+		{
+			$next_scheduled_text .= ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
+		}
 
-				if($option == "every_ten_seconds")
-				{
-					echo ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
-				}
-
-			echo "</span>"
-		."</label>";
+		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option, 'description' => $next_scheduled_text));
 	}
 }
 
@@ -1088,26 +1090,42 @@ function get_role_first_capability($role)
 	return $cap_keys[0];
 }
 
-function get_yes_no_for_select($add_choose_here = false)
+function get_yes_no_for_select($data = array())
 {
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
+
 	$arr_data = array();
 	
-	if($add_choose_here == true)
+	if($data['add_choose_here'] == true)
 	{
-		$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
 	}
 
-	$arr_data[] = array('yes', __("Yes", 'lang_base'));
-	$arr_data[] = array('no', __("No", 'lang_base'));
+	if($data['return_integer'] == true)
+	{
+		$arr_data[1] = __("Yes", 'lang_base');
+		$arr_data[0] = __("No", 'lang_base');
+	}
+
+	else
+	{
+		$arr_data['yes'] = __("Yes", 'lang_base');
+		$arr_data['no'] = __("No", 'lang_base');
+	}
 
 	return $arr_data;
 }
 
-function get_roles_for_select(&$arr_data, $add_choose_here = false, $strict_key = false)
+function get_roles_for_select($data = array())
 {
-	if($add_choose_here == true)
+	if(!isset($data['array'])){				$data['array'] = array();}
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
+
+	if($data['add_choose_here'] == true)
 	{
-		$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
+		$data['array'][''] = "-- ".__("Choose here", 'lang_base')." --";
 	}
 
 	$roles = get_all_roles();
@@ -1116,11 +1134,11 @@ function get_roles_for_select(&$arr_data, $add_choose_here = false, $strict_key 
 	{
 		$key = get_role_first_capability($key);
 
-		if($check_key == true)
+		if($data['strict_key'] == true)
 		{
-			if(!isset($arr_data[$key]) && $key != '')
+			if(!isset($data['array'][$key]) && $key != '')
 			{
-				$arr_data[$key] = array($key, $value);
+				$data['array'][$key] = $value;
 			}
 		}
 
@@ -1128,10 +1146,73 @@ function get_roles_for_select(&$arr_data, $add_choose_here = false, $strict_key 
 		{
 			if($key != '')
 			{
-				$arr_data[] = array($key, $value);
+				$data['array'][$key] = $value;
 			}
 		}
 	}
+
+	return $data['array'];
+}
+
+function get_posts_for_select($data)
+{
+	global $wpdb;
+
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['optgroup'])){			$data['optgroup'] = true;}
+
+	if(!isset($data['post_type'])){			$data['post_type'] = "";}
+	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
+	if(!isset($data['post_parent'])){		$data['post_parent'] = "";}
+	if(!isset($data['order'])){				$data['order'] = "menu_order ASC";}
+
+	$query_where = "";
+
+	if($data['post_type'] != '')
+	{
+		$query_where .= " AND post_type = '".esc_sql($data['post_type'])."'";
+	}
+
+	else
+	{
+		$query_where .= " AND post_type NOT IN('nav_menu_item')";
+	}
+
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type, post_title FROM ".$wpdb->posts." WHERE post_status = %s AND post_parent = '%d'".$query_where." ORDER BY post_type ASC, ".esc_sql($data['order']), $data['post_status'], $data['post_parent']));
+
+	$post_type_temp = $data['post_type'];
+	$opt_start_open = false;
+
+	$arr_data = array();
+
+	if($data['add_choose_here'] == true)
+	{
+		$arr_data[]	= array("", "-- ".__("Choose here", 'lang_base')." --");
+	}
+
+	foreach($result as $r)
+	{
+		$post_id = $r->ID;
+		$post_type = $r->post_type;
+		$post_title = $r->post_title;
+
+		if($post_type != $post_type_temp)
+		{
+			if($data['optgroup'] == true && $opt_start_open == true)
+			{
+				$arr_data["opt_end_".$post_type] = "";
+			}
+
+			$arr_data["opt_start_".$post_type] = "-- ".$post_type." --";
+			$opt_start_open = true;
+			
+			$post_type_temp = $post_type;
+		}
+
+		$arr_data[$post_id] = $post_title;
+	}
+
+	return $arr_data;
 }
 
 //Sortera array
@@ -1265,17 +1346,6 @@ function validate_url($value, $link = true, $http = true)
 
 function get_url_content($url, $catch_head = false, $password = "", $post = "", $post_data = array())
 {
-	//Replace with this?
-	/*$url = 'http://api.example.com/v1/users';
-
-    $args = array(
-		'headers' => array(
-			'token' => 'example_token'
-		),
-    );
-
-    $out = wp_remote_get($url, $args);*/
-
 	$url = validate_url($url, false);
 
 	$ch = curl_init();
@@ -1311,11 +1381,6 @@ function get_url_content($url, $catch_head = false, $password = "", $post = "", 
 	}
 
 	$content = curl_exec($ch);
-
-	/*if($output === false)
-	{
-		insert_error("cURL Error: ".curl_error($ch));
-	}*/
 
 	if($catch_head == true)
 	{
@@ -1912,7 +1977,8 @@ function show_select($data)
 	{
 		$count_temp = count($data['data']);
 
-		$is_multiple = preg_match('/(\[\])/', $data['name']);
+		//$is_multiple = preg_match('/(\[\])/', $data['name']);
+		$is_multiple = substr($data['name'], -2) == "[]";
 
 		if($is_multiple)
 		{
@@ -1932,7 +1998,7 @@ function show_select($data)
 			}
 
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			$data['xtra'] .= " multiple size='".$size."'"; //='multiple'
+			$data['xtra'] .= " multiple size='".$size."'";
 
 			$container_class = "form_select_multiple";
 		}
@@ -1964,17 +2030,29 @@ function show_select($data)
 				$out .= "<select id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
 
 					//for($i = 0; $i < $count_temp; $i++)
-					foreach($data['data'] as $option)
+					foreach($data['data'] as $key => $option)
 					{
 						//list($data_value, $data_text) = $data['data'][$i];
-						list($data_value, $data_text) = $option;
 
-						if($data_value == "opt_start" && $data_value != $data_text)
+						if(is_array($option))
+						{
+							list($data_value, $data_text) = $option;
+
+							do_log($data['name']." ".__("still uses the old way of inserting arrays in show_select()", 'lang_base'));
+						}
+
+						else
+						{
+							$data_value = $key;
+							$data_text = $option;
+						}
+
+						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
 						{
 							$out .= "<optgroup label='".$data_text."' rel='".$data_value."'>";
 						}
 
-						else if($data_value == "opt_end" && $data_value != $data_text)
+						else if(substr($data_value, 0, 7) == "opt_end" && $data_value != $data_text)
 						{
 							$out .= "</optgroup>";
 						}
@@ -2022,6 +2100,7 @@ function show_checkbox($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['switch'])){		$data['switch'] = 0;}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	$data['xtra'] .= $data['value'] == $data['compare'] ? " checked" : "";
 
@@ -2067,6 +2146,11 @@ function show_checkbox($data)
 		if($data['text'] != '')
 		{
 			$out .= "<label".($this_id != '' ? " for='".$this_id."'" : "").">".$data['text']."</label>";
+		}
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
 		}
 
 	$out .= "</div>";
@@ -2465,7 +2549,7 @@ function get_post_children($data, &$arr_data = array())
 					$post_title = "&nbsp;&nbsp;&nbsp;".$post_title;
 				}
 
-				$arr_data[] = array($post_id, $post_title);
+				$arr_data[$post_id] = $post_title;
 			}
 
 			else

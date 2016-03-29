@@ -156,7 +156,7 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		if(substr($db_field, -7) == "Deleted" && get_current_user_id() == 1)
+		if(substr($db_field, -7) == "Deleted")
 		{
 			$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
 
@@ -166,7 +166,8 @@ class mf_list_table extends WP_List_Table
 			{
 				$error_text = sprintf(__("Use run_cron_delete() on %s"), $db_field);
 
-				echo get_notification();
+				do_log($error_text);
+				//echo get_notification();
 			}
 		}
 	}
@@ -742,7 +743,7 @@ class mf_font_icons
 		{
 			foreach($this->fonts[$this->id] as $icon)
 			{
-				$arr_out[] = array($icon, $icon);
+				$arr_out[$icon] = $icon;
 			}
 		}
 
@@ -752,17 +753,17 @@ class mf_font_icons
 			{
 				if($data['allow_optgroup'] == true)
 				{
-					$arr_out[] = array('opt_start', __($key, 'lang_font_icons'));
+					$arr_out["opt_start_".$key] = $key;
 				}
 
 					foreach($fonts as $icon)
 					{
-						$arr_out[] = array($icon, $icon);
+						$arr_out[$icon] = $icon;
 					}
 
 				if($data['allow_optgroup'] == true)
 				{
-					$arr_out[] = array('opt_end', '');
+					$arr_out["opt_end_".$key] = "";
 				}
 			}
 		}
@@ -1365,9 +1366,9 @@ class mf_import
 					{
 						$arr_data = array();
 
-						$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
-						$arr_data[] = array("delete", __("Delete", 'lang_base'));
-						$arr_data[] = array("import", __("Import", 'lang_base'));
+						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+						$arr_data['delete'] = __("Delete", 'lang_base');
+						$arr_data['import'] = __("Import", 'lang_base');
 
 						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'compare' => $this->action));
 					}
@@ -1387,12 +1388,7 @@ class mf_import
 						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", 'lang_base'), 'required' => ($this->file_location != '' ? true : false)));
 					}
 
-					$arr_data = array();
-
-					$arr_data[] = array('1', __("Yes", 'lang_base'));
-					$arr_data[] = array('0', __("No", 'lang_base'));
-
-					$out .= show_select(array('data' => $arr_data, 'name' => 'intImportSkipHeader', 'compare' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
+					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'compare' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
 					.show_submit(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
 				."</div>
 			</div>
@@ -1429,25 +1425,11 @@ class mf_import
 						$strRowField = check_var('strRowCheck'.$i);
 
 						$arr_data = array();
+						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
 
-						$arr_data[] = array("", "-- ".__("Choose here", 'lang_base')." --");
-
-						/*$result = $wpdb->get_results("SHOW FIELDS FROM ".$wpdb->base_prefix.$this->table);
-
-						foreach($result as $r)
-						{
-							$strTableField = $r->Field;
-
-							if(array_key_exists($strTableField, $this->columns))
-							{
-								$arr_data[] = array($strTableField, $this->columns[$strTableField]);
-							}
-						}*/
-
-						//Works with wp_posts options
 						foreach($this->columns as $key => $value)
 						{
-							$arr_data[] = array($key, $value);
+							$arr_data[$key] = $value;
 						}
 
 						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'compare' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
@@ -1501,13 +1483,13 @@ class mf_export
 		$this->types = $this->data = array();
 
 		$this->actions = array(
-			array('', "-- ".__("Choose here", 'lang_base')." --"),
-			array('csv', "CSV"),
+			'' => "-- ".__("Choose here", 'lang_base')." --",
+			'csv' => "CSV",
 		);
 
 		if($this->has_excel_support)
 		{
-			$this->actions[] = array('xls', "XLS");
+			$this->actions['xls'] = "XLS";
 		}
 
 		$this->get_defaults();

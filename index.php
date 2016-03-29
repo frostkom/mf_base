@@ -1,11 +1,15 @@
 <?php
 /*
 Plugin Name: MF Base
-Plugin URI: http://github.com/frostkom/mf_base
+Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 4.5.1
+Version: 4.6.5
 Author: Martin Fors
 Author URI: http://frostkom.se
+Text Domain: lang_base
+Domain Path: /lang
+
+GitHub Plugin URI: frostkom/mf_base
 */
 
 include_once("include/classes.php");

@@ -161,7 +161,7 @@ jQuery(function($)
 
 			dom_raw.html(html);
 
-			var img_url = dom_raw.children('img').attr('src');
+			var img_url = dom_raw.find('img').attr('src');
 
 			dom_raw.html('');
 

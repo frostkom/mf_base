@@ -1584,8 +1584,6 @@ class mf_export
 
 						$objPHPExcel = new PHPExcel();
 
-						//$objPHPExcel->getProperties()->setCreator("")->setLastModifiedBy("")->setTitle("")->setSubject("")->setDescription("")->setKeywords("")->setCategory("");
-
 						foreach($this->data as $row_key => $row_value)
 						{
 							foreach($row_value as $col_key => $col_value)
@@ -1609,11 +1607,6 @@ class mf_export
 								}
 							}
 						}
-
-						/*$objPHPExcel->getActiveSheet()->getRowDimension(8)->setRowHeight(-1);
-						$objPHPExcel->getActiveSheet()->getStyle('A8')->getAlignment()->setWrapText(true);*/
-
-						//$objPHPExcel->getActiveSheet()->setTitle($strFormName);
 
 						$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
 						$objWriter->save($this->upload_path.$file);

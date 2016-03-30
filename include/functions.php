@@ -1,5 +1,10 @@
 <?php
 
+function admin_init_base()
+{
+	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));
+}
+
 function mf_uninstall_plugin($data)
 {
 	global $wpdb;
@@ -295,10 +300,14 @@ function insert_attachment($data)
 
 	if(strlen($data['content']) > 0 && $data['name'] != '')
 	{
+		$file_name = basename($data['name']);
+		$file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+		$file_name = sanitize_title_with_dashes(sanitize_title($file_name)).".".$file_extension;
+
 		$upload_dir = wp_upload_dir();
 
-		$temp_file = $upload_dir['path']."/".$data['name'];
-		$file_url = $upload_dir['url']."/".basename($data['name']);
+		$temp_file = $upload_dir['path']."/".$file_name;
+		$file_url = $upload_dir['url']."/".$file_name;
 
 		$intFileID = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid = %s", validate_url($file_url)));
 
@@ -384,6 +393,9 @@ function delete_base($data)
 	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
 
 	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+
+	$data['field_prefix'] = esc_sql($data['field_prefix']);
+	$data['table'] = esc_sql($data['table']);
 
 	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
@@ -643,37 +655,6 @@ function get_attachment_data_by_id($id)
 	}
 }
 
-/*function get_post_filter($data, &$query_where)
-{
-	global $wpdb;
-
-	$db_value = check_var($data['db_field'], 'char', true, 'all');
-
-	$query_trash = $data['db_field']." != 'trash' AND ".$data['db_field']." != 'ignore'";
-
-	$arr_filter = "";
-
-	foreach($data['types'] as $key => $value)
-	{
-		$amount = $wpdb->get_var("SELECT COUNT(ID) FROM ".$wpdb->posts." WHERE post_type = '".$data['plugin']."'".$query_where." AND ".($key == 'all' ? $query_trash : $data['db_field']." = '".$key."'"));
-
-		if($amount > 0)
-		{
-			$arr_filter .= "<li class='".$key."'>"
-				.($arr_filter != '' ? " | " : "")
-				."<a href='admin.php?page=".$data['plugin']."/list/index.php&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>
-			</li>";
-		}
-	}
-
-	$query_where .= " AND ".($db_value == 'all' ? $query_trash : $data['db_field']." = '".$db_value."'");
-
-	if($arr_filter != '')
-	{
-		return "<ul class='subsubsub'>".$arr_filter."</ul>";
-	}
-}*/
-
 function mf_format_number($in, $dec = 2)
 {
 	$out = number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
@@ -899,7 +880,6 @@ function setting_base_recommend_callback()
 		array('enable-media-replace/enable-media-replace.php', "Enable Media Replace", __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array('google-authenticator%2Fgoogle-authenticator.php', "Google Authenticator", __("to use 2-step verification when logging in", 'lang_base')),
 		array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
-		//array('profile-picture/profile-picture.php', "Profile Picture", __("to upload a profile picture", 'lang_base')), //Should not be used because it messes up other Media Buttons
 		array('quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', "Quick Page/Post Redirect Plugin", __("to redirect pages to internal or external URLs", 'lang_base')),
 		array('simple-page-ordering/simple-page-ordering.php', "Simple Page Ordering", __("to reorder posts with drag & drop", 'lang_base')),
 		array('tablepress/tablepress.php', "TablePress", __("to be able to add tables to posts", 'lang_base')),
@@ -1023,7 +1003,6 @@ function get_all_roles($data = array())
 
 		if($roles_temp == '')
 		{
-			//$roles_temp = $wp_roles->roles;
 			$roles_temp = get_option('wp_user_roles');
 		}
 
@@ -1037,10 +1016,7 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(!isset($wp_roles))
-		{
-			$wp_roles = new WP_Roles();
-		}
+		hide_roles();
 
 		$roles = $wp_roles->get_names();
 	}
@@ -1134,20 +1110,9 @@ function get_roles_for_select($data = array())
 	{
 		$key = get_role_first_capability($key);
 
-		if($data['strict_key'] == true)
+		if(!isset($data['array'][$key]) && $key != '')
 		{
-			if(!isset($data['array'][$key]) && $key != '')
-			{
-				$data['array'][$key] = $value;
-			}
-		}
-
-		else
-		{
-			if($key != '')
-			{
-				$data['array'][$key] = $value;
-			}
+			$data['array'][$key] = $value;
 		}
 	}
 
@@ -1470,7 +1435,7 @@ function add_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$result = $wpdb->get_results("SHOW COLUMNS FROM ".$table." WHERE Field = '".$column."'");
+			$result = $wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
 
 			if($wpdb->num_rows == 0)
 			{
@@ -1491,7 +1456,7 @@ function update_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$result = $wpdb->get_results("SHOW COLUMNS FROM ".$table." WHERE Field = '".$column."'");
+			$result = $wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
 
 			if($wpdb->num_rows > 0)
 			{
@@ -2533,7 +2498,7 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
-	$result = $wpdb->get_results("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = '".$data['post_type']."' AND post_status = 'publish' AND post_parent = '".$data['post_id']."' ORDER BY menu_order ASC");
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = 'publish' AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
 
 	if($wpdb->num_rows > 0)
 	{

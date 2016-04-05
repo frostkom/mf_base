@@ -27,8 +27,10 @@ jQuery(function($)
 				output_list += "<tr>"
 					+ "<td>";
 					
-						if(file_url.match(/(\.[png|gif|jpg|jpeg])/))
+						if(file_url.match(/\.(png|gif|jpg|jpeg)/))
 						{
+							console.log("Image..." + file_url);
+
 							output_list += "<div><img src='" + file_url + "' alt='" + file_name + "'></div>";
 						}
 

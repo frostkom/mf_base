@@ -49,6 +49,8 @@ function mf_editor($content, $editor_id, $settings = array())
 	if(isset($settings['mini_toolbar']) && $settings['mini_toolbar'] == true)
 	{
 		$settings['tinymce']['toolbar1'] = 'bold,italic,bullist,numlist,link,unlink';
+		
+		$settings['class'] .= ($settings['class'] != '' ? " " : "")."is_mini_toolbar";
 	}
 
 	if($settings['class'] != '')
@@ -790,30 +792,27 @@ function settings_base()
 
 	$options_area = __FUNCTION__;
 
-	if(IS_ADMIN)
+	add_settings_section($options_area, "",	$options_area."_callback", BASE_OPTIONS_PAGE);
+
+	$arr_settings = array(
+		"setting_base_info" => __("Versions", 'lang_base'),
+		"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
+	);
+
+	if(get_option('setting_base_auto_core_update') != 'none')
 	{
-		add_settings_section($options_area, "",	$options_area."_callback", BASE_OPTIONS_PAGE);
+		$arr_settings["setting_base_auto_core_email"] = __("Update notification", 'lang_base');
+	}
 
-		$arr_settings = array(
-			"setting_base_info" => __("Versions", 'lang_base'),
-			"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
-		);
+	$arr_settings["setting_base_cron"] = __("Scheduled to run", 'lang_base');
+	$arr_settings["setting_base_recommend"] = __("Recommendations", 'lang_base');
+	//$arr_settings["setting_all_options"] = __("All options", 'lang_base');
 
-		if(get_option('setting_base_auto_core_update') != 'none')
-		{
-			$arr_settings["setting_base_auto_core_email"] = __("Update notification", 'lang_base');
-		}
+	foreach($arr_settings as $handle => $text)
+	{
+		add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $options_area);
 
-		$arr_settings["setting_base_cron"] = __("Scheduled to run", 'lang_base');
-		$arr_settings["setting_base_recommend"] = __("Recommendations", 'lang_base');
-		//$arr_settings["setting_all_options"] = __("All options", 'lang_base');
-
-		foreach($arr_settings as $handle => $text)
-		{
-			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $options_area);
-
-			register_setting(BASE_OPTIONS_PAGE, $handle);
-		}
+		register_setting(BASE_OPTIONS_PAGE, $handle);
 	}
 }
 
@@ -879,7 +878,7 @@ function setting_base_recommend_callback()
 		array('email-log/email-log.php', "Email Log", __("to log all outgoing e-mails", 'lang_base')),
 		array('enable-media-replace/enable-media-replace.php', "Enable Media Replace", __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array('google-authenticator%2Fgoogle-authenticator.php', "Google Authenticator", __("to use 2-step verification when logging in", 'lang_base')),
-		array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
+		//array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
 		array('quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', "Quick Page/Post Redirect Plugin", __("to redirect pages to internal or external URLs", 'lang_base')),
 		array('simple-page-ordering/simple-page-ordering.php', "Simple Page Ordering", __("to reorder posts with drag & drop", 'lang_base')),
 		array('tablepress/tablepress.php', "TablePress", __("to be able to add tables to posts", 'lang_base')),
@@ -1016,7 +1015,10 @@ function get_all_roles($data = array())
 
 	else
 	{
-		hide_roles();
+		if(is_plugin_active("mf_users/index.php") && function_exists('hide_roles'))
+		{
+			hide_roles();
+		}
 
 		$roles = $wp_roles->get_names();
 	}
@@ -1060,10 +1062,18 @@ function get_role_first_capability($role)
 {
 	global $wp_roles;
 
-	$capabilities = is_array($wp_roles->roles[$role]['capabilities']) ? $wp_roles->roles[$role]['capabilities'] : array();
-	$cap_keys = array_keys($capabilities);
+	if(isset($wp_roles->roles[$role]['capabilities']) && is_array($wp_roles->roles[$role]['capabilities']))
+	{
+		$capabilities = $wp_roles->roles[$role]['capabilities'];
+		$cap_keys = array_keys($capabilities);
 
-	return $cap_keys[0];
+		return $cap_keys[0];
+	}
+
+	else
+	{
+		return false;
+	}
 }
 
 function get_yes_no_for_select($data = array())
@@ -1928,6 +1938,7 @@ function show_textarea($data)
 ############################
 function show_select($data)
 {
+	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['compare'])){		$data['compare'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
@@ -1938,14 +1949,11 @@ function show_select($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	if(isset($data['data']) && $data['data'] != '')
+	$count_temp = count($data['data']);
+
+	if($count_temp > 0) //isset($data['data']) && $data['data'] != ''
 	{
-		$count_temp = count($data['data']);
-
-		//$is_multiple = preg_match('/(\[\])/', $data['name']);
-		$is_multiple = substr($data['name'], -2) == "[]";
-
-		if($is_multiple)
+		if(substr($data['name'], -2) == "[]")
 		{
 			if($count_temp > $data['maxsize'])
 			{

@@ -57,6 +57,17 @@
 					margin-left: 1.5em;
 				}
 
+	.postbox.active, .postbox.active h3
+	{
+		background: #fff6bf;
+		border-color: #ffd324;
+	}
+
+		tr.active
+		{
+			background: #fff6bf !important;
+		}
+
 	.mf_editor.hide_media_button .wp-media-buttons, .mf_editor.hide_tabs .wp-editor-tabs
 	{
 		display: none;

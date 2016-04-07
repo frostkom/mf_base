@@ -283,31 +283,6 @@
 				outline: none;
 			}
 
-			/*.mf_form .form_textfield input:valid, .mf_form select:valid, .mf_form textarea:valid, .mf_form .form_password input:valid
-			{
-				background: rgba(217, 241, 191, .3);
-			}
-
-				.mf_form .form_textfield input:valid:focus, .mf_form select:valid:focus, .mf_form textarea:valid:focus, .mf_form .form_password input:valid:focus
-				{
-					background: #d9f1bf;
-				}
-
-			.mf_form .form_textfield input:invalid, .mf_form select:invalid, .mf_form textarea:invalid, .mf_form .form_password input:invalid
-			{
-				background: rgba(251, 227, 228, .3);
-			}
-
-				.mf_form .form_textfield input:invalid:focus, .mf_form select:invalid:focus, .mf_form textarea:invalid:focus, .mf_form .form_password input:invalid:focus
-				{
-					background: #fbe3e4;
-				}*/
-
-			/*.mf_form .form_textfield input[type=date], .mf_form .form_textfield input[type=number]
-			{
-				max-width: 140px;
-			}*/
-
 		.mf_form .form_select .description
 		{
 			margin: -5px 0 10px;
@@ -349,6 +324,11 @@
 			margin: 0 .7em .7em 0;
 			padding: .3em 1em .3em;
 		}
+
+			.mf_form button + .button
+			{
+				margin-left: .5em;
+			}
 
 			.mf_settings #postbox-container-1 button
 			{

@@ -39,6 +39,8 @@ function mf_editor($content, $editor_id, $settings = array())
 	if(!isset($settings['class'])){			$settings['class'] = "";}
 	if(!isset($settings['text'])){			$settings['text'] = "";}
 
+	$out = "";
+
 	if(isset($settings['statusbar']))
 	{
 		$settings['tinymce']['statusbar'] = $settings['statusbar'];
@@ -55,12 +57,12 @@ function mf_editor($content, $editor_id, $settings = array())
 
 	if($settings['class'] != '')
 	{
-		echo "<div class='mf_editor ".$settings['class']."'>";
+		$out .= "<div class='mf_editor ".$settings['class']."'>";
 	}
 
 		if($settings['text'] != '')
 		{
-			echo "<label>".$settings['text']."</label>";
+			$out .= "<label>".$settings['text']."</label>";
 		}
 
 		//'toolbar1' => 'strikethrough,alignleft,aligncenter,alignright,wp_more,spellchecker,wp_fullscreen,wp_adv,blockquote,hr',
@@ -70,12 +72,19 @@ function mf_editor($content, $editor_id, $settings = array())
 		//'editor_height' => '',
 		//'wp_autoresize_on' => false,
 
-		wp_editor($content, $editor_id, $settings);
+		ob_start();
+
+			wp_editor($content, $editor_id, $settings);
+
+		$out .= ob_get_clean();
+
 
 	if($settings['class'] != '')
 	{
-		echo "</div>";
+		$out .= "</div>";
 	}
+
+	return $out;
 }
 
 function get_setting_key($function_name)
@@ -479,8 +488,9 @@ function init_base()
 	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
 	// Add datepicker
-	wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-	wp_enqueue_script('jquery-ui-datepicker');
+	/*wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+	wp_enqueue_script('jquery-ui-datepicker');*/
+
 	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
 	if(is_user_logged_in() && IS_ADMIN)
@@ -870,30 +880,34 @@ function setting_base_info_callback()
 function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
-		array('admin-branding/admin-branding.php', "Admin Branding", __("to brand the login and admin area", 'lang_base')),
-		array('admin-menu-tree-page-view/index.php', "Admin Menu Tree Page View"),
-		array('adminer/adminer.php', "Adminer", __("to get a graphical interface to the database", 'lang_base')),
-		array('backwpup/backwpup.php', "BackWPup", __("to backup all files and database to an external source", 'lang_base')),
-		array('black-studio-tinymce-widget/black-studio-tinymce-widget.php', "Black Studio TinyMCE Widget", __("to get a WYSIWYG widget editor", 'lang_base')),
-		array('email-log/email-log.php', "Email Log", __("to log all outgoing e-mails", 'lang_base')),
-		array('enable-media-replace/enable-media-replace.php', "Enable Media Replace", __("to be able to replace existing files by uploading a replacement", 'lang_base')),
-		array('google-authenticator%2Fgoogle-authenticator.php', "Google Authenticator", __("to use 2-step verification when logging in", 'lang_base')),
-		//array('wp-media-library-categories%2Findex.php', "Media Library Categories", __("to be able to categorize uploaded files", 'lang_base')),
-		array('quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', "Quick Page/Post Redirect Plugin", __("to redirect pages to internal or external URLs", 'lang_base')),
-		array('simple-page-ordering/simple-page-ordering.php', "Simple Page Ordering", __("to reorder posts with drag & drop", 'lang_base')),
-		array('tablepress/tablepress.php', "TablePress", __("to be able to add tables to posts", 'lang_base')),
-		array('user-role-editor/user-role-editor.php', "User Role Editor", __("to be able to edit roles", 'lang_base')),
-		array('user-switching/user-switching.php', "User Switching", __("to be able to switch to another user without their credentials", 'lang_base')),
-		array('wp-smushit/wp-smush.php', "WP Smush", __("to losslessly compress all uploaded images", 'lang_base')),
-		array('wp-mail-smtp/wp_mail_smtp.php', "WP-Mail-SMTP", __("to setup custom SMTP settings", 'lang_base')),
-		array('favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', "Favicon by RealFaviconGenerator", __("to add all the favicons needed", 'lang_base')),
+		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
+		array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
+		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
+		array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
+		array("Google Authenticator", 'google-authenticator%2Fgoogle-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
+		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
+		//array("Media Library Categories", 'wp-media-library-categories%2Findex.php', __("to be able to categorize uploaded files", 'lang_base')),
+		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
+		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
+		array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
+		array("User Switching", 'user-switching/user-switching.php', __("to be able to switch to another user without their credentials", 'lang_base')),
+		array("WP Smush", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
+		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
+		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
+		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 	);
 
 	foreach($arr_recommendations as $value)
 	{
+		$name = $value[0];
+		$path = $value[1];
 		$text = isset($value[2]) ? $value[2] : "";
 
-		new recommend_plugin(array('path' => $value[0], 'name' => $value[1], 'text' => $text, 'show_notice' => false));
+		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
 }
 
@@ -1258,7 +1272,7 @@ function array_sort($data)
 }
 #########################
 
-function array_remove($data) //$remove, $array, $strict = true
+/*function array_remove($data)
 {
 	if(!isset($data['on'])){		$data['on'] = 'key';}
 
@@ -1293,7 +1307,7 @@ function array_remove($data) //$remove, $array, $strict = true
 	}
 
 	return $data['array'];
-}
+}*/
 
 #################
 function validate_url($value, $link = true, $http = true)
@@ -1806,6 +1820,11 @@ function show_textfield($data)
 
 	if($data['type'] == "date")
 	{
+		// Add datepicker
+		wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+		wp_enqueue_script('jquery-ui-datepicker');
+		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js");
+
 		$data['type'] = "text";
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";
 	}
@@ -1920,8 +1939,7 @@ function show_textarea($data)
 
 		/*if($data['wysiwyg'] == true)
 		{
-			//$out .= 
-			mf_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
+			$out .= mf_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
 		}
 
 		else
@@ -2073,6 +2091,7 @@ function show_checkbox($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['switch'])){		$data['switch'] = 0;}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
 	$data['xtra'] .= $data['value'] == $data['compare'] ? " checked" : "";
@@ -2119,6 +2138,11 @@ function show_checkbox($data)
 		if($data['text'] != '')
 		{
 			$out .= "<label".($this_id != '' ? " for='".$this_id."'" : "").">".$data['text']."</label>";
+		}
+
+		if($data['suffix'] != '')
+		{
+			$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
 		}
 
 		if($data['description'] != '')

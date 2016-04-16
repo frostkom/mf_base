@@ -24,8 +24,8 @@ jQuery(function($)
 		this.form.submit();
 	});
 
-	$('.mf_form :required').each(function()
+	$('.mf_form :required, .mf_form .required').each(function()
 	{
-		$(this).siblings('label').append(' *');
+		$(this).siblings('label').append(" <span class='asterisk'>*</span>");
 	});
 });

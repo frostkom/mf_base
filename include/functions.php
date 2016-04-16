@@ -34,59 +34,6 @@ function mf_uninstall_plugin($data)
 	}
 }
 
-function mf_editor($content, $editor_id, $settings = array())
-{
-	if(!isset($settings['class'])){			$settings['class'] = "";}
-	if(!isset($settings['text'])){			$settings['text'] = "";}
-
-	$out = "";
-
-	if(isset($settings['statusbar']))
-	{
-		$settings['tinymce']['statusbar'] = $settings['statusbar'];
-		
-		unset($settings['statusbar']);
-	}
-
-	if(isset($settings['mini_toolbar']) && $settings['mini_toolbar'] == true)
-	{
-		$settings['tinymce']['toolbar1'] = 'bold,italic,bullist,numlist,link,unlink';
-		
-		$settings['class'] .= ($settings['class'] != '' ? " " : "")."is_mini_toolbar";
-	}
-
-	if($settings['class'] != '')
-	{
-		$out .= "<div class='mf_editor ".$settings['class']."'>";
-	}
-
-		if($settings['text'] != '')
-		{
-			$out .= "<label>".$settings['text']."</label>";
-		}
-
-		//'toolbar1' => 'strikethrough,alignleft,aligncenter,alignright,wp_more,spellchecker,wp_fullscreen,wp_adv,blockquote,hr',
-		//'toolbar2' => 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
-		//'block_formats' => 'Paragraph=p; Heading 3=h3; Heading 4=h4',
-		//'quicktags' => array('buttons' => 'em,strong,link'), //false //Does not work
-		//'editor_height' => '',
-		//'wp_autoresize_on' => false,
-
-		ob_start();
-
-			wp_editor($content, $editor_id, $settings);
-
-		$out .= ob_get_clean();
-
-
-	if($settings['class'] != '')
-	{
-		$out .= "</div>";
-	}
-
-	return $out;
-}
-
 function get_setting_key($function_name)
 {
 	return str_replace("_callback", "", $function_name);
@@ -1809,7 +1756,7 @@ function show_textfield($data)
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
 	if(!isset($data['size'])){			$data['size'] = 0;}
-	if(!isset($data['required'])){		$data['required'] = 0;}
+	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['pattern'])){		$data['pattern'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
@@ -1831,7 +1778,7 @@ function show_textfield($data)
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 
-	if($data['required'] == 1)
+	if($data['required'])
 	{
 		$data['xtra'] .= " required";
 	}
@@ -1918,10 +1865,13 @@ function show_textarea($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
-	if(!isset($data['required'])){		$data['required'] = 0;}
+	if(!isset($data['required'])){		$data['required'] = false;}
 	//if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 
-	if($data['required'] == 1){		$data['xtra'] .= " required";}
+	if($data['required'])
+	{
+		$data['xtra'] .= " required";
+	}
 
 	if($data['placeholder'] != '')
 	{
@@ -1944,7 +1894,7 @@ function show_textarea($data)
 
 		else
 		{*/
-			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">".stripslashes($data['value'])."</textarea>";
+			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".$data['xtra'].">".stripslashes($data['value'])."</textarea>";
 		//}
 
 	$out .= "</div>";
@@ -1952,6 +1902,75 @@ function show_textarea($data)
 	return $out;
 }
 #################
+
+function mf_editor($content, $editor_id, $data = array())
+{
+	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+	if(!isset($data['required'])){		$data['required'] = false;}
+
+	$out = "";
+	
+	if($data['required'] && $data['text'] != '')
+	{
+		$data['xtra'] .= " class='required'";
+	}
+
+	if(isset($data['statusbar']))
+	{
+		$data['tinymce']['statusbar'] = $data['statusbar'];
+		
+		unset($data['statusbar']);
+	}
+
+	if(isset($data['mini_toolbar']) && $data['mini_toolbar'] == true)
+	{
+		$data['tinymce']['toolbar1'] = 'bold,italic,bullist,numlist,link,unlink';
+		
+		$data['class'] .= ($data['class'] != '' ? " " : "")."is_mini_toolbar";
+	}
+
+	if($data['class'] != '')
+	{
+		$out .= "<div class='mf_editor ".$data['class']."'>";
+	}
+
+		if($data['text'] != '')
+		{
+			$out .= "<label>".$data['text']."</label>";
+		}
+
+		if($data['xtra'] != '')
+		{
+			$out .= "<div".$data['xtra'].">";
+		}
+
+			//'toolbar1' => 'strikethrough,alignleft,aligncenter,alignright,wp_more,spellchecker,wp_fullscreen,wp_adv,blockquote,hr',
+			//'toolbar2' => 'formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
+			//'block_formats' => 'Paragraph=p; Heading 3=h3; Heading 4=h4',
+			//'quicktags' => array('buttons' => 'em,strong,link'), //false //Does not work
+			//'editor_height' => '',
+			//'wp_autoresize_on' => false,
+
+			ob_start();
+
+				wp_editor($content, $editor_id, $data);
+
+			$out .= ob_get_clean();
+
+		if($data['xtra'] != '')
+		{
+			$out .= "</div>";
+		}
+
+	if($data['class'] != '')
+	{
+		$out .= "</div>";
+	}
+
+	return $out;
+}
 
 ############################
 function show_select($data)
@@ -1962,7 +1981,7 @@ function show_select($data)
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['minsize'])){		$data['minsize'] = 2;}
 	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
-	if(!isset($data['required'])){		$data['required'] = 0;}
+	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
@@ -1999,12 +2018,12 @@ function show_select($data)
 			$container_class = "form_select";
 		}
 
-		if($data['required'] == 1)
+		if($data['required'])
 		{
 			$data['xtra'] .= " required";
 		}
 
-		if($count_temp == 1 && $data['required'] == 1 && $data['text'] != '')
+		if($count_temp == 1 && $data['required'] && $data['text'] != '')
 		{
 			$out = input_hidden(array('name' => $data['name'], 'value' => $data['data'][0][0]));
 		}
@@ -2086,7 +2105,7 @@ function show_checkbox($data)
 {
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['required'])){		$data['required'] = 0;}
+	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['compare'])){		$data['compare'] = 0;}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
@@ -2104,7 +2123,7 @@ function show_checkbox($data)
 
 		$this_id = $new_class."_".$data['value'];
 
-		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."class='".$new_class."'";
+		$data['xtra'] .= " class='".$new_class."'";
 	}
 
 	else
@@ -2114,9 +2133,9 @@ function show_checkbox($data)
 		$this_id = $data['name'];
 	}
 
-	if($data['required'] == 1)
+	if($data['required'])
 	{
-		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."required";
+		$data['xtra'] .= " required";
 	}
 
 	if($data['switch'] == 1 && $data['text'] == '')
@@ -2133,7 +2152,7 @@ function show_checkbox($data)
 				$out .= " name='".$data['name']."' id='".$this_id."'";
 			}
 
-		$out .= " value='".$data['value']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
+		$out .= " value='".$data['value']."'".$data['xtra'].">";
 
 		if($data['text'] != '')
 		{
@@ -2194,6 +2213,12 @@ function show_file_field($data)
 	if(!isset($data['class'])){		$data['class'] = "";}
 	if(!isset($data['multiple'])){	$data['multiple'] = false;}
 	if(!isset($data['required'])){	$data['required'] = false;}
+	if(!isset($data['xtra'])){		$data['xtra'] = "";}
+
+	if($data['required'])
+	{
+		$data['xtra'] .= " required";
+	}
 
 	$out .= "<div class='form_file_input".($data['class'] != '' ? " ".$data['class'] : "")."'>";
 
@@ -2202,7 +2227,7 @@ function show_file_field($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='file' name='".$data['name'].($data['multiple'] == true ? "[]" : "")."'".($data['multiple'] == true ? " multiple" : "").($data['required'] == true ? " required" : "").">
+		$out .= "<input type='file' name='".$data['name'].($data['multiple'] == true ? "[]" : "")."'".($data['multiple'] == true ? " multiple" : "").$data['xtra'].">
 	</div>";
 
 	return $out;

@@ -18,44 +18,54 @@
 		overflow: hidden;
 	}
 
-	.swipe_action, .swipe_action tr
-	{
-		position: relative;
-	}
-
-		.swipe_action tr > div
+		.positive
 		{
-			bottom: 0;
-			color: #fff;
-			overflow: hidden;
-			padding: 1.5em 0;
-			position: absolute;
-			top: 0;
-			width: .3%;
+			background: #d9f1bf !important;
 		}
 
-			.swipe_action tr > .from_left
-			{
-				background: rgba(0, 255, 0, .3);
-				left: 0;
-			}
-			
-				.swipe_action tr > .from_left i
-				{
-					float: right;
-					margin-right: 1.5em;
-				}
+		.negative
+		{
+			background: #fbe3e4 !important;
+		}
 
-			.swipe_action tr > .from_right
+		.swipe_action, .swipe_action tr
+		{
+			position: relative;
+		}
+
+			.swipe_action tr > div
 			{
-				background: rgba(255, 0, 0, .3);
-				right: 0;
+				bottom: 0;
+				color: #fff;
+				overflow: hidden;
+				padding: 1.5em 0;
+				position: absolute;
+				top: 0;
+				width: .3%;
 			}
-			
-				.swipe_action tr > .from_right i
+
+				.swipe_action tr > .from_left
 				{
-					margin-left: 1.5em;
+					background: rgba(0, 255, 0, .3);
+					left: 0;
 				}
+				
+					.swipe_action tr > .from_left i
+					{
+						float: right;
+						margin-right: 1.5em;
+					}
+
+				.swipe_action tr > .from_right
+				{
+					background: rgba(255, 0, 0, .3);
+					right: 0;
+				}
+				
+					.swipe_action tr > .from_right i
+					{
+						margin-left: 1.5em;
+					}
 
 	.postbox.active, .postbox.active h3
 	{
@@ -67,6 +77,16 @@
 		{
 			background: #fff6bf !important;
 		}
+
+		tr.inactive
+		{
+			opacity: .2;
+		}
+
+			tr.inactive:hover
+			{
+				opacity: 1;
+			}
 
 	.mf_editor.hide_media_button .wp-media-buttons, .mf_editor.hide_tabs .wp-editor-tabs
 	{
@@ -84,5 +104,10 @@
 	.toggle_item
 	{
 		display: block !important;
+	}
+
+	.swipe_bar
+	{
+		display: none;
 	}
 }

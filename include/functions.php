@@ -834,14 +834,14 @@ function setting_base_recommend_callback()
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
-		array("Google Authenticator", 'google-authenticator%2Fgoogle-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
+		array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
-		//array("Media Library Categories", 'wp-media-library-categories%2Findex.php', __("to be able to categorize uploaded files", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 		array("User Switching", 'user-switching/user-switching.php', __("to be able to switch to another user without their credentials", 'lang_base')),
+		array("WP Rollback", 'wp-rollback/wp-rollback.php', __("to revert to an older version of a theme or plugin", 'lang_base')),
 		array("WP Smush", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
 		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
 		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
@@ -2014,7 +2014,7 @@ function show_select($data)
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
 			$data['xtra'] .= " multiple size='".$size."'";
 
-			$container_class = "form_select_multiple";
+			$container_class = "form_select form_select_multiple";
 		}
 
 		else
@@ -2043,23 +2043,18 @@ function show_select($data)
 
 				$out .= "<select id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
 
-					//for($i = 0; $i < $count_temp; $i++)
 					foreach($data['data'] as $key => $option)
 					{
-						//list($data_value, $data_text) = $data['data'][$i];
-
-						if(is_array($option))
+						/*if(is_array($option))
 						{
 							list($data_value, $data_text) = $option;
-
-							do_log($data['name']." ".__("still uses the old way of inserting arrays in show_select()", 'lang_base'));
 						}
 
 						else
-						{
+						{*/
 							$data_value = $key;
 							$data_text = $option;
-						}
+						//}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
 						{

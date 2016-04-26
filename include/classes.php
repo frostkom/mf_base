@@ -1516,7 +1516,7 @@ class mf_export
 
 		if($this->dir_exists == false)
 		{
-			$error_text = __("Could not create the folder %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base');
+			$error_text = sprintf(__("Could not create the folder %s. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $this->upload_path);
 		}
 	}
 

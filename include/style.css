@@ -325,9 +325,10 @@
 			padding: .3em 1em .3em;
 		}
 
-			.mf_form button + .button
+			.mf_form button + .button, .mf_form .button + .button
 			{
 				margin-left: .5em;
+				margin-bottom: .5em;
 			}
 
 			.mf_settings #postbox-container-1 button

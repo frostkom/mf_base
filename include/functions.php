@@ -415,7 +415,6 @@ function init_base()
 	}
 
 	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
-	$setting_base_auto_core_email = get_option('setting_base_auto_core_email');
 
 	if($setting_base_auto_core_update != '')
 	{
@@ -423,12 +422,6 @@ function init_base()
 		else if($setting_base_auto_core_update == "none"){	$setting_base_auto_core_update = false;}
 
 		define('WP_AUTO_UPDATE_CORE', $setting_base_auto_core_update);
-	}
-
-	if($setting_base_auto_core_email != "yes")
-	{
-		apply_filters('auto_core_update_send_email', '__return_false');
-		//apply_filters('auto_core_update_send_email', false, $type, $core_update, $result);
 	}
 
 	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
@@ -756,11 +749,6 @@ function settings_base()
 		"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
 	);
 
-	if(get_option('setting_base_auto_core_update') != 'none')
-	{
-		$arr_settings["setting_base_auto_core_email"] = __("Update notification", 'lang_base');
-	}
-
 	$arr_settings["setting_base_cron"] = __("Scheduled to run", 'lang_base');
 	$arr_settings["setting_base_recommend"] = __("Recommendations", 'lang_base');
 	//$arr_settings["setting_all_options"] = __("All options", 'lang_base');
@@ -836,6 +824,7 @@ function setting_base_recommend_callback()
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
+		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
@@ -870,15 +859,6 @@ function setting_base_auto_core_update_callback()
 	);
 
 	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'compare' => $option));
-}
-
-function setting_base_auto_core_email_callback()
-{
-	$setting_key = get_setting_key(__FUNCTION__);
-	$option = get_option($setting_key);
-
-	echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'compare' => $option))
-	."<span class='description'>".__("Send e-mail to admin after auto core update", 'lang_base')."</span>";
 }
 
 function setting_base_cron_callback()
@@ -1870,7 +1850,7 @@ function show_textarea($data)
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
-	//if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
+	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 
 	if($data['required'])
 	{
@@ -1891,15 +1871,15 @@ function show_textarea($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		/*if($data['wysiwyg'] == true)
+		if($data['wysiwyg'] == true)
 		{
 			$out .= mf_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
 		}
 
 		else
-		{*/
+		{
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".$data['xtra'].">".stripslashes($data['value'])."</textarea>";
-		//}
+		}
 
 	$out .= "</div>";
 

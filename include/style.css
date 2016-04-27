@@ -40,25 +40,31 @@
 		cursor: pointer;
 	}
 
-		.fa.green
+		.fa.green, .color_green
 		{
 			color: #079807;
 		}
 
-		.fa.red
+		.fa.red, .color_red
 		{
 			color: #840606;
 		}
 
-		.fa.yellow
+		.fa.yellow, .color_yellow
 		{
 			color: #f4f1c6;
 		}
 
-		/*.color_active
-		{
-			background: #f4f1c6 !important;
-		}*/
+	.grey, .color_grey
+	{
+		color: #999;
+	}
+
+	.color_sunday
+	{
+		color: #f00 !important;
+		font-weight: bold;
+	}
 
 	.green > td
 	{
@@ -83,17 +89,6 @@
 	.italic
 	{
 		font-style: italic;
-	}
-
-	.grey
-	{
-		color: #999;
-	}
-
-	.color_sunday
-	{
-		color: #f00 !important;
-		font-weight: bold;
 	}
 
 	.error, .updated

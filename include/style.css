@@ -30,6 +30,30 @@
 		white-space: nowrap;
 	}
 
+	.error, .updated
+	{
+		border-left-width: 4px;
+		border-left-style: solid;
+		color: #333;
+		margin-bottom: 10px;
+		padding: 5px;
+	}
+
+		.error
+		{
+			border-color: #dd3d36;
+		}
+
+		.updated
+		{
+			border-color: #7ad03a;
+		}
+
+		.error p, .updated p
+		{
+			margin-bottom: 0;
+		}
+
 	.row-actions
 	{
 		color: #999;
@@ -90,30 +114,6 @@
 	{
 		font-style: italic;
 	}
-
-	.error, .updated
-	{
-		border-left-width: 4px;
-		border-left-style: solid;
-		color: #333;
-		margin-bottom: 10px;
-		padding: 5px;
-	}
-
-		.error
-		{
-			border-color: #dd3d36;
-		}
-
-		.updated
-		{
-			border-color: #7ad03a;
-		}
-
-		.error p, .updated p
-		{
-			margin-bottom: 0;
-		}
 
 	.wrap .update-plugins
 	{

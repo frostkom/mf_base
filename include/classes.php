@@ -363,8 +363,6 @@ class mf_list_table extends WP_List_Table
 		{
 			do_log("Bulk delete: ".var_export($_GET, true));
 		}
-
-
 	}
 
 	function process_bulk_action()
@@ -434,11 +432,12 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		echo "<form action='?page=".$this->page."' method='post'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
+		echo "<form method='get'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">"; // action='?page=".$this->page."'
 
 			$this->search_box(__("Search", 'lang_base'), 's');
-		
-		echo "</form>";
+
+			echo input_hidden(array('name' => 'page', 'value' => $this->page))
+		."</form>";
 	}
 
 	function select_data($data = array())

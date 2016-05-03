@@ -10,10 +10,10 @@
 		display: block;
 	}
 
-	.inline
+	/*.inline
 	{
 		display: inline-block;
-	}
+	}*/
 
 	.floatleft
 	{
@@ -66,17 +66,20 @@
 
 		.fa.green, .color_green
 		{
-			color: #079807;
+			x-color: #079807;
+			color: #76e476;
 		}
 
 		.fa.red, .color_red
 		{
-			color: #840606;
+			x-color: #840606;
+			color: #e47676;
 		}
 
 		.fa.yellow, .color_yellow
 		{
-			color: #f4f1c6;
+			x-color: #f4f1c6;
+			color: #e4d176;
 		}
 
 	.grey, .color_grey
@@ -267,6 +270,11 @@
 				padding-right: 2.5em;
 			}
 
+				.mf_form .form_select_multiple select
+				{
+					background: none;
+				}
+
 		.mf_form .wp-editor-wrap
 		{
 			margin: 0 0 .8em;
@@ -320,7 +328,7 @@
 			padding: .3em 1em .3em;
 		}
 
-			.mf_form button + .button, .mf_form .button + .button
+			.mf_form button + .button, .mf_form .button + .button, .mf_form button + .button-secondary
 			{
 				margin-left: .5em;
 				margin-bottom: .5em;

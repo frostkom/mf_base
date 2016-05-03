@@ -1,5 +1,60 @@
 <?php
 
+function add_shortcode_button_base($button)
+{
+	global $pagenow;
+
+	$out = "";
+
+	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+	{
+		$count_shortcode_button = 0;
+		$count_shortcode_button = apply_filters('count_shortcode_button', $count_shortcode_button);
+
+		if($count_shortcode_button > 0)
+		{
+			$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button' title='".__("Add Content", 'lang_base')."'>"
+				."<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span>"
+				." ".__("Add Content", 'lang_base')
+			."</a>";
+		}
+	}
+
+	return $button.$out;
+}
+
+function add_shortcode_display_base()
+{
+	global $pagenow;
+
+	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+	{
+		echo "<script>
+			function insert_form()
+			{
+				jQuery('.mf_shortcode_wrapper select').each(function()
+				{
+					var value = jQuery(this).val(),
+						type = jQuery(this).attr('rel');
+
+					if(value > 0)
+					{
+						window.send_to_editor('[' + type + ' id=' + value + ']');
+					}
+				});
+			}
+		</script>";
+
+		echo "<div id='mf_shortcode_container' class='hide'>
+			<div class='mf_form mf_shortcode_wrapper'>"
+				.apply_filters('get_shortcode_output', '')
+				.show_submit(array('text' => __("Insert", 'lang_base'), 'xtra' => " onclick='insert_form()'"))
+				.show_submit(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary", 'xtra' => " onclick='tb_remove()'"))
+			."</div>
+		</div>";
+	}
+}
+
 function admin_init_base()
 {
 	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));
@@ -1095,7 +1150,7 @@ function get_posts_for_select($data)
 
 	else
 	{
-		$query_where .= " AND post_type NOT IN('nav_menu_item')";
+		$query_where .= " AND post_type NOT IN('nav_menu_item', 'mf_custom_item')";
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type, post_title FROM ".$wpdb->posts." WHERE post_status = %s AND post_parent = '%d'".$query_where." ORDER BY post_type ASC, ".esc_sql($data['order']), $data['post_status'], $data['post_parent']));
@@ -1851,6 +1906,7 @@ function show_textarea($data)
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	if($data['required'])
 	{
@@ -1879,6 +1935,11 @@ function show_textarea($data)
 		else
 		{
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".$data['xtra'].">".stripslashes($data['value'])."</textarea>";
+		}
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
 		}
 
 	$out .= "</div>";

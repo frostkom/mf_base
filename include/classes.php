@@ -42,7 +42,7 @@ class recommend_plugin
 
 			if($pagenow == 'plugins.php' && $data['show_notice'] == true)
 			{
-				$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $data['name'], $a_end);
+				$this->message = sprintf(__("We highly recommend that you install %s%s%s aswell", 'lang_base'), $a_start, $data['name'], $a_end).($data['text'] != '' ? " ".$data['text'] : "");
 
 				add_action('network_admin_notices', array($this, 'show_notice'));
 				add_action('admin_notices', array($this, 'show_notice'));

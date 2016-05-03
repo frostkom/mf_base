@@ -39,6 +39,7 @@ jQuery(function($)
 
 	$('.wp-list-table').removeClass('fixed');
 
+	/* Swipe to edit or delete */
 	$('.wp-list-table tr').each(function()
 	{
 		var self = $(this);
@@ -138,4 +139,5 @@ jQuery(function($)
 		fingers: 1,
 		allowPageScroll: 'vertical'
 	});
+	/* ############### */
 });

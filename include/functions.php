@@ -501,6 +501,29 @@ function init_base()
 	}
 }
 
+function get_file_icon($file)
+{
+	$suffix = get_file_suffix($file);
+
+	switch($suffix)
+	{
+		default:														$class = "fa-file-o";				break;
+
+		case 'pdf':														$class = "fa-file-pdf-o";			break;
+		case 'mp3': case 'ogg':											$class = "fa-file-audio-o";			break;
+		case 'xls': case 'xlsx':										$class = "fa-file-excel-o";			break;
+		case 'css':														$class = "fa-file-code-o";			break;
+		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa-file-image-o";			break;
+		case 'ppt': case 'pptx':										$class = "fa-file-powerpoint-o";	break;
+		case 'wmv': case 'avi':	case 'mpg':								$class = "fa-file-video-o";			break;
+		case 'doc': case 'docx':										$class = "fa-file-word-o";			break;
+		case 'zip': case 'tar':											$class = "fa-file-zip-o";			break;
+		case 'txt':														$class = "fa-file-text-o";			break;
+	}
+
+	return "<i class='fa fa-lg ".$class."'></i>";
+}
+
 function get_file_suffix($file)
 {
 	$arr_file_name = explode(".", $file);
@@ -842,6 +865,13 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
 }
 
+function point2int($in)
+{
+	@list($main_version, $minor_version, $sub_version) = explode($in, 3);
+
+	return ($main_version * 10000) + ($minor_version * 100) + $sub_version;
+}
+
 function settings_header($id, $title)
 {
 	return "<div id='".$id."'><a href='#".$id."'><h3>".$title."</h3></a></div>"; //&nbsp;
@@ -957,7 +987,7 @@ function setting_base_cron_callback()
 			$next_scheduled_text .= ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
 		}
 
-		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option, 'description' => $next_scheduled_text));
+		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option, 'suffix' => $next_scheduled_text));
 	}
 }
 

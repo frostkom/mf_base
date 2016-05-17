@@ -29,8 +29,6 @@ jQuery(function($)
 					
 						if(file_url.match(/\.(png|gif|jpg|jpeg)/))
 						{
-							console.log("Image..." + file_url);
-
 							output_list += "<div><img src='" + file_url + "' alt='" + file_name + "'></div>";
 						}
 

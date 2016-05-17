@@ -40,7 +40,7 @@ jQuery(function($)
 	$('.wp-list-table').removeClass('fixed');
 
 	/* Swipe to edit or delete */
-	$('.wp-list-table tr').each(function()
+	/*$('.wp-list-table tr').each(function()
 	{
 		var self = $(this);
 
@@ -66,7 +66,7 @@ jQuery(function($)
 				}
 			});
 		}
-	});
+	});*/
 
 	var dom_width = $(document).width(),
 		threshold = parseInt(dom_width * .3);

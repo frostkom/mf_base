@@ -28,7 +28,7 @@
 			background: #fbe3e4 !important;
 		}
 
-		.swipe_action, .swipe_action tr
+		/*.swipe_action, .swipe_action tr
 		{
 			position: relative;
 		}
@@ -65,7 +65,7 @@
 					.swipe_action tr > .from_right i
 					{
 						margin-left: 1.5em;
-					}
+					}*/
 
 	.postbox.active, .postbox.active h3
 	{
@@ -80,7 +80,7 @@
 
 		tr.inactive
 		{
-			opacity: .2;
+			opacity: .3;
 		}
 
 			tr.inactive:hover

@@ -39,12 +39,75 @@ jQuery(function($)
 
 	$('.wp-list-table').removeClass('fixed');
 
+	/* Look for user notifications */
+	function send_notification(value)
+	{
+		if(Notification.permission !== "granted")
+		{
+			Notification.requestPermission();
+		}
+		
+		else
+		{
+			var notification = new Notification(value.title, {
+				tag: value.tag,
+				icon: value.icon ? value.icon : "",
+				body: value.text ? value.text : "",
+			});
+
+			if(value.link && value.link != '')
+			{
+				notification.onclick = function()
+				{
+					window.open(value.link);      
+				};
+			}
+		}
+	}
+
+	function check_notifications()
+	{
+		$.ajax(
+		{
+			type : "post",
+			dataType : "json",
+			url : script_base_wp.ajax_url,
+			data : {action: "check_notifications"},
+			success: function(data)
+			{
+				if(data.success)
+				{
+					$.each(data.notifications, function(index, value)
+					{
+						send_notification(value);
+					});
+				}
+				
+				else
+				{
+					console.log("Error: " , data);
+				}
+			}
+		});
+
+		setTimeout(function()
+		{
+			check_notifications();
+		}, 120000);
+	}
+
+	if('Notification' in window)
+	{
+		check_notifications();
+	}
+	/* ############### */
+
 	/* Swipe to edit or delete */
-	/*$('.wp-list-table tr').each(function()
+	$('.wp-list-table tr').each(function()
 	{
 		var self = $(this);
 
-		if(self.find('.row-actions > .edit').length > 0)
+		/*if(self.find('.row-actions > .edit').length > 0)
 		{
 			self.append("<div class='swipe_bar from_left'><i class='fa fa-lg fa-wrench'></i></div>").parents('table').addClass('swipe_action');
 		}
@@ -52,7 +115,7 @@ jQuery(function($)
 		if(self.find('.row-actions > .delete, .row-actions > .trash').length > 0)
 		{
 			self.append("<div class='swipe_bar from_right'><i class='fa fa-lg fa-close'></i></div>").parents('table').addClass('swipe_action');
-		}
+		}*/
 
 		if(self.find('.set_tr_color').length > 0)
 		{
@@ -66,9 +129,9 @@ jQuery(function($)
 				}
 			});
 		}
-	});*/
+	});
 
-	var dom_width = $(document).width(),
+	/*var dom_width = $(document).width(),
 		threshold = parseInt(dom_width * .3);
 
 	$('.wp-list-table tr').swipe("destroy").swipe(
@@ -138,6 +201,6 @@ jQuery(function($)
 		threshold: threshold,
 		fingers: 1,
 		allowPageScroll: 'vertical'
-	});
+	});*/
 	/* ############### */
 });

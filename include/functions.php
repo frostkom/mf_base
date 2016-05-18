@@ -1,5 +1,24 @@
 <?php
 
+function check_notifications()
+{
+	$arr_notifications = array();
+
+	$notification_showed = get_user_meta(get_current_user_id(), 'mf_notification_showed', true);
+
+	$arr_notifications = apply_filters('get_user_notifications', $arr_notifications, $notification_showed);
+
+	$result = array(
+		'success' => true,
+		'notifications' => $arr_notifications,
+	);
+
+	update_user_meta(get_current_user_id(), 'mf_notification_showed', date("Y-m-d H:i:s"));
+
+	echo json_encode($result);
+	die();
+}
+
 function add_shortcode_button_base($button)
 {
 	global $pagenow;
@@ -194,7 +213,7 @@ function is_between($data)
 	return $out;
 }
 
-function time_between_dates($data) //$start, $end, $type = "round", $divide = 86400
+function time_between_dates($data)
 {
 	if(!isset($data['type'])){		$data['type'] = "round";}
 	if(!isset($data['return'])){	$data['return'] = "days";}
@@ -808,13 +827,39 @@ function get_current_user_role($id = 0)
 	return $user_data->roles[0];
 }
 
+//main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
+function int2point($in)
+{
+	$out = "";
+	$in_orig = $in;
+
+	$main_version = floor($in / 10000);
+
+	$in -= $main_version * 10000;
+
+	$minor_version = floor($in / 100);
+
+	$in -= $minor_version * 100;
+
+	$sub_version = $in;
+
+	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
+}
+
+function point2int($in)
+{
+	@list($main_version, $minor_version, $sub_version) = explode($in, 3);
+
+	return ($main_version * 10000) + ($minor_version * 100) + $sub_version;
+}
+
 function settings_base()
 {
 	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
 	wp_enqueue_script('script_swipe', plugin_dir_url(__FILE__)."jquery.touchSwipe.min.js");
-	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url()));
+	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')));
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
@@ -846,32 +891,6 @@ function settings_base_callback()
 	echo settings_header($setting_key, __("Common", 'lang_base'));
 }
 
-//main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
-function int2point($in)
-{
-	$out = "";
-	$in_orig = $in;
-
-	$main_version = floor($in / 10000);
-
-	$in -= $main_version * 10000;
-
-	$minor_version = floor($in / 100);
-
-	$in -= $minor_version * 100;
-
-	$sub_version = $in;
-
-	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
-}
-
-function point2int($in)
-{
-	@list($main_version, $minor_version, $sub_version) = explode($in, 3);
-
-	return ($main_version * 10000) + ($minor_version * 100) + $sub_version;
-}
-
 function settings_header($id, $title)
 {
 	return "<div id='".$id."'><a href='#".$id."'><h3>".$title."</h3></a></div>"; //&nbsp;
@@ -879,6 +898,8 @@ function settings_header($id, $title)
 
 function setting_base_info_callback()
 {
+	global $wpdb;
+
 	$php_version = explode("-", phpversion());
 	$php_version = $php_version[0];
 	$mysql_version = explode("-", @mysql_get_server_info());
@@ -892,9 +913,23 @@ function setting_base_info_callback()
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
 
-	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> PHP: ".$php_version."</p>
-	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> MySQL: ".$mysql_version."</p>
-	<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+
+	if(!($php_version > $php_required && $mysql_version > $mysql_required))
+	{
+		echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+	}
+
+	$intDBDate = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
+	$intFileDate = strtotime(date("Y-m-d H:i:s"));
+	$intDateDifference = abs($intDBDate - $intFileDate);
+
+	if($intDateDifference > 60)
+	{
+		echo "<br>
+		<p><i class='fa ".($intDateDifference > 60 ? "fa-close red" : "fa-check green")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+	}
 }
 
 function setting_base_recommend_callback()

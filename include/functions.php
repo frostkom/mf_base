@@ -4,16 +4,16 @@ function check_notifications()
 {
 	$arr_notifications = array();
 
-	$notification_showed = get_user_meta(get_current_user_id(), 'mf_notification_showed', true);
+	//$notification_showed = get_user_meta(get_current_user_id(), 'mf_notification_showed', true);
 
-	$arr_notifications = apply_filters('get_user_notifications', $arr_notifications, $notification_showed);
+	$arr_notifications = apply_filters('get_user_notifications', $arr_notifications);
 
 	$result = array(
 		'success' => true,
 		'notifications' => $arr_notifications,
 	);
 
-	update_user_meta(get_current_user_id(), 'mf_notification_showed', date("Y-m-d H:i:s"));
+	//update_user_meta(get_current_user_id(), 'mf_notification_showed', date("Y-m-d H:i:s"));
 
 	echo json_encode($result);
 	die();
@@ -334,38 +334,28 @@ function insert_attachment($data)
 	{
 		$file_name = basename($data['name']);
 		$file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
-		$file_name = sanitize_title_with_dashes(sanitize_title($file_name)).".".$file_extension;
+		$file_name = sanitize_title_with_dashes(sanitize_title(str_replace(".".$file_extension, "", $file_name)))."-".date("dHis").".".$file_extension;
 
 		$upload_dir = wp_upload_dir();
 
 		$temp_file = $upload_dir['path']."/".$file_name;
 		$file_url = $upload_dir['url']."/".$file_name;
 
-		$intFileID = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid = %s", validate_url($file_url)));
+		set_file_content(array('file' => $temp_file, 'mode' => 'w', 'content' => $data['content']));
+
+		$attachment = array(
+			'post_mime_type' => $data['mime'],
+			'post_title' => preg_replace('/\.[^.]+$/', '', basename($data['name'])),
+			'post_content' => '',
+			'post_status' => 'inherit',
+			'guid' => $file_url,
+		);
+
+		$intFileID = wp_insert_attachment($attachment, $file_url);
 
 		if(!($intFileID > 0))
 		{
-			set_file_content(array('file' => $temp_file, 'mode' => 'w', 'content' => $data['content']));
-
-			$attachment = array(
-				'post_mime_type' => $data['mime'],
-				'post_title' => preg_replace('/\.[^.]+$/', '', basename($data['name'])),
-				'post_content' => '',
-				'post_status' => 'inherit',
-				'guid' => $file_url,
-			);
-
-			$intFileID = wp_insert_attachment($attachment, $file_url);
-
-			if(!($intFileID > 0))
-			{
-				$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", 'lang_base').": ".$temp_file;
-			}
-		}
-
-		else
-		{
-			//$error_text = __("The file already exists", 'lang_base').": ".$file_url;
+			$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", 'lang_base').": ".$temp_file;
 		}
 	}
 
@@ -848,7 +838,7 @@ function int2point($in)
 
 function point2int($in)
 {
-	@list($main_version, $minor_version, $sub_version) = explode($in, 3);
+	@list($main_version, $minor_version, $sub_version) = explode(".", $in, 3);
 
 	return ($main_version * 10000) + ($minor_version * 100) + $sub_version;
 }
@@ -936,7 +926,7 @@ function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
 		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
-		array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
 		array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),

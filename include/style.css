@@ -10,12 +10,7 @@
 		display: block;
 	}
 
-	/*.inline
-	{
-		display: inline-block;
-	}*/
-
-	.floatleft
+	/*.floatleft
 	{
 		float: left;
 	}
@@ -23,7 +18,7 @@
 	.floatright
 	{
 		float: right;
-	}
+	}*/
 
 	.nowrap
 	{
@@ -66,19 +61,16 @@
 
 		.fa.green, .color_green
 		{
-			x-color: #079807;
 			color: #76e476;
 		}
 
 		.fa.red, .color_red
 		{
-			x-color: #840606;
 			color: #e47676;
 		}
 
 		.fa.yellow, .color_yellow
 		{
-			x-color: #f4f1c6;
 			color: #e4d176;
 		}
 
@@ -87,7 +79,7 @@
 		color: #999;
 	}
 
-	.color_sunday
+	.color_sunday, .mf_form .asterisk
 	{
 		color: #f00 !important;
 		font-weight: bold;
@@ -317,7 +309,7 @@
 				padding-left: 10px;
 			}
 
-		.mf_form .form_button > button, .mf_form .form_button > .button
+		.form_button > button, .form_button > .button
 		{
 			border: .2em solid #ccc;
 			border-radius: .3em;

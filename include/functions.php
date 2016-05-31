@@ -2088,7 +2088,7 @@ function show_select($data)
 
 	$count_temp = count($data['data']);
 
-	if($count_temp > 0) //isset($data['data']) && $data['data'] != ''
+	if($count_temp > 0)
 	{
 		if(substr($data['name'], -2) == "[]")
 		{
@@ -2125,7 +2125,17 @@ function show_select($data)
 
 		if($count_temp == 1 && $data['required'] && $data['text'] != '')
 		{
-			$out = input_hidden(array('name' => $data['name'], 'value' => $data['data'][0][0]));
+			//$out = input_hidden(array('name' => $data['name'], 'value' => $data['data'][0][0]));
+
+			foreach($data['data'] as $key => $option)
+			{
+				if($key != '')
+				{
+					$out = input_hidden(array('name' => $data['name'], 'value' => $key));
+
+					break;
+				}
+			}
 		}
 
 		else
@@ -2141,16 +2151,8 @@ function show_select($data)
 
 					foreach($data['data'] as $key => $option)
 					{
-						/*if(is_array($option))
-						{
-							list($data_value, $data_text) = $option;
-						}
-
-						else
-						{*/
-							$data_value = $key;
-							$data_text = $option;
-						//}
+						$data_value = $key;
+						$data_text = $option;
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
 						{

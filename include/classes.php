@@ -167,7 +167,6 @@ class mf_list_table extends WP_List_Table
 				$error_text = sprintf(__("Use run_cron_delete() on %s"), $db_field);
 
 				do_log($error_text);
-				//echo get_notification();
 			}
 		}
 	}

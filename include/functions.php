@@ -2075,6 +2075,8 @@ function mf_editor($content, $editor_id, $data = array())
 ############################
 function show_select($data)
 {
+	$out = "";
+
 	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['compare'])){		$data['compare'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
@@ -2191,9 +2193,9 @@ function show_select($data)
 
 			$out .= "</div>";
 		}
-
-		return $out;
 	}
+
+	return $out;
 }
 ############################
 
@@ -2237,7 +2239,7 @@ function show_checkbox($data)
 
 	if($data['switch'] == 1 && $data['text'] == '')
 	{
-		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."switch";
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
 		$data['text'] = "<i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i>";
 	}
 
@@ -2566,7 +2568,7 @@ function get_file_info($data)
 						$data_temp = $data;
 						$data_temp['child'] = $child;
 
-						call_user_func($data['folder_callback'], $data_temp); //array('path' => $data['path'], 'child' => $child)
+						call_user_func($data['folder_callback'], $data_temp);
 					}
 				}
 
@@ -2575,7 +2577,7 @@ function get_file_info($data)
 					$data_temp = $data;
 					$data_temp['path'] = $file;
 
-					get_file_info($data_temp); //array('path' => $file, 'callback' => $data['callback'])
+					get_file_info($data_temp);
 				}
 			}
 
@@ -2586,7 +2588,7 @@ function get_file_info($data)
 					$data_temp = $data;
 					$data_temp['file'] = $file;
 
-					call_user_func($data['callback'], $data_temp); //array('path' => $data['path'], 'file' => $file)
+					call_user_func($data['callback'], $data_temp);
 				}
 			}
 

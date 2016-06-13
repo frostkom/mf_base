@@ -201,49 +201,4 @@ jQuery(function($)
 		allowPageScroll: 'vertical'
 	});*/
 	/* ############### */
-
-	/* Look for error messages and enhance visibility of them */
-	var dom_error = $('.error');
-
-	if(dom_error.length > 0 && dom_error.is(':visible'))
-	{
-		var position = dom_error.addClass('mf_overlay').position();
-
-		$('body').append("<div id='mf_overlay'><i class='fa fa-arrow-up'></i></div>");
-
-		var dom_overlay = $('#mf_overlay'),
-			dom_icon = dom_overlay.children('i');
-
-		function show_icon()
-		{
-			var offset = dom_error.offset(),
-				posY = offset.top - $(window).scrollTop() + 20,
-				posX = offset.left - $(window).scrollLeft(); 
-
-			dom_icon.css({'left': posX, 'top': posY});
-		}
-
-		function hide_overlay()
-		{
-			dom_overlay.fadeOut();
-
-			dom_error.removeClass('mf_overlay');
-		}
-
-		dom_overlay.fadeIn();
-
-		show_icon();
-		$(window).scroll(show_icon);
-
-		dom_overlay.on('click', function()
-		{
-			hide_overlay();
-		});
-
-		setTimeout(function()
-		{
-			hide_overlay()
-		}, 10000);
-	}
-	/* ############### */
 });

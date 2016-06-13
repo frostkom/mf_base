@@ -264,7 +264,8 @@
 
 				.mf_form .form_select_multiple select
 				{
-					background: none;
+					background-image: none;
+					padding-right: 0;
 				}
 
 		.mf_form .wp-editor-wrap
@@ -326,7 +327,7 @@
 				margin-bottom: .5em;
 			}*/
 
-			.mf_form button, .mf_form .button, .mf_form .button-secondary
+			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary/*, .mf_form button does not work since it affects .wp-editor-tabs*/
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;
@@ -360,56 +361,61 @@
 			right: 0;
 		}
 
-	.switch
+	.form_switch
 	{
-		margin-right: .5em;
+		margin-right: .1em;
 	}
 
-		.switch input[type=checkbox]
+		.form_switch input[type=checkbox]
 		{
 			display: none;
 		}
 
-			.switch .fa-lg
+			.form_switch .fa-lg
 			{
 				line-height: 0;
 			}
 
-			.switch input[type=checkbox] + label .checked
+			.form_switch input[type=checkbox] + label .checked
 			{
 				display: none;
 			}
 
-			.switch input[type=checkbox] + label .unchecked
+			.form_switch input[type=checkbox] + label .unchecked
 			{
 				display: inline-block;
 			}
 
 			/* Checked */
-			.switch input[type=checkbox]:checked + label .unchecked
+			.form_switch input[type=checkbox]:checked + label .unchecked
 			{
 				display: none;
 			}
 
-			.switch input[type=checkbox]:checked + label .checked
+			.form_switch input[type=checkbox]:checked + label .checked
 			{
 				display: inline-block;
 			}
 
 			/* Loading */
-			.switch input[type=checkbox] + label .loading
+			.form_switch input[type=checkbox] + label .loading
 			{
 				display: none;
 			}
 			
-			.switch.loading input[type=checkbox] + label .checked, .switch.loading input[type=checkbox] + label .unchecked
+			.form_switch.loading input[type=checkbox] + label .checked, .form_switch.loading input[type=checkbox] + label .unchecked
 			{
 				display: none !important;
 			}
 
-			.switch.loading input[type=checkbox] + label .loading
+			.form_switch.loading input[type=checkbox] + label .loading
 			{
 				display: inline-block;
+			}
+
+			.form_switch .description
+			{
+				margin-left: .2em;
 			}
 }
 

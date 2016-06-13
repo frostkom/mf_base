@@ -7,6 +7,12 @@
 		top: auto !important;
 	}
 
+	.mf_search
+	{
+		float: right;
+		max-width: 40%;
+	}
+
 	.tablenav .alignleft > div
 	{
 		display: inline-block;
@@ -101,32 +107,6 @@
 		.nav-target tr td:first-of-type
 		{
 			width: 1%;
-		}
-
-	.error.mf_overlay
-	{
-		position: relative;
-		z-index: 10001;
-	}
-
-	#mf_overlay
-	{
-		background: #000;
-		bottom: 0;
-		left: 0;
-		opacity: .2;
-		position: absolute;
-		position: fixed;
-		right: 0;
-		top: 0;
-		z-index: 10000;
-	}
-
-		#mf_overlay i
-		{
-			color: #fff;
-			font-size: 20em;
-			position: absolute;
 		}
 }
 

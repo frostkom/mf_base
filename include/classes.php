@@ -184,19 +184,26 @@ class mf_list_table extends WP_List_Table
 
 		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
 
-		$query = "SELECT COUNT(".$this->arr_settings['query_select_id'].") FROM ".$this->arr_settings['query_from'].$this->query_join;
+		$query = "SELECT COUNT(*) FROM ".$this->arr_settings['query_from'].$this->query_join;
 
 		if($this->query_where != '')
 		{
 			$query .= " WHERE ".$this->query_where;
 		}
 
+		$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
+
 		foreach($data['types'] as $key => $value)
 		{
-			$query_this = $query.($this->query_where != '' ? " AND " : " WHERE ")
-			.$this->get_views_trash_string($key, $data['db_field']);
+			$query_this = $query
+				.($this->query_where != '' ? " AND " : " WHERE ")
+				.$this->get_views_trash_string($key, $data['db_field'])
+				.$query_group
+			;
 
-			$amount = $wpdb->get_var($query_this);
+			$wpdb->query($query_this); //$amount = 
+
+			$amount = $wpdb->num_rows;
 
 			if($amount > 0)
 			{
@@ -461,6 +468,7 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
 		if(!isset($data['order'])){		$data['order'] = $this->order;}
+		if(!isset($data['sort_data'])){	$data['sort_data'] = true;}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 		
@@ -496,16 +504,29 @@ class mf_list_table extends WP_List_Table
 
 		if(isset($data['debug']) && $data['debug'] == true)
 		{
-			echo "mf_list_table->select_data() query: ".$query;
+			echo "mf_list_table->select_data() query: ".$query."<br>";
 		}
 
 		$result = $wpdb->get_results($query);
 
+		if(isset($data['debug']) && $data['debug'] == true)
+		{
+			echo "Rows: ".count($result)."<br>";
+		}
+
 		$this->data = json_decode(json_encode($result), true);
 
-		$this->sort_data();
+		if($data['sort_data'] == true)
+		{
+			$this->sort_data();
+		}
 
 		$this->num_rows = count($this->data);
+
+		if(isset($data['debug']) && $data['debug'] == true)
+		{
+			echo "Rows: ".$this->num_rows."<br><br>";
+		}
 	}
 
 	/*public function single_row($item)

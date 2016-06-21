@@ -935,6 +935,7 @@ function setting_base_recommend_callback()
 		array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
 		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
+		array("Meta Box", 'meta-box/meta-box.php', __("to easily add meta to pages", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
@@ -1245,11 +1246,12 @@ function get_posts_for_select($data)
 	return $arr_data;
 }
 
-//Sortera array
+//Sort array
 #########################
-# array		array(array("firstname" => "Martin", "surname" => "Fors"))
-# on		Ex. surname
-# order		asc/desc
+# array			array(array("firstname" => "Martin", "surname" => "Fors"))
+# on			Ex. surname
+# order			asc/desc
+# keep_index	true/false
 #########################
 function array_sort($data)
 {
@@ -1312,43 +1314,6 @@ function array_sort($data)
 	return $new_array;
 }
 #########################
-
-/*function array_remove($data)
-{
-	if(!isset($data['on'])){		$data['on'] = 'key';}
-
-	if(!is_array($data['remove']))
-	{
-		$data['remove'] = array($data['remove']);
-	}
-
-	foreach($data['array'] as $key => $value)
-	{
-		if($data['on'] == 'key')
-		{
-			foreach($data['remove'] as $remove)
-			{
-				if($remove == $key)
-				{
-					unset($data['array'][$key]);
-				}
-			}
-		}
-
-		else if($data['on'] == 'value')
-		{
-			foreach($data['remove'] as $remove)
-			{
-				if(is_array($value) && in_array($remove, $value) || $remove == $value)
-				{
-					unset($data['array'][$key]);
-				}
-			}
-		}
-	}
-
-	return $data['array'];
-}*/
 
 #################
 function validate_url($value, $link = true, $http = true)
@@ -2729,7 +2694,7 @@ function month_name($month_no, $ucfirst = 1)
 		$month_no = 1;
 	}
 
-	$month_names = array(__('January', 'lang_base'), __('February', 'lang_base'), __('March', 'lang_base'), __('April', 'lang_base'), __('May', 'lang_base'), __('June', 'lang_base'), __('July', 'lang_base'), __('August', 'lang_base'), __('September', 'lang_base'), __('October', 'lang_base'), __('November', 'lang_base'), __('December', 'lang_base'));
+	$month_names = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
 
 	$out = $month_names[$month_no - 1];
 
@@ -2740,7 +2705,7 @@ function month_name($month_no, $ucfirst = 1)
 
 function day_name($day_no, $ucfirst = 1)
 {
-	$day_names = array(__('Sunday', 'lang_base'), __('Monday', 'lang_base'), __('Tuesday', 'lang_base'), __('Wednesday', 'lang_base'), __('Thursday', 'lang_base'), __('Friday', 'lang_base'), __('Saturday', 'lang_base'));
+	$day_names = array(__("Sunday", 'lang_base'), __("Monday", 'lang_base'), __("Tuesday", 'lang_base'), __("Wednesday", 'lang_base'), __("Thursday", 'lang_base'), __("Friday", 'lang_base'), __("Saturday", 'lang_base'));
 
 	$out = $day_names[$day_no];
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-17 08:44+0100\n"
+"POT-Creation-Date: 2016-06-22 11:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -31,7 +31,7 @@ msgid "Delete"
 msgstr "Radera"
 
 #: ../include/classes.php:443
-#: ../include/functions.php:1480
+#: ../include/functions.php:1444
 msgid "Search"
 msgstr "Sök"
 
@@ -389,95 +389,95 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:2419
+#: ../include/functions.php:2383
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:2708
+#: ../include/functions.php:2672
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:2709
+#: ../include/functions.php:2673
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:2711
+#: ../include/functions.php:2675
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:2733
+#: ../include/functions.php:2697
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:2744
+#: ../include/functions.php:2708
 msgid "Saturday"
 msgstr "Lördag"
 

@@ -128,7 +128,7 @@
 			padding: 0 6px;
 		}
 
-	.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address, .rwmb-local_address
+	.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address
 	{
 		width: 100%;
 	}
@@ -156,7 +156,7 @@
 				margin-right: 0;
 			}
 
-			.flex_flow > button
+			.flex_flow > button, .flex_flow > .button
 			{
 				align-self: flex-end;
 				height: auto !important;

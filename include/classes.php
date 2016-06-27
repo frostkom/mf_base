@@ -20,8 +20,6 @@ class mf_cron
 		$date_now = date("Y-m-d H:i:s");
 		$date_difference = time_between_dates(array('start' => $this->date_start, 'end' => $date_now, 'type' => "ceil", 'return' => "seconds"));
 
-		//do_log("Has expired? ".$date_difference." >= (".$cron_interval_seconds." * ".$data['margin'].") -> ".($date_difference >= ($cron_interval_seconds * $data['margin'])));
-
 		return $date_difference >= ($cron_interval_seconds * $data['margin']);
 	}
 }

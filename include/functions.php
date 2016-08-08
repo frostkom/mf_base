@@ -2168,6 +2168,7 @@ function show_select($data)
 function show_checkbox($data)
 {
 	if(!isset($data['name'])){			$data['name'] = "";}
+	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['compare'])){		$data['compare'] = 0;}
@@ -2177,7 +2178,7 @@ function show_checkbox($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	$data['xtra'] .= $data['value'] == $data['compare'] ? " checked" : "";
+	$data['xtra'] .= $data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "";
 
 	if(substr($data['name'], -1) == "]")
 	{

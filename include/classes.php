@@ -109,7 +109,7 @@ class mf_list_table extends WP_List_Table
 		$this->search = check_var('s', 'char', true);
 
 		$this->arr_settings = array(
-			'per_page' => $this->get_items_per_page('edit_page_per_page', 10),
+			'per_page' => $this->get_items_per_page('edit_page_per_page', 20),
 			'query_from' => $wpdb->posts,
 			'query_select_id' => "ID",
 			'query_all_id' => "all",

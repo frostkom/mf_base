@@ -701,7 +701,7 @@ function mf_format_number($in, $dec = 2)
 	return $out;
 }
 
-function upload_mimes_base($existing_mimes = array())
+/*function upload_mimes_base($existing_mimes = array())
 {
 	// add your extension to the array
 	$existing_mimes['eot'] = "font/opentype";
@@ -714,7 +714,7 @@ function upload_mimes_base($existing_mimes = array())
 	//unset($existing_mimes['exe']);
 
 	return $existing_mimes;
-}
+}*/
 
 function mf_get_post_content($id)
 {

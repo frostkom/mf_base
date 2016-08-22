@@ -1,5 +1,96 @@
 <?php
 
+function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $height = '', $title = '')
+{
+	global $flot_count;
+
+	$globals['flot'] = true;
+
+	if(!($flot_count > 0))
+	{
+		$flot_count = 0;
+	}
+
+	$out = $type_xtra = "";
+
+	if($data != '')
+	{
+		if($settings == '')
+		{
+			$settings = "legend: {position: 'nw'},
+			xaxis: {mode: 'time'}";
+		}
+
+		if(preg_match("/\[tick_mb]/", $settings))
+		{
+			$settings = str_replace("[tick_mb]", "tickFormatter:
+				function suffixFormatter(val, axis)
+				{
+					if(val > 1000000){		return (val / 1000000).toFixed(axis.tickDecimals) + ' MB';}
+					else if(val > 1000){	return (val / 1000).toFixed(axis.tickDecimals) + ' kB';}
+					else{					return val.toFixed(axis.tickDecimals) + ' ';}
+				}", 
+			$settings);
+		}
+
+		$style_cont = "";
+
+		if($width > 0)
+		{
+			$style_cont .= "width: ".$width."px;";
+		}
+
+		if($height > 0)
+		{
+			$style_cont .= "height: ".$height."px;";
+		}
+
+		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($title != '' ? " title='".$title."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>";
+
+		if(is_array($type))
+		{
+			$type_xtra = $type[1];
+			$type = $type[0];
+		}
+
+		$out .= "<script>
+			jQuery(function($)
+			{
+				$.plot($('#flot_".$flot_count."'),
+				["
+					.$data
+				."],
+				{
+					series: {".$type.": {show: true".$type_xtra."}},
+					grid: {hoverable: true},"
+					.($type == "lines" ? "points: {show: true, radius: 0.5}," : "")
+					.$settings
+				."});
+			});
+		</script>";
+
+		/*$('#flot_".$flot_count."').on('plothover', function (event, pos, item)
+		{
+			if(item)
+			{
+				var x = parseInt(item.datapoint[0].toFixed(0));
+
+				if(x > 10000000)
+				{
+					var date = new Date(x);
+					x = date.getDate() + '/' + (date.getMonth() + 1) + ' ' + date.getFullYear();
+				}
+
+				$('#tooltip').css({top: item.pageY + 5, left: item.pageX + 5}).html(item.series.label + ' -> ' + x + ' x ' + item.datapoint[1].toFixed(2).replace('.00', '')).show();
+			}
+		});*/
+
+		$flot_count++;
+	}
+
+	return $out;
+}
+
 function check_notifications()
 {
 	$arr_notifications = array();
@@ -2606,6 +2697,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['current_id'])){	$data['current_id'] = "";}
 	if(!isset($data['post_id'])){		$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){		$data['post_type'] = "page";}
+	if(!isset($data['post_status'])){	$data['post_status'] = "publish";}
 	if(!isset($data['output_array'])){	$data['output_array'] = false;}
 
 	if(!isset($data['depth']))
@@ -2620,7 +2712,7 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = 'publish' AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s".($data['post_status'] != '' ? " AND post_status = '".$data['post_status']."'" : " AND post_status NOT IN('auto-draft', 'ignore', 'inherit', 'trash')")." AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
 
 	if($wpdb->num_rows > 0)
 	{

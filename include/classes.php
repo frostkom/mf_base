@@ -5,7 +5,7 @@ class mf_cron
 	function __construct()
 	{
 		$this->schedules = wp_get_schedules();
-		
+
 		$this->date_start = date("Y-m-d H:i:s");
 	}
 
@@ -33,7 +33,7 @@ class recommend_plugin
 		if(!isset($data['url'])){			$data['url'] = "";}
 		if(!isset($data['show_notice'])){	$data['show_notice'] = true;}
 		if(!isset($data['text'])){			$data['text'] = "";}
-		
+
 		if(!is_plugin_active($data['path']))
 		{
 			list($a_start, $a_end) = get_install_link_tags($data['url'], $data['name']);
@@ -398,7 +398,7 @@ class mf_list_table extends WP_List_Table
 	function prepare_items()
 	{
 		global $wpdb; //This is used only if making any database queries
-		
+
 		/**
 		 * REQUIRED. Now we need to define our column headers. This includes a complete
 		 * array of columns to be displayed (slugs & titles), a list of columns
@@ -469,7 +469,7 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['sort_data'])){	$data['sort_data'] = true;}
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
-		
+
 		if($this->query_where != '' || $data['where'] != '')
 		{
 			$query .= " WHERE ";
@@ -532,7 +532,7 @@ class mf_list_table extends WP_List_Table
 		echo "<tr".(isset($item['tr_class']) && $item['tr_class'] != '' ? " class='".$item['tr_class']."'" : "").">";
 
 			$this->single_row_columns($item);
-		
+
 		echo "</tr>";
 	}*/
 
@@ -553,7 +553,7 @@ class mf_list_table extends WP_List_Table
 		echo "<form method='get'>
 			<input type='hidden' name='page' value='".$_REQUEST['page']."'>";
 	}
-	
+
 	function show_after_display()
 	{
 		echo "</form>";
@@ -841,8 +841,6 @@ class mf_import
 {
 	function __construct()
 	{
-		//mf_enqueue_script('script_base_import', plugin_dir_url(__FILE__)."script_import.js", array('plugin_url' => plugin_dir_url(__FILE__)));
-
 		$this->table = $this->post_type = $this->actions = "";
 		$this->columns = $this->unique_columns = $this->validate_columns = $this->result = array();
 
@@ -1023,6 +1021,8 @@ class mf_import
 
 						for($j = 0; $j < $count_temp_values; $j++)
 						{
+							$this->current_column = $j;
+
 							$value = $arr_values[$j];
 
 							$strRowField = check_var('strRowCheck'.$j);

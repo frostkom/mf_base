@@ -55,7 +55,7 @@
 					background: rgba(0, 255, 0, .3);
 					left: 0;
 				}
-				
+
 					.swipe_action tr > .from_left i
 					{
 						float: right;
@@ -67,7 +67,7 @@
 					background: rgba(255, 0, 0, .3);
 					right: 0;
 				}
-				
+
 					.swipe_action tr > .from_right i
 					{
 						margin-left: 1.5em;

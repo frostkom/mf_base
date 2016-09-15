@@ -26,7 +26,7 @@ jQuery(function($)
 
 				output_list += "<tr>"
 					+ "<td>";
-					
+
 						if(file_url.match(/\.(png|gif|jpg|jpeg)/))
 						{
 							output_list += "<div><img src='" + file_url + "' alt='" + file_name + "'></div>";
@@ -36,7 +36,7 @@ jQuery(function($)
 						{
 							output_list += "<a href='" + file_url + "'>" + file_name + "</a>";
 						}
-						
+
 					output_list += "</td>"
 					+ "<td><a href='#' rel='" + index + "'><i class='fa fa-lg fa-trash red'></i></a></td>"
 				+ "</tr>";

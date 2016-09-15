@@ -46,7 +46,7 @@ jQuery(function($)
 		{
 			Notification.requestPermission();
 		}
-		
+
 		else
 		{
 			var notification = new Notification(value.title, {
@@ -82,7 +82,7 @@ jQuery(function($)
 						send_notification(value);
 					});
 				}
-				
+
 				else
 				{
 					console.log("Error: " , data);

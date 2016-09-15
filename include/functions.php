@@ -1,5 +1,18 @@
 <?php
 
+function shorten_text($text, $limit)
+{
+	if(strlen($text) > $limit)
+	{
+		return substr($text, 0, $limit)."...";
+	}
+
+	else
+	{
+		return $text;
+	}
+}
+
 function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $height = '', $title = '')
 {
 	global $flot_count;
@@ -767,7 +780,7 @@ function get_attachment_id_by_url($url)
 	{
 		$out = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid RLIKE %s", $parsed_url));
 	}
-	
+
 	return $out;
 }
 
@@ -1018,12 +1031,13 @@ function setting_base_recommend_callback()
 	$arr_recommendations = array(
 		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
-		array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
+		//array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
-		array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
+		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+		//array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
 		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
 		array("Meta Box", 'meta-box/meta-box.php', __("to easily add meta to pages", 'lang_base')),
@@ -1032,11 +1046,10 @@ function setting_base_recommend_callback()
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 		array("User Switching", 'user-switching/user-switching.php', __("to be able to switch to another user without their credentials", 'lang_base')),
-		array("WP Rollback", 'wp-rollback/wp-rollback.php', __("to revert to an older version of a theme or plugin", 'lang_base')),
+		//array("WP Rollback", 'wp-rollback/wp-rollback.php', __("to revert to an older version of a theme or plugin", 'lang_base')),
 		array("WP Smush", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
 		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
 		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
-		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 	);
 
 	foreach($arr_recommendations as $value)
@@ -1046,6 +1059,42 @@ function setting_base_recommend_callback()
 		$text = isset($value[2]) ? $value[2] : "";
 
 		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
+	}
+
+	if(IS_ADMIN)
+	{
+		function check_htaccess($data)
+		{
+			//echo $data['file']."<br>";
+
+			if(basename($data['file']) == ".htaccess")
+			{
+				$content = get_file_content(array('file' => $data['file']));
+
+				if(!preg_match("/ExpiresByType image/", $content))
+				{
+					$recommend_expires = "ExpiresActive On
+ExpiresByType text/javascript 'A604800'
+ExpiresByType text/css 'A604800'
+ExpiresByType image/x-icon 'A31536000'
+ExpiresByType image/gif 'A604800'
+ExpiresByType image/jpg 'A604800'
+ExpiresByType image/jpeg 'A604800'
+ExpiresByType image/png 'A604800'
+
+FileETag None
+
+Header set Cache-Control 'must-revalidate'";
+
+					echo "<div class='mf_form'>"
+						."<h3>".__("Copy this to", 'lang_base')." .htaccess</h3>"
+						.show_textarea(array('value' => $recommend_expires, 'xtra' => "class='widefat' rows='12' readonly"))
+					."</div>";
+				}
+			}
+		}
+
+		get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess", 'allow_depth' => false));
 	}
 }
 
@@ -1158,7 +1207,7 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(is_plugin_active("mf_users/index.php") && function_exists('hide_roles'))
+		if(function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php") && function_exists('hide_roles'))
 		{
 			hide_roles();
 		}
@@ -1225,7 +1274,7 @@ function get_yes_no_for_select($data = array())
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 
 	$arr_data = array();
-	
+
 	if($data['add_choose_here'] == true)
 	{
 		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
@@ -1327,7 +1376,7 @@ function get_posts_for_select($data)
 
 			$arr_data["opt_start_".$post_type] = "-- ".$post_type." --";
 			$opt_start_open = true;
-			
+
 			$post_type_temp = $post_type;
 		}
 
@@ -1615,7 +1664,7 @@ function mf_redirect($location, $arr_vars = array())
 					echo input_hidden(array('name' => $key, 'value' => $value));
 				}
 			}
-		
+
 		echo "</form>
 		<script>document.reload.submit();</script>";
 	}
@@ -1976,7 +2025,7 @@ function show_textfield($data)
 		{
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
-		
+
 		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
 
 		if($data['suffix'] != '')
@@ -2010,6 +2059,7 @@ function show_textfield($data)
 ######################################
 function show_textarea($data)
 {
+	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
@@ -2067,7 +2117,7 @@ function mf_editor($content, $editor_id, $data = array())
 	if(!isset($data['required'])){		$data['required'] = false;}
 
 	$out = "";
-	
+
 	if($data['required'] && $data['text'] != '')
 	{
 		$data['xtra'] .= " class='required'";
@@ -2076,14 +2126,14 @@ function mf_editor($content, $editor_id, $data = array())
 	if(isset($data['statusbar']))
 	{
 		$data['tinymce']['statusbar'] = $data['statusbar'];
-		
+
 		unset($data['statusbar']);
 	}
 
 	if(isset($data['mini_toolbar']) && $data['mini_toolbar'] == true)
 	{
 		$data['tinymce']['toolbar1'] = 'bold,italic,bullist,numlist,link,unlink';
-		
+
 		$data['class'] .= ($data['class'] != '' ? " " : "")."is_mini_toolbar";
 	}
 
@@ -2159,7 +2209,7 @@ function show_select($data)
 			{
 				$size = $data['minsize'];
 			}
-			
+
 			else
 			{
 				$size = $count_temp;
@@ -2605,6 +2655,7 @@ function get_file_info($data)
 	if(!isset($data['callback'])){			$data['callback'] = "";}
 	if(!isset($data['folder_callback'])){	$data['folder_callback'] = "";}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
+	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 
 	if($dp = opendir($data['path']))
 	{
@@ -2629,7 +2680,7 @@ function get_file_info($data)
 					}
 				}
 
-				else
+				else if($data['allow_depth'])
 				{
 					$data_temp = $data;
 					$data_temp['path'] = $file;

@@ -172,12 +172,12 @@
 			flex: initial;
 		}
 
-	.is_phone .flex_flow
+	.is_mobile .flex_flow
 	{
 		display: initial;
 	}
 
-		.is_phone .flex_flow > *
+		.is_mobile .flex_flow > *
 		{
 			x-display: initial;
 			margin-right: 0;
@@ -402,7 +402,7 @@
 			{
 				display: none;
 			}
-			
+
 			.form_switch.loading input[type=checkbox] + label .checked, .form_switch.loading input[type=checkbox] + label .unchecked
 			{
 				display: none !important;

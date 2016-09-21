@@ -19,7 +19,7 @@ jQuery(function($)
 		}
 	});
 
-	$('.mf_form').on('change', 'select[rel=submit_change]', function()
+	$('.mf_form').on('change', 'select[rel=submit_change], input[rel=submit_change]', function()
 	{
 		this.form.submit();
 	});

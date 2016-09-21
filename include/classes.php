@@ -1387,7 +1387,7 @@ class mf_import
 						$arr_data['delete'] = __("Delete", 'lang_base');
 						$arr_data['import'] = __("Import", 'lang_base');
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'compare' => $this->action));
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action));
 					}
 
 					else
@@ -1405,7 +1405,7 @@ class mf_import
 						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", 'lang_base'), 'required' => ($this->file_location != '' ? true : false)));
 					}
 
-					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'compare' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
+					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
 					.show_submit(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
 				."</div>
 			</div>
@@ -1449,7 +1449,7 @@ class mf_import
 							$arr_data[$key] = $value;
 						}
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'compare' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
 					}
 
 					$out .= "&nbsp;"
@@ -1659,12 +1659,12 @@ class mf_export
 
 					if(count($this->types) > 0)
 					{
-						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'compare' => $this->type));
+						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'value' => $this->type));
 					}
 
 					if(count($this->actions) > 0)
 					{
-						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'compare' => $this->action));
+						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
 					}
 
 					$out .= show_submit(array('name' => "btnExportRun", 'text' => __("Run", 'lang_base')))

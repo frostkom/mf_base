@@ -1109,7 +1109,7 @@ function setting_base_auto_core_update_callback()
 		'all' => __("All", 'lang_base'),
 	);
 
-	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'compare' => $option));
+	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'value' => $option));
 }
 
 function setting_base_cron_callback()
@@ -1153,7 +1153,7 @@ function setting_base_cron_callback()
 			$next_scheduled_text .= ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
 		}
 
-		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'compare' => $option, 'suffix' => $next_scheduled_text));
+		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $next_scheduled_text));
 	}
 }
 
@@ -2184,9 +2184,10 @@ function show_select($data)
 	$out = "";
 
 	if(!isset($data['data'])){			$data['data'] = array();}
-	if(!isset($data['compare'])){		$data['compare'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
+	if(!isset($data['value'])){			$data['value'] = $data['compare'];}
+	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['minsize'])){		$data['minsize'] = 2;}
 	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = false;}
@@ -2276,7 +2277,7 @@ function show_select($data)
 						{
 							$out .= "<option value='".$data_value."'";
 
-								if(is_array($data['compare']) && in_array($data_value, $data['compare']) || $data['compare'] == $data_value)
+								if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
 								{
 									$out .= " selected";
 								}

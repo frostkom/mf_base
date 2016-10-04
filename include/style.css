@@ -10,16 +10,6 @@
 		display: block;
 	}
 
-	/*.floatleft
-	{
-		float: left;
-	}
-
-	.floatright
-	{
-		float: right;
-	}*/
-
 	.nowrap
 	{
 		white-space: nowrap;
@@ -108,6 +98,14 @@
 	.italic
 	{
 		font-style: italic;
+	}
+
+	.force-select-all
+	{
+		-webkit-user-select: all;
+		-moz-user-select: all;
+		-ms-user-select: all;
+		user-select: all;
 	}
 
 	.wrap .update-plugins

@@ -1358,7 +1358,7 @@ function get_posts_for_select($data)
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[]	= array("", "-- ".__("Choose here", 'lang_base')." --");
+		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
 	}
 
 	foreach($result as $r)
@@ -2475,6 +2475,11 @@ function show_password_field($data)
 	return $out;
 }
 ######################
+
+function show_button($data)
+{
+	return show_submit($data);
+}
 
 #################
 function show_submit($data)

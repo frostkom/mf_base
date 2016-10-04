@@ -1408,11 +1408,18 @@ class mf_import
 					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
 					.show_submit(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
 				."</div>
-			</div>
-			<div id='import_result'>"
-				.$this->get_result()
-			."</div>
-		</form>";
+			</div>";
+
+			$out_temp = $this->get_result();
+
+			if($out_temp != '')
+			{
+				$out .= "<div id='import_result'>"
+					.$out_temp
+				."</div>";
+			}
+
+		$out .= "</form>";
 
 		return $out;
 	}

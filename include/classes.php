@@ -562,7 +562,7 @@ class mf_list_table extends WP_List_Table
 
 class pagination
 {
-	function pagination()
+	function __construct()
 	{
 		$this->range = 5;
 		$this->per_page = 20;
@@ -682,7 +682,7 @@ class settings_page
 ######################
 class mf_encryption 
 {
-	function mf_encryption($type)
+	function __construct($type)
 	{
 		$this->set_key($type);
 		$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);

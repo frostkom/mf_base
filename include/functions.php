@@ -178,10 +178,10 @@ function add_shortcode_display_base()
 	}
 }
 
-function admin_init_base()
+/*function admin_init_base()
 {
 	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));
-}
+}*/
 
 function mf_uninstall_plugin($data)
 {
@@ -570,10 +570,35 @@ function delete_base($data)
 function init_base()
 {
 	define('DEFAULT_DATE', "1982-08-04 23:15:00");
+	
 	//define('IS_SUPER_ADMIN', current_user_can('update_core'));
-	define('IS_ADMIN', current_user_can('manage_options'));
-	define('IS_EDITOR', current_user_can('edit_pages'));
-	define('IS_AUTHOR', current_user_can('upload_files'));
+	if(current_user_can('manage_options'))
+	{
+		define('IS_ADMIN', true);
+		define('IS_EDITOR', true);
+		define('IS_AUTHOR', true);
+	}
+
+	else if(current_user_can('edit_pages'))
+	{
+		define('IS_ADMIN', false);
+		define('IS_EDITOR', true);
+		define('IS_AUTHOR', true);
+	}
+
+	else if(current_user_can('upload_files'))
+	{
+		define('IS_ADMIN', false);
+		define('IS_EDITOR', false);
+		define('IS_AUTHOR', true);
+	}
+
+	else
+	{
+		define('IS_ADMIN', false);
+		define('IS_EDITOR', false);
+		define('IS_AUTHOR', false);
+	}
 
 	$timezone_string = get_option('timezone_string');
 
@@ -582,7 +607,7 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
-	$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
+	/*$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
 
 	if($setting_base_auto_core_update != '')
 	{
@@ -590,18 +615,14 @@ function init_base()
 		else if($setting_base_auto_core_update == "none"){	$setting_base_auto_core_update = false;}
 
 		define('WP_AUTO_UPDATE_CORE', $setting_base_auto_core_update);
-	}
+	}*/
 
 	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
 	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
-	// Add datepicker
-	/*wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
-	wp_enqueue_script('jquery-ui-datepicker');*/
-
 	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
-	if(is_user_logged_in() && IS_ADMIN)
+	/*if(is_user_logged_in() && IS_ADMIN)
 	{
 		global $wpdb;
 
@@ -611,7 +632,7 @@ function init_base()
 		}
 
 		$wpdb->show_errors();
-	}
+	}*/
 }
 
 function get_file_icon($file)
@@ -962,13 +983,12 @@ function settings_base()
 	add_settings_section($options_area, "",	$options_area."_callback", BASE_OPTIONS_PAGE);
 
 	$arr_settings = array(
-		"setting_base_info" => __("Versions", 'lang_base'),
-		"setting_base_auto_core_update" => __("Update core automatically", 'lang_base'),
+		'setting_base_info' => __("Versions", 'lang_base'),
+		//'setting_base_auto_core_update' => __("Update core automatically", 'lang_base'),
+		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+		'setting_base_recommend' => __("Recommendations", 'lang_base'),
+		//'setting_all_options' => __("All options", 'lang_base'),
 	);
-
-	$arr_settings["setting_base_cron"] = __("Scheduled to run", 'lang_base');
-	$arr_settings["setting_base_recommend"] = __("Recommendations", 'lang_base');
-	//$arr_settings["setting_all_options"] = __("All options", 'lang_base');
 
 	foreach($arr_settings as $handle => $text)
 	{
@@ -1041,6 +1061,7 @@ function setting_base_recommend_callback()
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
 		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
 		array("Meta Box", 'meta-box/meta-box.php', __("to easily add meta to pages", 'lang_base')),
+		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
@@ -1098,7 +1119,7 @@ Header set Cache-Control 'must-revalidate'";
 	}
 }
 
-function setting_base_auto_core_update_callback()
+/*function setting_base_auto_core_update_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
 	$option = get_option($setting_key, 'minor');
@@ -1110,7 +1131,7 @@ function setting_base_auto_core_update_callback()
 	);
 
 	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'value' => $option));
-}
+}*/
 
 function setting_base_cron_callback()
 {
@@ -1271,13 +1292,14 @@ function get_role_first_capability($role)
 function get_yes_no_for_select($data = array())
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 
 	$arr_data = array();
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+		$arr_data[''] = "-- ".$data['choose_here_text']." --";
 	}
 
 	if($data['return_integer'] == true)
@@ -2751,11 +2773,17 @@ function get_post_children($data, &$arr_data = array())
 {
 	global $wpdb;
 
-	if(!isset($data['current_id'])){	$data['current_id'] = "";}
-	if(!isset($data['post_id'])){		$data['post_id'] = 0;}
-	if(!isset($data['post_type'])){		$data['post_type'] = "page";}
-	if(!isset($data['post_status'])){	$data['post_status'] = "publish";}
-	if(!isset($data['output_array'])){	$data['output_array'] = false;}
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['current_id'])){		$data['current_id'] = "";}
+	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
+	if(!isset($data['post_type'])){			$data['post_type'] = "page";}
+	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
+	if(!isset($data['output_array'])){		$data['output_array'] = false;}
+
+	if($data['add_choose_here'] == true)
+	{
+		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+	}
 
 	if(!isset($data['depth']))
 	{
@@ -2873,20 +2901,20 @@ function get_meta_image_url($post_id, $meta_key)
 	return $image_array[0];
 }
 
-function footer_base()
+/*function footer_base()
 {
-	/*if(get_option('setting_base_requests') == 1)
+	if(get_option('setting_base_requests') == 1)
 	{
 		echo "<mf-debug>"
 			.var_export($_REQUEST, true)
 		."</mf-debug>";
-	}*/
+	}
 
-	/*if(get_option('setting_base_perfbar') == 1)
+	if(get_option('setting_base_perfbar') == 1)
 	{
 		if(is_user_logged_in() && IS_ADMIN)
 		{
 			mf_enqueue_script('script_base_perfbar', plugin_dir_url(__FILE__)."perfbar_script.js");
 		}
-	}*/
-}
+	}
+}*/

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 5.5.10
+Version: 5.6.3
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_base
@@ -30,11 +30,10 @@ if(is_admin())
 	register_deactivation_hook(__FILE__, 'deactivate_base');
 	register_uninstall_hook(__FILE__, 'uninstall_base');
 
-	add_action('admin_init', 'admin_init_base');
+	//add_action('admin_init', 'admin_init_base');
 	add_action('admin_init', 'settings_base', 0);
 	add_filter('plugin_action_links', 'disable_action_base', 10, 4);
 	add_filter('network_admin_plugin_action_links', 'disable_action_base', 10, 4);
-	//add_filter('upload_mimes', 'upload_mimes_base');
 
 	add_filter('media_buttons_context', 'add_shortcode_button_base');
 	add_action('admin_footer', 'add_shortcode_display_base');
@@ -47,7 +46,7 @@ else
 	add_filter('the_password_form', 'password_form_base');
 	add_filter('the_content', 'the_content_protected_base');
 
-	add_action('wp_footer', 'footer_base');
+	//add_action('wp_footer', 'footer_base');
 }
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');

@@ -69,10 +69,10 @@ jQuery(function($)
 	{
 		$.ajax(
 		{
-			type : "post",
-			dataType : "json",
-			url : script_base_wp.ajax_url,
-			data : {action: "check_notifications"},
+			type: "post",
+			dataType: "json",
+			url: script_base_wp.ajax_url,
+			data: {action: "check_notifications"},
 			success: function(data)
 			{
 				if(data.success)

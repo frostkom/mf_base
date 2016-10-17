@@ -195,7 +195,7 @@ function mf_uninstall_plugin($data)
 	{
 		list($upload_path, $upload_url) = get_uploads_folder($data['uploads']);
 
-		get_file_info(array('path' => $this->upload_path, 'callback' => "delete_files", 'time_limit' => 0));
+		get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
 
 		rmdir($upload_path);
 	}
@@ -1016,8 +1016,14 @@ function setting_base_info_callback()
 
 	$php_version = explode("-", phpversion());
 	$php_version = $php_version[0];
-	$mysql_version = explode("-", @mysql_get_server_info());
-	$mysql_version = $mysql_version[0];
+
+	$mysql_version = '';
+
+	if(function_exists('mysql_get_server_info'))
+	{
+		$mysql_version = explode("-", @mysql_get_server_info());
+		$mysql_version = $mysql_version[0];
+	}
 
 	if($mysql_version == '')
 	{

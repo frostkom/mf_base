@@ -26,7 +26,7 @@ class mf_cron
 
 class recommend_plugin
 {
-	function recommend_plugin($data)
+	function __construct($data)
 	{
 		global $pagenow;
 
@@ -509,6 +509,8 @@ class mf_list_table extends WP_List_Table
 
 		if(isset($data['debug']) && $data['debug'] == true)
 		{
+			//$this->debug_query = $query;
+
 			echo "Rows: ".count($result)."<br>";
 		}
 

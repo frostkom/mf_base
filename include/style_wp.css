@@ -112,13 +112,32 @@
 
 @media print
 {
+	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .mf_search, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated
+	{
+		display: none;
+	}
+
+	html.wp-toolbar
+	{
+		padding-top: 0;
+	}
+
+	#wpcontent
+	{
+		margin-left: 0;
+		padding-left: 0;
+	}
+}
+
+@media print
+{
 	.toggle_item
 	{
 		display: block !important;
 	}
 
-	.swipe_bar
+	/*.swipe_bar
 	{
 		display: none;
-	}
+	}*/
 }

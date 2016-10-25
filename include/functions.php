@@ -2262,8 +2262,6 @@ function show_select($data)
 
 		if($count_temp == 1 && $data['required'] && $data['text'] != '')
 		{
-			//$out = input_hidden(array('name' => $data['name'], 'value' => $data['data'][0][0]));
-
 			foreach($data['data'] as $key => $option)
 			{
 				if($key != '')
@@ -2315,6 +2313,136 @@ function show_select($data)
 					}
 
 				$out .= "</select>";
+
+				if($data['suffix'] != '')
+				{
+					$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+				}
+
+				if($data['description'] != '')
+				{
+					$out .= "<p class='description'>".$data['description']."</p>";
+				}
+
+			$out .= "</div>";
+		}
+	}
+
+	return $out;
+}
+############################
+
+############################
+function show_checkboxes($data)
+{
+	$out = "";
+
+	if(!isset($data['data'])){			$data['data'] = array();}
+	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['value'])){			$data['value'] = "";}
+	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+	//if(!isset($data['minsize'])){		$data['minsize'] = 2;}
+	//if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
+	if(!isset($data['required'])){		$data['required'] = false;}
+	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
+	if(!isset($data['description'])){	$data['description'] = "";}
+
+	$count_temp = count($data['data']);
+
+	if($count_temp > 0)
+	{
+		/*if(substr($data['name'], -2) == "[]")
+		{*/
+			/*if($count_temp > $data['maxsize'])
+			{
+				$size = $data['maxsize'];
+			}
+
+			else if($count_temp < $data['minsize'])
+			{
+				$size = $data['minsize'];
+			}
+
+			else
+			{
+				$size = $count_temp;
+			}*/
+
+			//$data['class'] .= ($data['class'] != '' ? " " : "")."top";
+			//$data['xtra'] .= " multiple size='".$size."'";
+
+			$container_class = "form_checkbox_multiple";
+		/*}
+
+		else
+		{
+			$container_class = "form_checkbox";
+		}*/
+
+		if($data['required'])
+		{
+			$data['xtra'] .= " required";
+		}
+
+		if($count_temp == 1 && $data['required'] && $data['text'] != '')
+		{
+			foreach($data['data'] as $key => $option)
+			{
+				if($key != '')
+				{
+					$out = input_hidden(array('name' => $data['name'], 'value' => $key));
+
+					break;
+				}
+			}
+		}
+
+		else
+		{
+			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
+
+				if($data['text'] != '')
+				{
+					$out .= "<label>".$data['text']."</label>"; // for='".$data['name']."'
+				}
+
+				$out .= "<ul>"; // id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra']."
+
+					foreach($data['data'] as $key => $option)
+					{
+						$data_value = $key;
+						$data_text = $option;
+
+						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
+						{
+							$out .= "<li rel='".$data_value."'>".$data_text."</li>
+							<ul>";
+						}
+
+						else if(substr($data_value, 0, 7) == "opt_end" && $data_value != $data_text)
+						{
+							$out .= "</ul>";
+						}
+
+						else
+						{
+							$compare = (is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value) ? $data_value : -$data_value;
+
+							$out .= show_checkbox(array('name' => $data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare));
+
+							/*$out .= "<option value='".$data_value."'";
+
+								if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
+								{
+									$out .= " selected";
+								}
+
+							$out .= ">".$data_text."</option>";*/
+						}
+					}
+
+				$out .= "</ul>";
 
 				if($data['suffix'] != '')
 				{

@@ -177,7 +177,6 @@
 
 		.is_mobile .flex_flow > *
 		{
-			x-display: initial;
 			margin-right: 0;
 			margin-bottom: 1em;
 		}
@@ -281,6 +280,27 @@
 		{
 			margin: -5px 0 10px;
 		}
+
+		.mf_form .form_checkbox_multiple
+		{
+			
+		}
+
+			.mf_form .form_checkbox_multiple > label
+			{
+				font-weight: bold;
+			}
+
+			.mf_form .form_checkbox_multiple > ul
+			{
+				background: #fff;
+				background: rgba(255, 255, 255, .8);
+				margin-top: 0;
+				border: .2em solid #ccc;
+				border-radius: .5em;
+				margin-bottom: .5em;
+				padding: .5em .5em 0;
+			}
     
 		.mf_form .form_checkbox, .mf_form .form_radio
         {
@@ -310,7 +330,7 @@
 
 		.form_button > button, .form_button > .button
 		{
-			border: .2em solid #ccc;
+			border: 0;
 			border-radius: .3em;
 			cursor: pointer;
 			display: inline-block;
@@ -318,12 +338,6 @@
 			margin: 0 .7em .7em 0;
 			padding: .3em 1em .3em;
 		}
-
-			/*.mf_form button + .button, .mf_form .button + .button, .mf_form button + .button-secondary
-			{
-				margin-left: .5em;
-				margin-bottom: .5em;
-			}*/
 
 			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary/*, .mf_form button does not work since it affects .wp-editor-tabs*/
 			{
@@ -415,23 +429,4 @@
 			{
 				margin-left: .2em;
 			}
-}
-
-@media print
-{
-	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated/*, .postbox*/
-	{
-		display: none;
-	}
-
-	html.wp-toolbar
-	{
-		padding-top: 0;
-	}
-
-	#wpcontent
-	{
-		margin-left: 0;
-		padding-left: 0;
-	}
 }

@@ -560,10 +560,10 @@ function delete_base($data)
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 		}
 
-		if($rows > 0)
+		/*if($rows > 0)
 		{
 			do_log("Trashed ".$rows." posts in ".$child_table);
-		}
+		}*/
 	}
 }
 

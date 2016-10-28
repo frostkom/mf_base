@@ -7,6 +7,17 @@
 		top: auto !important;
 	}
 
+	.toggler
+	{
+		x-box-shadow: none !important;
+		cursor: pointer;
+	}
+
+		.toggler .fa
+		{
+			margin-right: .4em;
+		}
+
 	.mf_search
 	{
 		float: right;

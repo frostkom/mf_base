@@ -305,6 +305,7 @@
 		.mf_form .form_checkbox, .mf_form .form_radio
         {
             margin-bottom: 10px;
+			white-space: nowrap;
         }
     
 			.mf_form .form_checkbox label, .mf_form .form_radio label

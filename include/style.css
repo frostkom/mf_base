@@ -184,8 +184,8 @@
 	.mf_form_inline
 	{
 		background: #fff;
-		border: .2em solid #ccc;
-		border-radius: .3em;
+		border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
+		/*border-radius: .3em;*/
 		display: none;
 		padding: .8em .8em 0;
 		position: absolute;
@@ -229,16 +229,16 @@
 
         .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input
         {
-            background: #fff;
+			background: #fff;
 			background: rgba(255, 255, 255, .8);
-            border: .2em solid #ccc;
-            border-radius: .3em;
+			border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
+			/*border-radius: .3em;*/
 			box-sizing: border-box;
-            display: inline-block;
+			display: inline-block;
 			font: inherit;
-            height: auto;
-            margin: 0 0 .8em;
-            padding: .4em;
+			height: auto;
+			margin: 0 0 .8em;
+			padding: .4em;
 			width: 100%;
         }
 
@@ -259,7 +259,7 @@
 				padding-right: 2.5em;
 			}
 
-				.mf_form .form_select_multiple select
+				.mf_form .form_select_multiple > select
 				{
 					background-image: none;
 					padding-right: 0;
@@ -281,10 +281,7 @@
 			margin: -5px 0 10px;
 		}
 
-		.mf_form .form_checkbox_multiple
-		{
-			
-		}
+		.mf_form .form_checkbox_multiple{}
 
 			.mf_form .form_checkbox_multiple > label
 			{
@@ -296,16 +293,20 @@
 				background: #fff;
 				background: rgba(255, 255, 255, .8);
 				margin-top: 0;
-				border: .2em solid #ccc;
-				border-radius: .5em;
+				border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
+				/*border-radius: .3em;*/
 				margin-bottom: .5em;
-				padding: .5em .5em 0;
+				padding: .7em 1.1em 0 .7em;
 			}
+
+				.mf_form .form_checkbox_multiple .form_checkbox
+				{
+					white-space: nowrap;
+				}
     
 		.mf_form .form_checkbox, .mf_form .form_radio
         {
             margin-bottom: 10px;
-			white-space: nowrap;
         }
     
 			.mf_form .form_checkbox label, .mf_form .form_radio label
@@ -317,6 +318,7 @@
             {
 				display: inline;
                 margin-right: 2%;
+				margin-bottom: -.4em;
             }
     
                 .mf_form .input-buttons.input-button-size-2

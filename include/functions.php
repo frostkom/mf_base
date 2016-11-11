@@ -82,22 +82,6 @@ function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $h
 			});
 		</script>";
 
-		/*$('#flot_".$flot_count."').on('plothover', function (event, pos, item)
-		{
-			if(item)
-			{
-				var x = parseInt(item.datapoint[0].toFixed(0));
-
-				if(x > 10000000)
-				{
-					var date = new Date(x);
-					x = date.getDate() + '/' + (date.getMonth() + 1) + ' ' + date.getFullYear();
-				}
-
-				$('#tooltip').css({top: item.pageY + 5, left: item.pageX + 5}).html(item.series.label + ' -> ' + x + ' x ' + item.datapoint[1].toFixed(2).replace('.00', '')).show();
-			}
-		});*/
-
 		$flot_count++;
 	}
 
@@ -108,16 +92,12 @@ function check_notifications()
 {
 	$arr_notifications = array();
 
-	//$notification_showed = get_user_meta(get_current_user_id(), 'mf_notification_showed', true);
-
 	$arr_notifications = apply_filters('get_user_notifications', $arr_notifications);
 
 	$result = array(
 		'success' => true,
 		'notifications' => $arr_notifications,
 	);
-
-	//update_user_meta(get_current_user_id(), 'mf_notification_showed', date("Y-m-d H:i:s"));
 
 	echo json_encode($result);
 	die();
@@ -1072,7 +1052,7 @@ function setting_base_recommend_callback()
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
-		array("User Switching", 'user-switching/user-switching.php', __("to be able to switch to another user without their credentials", 'lang_base')),
+		//array("User Switching", 'user-switching/user-switching.php', __("to be able to switch to another user without their credentials", 'lang_base')),
 		//array("WP Rollback", 'wp-rollback/wp-rollback.php', __("to revert to an older version of a theme or plugin", 'lang_base')),
 		array("WP Smush", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
 		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
@@ -1166,21 +1146,72 @@ function setting_base_cron_callback()
 		$arr_data[$key] = $value['display'];
 	}
 
-	$next_scheduled_text = sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
+	$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
+
+	$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
 
 	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 	{
-		echo $next_scheduled_text.". <a href='".get_site_url()."/wp-cron.php?doing_cron'>".__("Run schedule manually", 'lang_base')."</a>";
+		echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a>";
 	}
 
 	else
 	{
+		$select_description = "";
+
 		if($option == "every_ten_seconds")
 		{
-			$next_scheduled_text .= ". ".sprintf(__("Make sure that %s is added to wp-config.php", 'lang_base'), "define('DISABLE_WP_CRON', true);")."</a>";
+			$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php")."</a>";
 		}
 
-		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $next_scheduled_text));
+		else
+		{
+			switch($option)
+			{
+				case 'every_two_minutes':
+					$cron_schedule = "*/2 * * * *";
+				break;
+
+				case 'every_ten_minutes':
+					$cron_schedule = "*/10 * * * *";
+				break;
+
+				case 'hourly':
+					$cron_schedule = "* */1 * * *";
+				break;
+
+				case 'twicedaily':
+					$cron_schedule = "* */12 * * *";
+				break;
+
+				default:
+				case 'daily':
+					$cron_schedule = "* * */1 * *";
+				break;
+
+				case 'weekly':
+					$cron_schedule = "* * */7 * *";
+				break;
+
+				case 'monthly':
+					$cron_schedule = "* * * */1 *";
+				break;
+			}
+
+			$select_description = __("If you want to improve the performance regarding scheduling and your site you should do the following", 'lang_base')
+			."<ol>
+				<li>".__("Access your server through SSH", 'lang_base')."</li>
+				<li>".sprintf(__("Type the command '%s' and hit Enter", 'lang_base'), "crontab -e")."</li>
+				<li>".sprintf(__("Add '%s' on an empty line", 'lang_base'), $cron_schedule." wget -q -O - ".$cron_url)."</li>
+				<li>".sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php")."</li>
+			</ol>";
+
+			/*<option value="">En gång i timmen</option>
+			<option value="">Två gånger dagligen</option>
+			<option value="">Dagligen</option>*/
+		}
+
+		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix, 'description' => $select_description));
 	}
 }
 

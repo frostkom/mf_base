@@ -97,6 +97,11 @@ jQuery(function($)
 					{
 						file_name = dom_a.children('img').attr('alt');
 						file_url = dom_a.children('img').attr('src');
+
+						var file_class = dom_a.children('img').attr('class'),
+							file_id = file_class.match(/wp-image-(\d*)/)[1];
+
+						file_url += "|" + file_id;
 					}
 
 					else

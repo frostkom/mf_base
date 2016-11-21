@@ -151,8 +151,8 @@ function add_shortcode_display_base()
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
 				.apply_filters('get_shortcode_output', '')
-				.show_submit(array('text' => __("Insert", 'lang_base'), 'xtra' => " onclick='insert_form()'"))
-				.show_submit(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary", 'xtra' => " onclick='tb_remove()'"))
+				.show_button(array('text' => __("Insert", 'lang_base'), 'xtra' => " onclick='insert_form()'"))
+				.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary", 'xtra' => " onclick='tb_remove()'"))
 			."</div>
 		</div>";
 	}
@@ -707,7 +707,7 @@ function get_file_button($data)
 			<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
 		</div>
 		<div>"
-			.show_submit(array('text' => ($data['option'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))
+			.show_button(array('text' => ($data['option'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))
 			.input_hidden(array('name' => $data['setting_key'], 'value' => $data['option']))
 		."</div>
 		<div class='mf_file_raw'></div>
@@ -716,7 +716,21 @@ function get_file_button($data)
 
 function get_attachment_callback($in, $callback)
 {
-	$arr_files = get_attachment_to_send($in);
+	list($arr_files, $arr_ids) = get_attachment_to_send($in);
+
+	if(count($arr_ids) > 0)
+	{
+		foreach($arr_ids as $file_id)
+		{
+			if($file_id > 0)
+			{
+				if(is_callable($callback))
+				{
+					call_user_func($callback, $file_id);
+				}
+			}
+		}
+	}
 
 	if(count($arr_files) > 0)
 	{
@@ -742,7 +756,7 @@ function get_attachment_callback($in, $callback)
 
 function get_attachment_to_send($string)
 {
-	$arr_files = array();
+	$arr_ids = $arr_files = array();
 
 	if($string != '')
 	{
@@ -750,7 +764,12 @@ function get_attachment_to_send($string)
 
 		foreach($arr_attachments as $attachment)
 		{
-			list($file_name, $file_url) = explode("|", $attachment);
+			list($file_name, $file_url, $file_id) = explode("|", $attachment);
+
+			if($file_id > 0)
+			{
+				$arr_ids[] = $file_id;
+			}
 
 			if($file_url != '')
 			{
@@ -764,7 +783,7 @@ function get_attachment_to_send($string)
 		}
 	}
 
-	return $arr_files;
+	return array($arr_files, $arr_ids);
 }
 
 function get_attachment_id_by_url($url)
@@ -1640,7 +1659,7 @@ function get_list_navigation($resultPagination)
 		$out .= "<form method='post' action='".preg_replace("/\&paged\=\d+/", "", $_SERVER['REQUEST_URI'])."'>
 			<p class='search-box'>
 				<input type='search' name='s' value='".$strSearch."'>"
-				.show_submit(array('text' => __("Search", 'lang_base'), 'class' => "button"))
+				.show_button(array('text' => __("Search", 'lang_base'), 'class' => "button"))
 				//."<button type='submit' class='button'>".__("Search", 'lang_base')."</button>
 			."</p>
 		</form>";
@@ -2663,13 +2682,13 @@ function show_password_field($data)
 }
 ######################
 
-function show_button($data)
-{
-	return show_submit($data);
-}
-
 #################
 function show_submit($data)
+{
+	return show_button($data);
+}
+
+function show_button($data)
 {
 	if(!isset($data['name'])){	$data['name'] = "";}
 	if(!isset($data['xtra'])){	$data['xtra'] = "";}
@@ -3015,7 +3034,7 @@ function password_form_base()
 		<p>".__("To view this protected post, enter the password below", 'lang_base')."</p>"
 		.show_password_field(array('name' => "post_password", 'placeholder' => __("Password", 'lang_base'), 'max_length' => 20))
 		."<div class='form_button'>"
-			.show_submit(array('text' => __("Submit")))
+			.show_button(array('text' => __("Submit")))
 		."</div>
 	</form>";
 }

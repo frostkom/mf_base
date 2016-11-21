@@ -1408,7 +1408,7 @@ class mf_import
 					}
 
 					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
-					.show_submit(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
+					.show_button(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
 				."</div>
 			</div>";
 
@@ -1462,7 +1462,7 @@ class mf_import
 					}
 
 					$out .= "&nbsp;"
-					.show_submit(array('name' => "btnImportRun", 'text' => __("Run", 'lang_base')))
+					.show_button(array('name' => "btnImportRun", 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('import_run', '_wpnonce', true, false)
 				."</div>
 			</div>";
@@ -1676,7 +1676,7 @@ class mf_export
 						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
 					}
 
-					$out .= show_submit(array('name' => "btnExportRun", 'text' => __("Run", 'lang_base')))
+					$out .= show_button(array('name' => "btnExportRun", 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('export_run', '_wpnonce', true, false)
 				."</div>
 			</div>

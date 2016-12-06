@@ -2104,7 +2104,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
 
 		if($data['suffix'] != '')
 		{
@@ -2128,7 +2128,7 @@ function show_textfield($data)
 			$out .= "</datalist>";
 		}
 
-	$out .= "</div>"; //stripslashes($data['value'])
+	$out .= "</div>";
 
 	return $out;
 }

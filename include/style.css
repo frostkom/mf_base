@@ -342,7 +342,7 @@
 			padding: .3em 1em .3em;
 		}
 
-			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary/*, .mf_form button does not work since it affects .wp-editor-tabs*/
+			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;

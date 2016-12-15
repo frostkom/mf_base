@@ -180,22 +180,64 @@
 		padding-top: 0;
 	}
 
-	#wpcontent
-	{
-		margin-left: 0;
-		padding-left: 0;
-	}
-}
+		body
+		{
+			font-size: 11px;
+		}
 
-@media print
-{
-	.toggle_item
+			.wrap
+			{
+				margin: 0;
+			}
+
+				#wpcontent
+				{
+					margin-left: 0;
+					padding-left: 0;
+				}
+
+					#wpbody-content
+					{
+						padding-bottom: 0;
+					}
+
+						h1, h2, h3, h4, h5
+						{
+							page-break-after: avoid;
+						}
+
+						h2, h3
+						{
+							font-size: 1.1em;
+						}
+
+						.widefat td, .widefat th
+						{
+							padding: 5px;
+						}
+
+						.widefat tfoot td, .widefat th, .widefat thead td
+						{
+							font-size: 12px;
+						}
+
+						.widefat td, .widefat td ol, .widefat td p, .widefat td ul
+						{
+							font-size: 11px;
+						}
+
+	/*.toggle_item
 	{
 		display: block !important;
 	}
 
-	/*.swipe_bar
+	.swipe_bar
 	{
 		display: none;
 	}*/
+
+	@page
+	{
+		margin: 1cm .5cm;
+	}
 }

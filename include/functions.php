@@ -2526,7 +2526,7 @@ function show_checkbox($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	$data['xtra'] .= $data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "";
+	$data['xtra'] .= ($data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "");
 
 	if(substr($data['name'], -1) == "]")
 	{

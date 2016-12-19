@@ -2168,7 +2168,7 @@ function show_textarea($data)
 
 		if($data['wysiwyg'] == true)
 		{
-			$out .= mf_editor(stripslashes($data['value']), $data['name'], array('textarea_rows' => 5));
+			$out .= show_wp_editor(array('name' => $data['name'], 'value' => stripslashes($data['value']), 'textarea_rows' => 5));
 		}
 
 		else
@@ -2186,6 +2186,18 @@ function show_textarea($data)
 	return $out;
 }
 #################
+
+function show_wp_editor($data)
+{
+	if(!isset($data['name'])){			$data['name'] = "";}
+	if(!isset($data['value'])){			$data['value'] = "";}
+	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+	if(!isset($data['required'])){		$data['required'] = false;}
+
+	return mf_editor($data['value'], $data['name'], $data);
+}
 
 function mf_editor($content, $editor_id, $data = array())
 {

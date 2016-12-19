@@ -383,7 +383,10 @@
 
 		.form_switch input[type=checkbox]
 		{
-			display: none;
+			/*display: none;*/
+			/* Has to be this way for required switches to display error message in correct place */
+			position: absolute;
+			visibility: hidden;
 		}
 
 			.form_switch .fa-lg
@@ -432,4 +435,9 @@
 			{
 				margin-left: .2em;
 			}
+
+		.form_switch .asterisk
+		{
+			display: none;
+		}
 }

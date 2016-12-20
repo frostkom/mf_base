@@ -184,8 +184,7 @@
 	.mf_form_inline
 	{
 		background: #fff;
-		border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
-		/*border-radius: .3em;*/
+		border: 1px solid #e1e1e1;
 		display: none;
 		padding: .8em .8em 0;
 		position: absolute;
@@ -231,8 +230,7 @@
         {
 			background: #fff;
 			background: rgba(255, 255, 255, .8);
-			border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
-			/*border-radius: .3em;*/
+			border: 1px solid #e1e1e1;
 			box-sizing: border-box;
 			display: inline-block;
 			font: inherit;
@@ -276,6 +274,24 @@
 				outline: none;
 			}
 
+		.mf_form .form_textfield.reverse
+		{
+			overflow: hidden;
+		}
+
+			.mf_form .form_textfield.reverse label
+			{
+				float: right;
+				line-height: 2.8;
+				width: 80%;
+			}
+
+			.mf_form .form_textfield.reverse input
+			{
+				float: left;
+				width: 18%;
+			}
+
 		.mf_form .form_select .description
 		{
 			margin: -5px 0 10px;
@@ -293,8 +309,7 @@
 				background: #fff;
 				background: rgba(255, 255, 255, .8);
 				margin-top: 0;
-				border: 1px solid #e1e1e1; /*.2em solid #ccc;*/
-				/*border-radius: .3em;*/
+				border: 1px solid #e1e1e1;
 				margin-bottom: .5em;
 				padding: .7em 1.1em 0 .7em;
 			}

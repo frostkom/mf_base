@@ -1217,20 +1217,20 @@ function setting_base_cron_callback()
 				break;
 			}
 
-			$select_description = __("If you want to improve the performance regarding scheduling and your site you should do the following", 'lang_base')
+			/*$select_description = __("If you want to improve the performance regarding scheduling and your site you should do the following", 'lang_base')
 			."<ol>
 				<li>".__("Access your server through SSH", 'lang_base')."</li>
 				<li>".sprintf(__("Type the command '%s' and hit Enter", 'lang_base'), "crontab -e")."</li>
 				<li>".sprintf(__("Add '%s' on an empty line", 'lang_base'), $cron_schedule." wget -q -O - ".$cron_url)."</li>
 				<li>".sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php")."</li>
-			</ol>";
+			</ol>";*/
 
 			/*<option value="">En gång i timmen</option>
 			<option value="">Två gånger dagligen</option>
 			<option value="">Dagligen</option>*/
 		}
 
-		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix, 'description' => $select_description));
+		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix)); //, 'description' => $select_description
 	}
 }
 

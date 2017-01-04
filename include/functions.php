@@ -90,9 +90,7 @@ function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $h
 
 function check_notifications()
 {
-	$arr_notifications = array();
-
-	$arr_notifications = apply_filters('get_user_notifications', $arr_notifications);
+	$arr_notifications = apply_filters('get_user_notifications', array());
 
 	$result = array(
 		'success' => true,
@@ -1062,7 +1060,6 @@ function setting_base_recommend_callback()
 		array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		//array("Google Authenticator", 'google-authenticator/google-authenticator.php', __("to use 2-step verification when logging in", 'lang_base')),
 		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
 		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
 		array("Meta Box", 'meta-box/meta-box.php', __("to easily add meta to pages", 'lang_base')),

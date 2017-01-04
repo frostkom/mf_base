@@ -518,6 +518,11 @@ class mf_list_table extends WP_List_Table
 
 		if($data['sort_data'] == true)
 		{
+			if(isset($data['debug']) && $data['debug'] == true)
+			{
+				echo "Sorting...<br>";
+			}
+
 			$this->sort_data();
 		}
 

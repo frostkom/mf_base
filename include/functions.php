@@ -1885,70 +1885,25 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
-	else if($type == 'date' || $type2 == 'dte') // || $type == 'shortDate' || $type == 'shortDate2'
+	else if($type == 'date' || $type2 == 'dte')
 	{
-		/*if($type == 'shortDate')
+		if($temp == '' || (preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
 		{
-			if($temp == '' || (preg_match('/^\d{4}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
-			{
-				$out = $temp;
-			}
-
-			else
-			{
-				if($temp == "0000-00")
-				{
-					$out = "";
-				}
-
-				else
-				{
-					if($return_empty == false){$out = trim($temp);}
-				}
-			}
-		}
-
-		else if($type == 'shortDate2')
-		{
-			if($temp == '' || preg_match('/^\d{6}$/', $temp))
-			{
-				$out = $temp;
-			}
-
-			else
-			{
-				if($temp == "000000")
-				{
-					$out = "";
-				}
-
-				else
-				{
-					if($return_empty == false){$out = trim($temp);}
-				}
-			}
+			$out = $temp;
 		}
 
 		else
-		{*/
-			if($temp == '' || (preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
+		{
+			if($temp == "0000-00-00")
 			{
-				$out = $temp;
+				$out = "";
 			}
 
 			else
 			{
-				if($temp == "0000-00-00")
-				{
-					$out = "";
-				}
-
-				else
-				{
-					if($return_empty == false){$out = trim($temp);}
-				}
+				if($return_empty == false){$out = trim($temp);}
 			}
-		//}
+		}
 	}
 
 	else if(is_array($temp) || $type == 'array' || $type2 == 'arr')

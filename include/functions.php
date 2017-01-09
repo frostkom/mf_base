@@ -2873,7 +2873,7 @@ function set_file_content($data)
 
 	if($data['file'] != '')
 	{
-		if($fh = fopen($data['file'], $data['mode']))
+		if($fh = @fopen($data['file'], $data['mode']))
 		{
 			if(fwrite($fh, $data['content']))
 			{
@@ -2881,6 +2881,11 @@ function set_file_content($data)
 
 				$success = true;
 			}
+		}
+
+		else
+		{
+			do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
 		}
 	}
 

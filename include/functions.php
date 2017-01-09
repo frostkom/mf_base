@@ -1,5 +1,72 @@
 <?php
 
+function contains_html($string)
+{
+	$string_decoded = htmlspecialchars_decode($string);
+
+	if($string != strip_tags($string) || $string_decoded != strip_tags($string_decoded))
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+function contains_urls($string)
+{
+	if(preg_match("/(http|https|ftp|ftps)\:/i", $string))
+	{
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+function set_html_content_type()
+{
+	return 'text/html';
+	//return 'multipart/mixed';
+}
+
+function send_email($data)
+{
+	global $error_text;
+
+	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
+	if(!isset($data['attachment'])){	$data['attachment'] = array();}
+
+	if($data['content'] != '')
+	{
+		if(contains_html($data['content']))
+		{
+			add_filter('wp_mail_content_type', 'set_html_content_type');
+
+			//<head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head>
+			$data['content'] = "<html><body>".$data['content']."</body></html>";
+
+			/*$data['content'] = array(
+				'text/plain' => strip_tags($data['content']),
+				'text/html' => "<html><body>".$data['content']."</body></html>",
+			);*/
+		}
+
+		return wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
+	}
+
+	else
+	{
+		$error_text = sprintf(__("The message was empty so I could not send %s to %s", 'lang_base'), $data['subject'], $data['to']);
+
+		return false;
+	}
+}
+
 function shorten_text($text, $limit)
 {
 	if(strlen($text) > $limit)
@@ -2703,11 +2770,6 @@ function get_file_content($data)
 	}
 
 	return $content;
-}
-
-function set_html_content_type()
-{
-	return 'text/html';
 }
 
 function hextostr($hex)

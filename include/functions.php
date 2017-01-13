@@ -1,5 +1,16 @@
 <?php
 
+//https://developer.wordpress.org/reference/functions/wp_mail/
+//http://wordpress.stackexchange.com/a/191974
+//http://stackoverflow.com/a/2564472
+function phpmailer_init_base($phpmailer)
+{
+	if($phpmailer->ContentType == 'text/html')
+	{
+		$phpmailer->AltBody = strip_tags($phpmailer->Body);
+	}
+}
+
 function contains_html($string)
 {
 	$string_decoded = htmlspecialchars_decode($string);
@@ -31,7 +42,6 @@ function contains_urls($string)
 function set_html_content_type()
 {
 	return 'text/html';
-	//return 'multipart/mixed';
 }
 
 function send_email($data)
@@ -47,13 +57,7 @@ function send_email($data)
 		{
 			add_filter('wp_mail_content_type', 'set_html_content_type');
 
-			//<head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head>
-			$data['content'] = "<html><body>".$data['content']."</body></html>";
-
-			/*$data['content'] = array(
-				'text/plain' => strip_tags($data['content']),
-				'text/html' => "<html><body>".$data['content']."</body></html>",
-			);*/
+			$data['content'] = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>".$data['content']."</body></html>";
 		}
 
 		return wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
@@ -964,25 +968,51 @@ function get_site_language($data)
 	if(!isset($data['type'])){	$data['type'] = "";}
 	if(!isset($data['uc'])){	$data['uc'] = true;}
 
-	$arr_language = explode("_", $data['language']);
+	if(preg_match("/\_/", $data['language']))
+	{
+		$arr_language = explode("_", $data['language']);
+	}
+
+	else
+	{
+		$arr_language = explode("-", $data['language']);
+	}
+
+	$out = "";
 
 	if($data['type'] == "first")
 	{
-		$out = $arr_language[0];
-
-		if($data['uc'] == true)
+		if(isset($arr_language[0]))
 		{
-			$out = strtoupper($out);
+			$out = $arr_language[0];
+
+			if($data['uc'] == true)
+			{
+				$out = strtoupper($out);
+			}
+		}
+
+		else
+		{
+			do_log("Wrong lang[0]: ".var_export($data, true));
 		}
 	}
 
 	else if($data['type'] == "last")
 	{
-		$out = $arr_language[1];
-
-		if($data['uc'] == true)
+		if(isset($arr_language[1]))
 		{
-			$out = strtoupper($out);
+			$out = $arr_language[1];
+
+			if($data['uc'] == true)
+			{
+				$out = strtoupper($out);
+			}
+		}
+
+		else
+		{
+			do_log("Wrong lang[1]: ".var_export($data, true));
 		}
 	}
 
@@ -2900,7 +2930,7 @@ function get_file_info($data)
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 
-	if($dp = opendir($data['path']))
+	if($dp = @opendir($data['path']))
 	{
 		$count = 0;
 
@@ -2947,6 +2977,11 @@ function get_file_info($data)
 		}
 
 		closedir($dp);
+	}
+
+	else
+	{
+		do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['path']));
 	}
 }
 

@@ -257,7 +257,25 @@ function mf_uninstall_plugin($data)
 
 	foreach($data['tables'] as $table)
 	{
+		$wpdb->query("TRUNCATE TABLE IF EXISTS ".$wpdb->prefix.$table);
 		$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
+
+		$result = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
+
+		if($wpdb->num_rows > 0)
+		{
+			$result = $wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
+
+			if($wpdb->num_rows > 0)
+			{
+				do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+			}
+
+			else
+			{
+				do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+			}
+		}
 	}
 }
 
@@ -2183,6 +2201,44 @@ function show_textfield($data)
 }
 #################
 
+######################
+function show_password_field($data)
+{
+	$out = "";
+
+	if(!isset($data['name'])){			$data['name'] = "";}
+	if(!isset($data['text'])){			$data['text'] = "";}
+	if(!isset($data['value'])){			$data['value'] = "";}
+	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
+	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
+	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+
+	if($data['maxlength'] != '')
+	{
+		$data['xtra'] .= " maxlength='".$data['maxlength']."'";
+	}
+
+	if($data['placeholder'] != '')
+	{
+		$data['placeholder'] .= "...";
+
+		$data['xtra'] .= " placeholder='".$data['placeholder']."'";
+	}
+
+	$out .= "<div class='form_password'>";
+
+		if($data['text'] != '')
+		{
+			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+		}
+
+		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['xtra'].">
+	</div>";
+
+	return $out;
+}
+######################
+
 ######################################
 function show_textarea($data)
 {
@@ -2452,8 +2508,6 @@ function show_checkboxes($data)
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	//if(!isset($data['minsize'])){		$data['minsize'] = 2;}
-	//if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
@@ -2463,33 +2517,7 @@ function show_checkboxes($data)
 
 	if($count_temp > 0)
 	{
-		/*if(substr($data['name'], -2) == "[]")
-		{*/
-			/*if($count_temp > $data['maxsize'])
-			{
-				$size = $data['maxsize'];
-			}
-
-			else if($count_temp < $data['minsize'])
-			{
-				$size = $data['minsize'];
-			}
-
-			else
-			{
-				$size = $count_temp;
-			}*/
-
-			//$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			//$data['xtra'] .= " multiple size='".$size."'";
-
-			$container_class = "form_checkbox_multiple";
-		/*}
-
-		else
-		{
-			$container_class = "form_checkbox";
-		}*/
+		$container_class = "form_checkbox_multiple";
 
 		if($data['required'])
 		{
@@ -2515,10 +2543,10 @@ function show_checkboxes($data)
 
 				if($data['text'] != '')
 				{
-					$out .= "<label>".$data['text']."</label>"; // for='".$data['name']."'
+					$out .= "<label>".$data['text']."</label>";
 				}
 
-				$out .= "<ul>"; // id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra']."
+				$out .= "<ul>";
 
 					foreach($data['data'] as $key => $option)
 					{
@@ -2541,15 +2569,6 @@ function show_checkboxes($data)
 							$compare = (is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value) ? $data_value : -$data_value;
 
 							$out .= show_checkbox(array('name' => $data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare));
-
-							/*$out .= "<option value='".$data_value."'";
-
-								if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
-								{
-									$out .= " selected";
-								}
-
-							$out .= ">".$data_text."</option>";*/
 						}
 					}
 
@@ -2702,41 +2721,6 @@ function show_file_field($data)
 		}
 
 		$out .= "<input type='file' name='".$data['name'].($data['multiple'] == true ? "[]" : "")."'".($data['multiple'] == true ? " multiple" : "").$data['xtra'].">
-	</div>";
-
-	return $out;
-}
-######################
-
-######################
-function show_password_field($data)
-{
-	$out = "";
-
-	if(!isset($data['name'])){			$data['name'] = "";}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['value'])){			$data['value'] = "";}
-	if(!isset($data['max_length'])){	$data['max_length'] = "";}
-	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-
-	$data['max_length'] = $data['max_length'] != '' ? " maxlength='".$data['max_length']."'" : "";
-
-	if($data['placeholder'] != '')
-	{
-		$data['placeholder'] .= "...";
-
-		$data['xtra'] .= " placeholder='".$data['placeholder']."'";
-	}
-
-	$out .= "<div class='form_password'>";
-
-		if($data['text'] != '')
-		{
-			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
-		}
-
-		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['max_length'].$data['xtra'].">
 	</div>";
 
 	return $out;
@@ -3098,7 +3082,7 @@ function password_form_base()
 {
 	return "<form action='".site_url('wp-login.php?action=postpass', 'login_post')."' method='post' class='mf_form'>
 		<p>".__("To view this protected post, enter the password below", 'lang_base')."</p>"
-		.show_password_field(array('name' => "post_password", 'placeholder' => __("Password", 'lang_base'), 'max_length' => 20))
+		.show_password_field(array('name' => "post_password", 'placeholder' => __("Password", 'lang_base'), 'maxlength' => 20))
 		."<div class='form_button'>"
 			.show_button(array('text' => __("Submit")))
 		."</div>

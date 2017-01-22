@@ -502,35 +502,37 @@ class mf_list_table extends WP_List_Table
 
 		if(isset($data['debug']) && $data['debug'] == true)
 		{
-			echo "mf_list_table->select_data() query: ".$query."<br>";
+			echo "<br>mf_list_table->select_data() query: ".$query."<br>";
 		}
 
 		$result = $wpdb->get_results($query);
+
+		$this->num_rows = count($result);
 
 		if(isset($data['debug']) && $data['debug'] == true)
 		{
 			//$this->debug_query = $query;
 
-			echo "Rows: ".count($result)."<br>";
+			echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
 		}
 
 		$this->data = json_decode(json_encode($result), true);
 
-		if($data['sort_data'] == true)
+		if($this->num_rows > 0 && $data['sort_data'] == true)
 		{
 			if(isset($data['debug']) && $data['debug'] == true)
 			{
-				echo "Sorting...<br>";
+				echo __("Sorting...", 'lang_base')."<br>";
 			}
 
 			$this->sort_data();
-		}
 
-		$this->num_rows = count($this->data);
+			$this->num_rows = count($this->data);
 
-		if(isset($data['debug']) && $data['debug'] == true)
-		{
-			echo "Rows: ".$this->num_rows."<br><br>";
+			if(isset($data['debug']) && $data['debug'] == true)
+			{
+				echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
+			}
 		}
 	}
 

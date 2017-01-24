@@ -1168,7 +1168,7 @@ function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
 		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
-		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
 		//array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),

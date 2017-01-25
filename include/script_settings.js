@@ -51,7 +51,17 @@ jQuery(function($)
 
 			$.each(arr_tabs, function(index, value)
 			{
-				$('#nav-tab-wrapper').append("<a href='#" + value.id + "' id='tab_" + value.id + "' class='nav-tab'>" + value.name + "</a>");
+				var tab_label = "<a href='#" + value.id + "' id='tab_" + value.id + "' class='nav-tab'>" + value.name + "</a>";
+
+				if(value.id == "settings_base")
+				{
+					$('#nav-tab-wrapper').prepend(tab_label);
+				}
+
+				else
+				{
+					$('#nav-tab-wrapper').append(tab_label);
+				}
 
 				$('#' + value.id).hide();
 			});

@@ -2631,10 +2631,10 @@ function show_checkbox($data)
 		$data['xtra'] .= " required";
 	}
 
-	if($data['switch'] == 1 && $data['text'] == '')
+	if($data['switch'] == 1)
 	{
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i>";
+		$data['text'] = "<span><i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i></span>".$data['text'];
 	}
 
 	$out = "<div class='form_checkbox".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>

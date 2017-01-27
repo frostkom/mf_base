@@ -398,11 +398,15 @@
 
 		.form_switch input[type=checkbox]
 		{
-			/*display: none;*/
 			/* Has to be this way for required switches to display error message in correct place */
 			position: absolute;
 			visibility: hidden;
 		}
+
+			.form_switch label span
+			{
+				margin-right: .4em;
+			}
 
 			.form_switch .fa-lg
 			{

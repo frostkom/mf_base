@@ -851,7 +851,7 @@ function get_attachment_to_send($string)
 
 		foreach($arr_attachments as $attachment)
 		{
-			list($file_name, $file_url, $file_id) = explode("|", $attachment);
+			@list($file_name, $file_url, $file_id) = explode("|", $attachment);
 
 			if($file_id > 0)
 			{

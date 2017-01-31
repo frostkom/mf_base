@@ -199,13 +199,17 @@ class mf_list_table extends WP_List_Table
 				.$query_group
 			;
 
-			$wpdb->query($query_this); //$amount = 
+			$wpdb->query($query_this);
 
 			$amount = $wpdb->num_rows;
 
 			if($amount > 0)
 			{
-				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
+				$this->views[$key] = "<a href='admin.php?page=".$this->page
+					.(isset($this->arr_settings['page_vars']) && $this->arr_settings['page_vars'] != '' ? "&".$this->arr_settings['page_vars'] : "")
+					."&".$data['db_field']."=".$key."'"
+					.($key == $db_value ? " class='current'" : "")
+				.">".$value." <span class='count'>(".$amount.")</span></a>";
 			}
 		}
 
@@ -436,7 +440,7 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		echo "<form method='get'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">"; // action='?page=".$this->page."'
+		echo "<form method='get'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
 			$this->search_box(__("Search", 'lang_base'), 's');
 

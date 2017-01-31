@@ -181,11 +181,10 @@
 			margin-bottom: 1em;
 		}
 
-	.mf_form_inline
+	.form_inline
 	{
 		background: #fff;
 		border: 1px solid #e1e1e1;
-		display: none;
 		padding: .8em .8em 0;
 		position: absolute;
 		min-width: 400px;

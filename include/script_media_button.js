@@ -13,10 +13,10 @@ jQuery(function($)
 		{
 			arr_value = value.split("|");
 
-			var file_name = arr_value[0],
+			var file_name = (arr_value[0] ? arr_value[0] : script_media_button.unknown_title),
 				file_url = arr_value[1];
 
-			if(file_name != '')
+			if(file_url != '')
 			{
 				if(script_media_button.multiple == false)
 				{

@@ -748,6 +748,7 @@ function get_media_button($data = array())
 		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
+			'unknown_title' => __("Unknown title", 'lang_base'),
 		));
 
 		$out .= "<div class='mf_media_button'>";
@@ -785,7 +786,8 @@ function get_file_button($data)
 	mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
 		'multiple' => false,
 		'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
-		'adminurl' => get_admin_url(), 'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text
+		'unknown_title' => __("Unknown title", 'lang_base'),
+		'adminurl' => get_admin_url(), 'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text,
 	));
 
 	return "<div class='mf_image_button'>

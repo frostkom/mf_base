@@ -205,11 +205,17 @@ class mf_list_table extends WP_List_Table
 
 			if($amount > 0)
 			{
-				$this->views[$key] = "<a href='admin.php?page=".$this->page
-					.(isset($this->arr_settings['page_vars']) && $this->arr_settings['page_vars'] != '' ? "&".$this->arr_settings['page_vars'] : "")
-					."&".$data['db_field']."=".$key."'"
-					.($key == $db_value ? " class='current'" : "")
-				.">".$value." <span class='count'>(".$amount.")</span></a>";
+				$url_xtra = "";
+
+				if(isset($this->arr_settings['page_vars']) && count($this->arr_settings['page_vars']) > 0)
+				{
+					foreach($this->arr_settings['page_vars'] as $page_key => $page_value)
+					{
+						$url_xtra .= "&".$page_key."=".$page_value;
+					}
+				}
+
+				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key.$url_xtra."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
 			}
 		}
 
@@ -444,8 +450,17 @@ class mf_list_table extends WP_List_Table
 
 			$this->search_box(__("Search", 'lang_base'), 's');
 
-			echo input_hidden(array('name' => 'page', 'value' => $this->page))
-		."</form>";
+			echo input_hidden(array('name' => 'page', 'value' => $this->page));
+
+			if(isset($this->arr_settings['page_vars']) && count($this->arr_settings['page_vars']) > 0)
+			{
+				foreach($this->arr_settings['page_vars'] as $page_key => $page_value)
+				{
+					echo input_hidden(array('name' => $page_key, 'value' => $page_value));
+				}
+			}
+
+		echo "</form>";
 	}
 
 	function select_data($data = array())

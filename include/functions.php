@@ -26,7 +26,7 @@ function contains_html($string)
 	}
 }
 
-function contains_urls($string)
+/*function contains_urls($string)
 {
 	if(preg_match("/(http|https|ftp|ftps)\:/i", $string))
 	{
@@ -37,7 +37,7 @@ function contains_urls($string)
 	{
 		return false;
 	}
-}
+}*/
 
 function set_html_content_type()
 {
@@ -257,7 +257,7 @@ function mf_uninstall_plugin($data)
 
 	foreach($data['tables'] as $table)
 	{
-		$wpdb->query("TRUNCATE TABLE IF EXISTS ".$wpdb->prefix.$table);
+		$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
 		$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
 
 		$result = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
@@ -1775,7 +1775,6 @@ function get_list_navigation($resultPagination)
 			<p class='search-box'>
 				<input type='search' name='s' value='".$strSearch."'>"
 				.show_button(array('text' => __("Search", 'lang_base'), 'class' => "button"))
-				//."<button type='submit' class='button'>".__("Search", 'lang_base')."</button>
 			."</p>
 		</form>";
 	}

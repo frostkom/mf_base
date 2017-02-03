@@ -257,23 +257,28 @@ function mf_uninstall_plugin($data)
 
 	foreach($data['tables'] as $table)
 	{
-		$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
-		$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
-
-		$result = $wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
+		$wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
 
 		if($wpdb->num_rows > 0)
 		{
-			$result = $wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
+			$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
+			$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
+
+			$wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
 
 			if($wpdb->num_rows > 0)
 			{
-				do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
-			}
+				$result = $wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
 
-			else
-			{
-				do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+				if($wpdb->num_rows > 0)
+				{
+					do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+				}
+
+				else
+				{
+					do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+				}
 			}
 		}
 	}
@@ -1053,7 +1058,7 @@ function get_current_user_role($id = 0)
 
 	$user_data = get_userdata($id);
 
-	return $user_data->roles[0];
+	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("Unknown", 'lang_base').")";
 }
 
 //main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
@@ -3016,6 +3021,8 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
 	if(!isset($data['output_array'])){		$data['output_array'] = false;}
 
+	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');
+
 	if($data['add_choose_here'] == true)
 	{
 		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
@@ -3033,7 +3040,7 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s".($data['post_status'] != '' ? " AND post_status = '".$data['post_status']."'" : " AND post_status NOT IN('auto-draft', 'ignore', 'inherit', 'trash')")." AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s".($data['post_status'] != '' ? " AND post_status = '".$data['post_status']."'" : " AND post_status NOT IN('".implode("','", $exclude_post_status)."')")." AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
 
 	if($wpdb->num_rows > 0)
 	{

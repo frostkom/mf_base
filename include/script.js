@@ -1,5 +1,20 @@
+function on_load_base()
+{
+	jQuery('.mf_form :required, .mf_form .required').each(function()
+	{
+		jQuery(this).siblings('label').append(" <span class='asterisk'>*</span>");
+	});
+}
+
 jQuery(function($)
 {
+	on_load_base();
+
+	if(typeof collect_on_load == 'function')
+	{
+		collect_on_load('on_load_base'); 
+	}
+
 	$(document).on('click', 'a[rel=external]', function(e)
 	{
 		if(e.which != 3)
@@ -19,13 +34,8 @@ jQuery(function($)
 		}
 	});
 
-	$('.mf_form').on('change', 'select[rel=submit_change], input[rel=submit_change]', function()
+	$(document).on('change', '.mf_form select[rel=submit_change], .mf_form input[rel=submit_change]', function()
 	{
 		this.form.submit();
-	});
-
-	$('.mf_form :required, .mf_form .required').each(function()
-	{
-		$(this).siblings('label').append(" <span class='asterisk'>*</span>");
 	});
 });

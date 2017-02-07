@@ -192,6 +192,11 @@
 		z-index: 1;
 	}
 
+		.form_inline h2
+		{
+			margin-bottom: .4em;
+		}
+
     .mf_form
     {
         overflow: hidden;   

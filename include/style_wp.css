@@ -92,45 +92,6 @@
 			background: #fbe3e4 !important;
 		}
 
-		/*.swipe_action, .swipe_action tr
-		{
-			position: relative;
-		}
-
-			.swipe_action tr > div
-			{
-				bottom: 0;
-				color: #fff;
-				overflow: hidden;
-				padding: 1.5em 0;
-				position: absolute;
-				top: 0;
-				width: .3%;
-			}
-
-				.swipe_action tr > .from_left
-				{
-					background: rgba(0, 255, 0, .3);
-					left: 0;
-				}
-
-					.swipe_action tr > .from_left i
-					{
-						float: right;
-						margin-right: 1.5em;
-					}
-
-				.swipe_action tr > .from_right
-				{
-					background: rgba(255, 0, 0, .3);
-					right: 0;
-				}
-
-					.swipe_action tr > .from_right i
-					{
-						margin-left: 1.5em;
-					}*/
-
 	.postbox.active, .postbox.active h3
 	{
 		background: #fff6bf;
@@ -225,11 +186,6 @@
 						{
 							font-size: 11px;
 						}
-
-	/*.swipe_bar
-	{
-		display: none;
-	}*/
 
 	@page
 	{

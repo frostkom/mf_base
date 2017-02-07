@@ -1077,7 +1077,6 @@ function settings_base()
 	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
-	//wp_enqueue_script('script_swipe', plugin_dir_url(__FILE__)."jquery.touchSwipe.min.js");
 	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')));
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");

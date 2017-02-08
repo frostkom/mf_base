@@ -1190,40 +1190,6 @@ function setting_base_recommend_callback()
 
 		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
-
-	if(IS_ADMIN)
-	{
-		function check_htaccess($data)
-		{
-			if(basename($data['file']) == ".htaccess")
-			{
-				$content = get_file_content(array('file' => $data['file']));
-
-				if(!preg_match("/ExpiresByType image/", $content))
-				{
-					$recommend_expires = "ExpiresActive On
-ExpiresByType text/javascript 'A604800'
-ExpiresByType text/css 'A604800'
-ExpiresByType image/x-icon 'A31536000'
-ExpiresByType image/gif 'A604800'
-ExpiresByType image/jpg 'A604800'
-ExpiresByType image/jpeg 'A604800'
-ExpiresByType image/png 'A604800'
-
-FileETag None
-
-Header set Cache-Control 'must-revalidate'";
-
-					echo "<div class='mf_form'>"
-						."<h3>".__("Copy this to", 'lang_base')." .htaccess</h3>"
-						.show_textarea(array('value' => $recommend_expires, 'xtra' => "class='widefat' rows='12' readonly"))
-					."</div>";
-				}
-			}
-		}
-
-		get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess", 'allow_depth' => false));
-	}
 }
 
 /*function setting_base_auto_core_update_callback()

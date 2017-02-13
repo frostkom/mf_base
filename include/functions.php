@@ -71,16 +71,16 @@ function send_email($data)
 	}
 }
 
-function shorten_text($text, $limit)
+function shorten_text($data) //$text, $limit
 {
-	if(strlen($text) > $limit)
+	if(strlen($data['string']) > $data['limit'])
 	{
-		return trim(substr($text, 0, $limit))."...";
+		return trim(substr($data['string'], 0, $data['limit']))."...";
 	}
 
 	else
 	{
-		return $text;
+		return $data['string'];
 	}
 }
 

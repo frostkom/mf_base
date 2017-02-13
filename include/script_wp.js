@@ -90,10 +90,10 @@ jQuery(function($)
 					});
 				}
 
-				else
+				/*else
 				{
 					console.log("Error: " , data);
-				}
+				}*/
 			}
 		});
 	}

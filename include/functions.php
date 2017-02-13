@@ -75,7 +75,7 @@ function shorten_text($text, $limit)
 {
 	if(strlen($text) > $limit)
 	{
-		return substr($text, 0, $limit)."...";
+		return trim(substr($text, 0, $limit))."...";
 	}
 
 	else

@@ -232,6 +232,18 @@ function add_shortcode_display_base()
 	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));
 }*/
 
+function replace_option($data)
+{
+	if(get_option($data['old']) != '')
+	{
+		update_option($data['new'], get_option($data['old']));
+
+		mf_uninstall_plugin(array(
+			'options' => array($data['old']),
+		));
+	}
+}
+
 function mf_uninstall_plugin($data)
 {
 	global $wpdb;
@@ -275,10 +287,10 @@ function mf_uninstall_plugin($data)
 					do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
 				}
 
-				else
+				/*else
 				{
 					do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
-				}
+				}*/
 			}
 		}
 	}
@@ -796,13 +808,13 @@ function get_file_button($data)
 	));
 
 	return "<div class='mf_image_button'>
-		<div".($data['option'] != '' ? "" : " class='hide'").">
-			<img src='".$data['option']."'>
+		<div".($data['value'] != '' ? "" : " class='hide'").">
+			<img src='".$data['value']."'>
 			<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
 		</div>
 		<div>"
-			.show_button(array('text' => ($data['option'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))
-			.input_hidden(array('name' => $data['setting_key'], 'value' => $data['option']))
+			.show_button(array('text' => ($data['value'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))
+			.input_hidden(array('name' => $data['name'], 'value' => $data['value']))
 		."</div>
 		<div class='mf_file_raw'></div>
 	</div>";

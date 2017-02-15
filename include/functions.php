@@ -1170,17 +1170,16 @@ function setting_base_info_callback()
 function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
-		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
-		array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
+		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
 		//array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
-		array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		//array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
-		array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
-		//array("Meta Box", 'meta-box/meta-box.php', __("to easily add meta to pages", 'lang_base')),
+		//array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
+		//array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menu items", 'lang_base')),
 		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),

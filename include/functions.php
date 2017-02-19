@@ -1,5 +1,13 @@
 <?php
 
+if(!function_exists('get_post_title'))
+{
+	function get_post_title($post)
+	{
+		return get_the_title($post);
+	}
+}
+
 //https://developer.wordpress.org/reference/functions/wp_mail/
 //http://wordpress.stackexchange.com/a/191974
 //http://stackoverflow.com/a/2564472
@@ -71,7 +79,7 @@ function send_email($data)
 	}
 }
 
-function shorten_text($data) //$text, $limit
+function shorten_text($data)
 {
 	if(strlen($data['string']) > $data['limit'])
 	{

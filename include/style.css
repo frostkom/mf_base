@@ -373,6 +373,7 @@
 			font: inherit;
 			margin: 0 .7em .7em 0;
 			padding: .3em 1em .3em;
+			white-space: nowrap;
 		}
 
 			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary

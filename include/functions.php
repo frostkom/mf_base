@@ -1,5 +1,14 @@
 <?php
 
+function after_title_base()
+{
+	global $post, $wp_meta_boxes;
+
+	do_meta_boxes(get_current_screen(), 'after_title', $post);
+
+	unset($wp_meta_boxes[get_post_type($post)]['after_title']);
+}
+
 if(!function_exists('get_post_title'))
 {
 	function get_post_title($post)
@@ -1183,6 +1192,7 @@ function setting_base_recommend_callback()
 		//array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
+		array("Change WordPress URL", 'change-wp-url/change-wp-url.php', __("to change website URL", 'lang_base')),
 		//array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
@@ -1193,11 +1203,11 @@ function setting_base_recommend_callback()
 		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
+		array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
 		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 		//array("WP Rollback", 'wp-rollback/wp-rollback.php', __("to revert to an older version of a theme or plugin", 'lang_base')),
-		array("WP Smush", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
 		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
 		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
 	);
@@ -2896,7 +2906,7 @@ function get_file_info($data)
 }
 
 ########################################
-function show_table_header($arr_header)
+function show_table_header($arr_header, $shorten_text = true)
 {
 	$out = "<thead>
 		<tr>";
@@ -2907,7 +2917,7 @@ function show_table_header($arr_header)
 			{
 				$arr_header[$i] = stripslashes(strip_tags($arr_header[$i]));
 
-				if(strlen($arr_header[$i]) > 15)
+				if(strlen($arr_header[$i]) > 15 && $shorten_text == true)
 				{
 					$title = $arr_header[$i];
 					$content = substr($arr_header[$i], 0, 12)."...";

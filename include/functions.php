@@ -1189,7 +1189,7 @@ function setting_base_recommend_callback()
 	$arr_recommendations = array(
 		//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
-		//array("Adminer", 'adminer/adminer.php', __("to get a graphical interface to the database", 'lang_base')),
+		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("Change WordPress URL", 'change-wp-url/change-wp-url.php', __("to change website URL", 'lang_base')),
@@ -2156,9 +2156,7 @@ function show_password_field($data)
 
 	if($data['placeholder'] != '')
 	{
-		$data['placeholder'] .= "...";
-
-		$data['xtra'] .= " placeholder='".$data['placeholder']."'";
+		$data['xtra'] .= " placeholder='".$data['placeholder']."...'";
 	}
 
 	$out .= "<div class='form_password'>";
@@ -2195,9 +2193,7 @@ function show_textarea($data)
 
 	if($data['placeholder'] != '')
 	{
-		$data['placeholder'] .= "...";
-
-		$data['xtra'] .= " placeholder='".$data['placeholder']."'";
+		$data['xtra'] .= " placeholder='".$data['placeholder']."...'";
 	}
 
 	$out = "<div class='form_textarea".($data['class'] != '' ? " ".$data['class'] : "")."'>";

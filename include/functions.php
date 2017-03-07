@@ -92,7 +92,7 @@ function shorten_text($data)
 {
 	if(strlen($data['string']) > $data['limit'])
 	{
-		return trim(substr($data['string'], 0, $data['limit']))."...";
+		return trim(substr($data['string'], 0, $data['limit']))."&hellip;";
 	}
 
 	else
@@ -2075,7 +2075,7 @@ function show_textfield($data)
 
 	if($data['placeholder'] != '')
 	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."...'";
+		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
 	}
 
 	if($data['pattern'] != '')
@@ -2156,7 +2156,7 @@ function show_password_field($data)
 
 	if($data['placeholder'] != '')
 	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."...'";
+		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
 	}
 
 	$out .= "<div class='form_password'>";
@@ -2193,7 +2193,7 @@ function show_textarea($data)
 
 	if($data['placeholder'] != '')
 	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."...'";
+		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
 	}
 
 	$out = "<div class='form_textarea".($data['class'] != '' ? " ".$data['class'] : "")."'>";
@@ -2916,7 +2916,8 @@ function show_table_header($arr_header, $shorten_text = true)
 				if(strlen($arr_header[$i]) > 15 && $shorten_text == true)
 				{
 					$title = $arr_header[$i];
-					$content = substr($arr_header[$i], 0, 12)."...";
+					//$content = substr($arr_header[$i], 0, 12)."&hellip;";
+					$content = shorten_text(array('string' => $arr_header[$i], 'limit' => 12));
 				}
 
 				else

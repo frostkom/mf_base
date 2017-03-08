@@ -38,4 +38,11 @@ jQuery(function($)
 	{
 		this.form.submit();
 	});
+
+	$(document).on('click', '.toggler', function()
+	{
+		$(this).children('.fa').toggleClass('fa-caret-right fa-caret-down');
+
+		$(this).toggleClass('open').next('.toggle_container').toggleClass('hide');
+	});
 });

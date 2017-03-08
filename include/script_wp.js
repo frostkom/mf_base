@@ -1,12 +1,5 @@
 jQuery(function($)
 {
-	$('.toggler').on('click', function()
-	{
-		$(this).children('.fa').toggleClass('fa-caret-right fa-caret-down');
-
-		$(this).toggleClass('open').next('.toggle_container').toggleClass('hide');
-	});
-
 	var dom_form = $("form .search-box input[name='s']"),
 		plugin_name = dom_form.parents('form').attr('rel');
 

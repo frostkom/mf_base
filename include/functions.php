@@ -90,6 +90,8 @@ function send_email($data)
 
 function shorten_text($data)
 {
+	if(!isset($data['string'])){	$data['string'] = $data['text'];}
+
 	if(strlen($data['string']) > $data['limit'])
 	{
 		return trim(substr($data['string'], 0, $data['limit']))."&hellip;";
@@ -2946,6 +2948,8 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_type'])){			$data['post_type'] = "page";}
 	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
 	if(!isset($data['output_array'])){		$data['output_array'] = false;}
+	if(!isset($data['limit'])){				$data['limit'] = 0;}
+	if(!isset($data['count'])){				$data['count'] = false;}
 
 	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');
 
@@ -2966,9 +2970,26 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s".($data['post_status'] != '' ? " AND post_status = '".$data['post_status']."'" : " AND post_status NOT IN('".implode("','", $exclude_post_status)."')")." AND post_parent = '%d' ORDER BY menu_order ASC", $data['post_type'], $data['post_id']));
+	$query_where = "";
 
-	if($wpdb->num_rows > 0)
+	if($data['post_status'] != '')
+	{
+		$query_where .= " AND post_status = '".$data['post_status']."'";
+	}
+	
+	else
+	{
+		$query_where .= " AND post_status NOT IN('".implode("','", $exclude_post_status)."')";
+	}
+
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".$query_where." ORDER BY menu_order ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
+
+	if($data['count'] == true)
+	{
+		$out = $wpdb->num_rows;
+	}
+
+	else if($wpdb->num_rows > 0)
 	{
 		foreach($result as $r)
 		{

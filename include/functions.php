@@ -683,35 +683,33 @@ function delete_base($data)
 function init_base()
 {
 	define('DEFAULT_DATE', "1982-08-04 23:15:00");
-	
-	//define('IS_SUPER_ADMIN', current_user_can('update_core'));
-	if(current_user_can('manage_options'))
+
+	$is_super_admin = $is_admin = $is_editor = $is_author = false;
+
+	if(current_user_can('update_core'))
 	{
-		define('IS_ADMIN', true);
-		define('IS_EDITOR', true);
-		define('IS_AUTHOR', true);
+		$is_super_admin = $is_admin = $is_editor = $is_author = true;
+	}
+
+	else if(current_user_can('manage_options'))
+	{
+		$is_admin = $is_editor = $is_author = true;
 	}
 
 	else if(current_user_can('edit_pages'))
 	{
-		define('IS_ADMIN', false);
-		define('IS_EDITOR', true);
-		define('IS_AUTHOR', true);
+		$is_editor = $is_author = true;
 	}
-
+	
 	else if(current_user_can('upload_files'))
 	{
-		define('IS_ADMIN', false);
-		define('IS_EDITOR', false);
-		define('IS_AUTHOR', true);
+		$is_author = true;
 	}
 
-	else
-	{
-		define('IS_ADMIN', false);
-		define('IS_EDITOR', false);
-		define('IS_AUTHOR', false);
-	}
+	define('IS_SUPER_ADMIN', $is_super_admin);
+	define('IS_ADMIN', $is_admin);
+	define('IS_EDITOR', $is_editor);
+	define('IS_AUTHOR', $is_author);
 
 	$timezone_string = get_option('timezone_string');
 
@@ -720,32 +718,10 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
-	/*$setting_base_auto_core_update = get_option('setting_base_auto_core_update');
-
-	if($setting_base_auto_core_update != '')
-	{
-		if($setting_base_auto_core_update == "all"){		$setting_base_auto_core_update = true;}
-		else if($setting_base_auto_core_update == "none"){	$setting_base_auto_core_update = false;}
-
-		define('WP_AUTO_UPDATE_CORE', $setting_base_auto_core_update);
-	}*/
-
 	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
 	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
 	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
-
-	/*if(is_user_logged_in() && IS_ADMIN)
-	{
-		global $wpdb;
-
-		if(!defined('DIEONDBERROR'))
-		{
-			define('DIEONDBERROR', true);
-		}
-
-		$wpdb->show_errors();
-	}*/
 }
 
 function get_file_icon($file)
@@ -1128,7 +1104,6 @@ function settings_base()
 
 	$arr_settings = array(
 		'setting_base_info' => __("Versions", 'lang_base'),
-		//'setting_base_auto_core_update' => __("Update core automatically", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		'setting_base_recommend' => __("Recommendations", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
@@ -1233,20 +1208,6 @@ function setting_base_recommend_callback()
 		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
 }
-
-/*function setting_base_auto_core_update_callback()
-{
-	$setting_key = get_setting_key(__FUNCTION__);
-	$option = get_option($setting_key, 'minor');
-
-	$arr_data = array(
-		'none' => __("None", 'lang_base'),
-		'minor' => __("Minor", 'lang_base')." (".__("default", 'lang_base').")",
-		'all' => __("All", 'lang_base'),
-	);
-
-	echo show_select(array('data' => $arr_data, 'name' => $setting_key, 'value' => $option));
-}*/
 
 function setting_base_cron_callback()
 {

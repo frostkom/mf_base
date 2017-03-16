@@ -91,16 +91,26 @@ function send_email($data)
 function shorten_text($data)
 {
 	if(!isset($data['string'])){	$data['string'] = $data['text'];}
+	if(!isset($data['count'])){		$data['count'] = false;}
+
+	$out = "";
 
 	if(strlen($data['string']) > $data['limit'])
 	{
-		return trim(substr($data['string'], 0, $data['limit']))."&hellip;";
+		$out = trim(substr($data['string'], 0, $data['limit']))."&hellip;";
+
+		if($data['count'] == true)
+		{
+			$out .= " (".strlen($data['string']).")";
+		}
 	}
 
 	else
 	{
-		return $data['string'];
+		$out = $data['string'];
 	}
+
+	return $out;
 }
 
 function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $height = '', $title = '')

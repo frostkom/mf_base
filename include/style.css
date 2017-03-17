@@ -39,6 +39,11 @@
 			margin-bottom: 0;
 		}
 
+	.toggler
+	{
+		cursor: pointer;
+	}
+
 	.row-actions
 	{
 		color: #999;

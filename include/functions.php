@@ -501,7 +501,6 @@ function format_date($in)
 			{
 				$firstday_ts = mktime(0, 0, 0, $date_month, $date_day, $date_year);
 				$date_weekday = day_name(date("w", $firstday_ts));
-				//$date_weekday = day_name(date("w", $date_short));
 
 				$out .= $date_weekday."&nbsp;";
 			}
@@ -2020,7 +2019,6 @@ function show_textfield($data)
 
 	if($data['type'] == "date")
 	{
-		// Add datepicker
 		wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 		wp_enqueue_script('jquery-ui-datepicker');
 		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js");

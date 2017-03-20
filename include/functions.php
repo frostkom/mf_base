@@ -230,27 +230,13 @@ function add_shortcode_display_base()
 
 	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 	{
-		echo "<script>
-			function insert_form()
-			{
-				jQuery('.mf_shortcode_wrapper select').each(function()
-				{
-					var value = jQuery(this).val(),
-						type = jQuery(this).attr('rel');
-
-					if(value > 0)
-					{
-						window.send_to_editor('[' + type + ' id=' + value + ']');
-					}
-				});
-			}
-		</script>";
+		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js");
 
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
 				.apply_filters('get_shortcode_output', '')
-				.show_button(array('text' => __("Insert", 'lang_base'), 'xtra' => " onclick='insert_form()'"))
-				.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary", 'xtra' => " onclick='tb_remove()'"))
+				.show_button(array('text' => __("Insert", 'lang_base'))) //, 'xtra' => " onclick='insert_form()'"
+				.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary")) //, 'xtra' => " onclick='tb_remove()'"
 			."</div>
 		</div>";
 	}
@@ -2282,6 +2268,7 @@ function show_select($data)
 	$out = "";
 
 	if(!isset($data['data'])){			$data['data'] = array();}
+	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
 	if(!isset($data['value'])){			$data['value'] = $data['compare'];}
@@ -2352,7 +2339,7 @@ function show_select($data)
 					$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 				}
 
-				$out .= "<select id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'".$data['xtra'].">";
+				$out .= "<select".($data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'" : "")."".$data['xtra'].">";
 
 					foreach($data['data'] as $key => $option)
 					{

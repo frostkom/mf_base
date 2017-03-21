@@ -44,6 +44,19 @@
 		cursor: pointer;
 	}
 
+	.widefat
+	{
+		border-spacing: 0;
+		clear: both;
+		margin: 0;
+		width: 100%;
+	}
+
+	.striped > tbody > tr:nth-child(2n+1), ul.striped > li:nth-child(2n+1)
+	{
+		background-color: #f9f9f9;
+	}
+
 	.row-actions
 	{
 		color: #999;
@@ -105,13 +118,13 @@
 		font-style: italic;
 	}
 
-	.force-select-all
+	/*.force-select-all
 	{
 		-webkit-user-select: all;
 		-moz-user-select: all;
 		-ms-user-select: all;
 		user-select: all;
-	}
+	}*/
 
 	.wrap .update-plugins
 	{

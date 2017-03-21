@@ -242,6 +242,11 @@ function add_shortcode_display_base()
 	}
 }
 
+function meta_boxes_script_base()
+{
+	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js");
+}
+
 /*function admin_init_base()
 {
 	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));

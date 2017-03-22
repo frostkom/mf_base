@@ -81,6 +81,13 @@
 		overflow: hidden;
 	}
 
+		.wp-list-table .column-image img
+		{
+			max-height: 80px;
+			object-fit: cover;
+			width: auto;
+		}
+
 		.positive
 		{
 			background: #d9f1bf !important;

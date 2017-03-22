@@ -22,15 +22,15 @@
 		margin-bottom: 1em;
 	}
 
-		.mf_media_button .mf_media_list td > div
+		/*.mf_media_button .mf_media_list td > div
 		{
 			max-height: 50px;
 			overflow: hidden;
-		}
+		}*/
 
 			.mf_media_button .mf_media_list td img
 			{
-				height: 50px;
+				height: 80px;
 				object-fit: cover;
 			}
 

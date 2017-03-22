@@ -1170,7 +1170,7 @@ function setting_base_recommend_callback()
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("Change WordPress URL", 'change-wp-url/change-wp-url.php', __("to change website URL", 'lang_base')),
-		//array("Email Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		//array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 		array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
@@ -1292,7 +1292,7 @@ function roles_option_to_array($option = '')
 
 function get_all_roles($data = array())
 {
-	global $wp_roles;
+	global $wpdb, $wp_roles;
 
 	if(!isset($data['orig'])){	$data['orig'] = false;}
 
@@ -2921,13 +2921,16 @@ function get_post_children($data, &$arr_data = array())
 	global $wpdb;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
-	if(!isset($data['current_id'])){		$data['current_id'] = "";}
+	if(!isset($data['output_array'])){		$data['output_array'] = true;}
+
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){			$data['post_type'] = "page";}
 	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
-	if(!isset($data['output_array'])){		$data['output_array'] = false;}
+	if(!isset($data['order_by'])){			$data['order_by'] = "menu_order";}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['count'])){				$data['count'] = false;}
+
+	if(!isset($data['current_id'])){		$data['current_id'] = "";}
 
 	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');
 
@@ -2960,7 +2963,7 @@ function get_post_children($data, &$arr_data = array())
 		$query_where .= " AND post_status NOT IN('".implode("','", $exclude_post_status)."')";
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".$query_where." ORDER BY menu_order ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".$query_where." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
 
 	if($data['count'] == true)
 	{

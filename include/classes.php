@@ -609,9 +609,9 @@ if(class_exists('RWMB_Field'))
 		static public function html($meta, $field)
 		{
 			return "<div class='map_wrapper'>"
-				.show_textfield(array('name' => "webshop_map_input", 'placeholder' => __("Search for your location", 'lang_webshop'), 'xtra' => " id='webshop_map_input'"))
+				.show_textfield(array('name' => "webshop_map_input", 'placeholder' => __("Search for your location", 'lang_base'), 'xtra' => " id='webshop_map_input'"))
 				."<div id='webshop_map'></div>"
-				.show_textfield(array('name' => $field['field_name'], 'value' => $meta, 'placeholder' => __("Coordinates will be displayed here", 'lang_webshop'), 'xtra' => " id='webshop_map_coords' class='rwmb-text'"))
+				.show_textfield(array('name' => $field['field_name'], 'value' => $meta, 'placeholder' => __("Coordinates will be displayed here", 'lang_base'), 'xtra' => " id='webshop_map_coords' class='rwmb-text'"))
 			."</div>";
 		}
 	}
@@ -623,7 +623,7 @@ if(class_exists('RWMB_Field'))
 			global $wpdb;
 
 			$arr_data = array();
-			get_post_children(array('add_choose_here' => true, 'output_array' => true), $arr_data);
+			get_post_children(array('add_choose_here' => true), $arr_data);
 
 			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta));
 		}
@@ -634,7 +634,7 @@ if(class_exists('RWMB_Field'))
 		static public function html($meta, $field)
 		{
 			return sprintf(
-				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", 'lang_webshop')."&hellip;'%s>",
+				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", 'lang_base')."&hellip;'%s>",
 				$field['field_name'],
 				$field['id'],
 				$meta,

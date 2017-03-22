@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-08 08:48+0100\n"
+"POT-Creation-Date: 2017-03-22 06:20+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -17,8 +17,8 @@ msgstr ""
 
 #: ../include/classes.php:43
 #, php-format
-msgid "We highly recommend that you install %s%s%s aswell"
-msgstr "Vi rekommenderar att du installerar %s%s%s också"
+msgid "We highly recommend that you install %s aswell"
+msgstr "Vi rekommenderar att du installerar %s också"
 
 #: ../include/classes.php:165
 #, php-format
@@ -31,7 +31,7 @@ msgid "Delete"
 msgstr "Radera"
 
 #: ../include/classes.php:451
-#: ../include/functions.php:1681
+#: ../include/functions.php:1686
 msgid "Search"
 msgstr "Sök"
 
@@ -88,10 +88,10 @@ msgstr "Kolla"
 #: ../include/classes.php:1414
 #: ../include/classes.php:1480
 #: ../include/classes.php:1538
-#: ../include/functions.php:1370
-#: ../include/functions.php:1404
-#: ../include/functions.php:1458
-#: ../include/functions.php:2927
+#: ../include/functions.php:1375
+#: ../include/functions.php:1409
+#: ../include/functions.php:1463
+#: ../include/functions.php:2931
 msgid "Choose here"
 msgstr "Välj här"
 
@@ -163,321 +163,330 @@ msgstr "Inställningar"
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/functions.php:68
+#: ../include/functions.php:85
 #, php-format
 msgid "The message was empty so I could not send %s to %s"
 msgstr "Meddelandet var tomt så jag kunde inte skicka %s till %s"
 
-#: ../include/functions.php:188
-#: ../include/functions.php:190
+#: ../include/functions.php:217
+#: ../include/functions.php:219
 msgid "Add Content"
 msgstr "Lägg till innehåll"
 
-#: ../include/functions.php:223
+#: ../include/functions.php:238
 msgid "Insert"
 msgstr "Lägg till"
 
-#: ../include/functions.php:224
+#: ../include/functions.php:239
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../include/functions.php:275
+#: ../include/functions.php:307
 #, php-format
 msgid "I was not allowed to drop %s and it still has data"
 msgstr "Jag har inte tillåtelse att radera %s och den innehåller fortfarande data"
 
-#: ../include/functions.php:280
-#, php-format
-msgid "I was not allowed to drop %s but at least it is empty now"
-msgstr "Jag har inte tillåtelse att radera %s men den är åtminstone tom"
-
-#: ../include/functions.php:470
+#: ../include/functions.php:501
 msgid "Yesterday"
 msgstr "Igår"
 
-#: ../include/functions.php:534
+#: ../include/functions.php:565
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:562
+#: ../include/functions.php:593
 msgid "Manually"
 msgstr "Manuellt"
 
-#: ../include/functions.php:563
+#: ../include/functions.php:594
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
 
-#: ../include/functions.php:564
+#: ../include/functions.php:595
 msgid "Every 10 Minutes"
 msgstr "Var tionde minut"
 
-#: ../include/functions.php:566
+#: ../include/functions.php:597
 msgid "Weekly"
 msgstr "Varje vecka"
 
-#: ../include/functions.php:567
+#: ../include/functions.php:598
 msgid "Monthly"
 msgstr "Varje månad"
 
-#: ../include/functions.php:695
+#: ../include/functions.php:714
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/functions.php:745
+#: ../include/functions.php:752
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-#: ../include/functions.php:755
-#: ../include/functions.php:793
+#: ../include/functions.php:762
+#: ../include/functions.php:800
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
 
-#: ../include/functions.php:756
-#: ../include/functions.php:794
+#: ../include/functions.php:763
+#: ../include/functions.php:801
 msgid "Unknown title"
 msgstr "Okänt namn"
 
-#: ../include/functions.php:785
+#: ../include/functions.php:792
 msgid "Add Image"
 msgstr "Lägg till bild"
 
-#: ../include/functions.php:786
+#: ../include/functions.php:793
 msgid "Change Image"
 msgstr "Byt bild"
 
-#: ../include/functions.php:787
+#: ../include/functions.php:794
 msgid "Insert Image"
 msgstr "Lägg in bild"
 
-#: ../include/functions.php:845
+#: ../include/functions.php:852
 msgid "The file couldn't be saved"
 msgstr "Filen kunde inte sparas"
 
-#: ../include/functions.php:959
+#: ../include/functions.php:966
 #, php-format
 msgid "You need to install the plugin %s%s%s first"
 msgstr "Du måste installera pluginet %s%s%s först"
 
-#: ../include/functions.php:1046
+#: ../include/functions.php:1053
 msgid "Unknown"
 msgstr "Okänt"
 
-#: ../include/functions.php:1089
+#: ../include/functions.php:1096
 msgid "Versions"
 msgstr "Versioner"
 
-#: ../include/functions.php:1091
+#: ../include/functions.php:1097
 msgid "Scheduled to run"
 msgstr "Schemalagd att köras"
 
-#: ../include/functions.php:1092
+#: ../include/functions.php:1098
 msgid "Recommendations"
 msgstr "Rekommendationer"
 
-#: ../include/functions.php:1108
+#: ../include/functions.php:1114
 msgid "Common"
 msgstr "Gemensamt"
 
-#: ../include/functions.php:1139
-#: ../include/functions.php:1154
+#: ../include/functions.php:1145
+#: ../include/functions.php:1160
 msgid "PHP"
 msgstr "PHP"
 
-#: ../include/functions.php:1140
-#: ../include/functions.php:1154
+#: ../include/functions.php:1146
+#: ../include/functions.php:1160
 msgid "MySQL"
 msgstr "MySQL"
 
-#: ../include/functions.php:1144
+#: ../include/functions.php:1150
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:1161
-msgid "to brand the login and admin area"
-msgstr "för att ändra utseende på login"
+#: ../include/functions.php:1169
+msgid "to get a graphical interface to the database"
+msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
 
-#: ../include/functions.php:1164
+#: ../include/functions.php:1170
 msgid "to backup all files and database to an external source"
 msgstr "för att ta backup av alla filer och databasen, och skicka till en extern plats"
 
-#: ../include/functions.php:1165
+#: ../include/functions.php:1171
 msgid "to get a WYSIWYG widget editor"
 msgstr "för att kunna ha WYSIWYG-fält i widgets"
 
-#: ../include/functions.php:1166
-msgid "to log all outgoing e-mails"
-msgstr "för att logga alla utgående e-post"
+#: ../include/functions.php:1172
+msgid "to change website URL"
+msgstr "för att kunna byta URL på webbplatsen"
 
-#: ../include/functions.php:1167
+#: ../include/functions.php:1174
 msgid "to be able to replace existing files by uploading a replacement"
 msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
-#: ../include/functions.php:1168
+#: ../include/functions.php:1175
 msgid "to add all the favicons needed"
 msgstr "för att kunna lägga till alla sk. favicons som kan behövas"
 
-#: ../include/functions.php:1169
-msgid "to compress and combine JS and CSS files"
-msgstr "för att komprimera och slå ihop JS- och CSS-filer"
+#: ../include/functions.php:1176
+msgid "to add a Sitemap XML to your site"
+msgstr "för att kunna skapa en Sitemap XML till din webbplats"
 
-#: ../include/functions.php:1170
-msgid "to add icons to menu items"
-msgstr "för att lägga till ikoner i menyer"
-
-#: ../include/functions.php:1172
+#: ../include/functions.php:1179
 msgid "to scan for potential time thiefs on your site"
 msgstr "för att skanna efter möjliga tidstjuvar på din webbsida"
 
-#: ../include/functions.php:1174
+#: ../include/functions.php:1181
 msgid "to redirect pages to internal or external URLs"
 msgstr "för att kunna dirigera om sidor till interna och externa URLer"
 
-#: ../include/functions.php:1175
+#: ../include/functions.php:1182
 msgid "to reorder posts with drag & drop"
 msgstr "för att sortera om sidor med musen"
 
-#: ../include/functions.php:1177
-msgid "to be able to add tables to posts"
-msgstr "för att kunna lägga in tabeller i texter"
-
-#: ../include/functions.php:1178
-msgid "to be able to edit roles"
-msgstr "för att kunna redigera roller"
-
-#: ../include/functions.php:1180
+#: ../include/functions.php:1183
 msgid "to losslessly compress all uploaded images"
 msgstr "för att komprimera bilder utan förlust av kvalité"
 
-#: ../include/functions.php:1181
+#: ../include/functions.php:1185
+msgid "to be able to add tables to posts"
+msgstr "för att kunna lägga in tabeller i texter"
+
+#: ../include/functions.php:1186
+msgid "to be able to edit roles"
+msgstr "för att kunna redigera roller"
+
+#: ../include/functions.php:1188
 msgid "to increase the speed of the public site"
 msgstr "för att öka hastigheten på den publika sidan"
 
-#: ../include/functions.php:1182
+#: ../include/functions.php:1189
 msgid "to setup custom SMTP settings"
 msgstr "för att kunna sätta egna SMTP-inställningar"
 
-#: ../include/functions.php:1238
+#: ../include/functions.php:1231
 #, php-format
 msgid "Next scheduled %s"
 msgstr "Nästa schemaläggning %s"
 
-#: ../include/functions.php:1242
+#: ../include/functions.php:1235
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/functions.php:1249
+#: ../include/functions.php:1242
 #, php-format
 msgid "Make sure that %s is added to %s"
 msgstr "Se till så att %s är med i %s"
 
-#: ../include/functions.php:1258
+#: ../include/functions.php:1251
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/functions.php:1382
-#: ../include/functions.php:1388
+#: ../include/functions.php:1316
+msgid "I could not find any roles for this site...?"
+msgstr "Jag kunde inte hitta någon roll till denna webbplats...?"
+
+#: ../include/functions.php:1387
+#: ../include/functions.php:1393
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:1383
-#: ../include/functions.php:1389
+#: ../include/functions.php:1388
+#: ../include/functions.php:1394
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:2688
+#: ../include/functions.php:2689
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:2808
+#: ../include/functions.php:2809
 #, php-format
 msgid "I am sorry but I did not have permission to access %s"
 msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 
-#: ../include/functions.php:2992
+#: ../include/functions.php:3013
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:2993
+#: ../include/functions.php:3014
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:2995
+#: ../include/functions.php:3016
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:3017
+#: ../include/functions.php:3038
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:3028
+#: ../include/functions.php:3049
 msgid "Saturday"
 msgstr "Lördag"
 
+#~ msgid "I was not allowed to drop %s but at least it is empty now"
+#~ msgstr "Jag har inte tillåtelse att radera %s men den är åtminstone tom"
+
+#~ msgid "to brand the login and admin area"
+#~ msgstr "för att ändra utseende på login"
+
+#~ msgid "to log all outgoing e-mails"
+#~ msgstr "för att logga alla utgående e-post"
+
+#~ msgid "to compress and combine JS and CSS files"
+#~ msgstr "för att komprimera och slå ihop JS- och CSS-filer"
+
+#~ msgid "to add icons to menu items"
+#~ msgstr "för att lägga till ikoner i menyer"

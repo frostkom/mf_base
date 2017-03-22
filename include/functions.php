@@ -1271,6 +1271,25 @@ function mf_enqueue_script($handle, $file = "", $translation = array())
 	}
 }
 
+function roles_option_to_array($option = '')
+{
+	global $wpdb;
+
+	if($option == '' || is_array($option) && count($option) == 0)
+	{
+		$option = get_option($wpdb->prefix.'user_roles');
+	}
+
+	$roles = array();
+
+	foreach($option as $key => $value)
+	{
+		$roles[$key] = $value['name'];
+	}
+
+	return $roles;
+}
+
 function get_all_roles($data = array())
 {
 	global $wp_roles;
@@ -1279,19 +1298,7 @@ function get_all_roles($data = array())
 
 	if($data['orig'] == true)
 	{
-		$roles_temp = get_option('wp_user_roles_orig');
-
-		if($roles_temp == '')
-		{
-			$roles_temp = get_option('wp_user_roles');
-		}
-
-		$roles = array();
-
-		foreach($roles_temp as $key => $value)
-		{
-			$roles[$key] = $value['name'];
-		}
+		$roles = roles_option_to_array(get_option($wpdb->prefix.'user_roles_orig'));
 	}
 
 	else
@@ -1302,6 +1309,11 @@ function get_all_roles($data = array())
 		}
 
 		$roles = $wp_roles->get_names();
+	}
+
+	if(count($roles) == 0)
+	{
+		do_log(__("I could not find any roles for this site...?", 'lang_base'));
 	}
 
 	if(isset($data['allowed']))

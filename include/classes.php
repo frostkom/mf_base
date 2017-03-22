@@ -588,6 +588,62 @@ class mf_list_table extends WP_List_Table
 	}
 }
 
+if(class_exists('RWMB_Field'))
+{
+	class RWMB_Clock_Field extends RWMB_Field
+	{
+		static public function html($meta, $field)
+		{
+			return sprintf(
+				"<input type='text' name='%s' id='%s' value='%s' class='rwmb-text rwmb-clock' placeholder='18.00-03.00&hellip;'%s>", // pattern='[\d\s\:\.-]*'
+				$field['field_name'],
+				$field['id'],
+				$meta,
+				self::render_attributes($field['attributes'])
+			);
+		}
+	}
+
+	class RWMB_Gps_Field extends RWMB_Field
+	{
+		static public function html($meta, $field)
+		{
+			return "<div class='map_wrapper'>"
+				.show_textfield(array('name' => "webshop_map_input", 'placeholder' => __("Search for your location", 'lang_webshop'), 'xtra' => " id='webshop_map_input'"))
+				."<div id='webshop_map'></div>"
+				.show_textfield(array('name' => $field['field_name'], 'value' => $meta, 'placeholder' => __("Coordinates will be displayed here", 'lang_webshop'), 'xtra' => " id='webshop_map_coords' class='rwmb-text'"))
+			."</div>";
+		}
+	}
+
+	class RWMB_Page_Field extends RWMB_Field
+	{
+		static public function html($meta, $field)
+		{
+			global $wpdb;
+
+			$arr_data = array();
+			get_post_children(array('add_choose_here' => true, 'output_array' => true), $arr_data);
+
+			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta));
+		}
+	}
+
+	class RWMB_Phone_Field extends RWMB_Field
+	{
+		static public function html($meta, $field)
+		{
+			return sprintf(
+				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", 'lang_webshop')."&hellip;'%s>",
+				$field['field_name'],
+				$field['id'],
+				$meta,
+				self::render_attributes($field['attributes'])
+			);
+		}
+	}
+}
+
 class pagination
 {
 	function __construct()
@@ -706,8 +762,6 @@ class settings_page
 	}
 }
 
-//
-######################
 class mf_encryption 
 {
 	function __construct($type)
@@ -741,7 +795,6 @@ class mf_encryption
 		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
 	}
 }
-######################
 
 class mf_font_icons
 {

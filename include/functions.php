@@ -1409,6 +1409,11 @@ function get_roles_for_select($data = array())
 		$data['array'][''] = "-- ".__("Choose here", 'lang_base')." --";
 	}
 
+	if(is_multisite() && $data['use_capability'] == true)
+	{
+		$data['array']['update_core'] = __("Super Admin", 'lang_base');
+	}
+
 	$roles = get_all_roles();
 
 	foreach($roles as $key => $value)

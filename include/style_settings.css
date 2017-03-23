@@ -1,7 +1,33 @@
 @media all
 {
-	.wrap > form
+	.nav-tab-wrapper
+	{
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: -webkit-flex;
+		display: flex;
+	}
+
+		h3 .nav-tab
+		{
+			-webkit-box-flex: 1 1 0;
+			-webkit-flex: 1 1 0;
+			-ms-flex: 1 1 0;
+			flex: 1 1 0;
+			margin: 0 .2em;
+			overflow: hidden;
+			text-align: center;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+			h3 .nav-tab:hover, h3 .nav-tab.nav-tab-active
+			{
+				overflow: unset;
+			}
+
+	/*.wrap > form
 	{
 		margin-top: -3em;
-	}
+	}*/
 }

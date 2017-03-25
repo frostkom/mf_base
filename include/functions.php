@@ -1,5 +1,36 @@
 <?php
 
+function get_user_info($data = array())
+{
+	if(!isset($data['id'])){	$data['id'] = get_current_user_id();}
+	if(!isset($data['type'])){	$data['type'] = 'name';}
+
+	$user_data = get_userdata($data['id']);
+
+	switch($data['type'])
+	{
+		case 'name':
+			return $user_data->display_name;
+		break;
+
+		case 'shortname':
+		case 'short_name':
+			$display_name = $user_data->display_name;
+
+			$arr_name = explode(" ", $display_name);
+
+			$short_name = "";
+
+			foreach($arr_name as $name)
+			{
+				$short_name .= substr($name, 0, 1);
+			}
+
+			return "<span title='".$display_name."'>".$short_name."</span>";
+		break;
+	}
+}
+
 function after_title_base()
 {
 	global $post, $wp_meta_boxes;
@@ -97,7 +128,7 @@ function shorten_text($data)
 
 	if(strlen($data['string']) > $data['limit'])
 	{
-		$out = trim(substr($data['string'], 0, $data['limit']))."&hellip;";
+		$out = trim(mb_substr($data['string'], 0, $data['limit']))."&hellip;";
 
 		if($data['count'] == true)
 		{
@@ -1083,12 +1114,13 @@ function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
 	if(!isset($data['settings'])){	$data['settings'] = array();}
+	if(!isset($data['callback'])){	$data['callback'] = '';}
 
 	foreach($data['settings'] as $handle => $text)
 	{
 		add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area']);
 
-		register_setting(BASE_OPTIONS_PAGE, $handle);
+		register_setting(BASE_OPTIONS_PAGE, $handle, $data['callback']);
 	}
 }
 

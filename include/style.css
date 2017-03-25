@@ -52,6 +52,11 @@
 		width: 100%;
 	}
 
+		.widefat th
+		{
+			vertical-align: top;
+		}
+
 	.striped > tbody > tr:nth-child(2n+1), ul.striped > li:nth-child(2n+1)
 	{
 		background-color: #f9f9f9;
@@ -60,6 +65,7 @@
 	.row-actions
 	{
 		color: #999;
+		white-space: nowrap;
 	}
 
 	.fa, .pointer
@@ -405,10 +411,11 @@
 				margin: .6em .6em 0 0;
 			}
 
-		.ui-helper-clearfix.ui-helper-clearfix
+		/* This hides date/year in admin when using datepicker */
+		/*.ui-helper-clearfix.ui-helper-clearfix
 		{
 			display: none;
-		}
+		}*/
 
 	.mf_form_results .form_radio
 	{

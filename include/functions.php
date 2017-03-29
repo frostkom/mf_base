@@ -1,5 +1,22 @@
 <?php
 
+function get_toggler_container($data)
+{
+	if(!isset($data['open'])){	$data['open'] = false;}
+
+	switch($data['type'])
+	{
+		case 'start':
+			return "<label class='toggler".($data['open'] ? " open" : "")."'><i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i><span>".$data['text']."</span></label>
+			<div class='toggle_container".($data['open'] ? "" : " hide")."'>";
+		break;
+
+		case 'end':
+			return "</div>";
+		break;
+	}
+}
+
 function get_user_info($data = array())
 {
 	if(!isset($data['id'])){	$data['id'] = get_current_user_id();}
@@ -1467,6 +1484,51 @@ function get_roles_for_select($data = array())
 	}
 
 	return $data['array'];
+}
+
+function get_post_types_for_select()
+{
+	$arr_pages = array();
+	get_post_children(array(), $arr_pages);
+
+	$arr_data = array();
+
+	$arr_data["is_404()"] = __("404", 'lang_base');
+	//$arr_data["is_archive()"] = __("Archive", 'lang_base');
+	//$arr_data["is_category()"] = __("Category", 'lang_base');
+	//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
+	//$arr_data["is_home()"] = __("Home", 'lang_base');
+	//$arr_data["is_page()"] = __("Page", 'lang_base');
+	//$arr_data['is_singular("post")'] = __("Post", 'lang_base');
+	$arr_data["is_search()"] = __("Search", 'lang_base');
+	//$arr_data["is_single()"] = __("Single", 'lang_base');
+	//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
+
+	$arr_data["opt_start_post_types"] = __("Post Types", 'lang_base');
+
+		foreach(get_post_types(array('public' => true), 'objects') as $post_type)
+		{
+			if(!in_array($post_type->name, array('attachment')))
+			{
+				$arr_data['is_singular("'.$post_type->name.'")'] = $post_type->label;
+			}
+		}
+
+	$arr_data["opt_end_post_types"] = "";
+
+	if(count($arr_pages) > 0)
+	{
+		$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
+
+			foreach($arr_pages as $post_id => $post_title)
+			{
+				$arr_data["is_page(".$post_id.")"] = $post_title;
+			}
+
+		$arr_data["opt_end_pages"] = "";
+	}
+
+	return $arr_data;
 }
 
 function get_posts_for_select($data)

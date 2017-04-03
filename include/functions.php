@@ -283,8 +283,8 @@ function add_shortcode_display_base()
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
 				.apply_filters('get_shortcode_output', '')
-				.show_button(array('text' => __("Insert", 'lang_base'))) //, 'xtra' => " onclick='insert_form()'"
-				.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary")) //, 'xtra' => " onclick='tb_remove()'"
+				.show_button(array('text' => __("Insert", 'lang_base')))
+				.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary"))
 			."</div>
 		</div>";
 	}
@@ -824,7 +824,7 @@ function get_media_button($data = array())
 
 			$out .= "<div class='mf_media_raw'></div>
 			<table class='mf_media_list widefat striped'></table>"
-			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => " class='mf_media_urls'"))
+			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"))
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
 		."</div>";
 	}

@@ -205,22 +205,6 @@
 			margin-bottom: 1em;
 		}
 
-	.form_inline
-	{
-		background: #fff;
-		border: 1px solid #e1e1e1;
-		padding: .8em .8em 0;
-		position: absolute;
-		min-width: 400px;
-		max-width: 100%;
-		z-index: 1;
-	}
-
-		.form_inline h2
-		{
-			margin-bottom: .4em;
-		}
-
     .mf_form
     {
         overflow: hidden;   

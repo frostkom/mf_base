@@ -65,9 +65,6 @@ if(!function_exists('get_post_title'))
 	}
 }
 
-//https://developer.wordpress.org/reference/functions/wp_mail/
-//http://wordpress.stackexchange.com/a/191974
-//http://stackoverflow.com/a/2564472
 function phpmailer_init_base($phpmailer)
 {
 	if($phpmailer->ContentType == 'text/html')
@@ -90,19 +87,6 @@ function contains_html($string)
 		return false;
 	}
 }
-
-/*function contains_urls($string)
-{
-	if(preg_match("/(http|https|ftp|ftps)\:/i", $string))
-	{
-		return true;
-	}
-
-	else
-	{
-		return false;
-	}
-}*/
 
 function set_html_content_type()
 {
@@ -294,11 +278,6 @@ function meta_boxes_script_base()
 {
 	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js");
 }
-
-/*function admin_init_base()
-{
-	new recommend_plugin(array('path' => "github-updater/github-updater.php", 'name' => "GitHub Updater", 'url' => "//github.com/afragen/github-updater"));
-}*/
 
 function replace_option($data)
 {
@@ -1774,34 +1753,6 @@ function get_notification()
 	return $out;
 }
 
-function get_list_navigation($resultPagination)
-{
-	global $wpdb, $intLimitAmount, $strSearch;
-
-	$out = "";
-
-	$rowsPagination = $wpdb->num_rows;
-
-	if($rowsPagination > $intLimitAmount || $strSearch != '')
-	{
-		$out .= "<form method='post' action='".preg_replace("/\&paged\=\d+/", "", $_SERVER['REQUEST_URI'])."'>
-			<p class='search-box'>
-				<input type='search' name='s' value='".$strSearch."'>"
-				.show_button(array('text' => __("Search", 'lang_base'), 'class' => "button"))
-			."</p>
-		</form>";
-	}
-
-	if($rowsPagination > 0)
-	{
-		$pagination_obj = new pagination();
-
-		$out .= $pagination_obj->show(array('result' => $resultPagination));
-	}
-
-	return $out;
-}
-
 function add_columns($array)
 {
 	global $wpdb;
@@ -3164,6 +3115,8 @@ function day_name($day_no, $ucfirst = 1)
 
 function get_meta_image_url($post_id, $meta_key)
 {
+	do_log(sprintf(__("%s is deprecated", 'lang_base'), __FUNCTION__));
+
 	$image_id = get_post_meta($post_id, $meta_key, true);
 
 	$image_array = wp_get_attachment_image_src($image_id, 'full');
@@ -3171,20 +3124,32 @@ function get_meta_image_url($post_id, $meta_key)
 	return $image_array[0];
 }
 
-/*function footer_base()
+function get_list_navigation($resultPagination)
 {
-	if(get_option('setting_base_requests') == 1)
+	do_log(sprintf(__("%s is deprecated", 'lang_base'), __FUNCTION__));
+
+	global $wpdb, $intLimitAmount, $strSearch;
+
+	$out = "";
+
+	$rowsPagination = $wpdb->num_rows;
+
+	if($rowsPagination > $intLimitAmount || $strSearch != '')
 	{
-		echo "<mf-debug>"
-			.var_export($_REQUEST, true)
-		."</mf-debug>";
+		$out .= "<form method='post' action='".preg_replace("/\&paged\=\d+/", "", $_SERVER['REQUEST_URI'])."'>
+			<p class='search-box'>
+				<input type='search' name='s' value='".$strSearch."'>"
+				.show_button(array('text' => __("Search", 'lang_base'), 'class' => "button"))
+			."</p>
+		</form>";
 	}
 
-	if(get_option('setting_base_perfbar') == 1)
+	if($rowsPagination > 0)
 	{
-		if(is_user_logged_in() && IS_ADMIN)
-		{
-			mf_enqueue_script('script_base_perfbar', plugin_dir_url(__FILE__)."perfbar_script.js");
-		}
+		$pagination_obj = new pagination();
+
+		$out .= $pagination_obj->show(array('result' => $resultPagination));
 	}
-}*/
+
+	return $out;
+}

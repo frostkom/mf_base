@@ -42,7 +42,42 @@
 	.toggler
 	{
 		cursor: pointer;
+		margin-top: .5em;
+		margin-bottom: .5em;
+		padding: .5em 1em .3em;
 	}
+
+		.toggler.open
+		{
+			margin-bottom: 0;
+		}
+
+		.toggler .fa
+		{
+			margin-right: .4em;
+		}
+
+	.toggle_container
+	{
+		margin: 0 0 .5em 0;
+		overflow: hidden;
+		padding: .5em 1em;
+	}
+
+		.toggle_container li + li
+		{
+			margin-top: 1em;
+		}
+
+			.toggle_container p
+			{
+				margin: 0 0 .2em !important;
+			}
+
+			.toggle_container a
+			{
+				color: inherit;
+			}
 
 	.widefat
 	{

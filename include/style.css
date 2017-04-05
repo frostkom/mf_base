@@ -242,14 +242,14 @@
 
     .mf_form
     {
-        overflow: hidden;   
+        overflow: hidden;
     }
-    
+
         .mf_form > div, .mf_form .clear.clear.clear
         {
             clear: both;
         }
-    
+
         .mf_form .left_col
         {
             clear: left;
@@ -257,7 +257,7 @@
 			margin-right: 2%;
             width: 48%;
         }
-        
+
         .mf_form .right_col
         {
             clear: right;
@@ -265,7 +265,7 @@
 			margin-left: 2%;
             width: 48%;
         }
-        
+
         .mf_form label
         {
 			cursor: pointer;
@@ -365,24 +365,24 @@
 				{
 					white-space: nowrap;
 				}
-    
+   
 		.mf_form .form_checkbox, .mf_form .form_radio
         {
             margin-bottom: 10px;
         }
-    
+   
 			.mf_form .form_checkbox label, .mf_form .form_radio label
 			{
 				display: inline;
 			}
-    
+   
             .mf_form .form_checkbox input, .mf_form .form_radio input
             {
 				display: inline;
                 margin-right: 2%;
 				margin-bottom: -.4em;
             }
-    
+   
                 .mf_form .input-buttons.input-button-size-2
 				{
 					margin-left: -43px;
@@ -400,7 +400,7 @@
 					text-align: center;
 				}
 
-				.mf_form .form_zipcode span
+				.mf_form .form_zipcode > span
 				{
 					float: left;
 					line-height: 2.7;

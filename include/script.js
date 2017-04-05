@@ -12,7 +12,7 @@ jQuery(function($)
 
 	if(typeof collect_on_load == 'function')
 	{
-		collect_on_load('on_load_base'); 
+		collect_on_load('on_load_base');
 	}
 
 	$(document).on('click', 'a[rel=external]', function(e)

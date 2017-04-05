@@ -735,10 +735,10 @@ class settings_page
 	public function add_plugin_page()
 	{
 		add_options_page(
-			__("My Settings", 'lang_base'), 
 			__("My Settings", 'lang_base'),
-			'manage_options', 
-			$this->options_page, 
+			__("My Settings", 'lang_base'),
+			'manage_options',
+			$this->options_page,
 			array($this, 'create_admin_page')
 		);
 	}
@@ -750,19 +750,23 @@ class settings_page
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
-			<h3 id='nav-tab-wrapper' class='nav-tab-wrapper'></h3>
-			<form method='post' action='options.php'>";
+			<div class='settings-wrap'>
+				<div class='settings-nav'>
+					<div class='mainnav contextual-help-tabs'><ul></ul></div>
+				</div>
+				<form method='post' action='options.php' class='settings-tabs'>";
 
-				settings_fields($this->options_page);
-				do_settings_sections($this->options_page);
-				submit_button(); 
+					settings_fields($this->options_page);
+					do_settings_sections($this->options_page);
+					submit_button();
 
-			echo "</form>
+				echo "</div>
+			</div>
 		</div>";
 	}
 }
 
-class mf_encryption 
+class mf_encryption
 {
 	function __construct($type)
 	{

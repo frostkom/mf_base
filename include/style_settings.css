@@ -1,34 +1,30 @@
 @media all
 {
-	.nav-tab-wrapper
+	.contextual-help-tabs .active
 	{
+		margin-left: -2px;
+	}
+
+	.settings-wrap
+	{
+		border: 1px solid #ccc;
 		display: -webkit-box;
 		display: -ms-flexbox;
 		display: -webkit-flex;
 		display: flex;
+		margin-top: 15px;
+		min-height: 80vh;
 	}
 
-		h3 .nav-tab
+		.settings-tabs
 		{
+			background: #fff;
+			border-left: 1px solid #ccc;
 			-webkit-box-flex: 1 1 0;
 			-webkit-flex: 1 1 0;
 			-ms-flex: 1 1 0;
 			flex: 1 1 0;
-			margin-left: .2em;
-			margin-right: .2em;
 			overflow: hidden;
-			text-align: center;
-			text-overflow: ellipsis;
-			white-space: nowrap;
+			padding: .5em 2em;
 		}
-
-			h3 .nav-tab:hover, h3 .nav-tab.nav-tab-active
-			{
-				overflow: unset;
-			}
-
-	/*.wrap > form
-	{
-		margin-top: -3em;
-	}*/
 }

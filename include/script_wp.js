@@ -59,7 +59,7 @@ jQuery(function($)
 			{
 				notification.onclick = function()
 				{
-					window.open(value.link);      
+					window.open(value.link);
 				};
 			}
 		}

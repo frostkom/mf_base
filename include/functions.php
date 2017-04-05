@@ -174,7 +174,7 @@ function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $h
 					if(val > 1000000){		return (val / 1000000).toFixed(axis.tickDecimals) + ' MB';}
 					else if(val > 1000){	return (val / 1000).toFixed(axis.tickDecimals) + ' kB';}
 					else{					return val.toFixed(axis.tickDecimals) + ' ';}
-				}", 
+				}",
 			$settings);
 		}
 
@@ -717,7 +717,7 @@ function init_base()
 	{
 		$is_editor = $is_author = true;
 	}
-	
+
 	else if(current_user_can('upload_files'))
 	{
 		$is_author = true;
@@ -3007,7 +3007,7 @@ function get_post_children($data, &$arr_data = array())
 	{
 		$query_where .= " AND post_status = '".$data['post_status']."'";
 	}
-	
+
 	else
 	{
 		$query_where .= " AND post_status NOT IN('".implode("','", $exclude_post_status)."')";

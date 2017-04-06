@@ -1531,7 +1531,17 @@ function get_posts_for_select($data)
 
 	else
 	{
-		$query_where .= " AND post_type NOT IN('nav_menu_item', 'mf_custom_item')";
+		$arr_exclude = array();
+
+		foreach(get_post_types(array('public' => false), 'objects') as $post_type)
+		{
+			$arr_exclude[] = $post_type->name;
+		}
+
+		if(count($arr_exclude) > 0)
+		{
+			$query_where .= " AND post_type NOT IN('".implode("','", $arr_exclude)."')";
+		}
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type, post_title FROM ".$wpdb->posts." WHERE post_status = %s AND post_parent = '%d'".$query_where." ORDER BY post_type ASC, ".esc_sql($data['order']), $data['post_status'], $data['post_parent']));

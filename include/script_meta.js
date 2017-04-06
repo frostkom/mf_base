@@ -6,7 +6,7 @@ jQuery(function($)
 			condition_type = dom_obj.attr('condition_type'),
 			condition_field = dom_obj.attr('condition_field'),
 			condition_value = dom_obj.attr('condition_value') || '',
-			condition_default = dom_obj.attr('condition_default') || '',
+			condition_default = dom_obj.attr('condition_default'),
 			dom_field = $('#' + condition_field),
 			dom_parent = dom_field.parents('.rwmb-field'),
 			statement_is = dom_value == condition_value;
@@ -24,7 +24,10 @@ jQuery(function($)
 					dom_parent.addClass('hide');
 				}
 
-				dom_field.val(condition_default);
+				if(typeof condition_default != 'undefined')
+				{
+					dom_field.val(condition_default);
+				}
 			break;
 
 			case 'hide_if':
@@ -38,7 +41,10 @@ jQuery(function($)
 					dom_parent.removeClass('hide');
 				}
 
-				dom_field.val(condition_default);
+				if(typeof condition_default != 'undefined')
+				{
+					dom_field.val(condition_default);
+				}
 			break;
 		}
 	}

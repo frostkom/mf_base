@@ -15,6 +15,27 @@ jQuery(function($)
 		collect_on_load('on_load_base');
 	}
 
+	$.fn.nextElementInDom = function(selector, options)
+	{
+		var defaults = { stopAt : 'body' };
+		options = $.extend(defaults, options);
+
+		var parent = $(this).parent(),
+			found = parent.next(selector); //find -> next
+
+		switch(true)
+		{
+			case (found.length > 0):
+			return found;
+
+			case (parent.length === 0 || parent.is(options.stopAt)):
+			return $([]);
+
+			default:
+			return parent.nextElementInDom(selector);
+		}
+    };
+
 	$(document).on('click', 'a[rel=external]', function(e)
 	{
 		if(e.which != 3)
@@ -43,6 +64,6 @@ jQuery(function($)
 	{
 		$(this).children('.fa').toggleClass('fa-caret-right fa-caret-down');
 
-		$(this).toggleClass('open').next('.toggle_container').toggleClass('hide');
+		$(this).toggleClass('open').nextElementInDom('.toggle_container').toggleClass('hide');
 	});
 });

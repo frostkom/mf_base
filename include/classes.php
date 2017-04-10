@@ -751,8 +751,8 @@ class settings_page
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
 			<div class='settings-wrap'>
-				<div class='settings-nav'>
-					<div class='mainnav contextual-help-tabs'><ul></ul></div>
+				<div class='settings-nav contextual-help-tabs'>
+					<ul></ul>
 				</div>
 				<form method='post' action='options.php' class='settings-tabs'>";
 

@@ -53,6 +53,13 @@ jQuery(function($)
 
 			$.each(arr_tabs, function(index, value)
 			{
+				if(value.name.indexOf(' - ') > -1)
+				{
+					var arr_name = value.name.split(' - ');
+
+					value.name = ' - ' + arr_name[1];
+				}
+
 				var tab_label = "<li><a href='#" + value.id + "' id='tab_" + value.id + "'>" + value.name + "</a></li>";
 
 				if(value.id == "settings_base")

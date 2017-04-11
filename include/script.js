@@ -64,6 +64,22 @@ jQuery(function($)
 	{
 		$(this).children('.fa').toggleClass('fa-caret-right fa-caret-down');
 
-		$(this).toggleClass('open').nextElementInDom('.toggle_container').toggleClass('hide');
+		var toggle_container = $(this).next('.toggle_container');
+
+		if(toggle_container.length == 0)
+		{
+			toggle_container = $(this).nextElementInDom('.toggle_container')
+		}
+
+		if(toggle_container.length == 0)
+		{
+			console.log("Could not find .toggle_container");
+		}
+
+		else
+		{
+			$(this).toggleClass('open');
+			toggle_container.toggleClass('hide');
+		}
 	});
 });

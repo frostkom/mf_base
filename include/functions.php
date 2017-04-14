@@ -738,7 +738,7 @@ function init_base()
 	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
 	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
-	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')));
 }
 
 function get_file_icon($file)
@@ -1101,9 +1101,28 @@ function int2point($in)
 
 function point2int($in)
 {
-	@list($main_version, $minor_version, $sub_version) = explode(".", $in, 3);
+	$arr_version = explode(".", $in);
 
-	return ($main_version * 10000) + ($minor_version * 100) + $sub_version;
+	$count_temp = count($arr_version);
+
+	while($count_temp < 3)
+	{
+		$arr_version[] = 0;
+
+		$count_temp++;
+	}
+
+	$str_version = 0;
+	$multiplier = 1;
+
+	for($i = 1; $i <= $count_temp; $i++)
+	{
+		$str_version += $arr_version[$count_temp - $i] * $multiplier;
+
+		$multiplier *= 100;
+	}
+
+	return $str_version;
 }
 
 function show_settings_fields($data)
@@ -1127,6 +1146,8 @@ function settings_header($id, $title)
 
 function settings_base()
 {
+	global $wpdb;
+
 	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
@@ -1141,6 +1162,7 @@ function settings_base()
 	$arr_settings = array(
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+		'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
 		'setting_base_recommend' => __("Recommendations", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
@@ -1197,43 +1219,6 @@ function setting_base_info_callback()
 	}
 }
 
-function setting_base_recommend_callback()
-{
-	$arr_recommendations = array(
-		//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
-		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
-		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
-		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
-		//array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
-		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
-		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
-		//array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
-		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
-		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
-		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
-		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
-		array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
-		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
-		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
-		//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
-		array("WP jQuery Lightbox", 'wp-jquery-lightbox/wp-jquery-lightbox.php', __("to add lightboxes to your site", 'lang_base')),
-		//array("WP Fastest Cache", 'wp-fastest-cache/wpFastestCache.php', __("to increase the speed of the public site", 'lang_base')),
-		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
-		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
-	);
-
-	foreach($arr_recommendations as $value)
-	{
-		$name = $value[0];
-		$path = $value[1];
-		$text = isset($value[2]) ? $value[2] : "";
-
-		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
-	}
-}
-
 function setting_base_cron_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
@@ -1278,6 +1263,50 @@ function setting_base_cron_callback()
 		}
 
 		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+	}
+}
+
+function setting_base_external_links_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key, 'yes');
+
+	echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+}
+
+function setting_base_recommend_callback()
+{
+	$arr_recommendations = array(
+		//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
+		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
+		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
+		//array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
+		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+		array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
+		//array("JS & CSS Script Optimizer", 'js-css-script-optimizer/js-css-script-optimizer.php', __("to compress and combine JS and CSS files", 'lang_base')),
+		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
+		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
+		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
+		array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
+		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
+		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
+		//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
+		//array("WP Fastest Cache", 'wp-fastest-cache/wpFastestCache.php', __("to increase the speed of the public site", 'lang_base')),
+		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
+		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
+	);
+
+	foreach($arr_recommendations as $value)
+	{
+		$name = $value[0];
+		$path = $value[1];
+		$text = isset($value[2]) ? $value[2] : "";
+
+		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
 }
 
@@ -3138,8 +3167,6 @@ function get_meta_image_url($post_id, $meta_key)
 
 function get_list_navigation($resultPagination)
 {
-	do_log(sprintf(__("%s is deprecated", 'lang_base'), __FUNCTION__));
-
 	global $wpdb, $intLimitAmount, $strSearch;
 
 	$out = "";

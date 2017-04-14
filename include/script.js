@@ -36,14 +36,17 @@ jQuery(function($)
 		}
     };
 
-	$(document).on('click', 'a[rel=external]', function(e)
+	if(script_base.external_links == 'yes')
 	{
-		if(e.which != 3)
+		$(document).on('click', 'a[rel=external]', function(e)
 		{
-			window.open($(this).attr('href'));
-			return false;
-		}
-	});
+			if(e.which != 3)
+			{
+				window.open($(this).attr('href'));
+				return false;
+			}
+		});
+	}
 
 	$(document).on('click', 'a[rel=confirm], button[rel=confirm], .delete > a', function()
 	{

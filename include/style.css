@@ -283,7 +283,7 @@
 			width: 100%;
         }
 
-			.mf_form .form_textfield input, .mf_form select
+			.mf_form .form_textfield input, .mf_form select, .mf_form .form_password input
 			{
 				min-height: 2.7em;
 			}

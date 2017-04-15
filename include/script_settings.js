@@ -48,7 +48,7 @@ jQuery(function($)
 		{
 			arr_tabs.sort(function(a, b)
 			{
-				return a.name < b.name ? -1 : 1;
+				return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
 			});
 
 			$.each(arr_tabs, function(index, value)

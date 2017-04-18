@@ -1099,32 +1099,6 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
 }
 
-function point2int($in)
-{
-	$arr_version = explode(".", $in);
-
-	$count_temp = count($arr_version);
-
-	while($count_temp < 3)
-	{
-		$arr_version[] = 0;
-
-		$count_temp++;
-	}
-
-	$str_version = 0;
-	$multiplier = 1;
-
-	for($i = 1; $i <= $count_temp; $i++)
-	{
-		$str_version += $arr_version[$count_temp - $i] * $multiplier;
-
-		$multiplier *= 100;
-	}
-
-	return $str_version;
-}
-
 function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
@@ -2415,7 +2389,7 @@ function show_select($data)
 			}
 
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			$data['xtra'] .= " multiple size='".$size."'";
+			$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."multiple size='".$size."'";
 
 			$container_class = "form_select form_select_multiple";
 		}
@@ -2427,7 +2401,7 @@ function show_select($data)
 
 		if($data['required'])
 		{
-			$data['xtra'] .= " required";
+			$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."required";
 		}
 
 		if($count_temp == 1 && $data['required'] && $data['text'] != '')
@@ -2452,7 +2426,7 @@ function show_select($data)
 					$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 				}
 
-				$out .= "<select".($data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'" : "")."".$data['xtra'].">";
+				$out .= "<select".($data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'" : "").($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
 
 					foreach($data['data'] as $key => $option)
 					{

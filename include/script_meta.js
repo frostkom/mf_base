@@ -3,49 +3,44 @@ jQuery(function($)
 	function check_condition(dom_obj)
 	{
 		var dom_value = dom_obj.val(),
+			dom_parent = dom_obj.parents('.rwmb-field'),
 			condition_type = dom_obj.attr('condition_type'),
 			condition_field = dom_obj.attr('condition_field'),
 			condition_value = dom_obj.attr('condition_value') || '',
 			condition_default = dom_obj.attr('condition_default'),
-			dom_field = $('#' + condition_field),
-			dom_parent = dom_field.parents('.rwmb-field'),
-			statement_is = dom_value == condition_value;
+			field_obj = $((condition_field.substr(0, 1) == '#' ? '' : '#') + condition_field),
+			field_parent = field_obj.parents('.rwmb-field');
 
 		switch(condition_type)
 		{
 			case 'show_if':
-				if(statement_is == true)
+				if(dom_value == condition_value)
 				{
-					dom_parent.removeClass('hide');
+					field_parent.removeClass('hide');
 				}
 
 				else
 				{
-					dom_parent.addClass('hide');
-				}
-
-				if(typeof condition_default != 'undefined')
-				{
-					dom_field.val(condition_default);
+					field_parent.addClass('hide');
 				}
 			break;
 
 			case 'hide_if':
-				if(statement_is == true)
+				if(dom_value == condition_value)
 				{
-					dom_parent.addClass('hide');
+					field_parent.addClass('hide');
 				}
 
 				else
 				{
-					dom_parent.removeClass('hide');
-				}
-
-				if(typeof condition_default != 'undefined')
-				{
-					dom_field.val(condition_default);
+					field_parent.removeClass('hide');
 				}
 			break;
+		}
+
+		if(typeof condition_default != 'undefined')
+		{
+			field_obj.val(condition_default);
 		}
 	}
 

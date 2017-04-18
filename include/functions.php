@@ -1,5 +1,16 @@
 <?php
 
+function get_plugin_version($file)
+{
+	$plugin_dir = plugin_dir_path($file)."index.php";
+
+	$plugin_dir = str_replace("include/", "", $plugin_dir);
+
+	$arr_plugin_data = get_plugin_data($plugin_dir);
+
+	return $arr_plugin_data['Version'];
+}
+
 function get_toggler_container($data)
 {
 	if(!isset($data['open'])){	$data['open'] = false;}
@@ -262,7 +273,7 @@ function add_shortcode_display_base()
 
 	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 	{
-		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js");
+		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", array(), get_plugin_version(__FILE__));
 
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
@@ -276,7 +287,7 @@ function add_shortcode_display_base()
 
 function meta_boxes_script_base()
 {
-	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js");
+	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", array(), get_plugin_version(__FILE__));
 }
 
 function replace_option($data)
@@ -738,7 +749,7 @@ function init_base()
 	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
 	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
 
-	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')));
+	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), get_plugin_version(__FILE__));
 }
 
 function get_file_icon($file)
@@ -788,7 +799,7 @@ function get_media_button($data = array())
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
-		));
+		), get_plugin_version(__FILE__));
 
 		$out .= "<div class='mf_media_button'>";
 
@@ -827,7 +838,7 @@ function get_file_button($data)
 		'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 		'unknown_title' => __("Unknown title", 'lang_base'),
 		'adminurl' => get_admin_url(), 'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text,
-	));
+	), get_plugin_version(__FILE__));
 
 	return "<div class='mf_image_button'>
 		<div".($data['value'] != '' ? "" : " class='hide'").">
@@ -1125,7 +1136,7 @@ function settings_base()
 	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
 
 	wp_enqueue_script('jquery-ui-autocomplete');
-	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')));
+	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), get_plugin_version(__FILE__));
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
@@ -1271,7 +1282,7 @@ function setting_base_recommend_callback()
 		//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 		//array("WP Fastest Cache", 'wp-fastest-cache/wpFastestCache.php', __("to increase the speed of the public site", 'lang_base')),
 		array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base')),
-		array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
+		//array("WP-Mail-SMTP", 'wp-mail-smtp/wp_mail_smtp.php', __("to setup custom SMTP settings", 'lang_base')),
 	);
 
 	foreach($arr_recommendations as $value)
@@ -1289,24 +1300,29 @@ function setting_all_options_callback()
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array())
+function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
 {
 	if(count($translation) > 0)
 	{
-		wp_register_script($handle, $file, array('jquery'), '1.0', true);
+		wp_register_script($handle, $file, array('jquery'), $version);
 		wp_localize_script($handle, $handle, $translation);
 		wp_enqueue_script($handle);
 	}
 
 	else if($file != '')
 	{
-		wp_enqueue_script($handle, $file, array('jquery'), '1.0', true);
+		wp_enqueue_script($handle, $file, array('jquery'), $version, true);
 	}
 
 	else
 	{
 		wp_enqueue_script($handle);
 	}
+}
+
+function mf_enqueue_style($handle, $file = "", $version = false)
+{
+	wp_enqueue_style($handle, $file, array(), $version);
 }
 
 function roles_option_to_array($option = '')
@@ -2094,7 +2110,7 @@ function show_textfield($data)
 	{
 		wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 		wp_enqueue_script('jquery-ui-datepicker');
-		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js");
+		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", array(), get_plugin_version(__FILE__));
 
 		$data['type'] = "text";
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";

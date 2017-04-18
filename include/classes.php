@@ -746,7 +746,7 @@ class settings_page
 	public function create_admin_page()
 	{
 		wp_enqueue_style('style_base_settings', plugin_dir_url(__FILE__)."style_settings.css");
-		mf_enqueue_script('script_base_settings', plugin_dir_url(__FILE__)."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true));
+		mf_enqueue_script('script_base_settings', plugin_dir_url(__FILE__)."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), get_plugin_version(__FILE__));
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>

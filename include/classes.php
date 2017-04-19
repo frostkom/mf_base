@@ -745,7 +745,7 @@ class settings_page
 
 	public function create_admin_page()
 	{
-		wp_enqueue_style('style_base_settings', plugin_dir_url(__FILE__)."style_settings.css");
+		mf_enqueue_style('style_base_settings', plugin_dir_url(__FILE__)."style_settings.css", get_plugin_version(__FILE__));
 		mf_enqueue_script('script_base_settings', plugin_dir_url(__FILE__)."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), get_plugin_version(__FILE__));
 
 		echo "<div class='wrap'>
@@ -907,7 +907,7 @@ class mf_font_icons
 		{
 			if(substr($symbol, 0, 5) == "icon-")
 			{
-				wp_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css");
+				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css", get_plugin_version(__FILE__));
 
 				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>&nbsp;";
 			}

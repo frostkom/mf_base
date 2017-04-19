@@ -273,7 +273,7 @@ function add_shortcode_display_base()
 
 	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 	{
-		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", array(), get_plugin_version(__FILE__));
+		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", get_plugin_version(__FILE__));
 
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
@@ -287,7 +287,7 @@ function add_shortcode_display_base()
 
 function meta_boxes_script_base()
 {
-	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", array(), get_plugin_version(__FILE__));
+	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
 }
 
 function replace_option($data)
@@ -746,8 +746,8 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
-	wp_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css");
-	wp_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css");
+	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css", '4.4.0');
+	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", get_plugin_version(__FILE__));
 
 	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), get_plugin_version(__FILE__));
 }
@@ -794,7 +794,7 @@ function get_media_button($data = array())
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
-		wp_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css");
+		mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", get_plugin_version(__FILE__));
 		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
@@ -825,7 +825,7 @@ function get_media_button($data = array())
 function get_file_button($data)
 {
 	wp_enqueue_style('thickbox');
-	wp_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css");
+	mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", get_plugin_version(__FILE__));
 
 	$add_file_text = __("Add Image", 'lang_base');
 	$change_file_text = __("Change Image", 'lang_base');
@@ -1133,7 +1133,7 @@ function settings_base()
 {
 	global $wpdb;
 
-	wp_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css");
+	mf_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css", get_plugin_version(__FILE__));
 
 	wp_enqueue_script('jquery-ui-autocomplete');
 	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), get_plugin_version(__FILE__));
@@ -1302,6 +1302,12 @@ function setting_all_options_callback()
 
 function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
 {
+	if(!is_array($translation))
+	{
+		$version = $translation;
+		$translation = array();
+	}
+
 	if(count($translation) > 0)
 	{
 		wp_register_script($handle, $file, array('jquery'), $version);
@@ -1320,9 +1326,15 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 	}
 }
 
-function mf_enqueue_style($handle, $file = "", $version = false)
+function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 {
-	wp_enqueue_style($handle, $file, array(), $version);
+	if(!is_array($dep))
+	{
+		$version = $dep;
+		$dep = array();
+	}
+
+	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
 function roles_option_to_array($option = '')
@@ -2108,9 +2120,9 @@ function show_textfield($data)
 
 	if($data['type'] == "date")
 	{
-		wp_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+		mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
 		wp_enqueue_script('jquery-ui-datepicker');
-		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", array(), get_plugin_version(__FILE__));
+		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", get_plugin_version(__FILE__));
 
 		$data['type'] = "text";
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";

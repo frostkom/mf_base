@@ -38,7 +38,7 @@ jQuery(function($)
 			break;
 		}
 
-		if(typeof condition_default != 'undefined')
+		if(typeof condition_default != 'undefined' && field_obj.val() == '')
 		{
 			field_obj.val(condition_default);
 		}

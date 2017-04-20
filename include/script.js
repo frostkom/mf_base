@@ -15,27 +15,6 @@ jQuery(function($)
 		collect_on_load('on_load_base');
 	}
 
-	$.fn.nextElementInDom = function(selector, options)
-	{
-		var defaults = { stopAt : 'body' };
-		options = $.extend(defaults, options);
-
-		var parent = $(this).parent(),
-			found = parent.next(selector); //find -> next
-
-		switch(true)
-		{
-			case (found.length > 0):
-			return found;
-
-			case (parent.length === 0 || parent.is(options.stopAt)):
-			return $([]);
-
-			default:
-			return parent.nextElementInDom(selector);
-		}
-    };
-
 	if(script_base.external_links == 'yes')
 	{
 		$(document).on('click', 'a[rel=external]', function(e)
@@ -65,23 +44,13 @@ jQuery(function($)
 
 	$(document).on('click', '.toggler', function()
 	{
-		$(this).children('.fa').toggleClass('fa-caret-right fa-caret-down');
+		var toggler_rel = $(this).attr('rel'),
+			toggle_obj = $('.toggler[rel=' + toggler_rel + ']')
+			toggle_container = $('.toggle_container[rel=' + toggler_rel + ']');
 
-		var toggle_container = $(this).next('.toggle_container');
-
-		if(toggle_container.length == 0)
+		if(toggle_container.length > 0)
 		{
-			toggle_container = $(this).nextElementInDom('.toggle_container')
-		}
-
-		if(toggle_container.length == 0)
-		{
-			console.log("Could not find .toggle_container");
-		}
-
-		else
-		{
-			$(this).toggleClass('open');
+			toggle_obj.toggleClass('open').find('.fa.fa-caret-right, .fa.fa-caret-down').toggleClass('fa-caret-right fa-caret-down');
 			toggle_container.toggleClass('hide');
 		}
 	});

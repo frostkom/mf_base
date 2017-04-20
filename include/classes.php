@@ -754,7 +754,7 @@ class settings_page
 				<div class='settings-nav contextual-help-tabs'>
 					<ul></ul>
 				</div>
-				<form method='post' action='options.php' class='settings-tabs'>";
+				<form method='post' action='options.php' class='settings-tabs mf_form'>";
 
 					settings_fields($this->options_page);
 					do_settings_sections($this->options_page);

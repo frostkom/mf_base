@@ -13,13 +13,14 @@ function get_plugin_version($file)
 
 function get_toggler_container($data)
 {
-	if(!isset($data['open'])){	$data['open'] = false;}
+	if(!isset($data['open'])){						$data['open'] = false;}
+	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 
 	switch($data['type'])
 	{
 		case 'start':
-			return "<label class='toggler".($data['open'] ? " open" : "")."'><i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i><span>".$data['text']."</span></label>
-			<div class='toggle_container".($data['open'] ? "" : " hide")."'>";
+			return "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'><i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i><span>".$data['text']."</span></label>
+			<div class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
 		break;
 
 		case 'end':
@@ -2172,6 +2173,11 @@ function show_textfield($data)
 		$data['xtra'] .= " list='".$data['name']."_list'";
 	}
 
+	if($data['suffix'] != '')
+	{
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
+	}
+
 	$out = "<div class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
 
 		if($data['text'] != '')
@@ -2183,7 +2189,7 @@ function show_textfield($data)
 
 		if($data['suffix'] != '')
 		{
-			$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+			$out .= "<span class='description'>".$data['suffix']."</span>";
 		}
 
 		if($data['description'] != '')
@@ -2447,6 +2453,11 @@ function show_select($data)
 
 		else
 		{
+			if($data['suffix'] != '')
+			{
+				$data['class'] .= ($data['class'] != '' ? " " : "")."has_suffix";
+			}
+
 			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
 
 				if($data['text'] != '')
@@ -2488,7 +2499,7 @@ function show_select($data)
 
 				if($data['suffix'] != '')
 				{
-					$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+					$out .= "<span class='description'>".$data['suffix']."</span>";
 				}
 
 				if($data['description'] != '')
@@ -2544,6 +2555,11 @@ function show_checkboxes($data)
 
 		else
 		{
+			if($data['suffix'] != '')
+			{
+				$data['class'] .= ($data['class'] != '' ? " " : "")."has_suffix";
+			}
+
 			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
 
 				if($data['text'] != '')
@@ -2581,7 +2597,7 @@ function show_checkboxes($data)
 
 				if($data['suffix'] != '')
 				{
-					$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+					$out .= "<span class='description'>".$data['suffix']."</span>";
 				}
 
 				if($data['description'] != '')
@@ -2642,6 +2658,11 @@ function show_checkbox($data)
 		$data['text'] = "<span><i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i></span>".$data['text'];
 	}
 
+	if($data['suffix'] != '')
+	{
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
+	}
+
 	$out = "<div class='form_checkbox".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
 		<input type='checkbox'";
 
@@ -2659,7 +2680,7 @@ function show_checkbox($data)
 
 		if($data['suffix'] != '')
 		{
-			$out .= "&nbsp;<span class='description'>".$data['suffix']."</span>";
+			$out .= "<span class='description'>".$data['suffix']."</span>";
 		}
 
 		if($data['description'] != '')

@@ -283,6 +283,16 @@
 			width: 100%;
         }
 
+			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
+			{
+				width: auto;
+			}
+
+				.mf_form .has_suffix span.description
+				{
+					margin-left: 1em;
+				}
+
 			.mf_form .form_textfield input, .mf_form select, .mf_form .form_password input
 			{
 				min-height: 2.7em;

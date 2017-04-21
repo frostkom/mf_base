@@ -14,6 +14,7 @@ jQuery(function($)
 		switch(condition_type)
 		{
 			case 'show_if':
+			case 'show_if_empty':
 				if(dom_value == condition_value)
 				{
 					field_parent.removeClass('hide');
@@ -26,6 +27,7 @@ jQuery(function($)
 			break;
 
 			case 'hide_if':
+			case 'hide_if_empty':
 				if(dom_value == condition_value)
 				{
 					field_parent.addClass('hide');

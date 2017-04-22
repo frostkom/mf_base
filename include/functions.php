@@ -1515,16 +1515,17 @@ function get_post_types_for_select()
 
 	$arr_data = array();
 
-	$arr_data["is_404()"] = __("404", 'lang_base');
-	//$arr_data["is_archive()"] = __("Archive", 'lang_base');
-	//$arr_data["is_category()"] = __("Category", 'lang_base');
-	//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
-	//$arr_data["is_home()"] = __("Home", 'lang_base');
-	//$arr_data["is_page()"] = __("Page", 'lang_base');
-	//$arr_data['is_singular("post")'] = __("Post", 'lang_base');
-	$arr_data["is_search()"] = __("Search", 'lang_base');
-	//$arr_data["is_single()"] = __("Single", 'lang_base');
-	//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
+	if(count($arr_pages) > 0)
+	{
+		$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
+
+			foreach($arr_pages as $post_id => $post_title)
+			{
+				$arr_data["is_page(".$post_id.")"] = $post_title;
+			}
+
+		$arr_data["opt_end_pages"] = "";
+	}
 
 	$arr_data["opt_start_post_types"] = __("Post Types", 'lang_base');
 
@@ -1538,17 +1539,15 @@ function get_post_types_for_select()
 
 	$arr_data["opt_end_post_types"] = "";
 
-	if(count($arr_pages) > 0)
-	{
-		$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
-
-			foreach($arr_pages as $post_id => $post_title)
-			{
-				$arr_data["is_page(".$post_id.")"] = $post_title;
-			}
-
-		$arr_data["opt_end_pages"] = "";
-	}
+	$arr_data["is_404()"] = __("404", 'lang_base');
+	//$arr_data["is_archive()"] = __("Archive", 'lang_base');
+	//$arr_data["is_category()"] = __("Category", 'lang_base');
+	//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
+	//$arr_data["is_home()"] = __("Home", 'lang_base');
+	//$arr_data["is_page()"] = __("Page", 'lang_base');
+	$arr_data["is_search()"] = __("Search", 'lang_base');
+	//$arr_data["is_single()"] = __("Single", 'lang_base');
+	//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
 
 	return $arr_data;
 }
@@ -3186,16 +3185,14 @@ function day_name($day_no, $ucfirst = 1)
 	return $out;
 }
 
-function get_meta_image_url($post_id, $meta_key)
+/*function get_meta_image_url($post_id, $meta_key)
 {
-	do_log(sprintf(__("%s is deprecated", 'lang_base'), __FUNCTION__));
-
 	$image_id = get_post_meta($post_id, $meta_key, true);
 
 	$image_array = wp_get_attachment_image_src($image_id, 'full');
 
 	return $image_array[0];
-}
+}*/
 
 function get_list_navigation($resultPagination)
 {

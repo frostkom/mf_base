@@ -286,6 +286,54 @@ function add_shortcode_display_base()
 	}
 }
 
+function get_page_content()
+{
+	global $wpdb;
+
+	$out = "";
+
+	$post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT);
+
+	if($post_id > 0)
+	{
+		list($post_id, $content_list) = apply_filters('get_shortcode_list', array($post_id, ''));
+
+		if($content_list != '')
+		{
+			$out .= "<ul>"
+				.$content_list
+			."</ul>";
+		}
+	}
+
+	return $out;
+}
+
+function meta_boxes_base($meta_boxes)
+{
+	$meta_prefix = "mf_base_";
+
+	if(current_user_can('manage_options')) //IS_ADMIN
+	{
+		$meta_boxes[] = array(
+			'id' => $meta_prefix.'content',
+			'title' => __("Added Content", 'lang_base'),
+			'pages' => array('page'),
+			//'context' => 'side',
+			'priority' => 'low',
+			'fields' => array(
+				array(
+					'id' => $meta_prefix.'content',
+					'type' => 'custom_html',
+					'callback' => 'get_page_content',
+				),
+			)
+		);
+	}
+
+	return $meta_boxes;
+}
+
 function meta_boxes_script_base()
 {
 	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
@@ -1149,9 +1197,13 @@ function settings_base()
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
-		'setting_base_recommend' => __("Recommendations", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
+
+	if(IS_SUPER_ADMIN)
+	{
+		$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
+	}
 
 	show_settings_fields(array('area' => $options_area, 'settings' => $arr_settings));
 }

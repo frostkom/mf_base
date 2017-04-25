@@ -55,4 +55,9 @@ jQuery(function($)
 	{
 		check_condition($(this));
 	});
+
+	$('.rwmb-custom_html-wrapper .rwmb-input:empty').each(function()
+	{
+		$(this).parents('.postbox').remove();
+	});
 });

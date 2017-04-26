@@ -300,7 +300,7 @@ function get_page_content()
 
 		if($content_list != '')
 		{
-			$out .= "<ul>"
+			$out .= "<ul class='shortcode_list'>"
 				.$content_list
 			."</ul>";
 		}

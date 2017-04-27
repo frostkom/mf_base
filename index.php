@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 6.11.10
+Version: 6.11.13
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_base
@@ -20,7 +20,7 @@ if(is_admin())
 	new settings_page();
 }
 
-add_action('init', 'init_base');
+add_action('init', 'init_base', 0);
 add_filter('cron_schedules', 'schedules_base');
 
 if(is_admin())

@@ -308,7 +308,7 @@ function get_page_content()
 
 		if($content_list != '')
 		{
-			$out .= "<ul class='shortcode_list'>"
+			$out .= "<ul class='meta_list'>"
 				.$content_list
 			."</ul>";
 		}
@@ -321,23 +321,20 @@ function meta_boxes_base($meta_boxes)
 {
 	$meta_prefix = "mf_base_";
 
-	if(current_user_can('manage_options')) //IS_ADMIN
-	{
-		$meta_boxes[] = array(
-			'id' => $meta_prefix.'content',
-			'title' => __("Added Content", 'lang_base'),
-			'pages' => array('page'),
-			//'context' => 'side',
-			'priority' => 'low',
-			'fields' => array(
-				array(
-					'id' => $meta_prefix.'content',
-					'type' => 'custom_html',
-					'callback' => 'get_page_content',
-				),
-			)
-		);
-	}
+	$meta_boxes[] = array(
+		'id' => $meta_prefix.'content',
+		'title' => __("Added Content", 'lang_base'),
+		'post_types' => array('page'),
+		//'context' => 'side',
+		'priority' => 'low',
+		'fields' => array(
+			array(
+				'id' => $meta_prefix.'content',
+				'type' => 'custom_html',
+				'callback' => 'get_page_content',
+			),
+		)
+	);
 
 	return $meta_boxes;
 }
@@ -1678,6 +1675,19 @@ function get_posts_for_select($data)
 		}
 
 		$arr_data[$post_id] = $post_title;
+	}
+
+	return $arr_data;
+}
+
+function get_sidebars_for_select()
+{
+	$arr_data = array();
+	$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+
+	foreach($GLOBALS['wp_registered_sidebars'] as $sidebar)
+	{
+		$arr_data[$sidebar['id']] = $sidebar['name'];
 	}
 
 	return $arr_data;

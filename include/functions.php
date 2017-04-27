@@ -2,13 +2,21 @@
 
 function get_plugin_version($file)
 {
-	$plugin_dir = plugin_dir_path($file)."index.php";
+	if(function_exists('get_plugin_data'))
+	{
+		$plugin_dir = plugin_dir_path($file)."index.php";
 
-	$plugin_dir = str_replace("include/", "", $plugin_dir);
+		$plugin_dir = str_replace("include/", "", $plugin_dir);
 
-	$arr_plugin_data = get_plugin_data($plugin_dir);
+		$arr_plugin_data = get_plugin_data($plugin_dir);
 
-	return $arr_plugin_data['Version'];
+		return $arr_plugin_data['Version'];
+	}
+
+	else
+	{
+		return false;
+	}
 }
 
 function get_toggler_container($data)

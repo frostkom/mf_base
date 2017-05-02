@@ -23,12 +23,30 @@ function get_toggler_container($data)
 {
 	if(!isset($data['open'])){						$data['open'] = false;}
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
+	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
 
 	switch($data['type'])
 	{
 		case 'start':
-			return "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'><i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i><span>".$data['text']."</span></label>
+			$icon = "<i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i>";
+			$text = "<span>".$data['text']."</span>";
+
+			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";
+
+				if($icon_first == true)
+				{
+					$out .= $icon.$text;
+				}
+
+				else
+				{
+					$out .= $text.$icon;
+				}
+			
+			$out .= "</label>
 			<div class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
+
+			return $out;
 		break;
 
 		case 'end':

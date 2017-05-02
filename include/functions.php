@@ -33,7 +33,7 @@ function get_toggler_container($data)
 
 			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";
 
-				if($icon_first == true)
+				if($data['icon_first'] == true)
 				{
 					$out .= $icon.$text;
 				}
@@ -1583,46 +1583,88 @@ function get_roles_for_select($data = array())
 	return $data['array'];
 }
 
-function get_post_types_for_select()
+function get_post_types_for_select($data = array())
 {
-	$arr_pages = array();
-	get_post_children(array(), $arr_pages);
+	if(!isset($data['include'])){	$data['include'] = array('ids', 'types', 'special');}
+	if(!isset($data['add_is'])){	$data['add_is'] = true;}
+
+	$opt_groups = is_array($data['include']) && count($data['include']) > 1;
 
 	$arr_data = array();
 
-	if(count($arr_pages) > 0)
+	if(in_array('ids', $data['include']))
 	{
-		$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
+		$arr_pages = array();
+		get_post_children(array(), $arr_pages);
 
-			foreach($arr_pages as $post_id => $post_title)
+		if(count($arr_pages) > 0)
+		{
+			if($opt_groups == true)
 			{
-				$arr_data["is_page(".$post_id.")"] = $post_title;
+				$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
 			}
 
-		$arr_data["opt_end_pages"] = "";
+				foreach($arr_pages as $post_id => $post_title)
+				{
+					if($data['add_is'] == true)
+					{
+						$arr_data["is_page(".$post_id.")"] = $post_title;
+					}
+
+					else
+					{
+						$arr_data[$post_id] = $post_title;
+					}
+				}
+
+			if($opt_groups == true)
+			{
+				$arr_data["opt_end_pages"] = "";
+			}
+		}
 	}
 
-	$arr_data["opt_start_post_types"] = __("Post Types", 'lang_base');
+	if($opt_groups == true)
+	{
+		$arr_data["opt_start_post_types"] = __("Post Types", 'lang_base');
+	}
 
-		foreach(get_post_types(array('public' => true), 'objects') as $post_type)
+		if(in_array('types', $data['include']))
 		{
-			if(!in_array($post_type->name, array('attachment')))
+			foreach(get_post_types(array('public' => true), 'objects') as $post_type)
 			{
-				$arr_data['is_singular("'.$post_type->name.'")'] = $post_type->label;
+				if(!in_array($post_type->name, array('attachment')))
+				{
+					if($data['add_is'] == true)
+					{
+						$arr_data['is_singular("'.$post_type->name.'")'] = $post_type->label;
+					}
+
+					else
+					{
+						$arr_data[$post_type->name] = $post_type->label;
+					}
+				}
 			}
 		}
 
-	$arr_data["opt_end_post_types"] = "";
+	if($opt_groups == true)
+	{
+		$arr_data["opt_end_post_types"] = "";
+	}
 
-	$arr_data["is_404()"] = __("404", 'lang_base');
-	//$arr_data["is_archive()"] = __("Archive", 'lang_base');
-	//$arr_data["is_category()"] = __("Category", 'lang_base');
-	//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
-	//$arr_data["is_home()"] = __("Home", 'lang_base');
-	//$arr_data["is_page()"] = __("Page", 'lang_base');
-	$arr_data["is_search()"] = __("Search", 'lang_base');
-	//$arr_data["is_single()"] = __("Single", 'lang_base');
-	//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
+	if(in_array('special', $data['include']))
+	{
+		$arr_data["is_404()"] = __("404", 'lang_base');
+		//$arr_data["is_archive()"] = __("Archive", 'lang_base');
+		//$arr_data["is_category()"] = __("Category", 'lang_base');
+		//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
+		//$arr_data["is_home()"] = __("Home", 'lang_base');
+		//$arr_data["is_page()"] = __("Page", 'lang_base');
+		$arr_data["is_search()"] = __("Search", 'lang_base');
+		//$arr_data["is_single()"] = __("Single", 'lang_base');
+		//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
+	}
 
 	return $arr_data;
 }

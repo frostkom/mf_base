@@ -39,10 +39,7 @@
 			margin-bottom: 0;
 		}
 
-	.toggler
-	{
-		cursor: pointer;
-	}
+	.toggler{}
 
 		.toggler.open
 		{
@@ -99,7 +96,7 @@
 		white-space: nowrap;
 	}
 
-	.fa, .pointer
+	.fa, .pointer, .toggler
 	{
 		cursor: pointer;
 	}

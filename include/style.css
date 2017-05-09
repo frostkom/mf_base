@@ -313,6 +313,12 @@
 					padding-right: 0;
 				}
 
+			.mf_form .form_textfield input[type='color']
+			{
+				height: 2em;
+				width: 4em;
+			}
+
 		.mf_form .wp-editor-wrap
 		{
 			margin: 0 0 .8em;

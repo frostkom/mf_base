@@ -86,6 +86,7 @@ class mf_list_table extends WP_List_Table
 	var $views = array();
 	var $columns = array();
 	var $sortable_columns = array();
+	//var $default_column = '';
 	var $data = "";
 	var $num_rows = 0;
 	var $query_join = "";
@@ -416,9 +417,7 @@ class mf_list_table extends WP_List_Table
 		 * can be defined in another method (as we've done here) before being
 		 * used to build the value for our _column_headers property.
 		 */
-		//$columns = $this->get_columns();
 		$hidden = array();
-		//$sortable = $this->get_sortable_columns();
 
 		/**
 		 * REQUIRED. Finally, we build an array to be used by the class for column 
@@ -426,7 +425,7 @@ class mf_list_table extends WP_List_Table
 		 * 3 other arrays. One for all columns, one for hidden columns, and one
 		 * for sortable columns.
 		 */
-		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
+		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns); //, $this->default_column
 
 		$current_page = $this->get_pagenum();
 

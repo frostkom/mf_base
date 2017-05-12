@@ -1043,14 +1043,8 @@ function mf_get_post_content($id)
 	return $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
 }
 
-function disable_action_base($actions, $plugin_file, $plugin_data, $context)
+function plugin_actions_base($actions, $plugin_file) //, $plugin_data, $context
 {
-	// Remove edit link for all
-	/*if(array_key_exists('edit', $actions))
-	{
-		unset($actions['edit']);
-	}*/
-
 	if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
 	{
 		unset($actions['deactivate']);

@@ -1036,11 +1036,11 @@ function mf_format_number($in, $dec = 2)
 	return $out;
 }
 
-function mf_get_post_content($id)
+function mf_get_post_content($id, $field = 'post_content')
 {
 	global $wpdb;
 
-	return $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
+	return $wpdb->get_var($wpdb->prepare("SELECT ".$field." FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
 }
 
 function plugin_actions_base($actions, $plugin_file) //, $plugin_data, $context

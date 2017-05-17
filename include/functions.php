@@ -1,5 +1,21 @@
 <?php
 
+function compress_css($in)
+{
+	if(is_plugin_active('wp-super-cache/wp-cache.php') || is_plugin_active('wp-fastest-cache/wpFastestCache.php'))
+	{
+		$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/', '/(:|,) /', '/;}/');
+		$inkludera = array('', '', '$1', '}');
+
+		return preg_replace($exkludera, $inkludera, $in);
+	}
+
+	else
+	{
+		return $in;
+	}
+}
+
 function get_plugin_version($file)
 {
 	if(function_exists('get_plugin_data'))
@@ -1336,7 +1352,6 @@ function setting_base_recommend_callback()
 		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
 		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-		array("Better WordPress Minify", 'bwp-minify/bwp-minify.php', __("to compress and combine JS and CSS files", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base')),
 		array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),

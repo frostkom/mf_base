@@ -152,14 +152,6 @@
 		font-style: italic;
 	}
 
-	/*.force-select-all
-	{
-		-webkit-user-select: all;
-		-moz-user-select: all;
-		-ms-user-select: all;
-		user-select: all;
-	}*/
-
 	.wrap .update-plugins
 	{
 		background-color: #d54e21;
@@ -441,10 +433,7 @@
 			}
 
 		/* This hides date/year in admin when using datepicker */
-		/*.ui-helper-clearfix.ui-helper-clearfix
-		{
-			display: none;
-		}*/
+		/*.ui-helper-clearfix.ui-helper-clearfix{display: none;}*/
 
 	.mf_form_results .form_radio
 	{

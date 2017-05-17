@@ -1755,25 +1755,22 @@ function get_sidebars_for_select()
 #########################
 function array_sort($data)
 {
+	if(!isset($data['on'])){			$data['on'] = 0;}
 	if(!isset($data['order'])){			$data['order'] = "asc";}
 	if(!isset($data['keep_index'])){	$data['keep_index'] = false;}
-
-	$array = $data['array'];
-	$on = $data['on'];
-	$order = $data['order'];
 
 	$new_array = array();
 	$sortable_array = array();
 
-	if(count($array) > 0)
+	if(count($data['array']) > 0)
 	{
-		foreach($array as $k => $v)
+		foreach($data['array'] as $k => $v)
 		{
 			if(is_array($v))
 			{
 				foreach($v as $k2 => $v2)
 				{
-					if($k2 == $on)
+					if($k2 == $data['on'])
 					{
 						$sortable_array[$k] = $v2;
 					}
@@ -1786,7 +1783,7 @@ function array_sort($data)
 			}
 		}
 
-		switch($order)
+		switch($data['order'])
 		{
 			case "asc":
 				asort($sortable_array);
@@ -1801,12 +1798,12 @@ function array_sort($data)
 		{
 			if($data['keep_index'] == true)
 			{
-				$new_array[$k] = $array[$k];
+				$new_array[$k] = $data['array'][$k];
 			}
 
 			else
 			{
-				$new_array[] = $array[$k];
+				$new_array[] = $data['array'][$k];
 			}
 		}
 	}

@@ -2,18 +2,18 @@
 
 function compress_css($in)
 {
-	if(is_plugin_active('wp-super-cache/wp-cache.php') || is_plugin_active('wp-fastest-cache/wpFastestCache.php'))
-	{
+	/*if(is_plugin_active('wp-super-cache/wp-cache.php') || is_plugin_active('wp-fastest-cache/wpFastestCache.php'))
+	{*/
 		$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/', '/(:|,) /', '/;}/');
 		$inkludera = array('', '', '$1', '}');
 
 		return preg_replace($exkludera, $inkludera, $in);
-	}
+	/*}
 
 	else
 	{
 		return $in;
-	}
+	}*/
 }
 
 function get_plugin_version($file)
@@ -649,10 +649,30 @@ function format_date($in)
 
 function get_uploads_folder($subfolder = "")
 {
+	global $error_text;
+
 	$upload_dir = wp_upload_dir();
 
 	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
 	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");
+
+	if($subfolder != '')
+	{
+		$dir_exists = true;
+
+		if(!is_dir($upload_path))
+		{
+			if(!mkdir($upload_path, 0755, true))
+			{
+				$dir_exists = false;
+			}
+		}
+
+		if($dir_exists == false)
+		{
+			$error_text = sprintf(__("Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $subfolder);
+		}
+	}
 
 	return array($upload_path, $upload_url);
 }
@@ -1192,6 +1212,35 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
 }
 
+if(!function_exists('point2int'))
+{
+	function point2int($in)
+	{
+		$arr_version = explode(".", $in);
+
+		$count_temp = count($arr_version);
+
+		while($count_temp < 3)
+		{
+			$arr_version[] = 0;
+
+			$count_temp++;
+		}
+
+		$str_version = 0;
+		$multiplier = 1;
+
+		for($i = 1; $i <= $count_temp; $i++)
+		{
+			$str_version += $arr_version[$count_temp - $i] * $multiplier;
+
+			$multiplier *= 100;
+		}
+
+		return $str_version;
+	}
+}
+
 function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
@@ -1425,6 +1474,20 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 	{
 		$version = $dep;
 		$dep = array();
+	}
+
+	if(!isset($GLOBALS['mf_styles']))
+	{
+		$GLOBALS['mf_styles'] = array();
+	}
+
+	if($file != '') // && $version != false
+	{
+		$GLOBALS['mf_styles'][$handle] = array(
+			'file' => $file,
+			'dep' => $dep,
+			'version' => $version,
+		);
 	}
 
 	wp_enqueue_style($handle, $file, $dep, $version);

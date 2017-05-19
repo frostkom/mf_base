@@ -1609,11 +1609,11 @@ class mf_export
 
 	function create_dir()
 	{
-		global $error_text;
+		//global $error_text;
 
 		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
 
-		if(!is_dir($this->upload_path))
+		/*if(!is_dir($this->upload_path))
 		{
 			if(!mkdir($this->upload_path, 0755, true))
 			{
@@ -1624,7 +1624,7 @@ class mf_export
 		if($this->dir_exists == false)
 		{
 			$error_text = sprintf(__("Could not create the folder %s. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $this->upload_path);
-		}
+		}*/
 	}
 
 	function fetch_request()

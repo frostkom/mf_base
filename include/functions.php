@@ -2,18 +2,17 @@
 
 function compress_css($in)
 {
-	/*if(is_plugin_active('wp-super-cache/wp-cache.php') || is_plugin_active('wp-fastest-cache/wpFastestCache.php'))
-	{*/
-		$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/', '/(:|,) /', '/;}/');
-		$inkludera = array('', '', '$1', '}');
+	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/', '/(:|,) /', '/;}/');
+	$inkludera = array('', '', '$1', '}');
 
-		return preg_replace($exkludera, $inkludera, $in);
-	/*}
+	return preg_replace($exkludera, $inkludera, $in);
+}
 
-	else
-	{
-		return $in;
-	}*/
+function compress_js($in)
+{
+	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/'); //"/(\/\/.*?\n)/", 
+
+	return preg_replace($exkludera, '', $in);
 }
 
 function get_plugin_version($file)
@@ -1442,12 +1441,50 @@ function setting_all_options_callback()
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
 }
 
+function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
+{
+	if(!is_array($dep))
+	{
+		$version = $dep;
+		$dep = array();
+	}
+
+	if(!isset($GLOBALS['mf_styles']))
+	{
+		$GLOBALS['mf_styles'] = array();
+	}
+
+	if($file != '')
+	{
+		$GLOBALS['mf_styles'][$handle] = array(
+			'file' => $file,
+			'version' => $version,
+		);
+	}
+
+	wp_enqueue_style($handle, $file, $dep, $version);
+}
+
 function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
 {
 	if(!is_array($translation))
 	{
 		$version = $translation;
 		$translation = array();
+	}
+
+	if(!isset($GLOBALS['mf_scripts']))
+	{
+		$GLOBALS['mf_scripts'] = array();
+	}
+
+	if($file != '')
+	{
+		$GLOBALS['mf_scripts'][$handle] = array(
+			'file' => $file,
+			'translation' => $translation,
+			'version' => $version,
+		);
 	}
 
 	if(count($translation) > 0)
@@ -1466,31 +1503,6 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 	{
 		wp_enqueue_script($handle);
 	}
-}
-
-function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
-{
-	if(!is_array($dep))
-	{
-		$version = $dep;
-		$dep = array();
-	}
-
-	if(!isset($GLOBALS['mf_styles']))
-	{
-		$GLOBALS['mf_styles'] = array();
-	}
-
-	if($file != '') // && $version != false
-	{
-		$GLOBALS['mf_styles'][$handle] = array(
-			'file' => $file,
-			'dep' => $dep,
-			'version' => $version,
-		);
-	}
-
-	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
 function roles_option_to_array($option = '')

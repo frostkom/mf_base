@@ -45,7 +45,7 @@ jQuery(function($)
 	$(document).on('click', '.toggler', function()
 	{
 		var toggler_rel = $(this).attr('rel'),
-			toggle_obj = $('.toggler[rel=' + toggler_rel + ']')
+			toggle_obj = $('.toggler[rel=' + toggler_rel + ']'),
 			toggle_container = $('.toggle_container[rel=' + toggler_rel + ']');
 
 		if(toggle_container.length > 0)

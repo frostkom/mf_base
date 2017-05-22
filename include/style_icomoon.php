@@ -1,15 +1,32 @@
-@font-face {
-	font-family: 'icomoon';
-	src:url('../../../plugins/mf_base/fonts/icomoon.eot?p0ysti');
-	src:url('../../../plugins/mf_base/fonts/icomoon.eot?p0ysti#iefix') format('embedded-opentype'),
-		url('../../../plugins/mf_base/fonts/icomoon.ttf?p0ysti') format('truetype'),
-		url('../../../plugins/mf_base/fonts/icomoon.woff?p0ysti') format('woff'),
-		url('../../../plugins/mf_base/fonts/icomoon.svg?p0ysti#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
+<?php
+
+header("Content-Type: text/css; charset=utf-8");
+
+if(!defined('ABSPATH'))
+{
+	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
+
+	require_once($folder."wp-load.php");
 }
 
-[class^="icon-"], [class*=" icon-"] {
+$plugin_include_url = plugin_dir_url(__FILE__);
+$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
+
+ echo "@font-face {
+	font-family: 'icomoon';
+	src:url('".$plugin_fonts_url."icomoon.eot?p0ysti');
+	src:url('".$plugin_fonts_url."icomoon.eot?p0ysti#iefix') format('embedded-opentype'),
+		url('".$plugin_fonts_url."icomoon.ttf?p0ysti') format('truetype'),
+		url('".$plugin_fonts_url."icomoon.woff?p0ysti') format('woff'),
+		url('".$plugin_fonts_url."icomoon.svg?p0ysti#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}";
+
+?>
+
+[class^="icon-"], [class*=" icon-"]
+{
 	font-family: 'icomoon';
 	speak: none;
 	font-style: normal;
@@ -18,7 +35,7 @@
 	text-transform: none;
 	line-height: 1.1;
 
-	/* Better Font Rendering =========== */
+	/* Better Font Rendering */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }

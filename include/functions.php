@@ -853,7 +853,7 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
-	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.min.css", '4.4.0');
+	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.php", get_plugin_version(__FILE__));
 	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", get_plugin_version(__FILE__));
 
 	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), get_plugin_version(__FILE__));

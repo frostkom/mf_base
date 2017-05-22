@@ -906,7 +906,7 @@ class mf_font_icons
 		{
 			if(substr($symbol, 0, 5) == "icon-")
 			{
-				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css", get_plugin_version(__FILE__));
+				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php", get_plugin_version(__FILE__));
 
 				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>&nbsp;";
 			}

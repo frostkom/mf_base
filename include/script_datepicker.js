@@ -7,9 +7,9 @@ jQuery(function($)
 		showOtherMonths: true,
 		selectOtherMonths: true,
 		showWeek: true,
-		//changeYear: true,
-		//yearRange: '-2:2',
-		//changeMonth: true,
+		/*changeYear: true,
+		yearRange: '-2:2',
+		changeMonth: true,*/
 		firstDay: 1
 	});
 });

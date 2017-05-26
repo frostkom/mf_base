@@ -426,9 +426,12 @@ function mf_uninstall_plugin($data)
 	{
 		list($upload_path, $upload_url) = get_uploads_folder($data['uploads']);
 
-		get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
+		if($upload_path != '')
+		{
+			get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
 
-		rmdir($upload_path);
+			rmdir($upload_path);
+		}
 	}
 
 	foreach($data['options'] as $option)
@@ -695,6 +698,8 @@ function get_uploads_folder($subfolder = "")
 		if($dir_exists == false)
 		{
 			$error_text = sprintf(__("Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $subfolder);
+
+			$upload_path = $upload_url = "";
 		}
 	}
 

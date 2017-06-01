@@ -178,7 +178,21 @@ function send_email($data)
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
 
-	if($data['content'] != '')
+	if($data['to'] == '')
+	{
+		$error_text = sprintf(__("The message had no recepient so '%s' could not be sent", 'lang_base'), $data['subject']);
+
+		return false;
+	}
+
+	else if($data['content'] == '')
+	{
+		$error_text = sprintf(__("The message was empty so I could not send '%s' to '%s'", 'lang_base'), $data['subject'], $data['to']);
+
+		return false;
+	}
+
+	else
 	{
 		if(contains_html($data['content']))
 		{
@@ -188,13 +202,6 @@ function send_email($data)
 		}
 
 		return wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
-	}
-
-	else
-	{
-		$error_text = sprintf(__("The message was empty so I could not send %s to %s", 'lang_base'), $data['subject'], $data['to']);
-
-		return false;
 	}
 }
 

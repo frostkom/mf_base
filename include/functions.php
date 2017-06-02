@@ -488,6 +488,18 @@ function is_domain_valid($email, $record = 'MX')
 	return checkdnsrr($domain, $record);
 }
 
+function get_post_meta_or_default($post_id, $key = '', $single = false, $default = '')
+{
+	$post_meta = get_post_meta($post_id, $key, $single);
+
+	if($post_meta == '' && $default != '')
+	{
+		$post_meta = $default;
+	}
+
+	return $post_meta;
+}
+
 function get_option_or_default($key, $default = '')
 {
 	$option = get_option($key);

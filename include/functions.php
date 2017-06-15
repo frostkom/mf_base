@@ -1273,25 +1273,28 @@ if(!function_exists('point2int'))
 {
 	function point2int($in)
 	{
-		$arr_version = explode(".", $in);
-
-		$count_temp = count($arr_version);
-
-		while($count_temp < 3)
-		{
-			$arr_version[] = 0;
-
-			$count_temp++;
-		}
-
 		$str_version = 0;
 		$multiplier = 1;
 
-		for($i = 1; $i <= $count_temp; $i++)
+		if($in != '')
 		{
-			$str_version += $arr_version[$count_temp - $i] * $multiplier;
+			$arr_version = explode(".", $in);
 
-			$multiplier *= 100;
+			$count_temp = count($arr_version);
+
+			while($count_temp < 3)
+			{
+				$arr_version[] = 0;
+
+				$count_temp++;
+			}
+
+			for($i = 1; $i <= $count_temp; $i++)
+			{
+				$str_version += $arr_version[$count_temp - $i] * $multiplier;
+
+				$multiplier *= 100;
+			}
 		}
 
 		return $str_version;
@@ -2931,7 +2934,7 @@ function show_checkbox($data)
 	if($data['switch'] == 1)
 	{
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<span><i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spin fa-spinner loading'></i></span>".$data['text'];
+		$data['text'] = "<span><i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spinner fa-spin loading'></i></span>".$data['text'];
 	}
 
 	if($data['suffix'] != '')

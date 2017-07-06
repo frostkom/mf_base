@@ -1803,7 +1803,7 @@ function get_post_types_for_select($data = array())
 		//$arr_data["is_archive()"] = __("Archive", 'lang_base');
 		//$arr_data["is_category()"] = __("Category", 'lang_base');
 		//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
-		//$arr_data["is_home()"] = __("Home", 'lang_base');
+		$arr_data["is_home()"] = __("Home", 'lang_base');
 		//$arr_data["is_page()"] = __("Page", 'lang_base');
 		$arr_data["is_search()"] = __("Search", 'lang_base');
 		//$arr_data["is_single()"] = __("Single", 'lang_base');
@@ -2392,6 +2392,7 @@ function show_textfield($data)
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['pattern'])){		$data['pattern'] = "";}
+	if(!isset($data['title'])){			$data['title'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['datalist'])){		$data['datalist'] = array();}
@@ -2433,6 +2434,11 @@ function show_textfield($data)
 	if($data['pattern'] != '')
 	{
 		$data['xtra'] .= " pattern='".$data['pattern']."'";
+	}
+
+	if($data['title'] != '')
+	{
+		$data['xtra'] .= " title='".$data['title']."'";
 	}
 
 	if($data['type'] == "email" || $data['type'] == "url")

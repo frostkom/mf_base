@@ -1475,6 +1475,7 @@ function setting_base_recommend_callback()
 		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
+		array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
 	);
 
 	if(is_multisite())

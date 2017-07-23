@@ -39,17 +39,15 @@
 			margin-bottom: 0;
 		}
 
-	.toggler{}
+	.toggler.open
+	{
+		margin-bottom: 0;
+	}
 
-		.toggler.open
-		{
-			margin-bottom: 0;
-		}
-
-		.toggler .fa, .toggler span
-		{
-			margin-right: .4em;
-		}
+	.toggler .fa, .toggler span
+	{
+		margin-right: .4em;
+	}
 
 	.toggle_container
 	{
@@ -235,22 +233,6 @@
             clear: both;
         }
 
-        .mf_form .left_col
-        {
-            clear: left;
-            float: left;
-			margin-right: 2%;
-            width: 48%;
-        }
-
-        .mf_form .right_col
-        {
-            clear: right;
-            float: right;
-			margin-left: 2%;
-            width: 48%;
-        }
-
         .mf_form label
         {
 			color: inherit;
@@ -324,24 +306,6 @@
 				outline: none;
 			}
 
-		.mf_form .form_textfield.reverse
-		{
-			overflow: hidden;
-		}
-
-			.mf_form .form_textfield.reverse label
-			{
-				float: right;
-				line-height: 2.8;
-				width: 80%;
-			}
-
-			.mf_form .form_textfield.reverse input
-			{
-				float: left;
-				width: 18%;
-			}
-
 		.mf_form .form_select .description
 		{
 			margin: -5px 0 10px;
@@ -388,30 +352,6 @@
 				{
 					margin-left: -43px;
 				}
-
-			.mf_form .form_zipcode
-			{
-				overflow: hidden;
-			}
-
-				.mf_form .form_zipcode input
-				{
-					float: left;
-					max-width: 70px;
-					text-align: center;
-				}
-
-				.mf_form .form_zipcode > span
-				{
-					float: left;
-					line-height: 2.7;
-					padding-left: 1em;
-				}
-
-		.form_textfield.form_check
-		{
-			display: none;
-		}
 
 		.form_button > button, .form_button > .button
 		{

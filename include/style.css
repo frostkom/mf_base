@@ -347,8 +347,6 @@
 			margin: -5px 0 10px;
 		}
 
-		.mf_form .form_checkbox_multiple{}
-
 			.mf_form .form_checkbox_multiple > label
 			{
 				font-weight: bold;
@@ -409,6 +407,11 @@
 					line-height: 2.7;
 					padding-left: 1em;
 				}
+
+		.form_textfield.form_check
+		{
+			display: none;
+		}
 
 		.form_button > button, .form_button > .button
 		{

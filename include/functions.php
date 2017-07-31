@@ -3238,6 +3238,14 @@ function get_file_info($data)
 
 			if(is_dir($file))
 			{
+				if($data['allow_depth'])
+				{
+					$data_temp = $data;
+					$data_temp['path'] = $file;
+
+					get_file_info($data_temp);
+				}
+
 				if($data['folder_callback'] != '')
 				{
 					if(is_callable($data['folder_callback']))
@@ -3247,14 +3255,6 @@ function get_file_info($data)
 
 						call_user_func($data['folder_callback'], $data_temp);
 					}
-				}
-
-				else if($data['allow_depth'])
-				{
-					$data_temp = $data;
-					$data_temp['path'] = $file;
-
-					get_file_info($data_temp);
 				}
 			}
 

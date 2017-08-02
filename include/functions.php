@@ -702,11 +702,22 @@ function format_date($in)
 	return $out;
 }
 
-function get_uploads_folder($subfolder = "")
+function get_uploads_folder($subfolder = "", $force_main_uploads = false)
 {
 	global $error_text;
 
 	$upload_dir = wp_upload_dir();
+
+	if($force_main_uploads == true && is_multisite())
+	{
+		@list($rest, $sites_sub) = explode("/uploads/sites/", $upload_dir['basedir'], 2);
+
+		if($sites_sub != '')
+		{
+			$upload_dir['basedir'] = str_replace("/sites/".$sites_sub, "", $upload_dir['basedir']);
+			$upload_dir['baseurl'] = str_replace("/sites/".$sites_sub, "", $upload_dir['baseurl']);
+		}
+	}
 
 	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
 	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");

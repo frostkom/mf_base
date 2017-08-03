@@ -1188,7 +1188,7 @@ function mf_trigger_error($message, $errno)
 	}
 }
 
-function get_site_language($data)
+function get_site_language($data) //sv_SE, en_US etc.
 {
 	if(!isset($data['type'])){	$data['type'] = "";}
 	if(!isset($data['uc'])){	$data['uc'] = true;}

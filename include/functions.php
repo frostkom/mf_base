@@ -1410,6 +1410,11 @@ function setting_base_info_callback()
 	}
 }
 
+function get_next_cron()
+{
+	return format_date(date("Y-m-d H:i:s", wp_next_scheduled('cron_base')));
+}
+
 function setting_base_cron_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
@@ -1426,8 +1431,6 @@ function setting_base_cron_callback()
 	}
 	######################
 
-	$next_scheduled = wp_next_scheduled('cron_base');
-
 	$arr_schedules = wp_get_schedules();
 
 	$arr_data = array();
@@ -1439,7 +1442,7 @@ function setting_base_cron_callback()
 
 	$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 
-	$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), date("Y-m-d H:i:s", $next_scheduled));
+	$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), get_next_cron());
 
 	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 	{

@@ -2151,7 +2151,7 @@ function add_index($array)
 				$intIndexNonUnique = $r['Non_unique'];
 				$strIndexKey = $r['Key_name'];
 				$strIndexSeq = $r['Seq_in_index'];*/
-				$strIndexColumn = $r['Column_name'];
+				$strIndexColumn = $r->Column_name;
 				/*$strIndexCollation = $r['Collation'];
 				$strIndexCardinality = $r['Cardinality'];
 				$strIndexSub = $r['Sub_part'];

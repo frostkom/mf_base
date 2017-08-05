@@ -2133,6 +2133,47 @@ function update_columns($array)
 	}
 }
 
+function add_index($array)
+{
+	global $wpdb;
+
+	foreach($array as $table => $arr_col)
+	{
+		foreach($arr_col as $column => $value)
+		{
+			$arr_existing_indexes = array();
+
+			$result = $wpdb->get_results("SHOW INDEX FROM ".esc_sql($table));
+
+			foreach($result as $r)
+			{
+				/*$strIndexTable = $r['Table'];
+				$intIndexNonUnique = $r['Non_unique'];
+				$strIndexKey = $r['Key_name'];
+				$strIndexSeq = $r['Seq_in_index'];*/
+				$strIndexColumn = $r['Column_name'];
+				/*$strIndexCollation = $r['Collation'];
+				$strIndexCardinality = $r['Cardinality'];
+				$strIndexSub = $r['Sub_part'];
+				$strIndexPacked = $r['Packed'];
+				$strIndexNull = $r['Null'];
+				$strIndexType = $r['Index_type'];
+				$strIndexComment = $r['Comment'];*/
+
+				$arr_existing_indexes[] = $strIndexColumn;
+			}
+
+			if(!in_array($column, $arr_existing_indexes))
+			{
+				$value = str_replace("[table]", $table, $value);
+				$value = str_replace("[column]", $column, $value);
+
+				$wpdb->query($value);
+			}
+		}
+	}
+}
+
 function run_queries($array)
 {
 	global $wpdb;

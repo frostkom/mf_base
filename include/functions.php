@@ -1440,17 +1440,17 @@ function setting_base_cron_callback()
 		$arr_data[$key] = $value['display'];
 	}
 
-	$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
-
-	$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), get_next_cron());
-
 	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 	{
+		$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
+
 		echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a>";
 	}
 
 	else
 	{
+		$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), get_next_cron());
+
 		if($option == "every_ten_seconds")
 		{
 			$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
@@ -1473,6 +1473,7 @@ function setting_base_recommend_callback()
 	$arr_recommendations = array(
 		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),

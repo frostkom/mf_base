@@ -3330,11 +3330,6 @@ function get_file_info($data)
 
 		closedir($dp);
 	}
-
-	/*else
-	{
-		do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['path']));
-	}*/
 }
 
 ########################################

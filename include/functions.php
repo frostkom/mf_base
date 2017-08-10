@@ -922,6 +922,8 @@ function init_base()
 		date_default_timezone_set($timezone_string);
 	}
 
+	reschedule_base();
+
 	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.php", get_plugin_version(__FILE__));
 	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", get_plugin_version(__FILE__));
 
@@ -1147,7 +1149,7 @@ function mf_get_post_content($id, $field = 'post_content')
 	return $wpdb->get_var($wpdb->prepare("SELECT ".$field." FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
 }
 
-function plugin_actions_base($actions, $plugin_file) //, $plugin_data, $context
+function plugin_actions_base($actions, $plugin_file)
 {
 	if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
 	{
@@ -1415,13 +1417,10 @@ function get_next_cron()
 	return format_date(date("Y-m-d H:i:s", wp_next_scheduled('cron_base')));
 }
 
-function setting_base_cron_callback()
+function reschedule_base($option = '')
 {
-	$setting_key = get_setting_key(__FUNCTION__);
-	$option = get_option($setting_key, 'every_ten_minutes');
+	if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}
 
-	//Re-schedule if value has changed
-	######################
 	$schedule = wp_get_schedule('cron_base');
 
 	if($schedule != $option)
@@ -1429,7 +1428,14 @@ function setting_base_cron_callback()
 		deactivate_base();
 		activate_base();
 	}
-	######################
+}
+
+function setting_base_cron_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key, 'every_ten_minutes');
+
+	reschedule_base($option);
 
 	$arr_schedules = wp_get_schedules();
 
@@ -1493,7 +1499,7 @@ function setting_base_recommend_callback()
 		array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
 	);
 
-	if(is_multisite())
+	/*if(is_multisite())
 	{
 		$arr_recommendations[] = array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base'));
 	}
@@ -1501,7 +1507,7 @@ function setting_base_recommend_callback()
 	else
 	{
 		$arr_recommendations[] = array("WP Fastest Cache", 'wp-fastest-cache/wpFastestCache.php', __("to increase the speed of the public site", 'lang_base'));
-	}
+	}*/
 
 	foreach($arr_recommendations as $value)
 	{

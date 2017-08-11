@@ -3254,6 +3254,8 @@ function set_file_content($data)
 {
 	$success = false;
 
+	if(!isset($data['log'])){	$data['log'] = true;}
+
 	if(isset($data['realpath']) && $data['realpath'] == true)
 	{
 		$data['file'] = realpath($data['file']);
@@ -3271,7 +3273,7 @@ function set_file_content($data)
 			}
 		}
 
-		else
+		else if($data['log'] == true)
 		{
 			do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
 		}

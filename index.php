@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 6.15.8
+Version: 6.15.9
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_base
@@ -60,7 +60,7 @@ load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/
 function activate_base()
 {
 	set_cron('cron_base', 'setting_base_cron');
-	
+
 	mf_uninstall_plugin(array(
 		'options' => array('setting_base_info', 'setting_base_recommend'),
 	));

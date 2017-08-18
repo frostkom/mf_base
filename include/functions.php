@@ -44,7 +44,7 @@ function compress_css($in)
 
 function compress_js($in)
 {
-	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/'); //"/(\/\/.*?\n)/", 
+	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/'); //"/(\/\/.*?\n)/",
 
 	return preg_replace($exkludera, '', $in);
 }
@@ -91,7 +91,7 @@ function get_toggler_container($data)
 				{
 					$out .= $text.$icon;
 				}
-			
+
 			$out .= "</label>
 			<div class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
 
@@ -1393,10 +1393,13 @@ function setting_base_info_callback()
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
 
-	echo "<p><i class='fa ".($php_version > $php_required ? "fa-check green" : "fa-close red")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
-	<p><i class='fa ".($mysql_version > $mysql_required ? "fa-check green" : "fa-close red")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+	$has_required_php_version = point2int($php_version) > point2int($php_required);
+	$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
 
-	if(!($php_version > $php_required && $mysql_version > $mysql_required))
+	echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+	<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+
+	if(!($has_required_php_version && $has_required_mysql_version))
 	{
 		echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
 	}

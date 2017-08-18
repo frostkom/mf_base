@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-04 10:03+0100\n"
+"POT-Creation-Date: 2017-08-18 13:04+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -25,150 +25,150 @@ msgstr "Vi rekommenderar att du installerar %s också"
 msgid "Use run_cron_delete() on %s"
 msgstr "Använd run_cron_delete() på %s"
 
-#: ../include/classes.php:354
-#: ../include/classes.php:1470
+#: ../include/classes.php:339
+#: ../include/classes.php:1448
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:450
-#: ../include/functions.php:1825
-#: ../include/functions.php:3504
+#: ../include/classes.php:428
+#: ../include/functions.php:1833
+#: ../include/functions.php:3550
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:534
-#: ../include/classes.php:552
-#: ../include/classes.php:1523
+#: ../include/classes.php:512
+#: ../include/classes.php:530
+#: ../include/classes.php:1501
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:543
+#: ../include/classes.php:521
 msgid "Sorting..."
 msgstr "Sorterar..."
 
-#: ../include/classes.php:611
+#: ../include/classes.php:589
 msgid "Search for your location"
 msgstr "Sök efter din plats"
 
-#: ../include/classes.php:613
+#: ../include/classes.php:591
 msgid "Coordinates will be displayed here"
 msgstr "Koordinater kommer att visas här"
 
-#: ../include/classes.php:636
+#: ../include/classes.php:614
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
-#: ../include/classes.php:737
-#: ../include/classes.php:738
-#: ../include/classes.php:751
+#: ../include/classes.php:715
+#: ../include/classes.php:716
+#: ../include/classes.php:729
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:1372
+#: ../include/classes.php:1350
 msgid "Updated"
 msgstr "Uppdaterade"
 
-#: ../include/classes.php:1377
+#: ../include/classes.php:1355
 msgid "Already up to date"
 msgstr "Redan uppdaterade"
 
-#: ../include/classes.php:1382
+#: ../include/classes.php:1360
 msgid "Inserted"
 msgstr "Inlagda"
 
-#: ../include/classes.php:1387
+#: ../include/classes.php:1365
 msgid "Not inserted"
 msgstr "Inte inlagda"
 
-#: ../include/classes.php:1392
-#: ../include/classes.php:1400
+#: ../include/classes.php:1370
+#: ../include/classes.php:1378
 msgid "Deleted"
 msgstr "Borttagen"
 
-#: ../include/classes.php:1405
+#: ../include/classes.php:1383
 msgid "Not deleted"
 msgstr "Inte borttagna"
 
-#: ../include/classes.php:1410
+#: ../include/classes.php:1388
 msgid "Did not exist"
 msgstr "Fanns inte"
 
-#: ../include/classes.php:1463
-#: ../include/classes.php:1492
+#: ../include/classes.php:1441
+#: ../include/classes.php:1470
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:1469
-#: ../include/classes.php:1535
-#: ../include/classes.php:1593
-#: ../include/functions.php:1687
-#: ../include/functions.php:1721
-#: ../include/functions.php:1876
-#: ../include/functions.php:1907
-#: ../include/functions.php:3355
+#: ../include/classes.php:1447
+#: ../include/classes.php:1513
+#: ../include/classes.php:1571
+#: ../include/functions.php:1695
+#: ../include/functions.php:1729
+#: ../include/functions.php:1884
+#: ../include/functions.php:1915
+#: ../include/functions.php:3401
 msgid "Choose here"
 msgstr "Välj här"
 
-#: ../include/classes.php:1471
+#: ../include/classes.php:1449
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:1473
+#: ../include/classes.php:1451
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:1483
+#: ../include/classes.php:1461
 msgid "Text"
 msgstr "Text"
 
-#: ../include/classes.php:1483
+#: ../include/classes.php:1461
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:1488
+#: ../include/classes.php:1466
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:1491
+#: ../include/classes.php:1469
 msgid "Skip first row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:1521
-#: ../include/classes.php:1546
-#: ../include/classes.php:1760
+#: ../include/classes.php:1499
+#: ../include/classes.php:1524
+#: ../include/classes.php:1738
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:1542
+#: ../include/classes.php:1520
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:1552
+#: ../include/classes.php:1530
 msgid "Example"
 msgstr "Exempel"
 
-#: ../include/classes.php:1679
-#: ../include/classes.php:1721
+#: ../include/classes.php:1657
+#: ../include/classes.php:1699
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:1684
+#: ../include/classes.php:1662
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:1727
+#: ../include/classes.php:1705
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:1735
+#: ../include/classes.php:1713
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:1747
+#: ../include/classes.php:1725
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:1757
+#: ../include/classes.php:1735
 msgid "File type"
 msgstr "Filtyp"
 
@@ -182,58 +182,58 @@ msgstr "Meddelandet hade ingen mottagare so '%s' kunde inte skickas"
 msgid "The message was empty so I could not send '%s' to '%s'"
 msgstr "Meddelandet var tomt så jag kunde inte skicka '%s' till '%s'"
 
+#: ../include/functions.php:343
 #: ../include/functions.php:345
-#: ../include/functions.php:347
 msgid "Add Content"
 msgstr "Lägg till innehåll"
 
-#: ../include/functions.php:366
+#: ../include/functions.php:364
 msgid "Insert"
 msgstr "Lägg till"
 
-#: ../include/functions.php:367
+#: ../include/functions.php:365
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../include/functions.php:402
+#: ../include/functions.php:400
 msgid "Added Content"
 msgstr "Tilllagt innehåll"
 
-#: ../include/functions.php:478
+#: ../include/functions.php:476
 #, php-format
 msgid "I was not allowed to drop %s and it still has data"
 msgstr "Jag har inte tillåtelse att radera %s och den innehåller fortfarande data"
 
-#: ../include/functions.php:684
+#: ../include/functions.php:682
 msgid "Yesterday"
 msgstr "Igår"
 
-#: ../include/functions.php:741
+#: ../include/functions.php:739
 #, php-format
 msgid "Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder"
 msgstr "Det gick inte att skapa mappen %s i uploads. Lägg till rätt behörigheter för att kunna skapa en undermapp"
 
-#: ../include/functions.php:781
+#: ../include/functions.php:779
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:809
+#: ../include/functions.php:807
 msgid "Manually"
 msgstr "Manuellt"
 
-#: ../include/functions.php:810
+#: ../include/functions.php:808
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
 
-#: ../include/functions.php:811
+#: ../include/functions.php:809
 msgid "Every 10 Minutes"
 msgstr "Var tionde minut"
 
-#: ../include/functions.php:813
+#: ../include/functions.php:811
 msgid "Weekly"
 msgstr "Varje vecka"
 
-#: ../include/functions.php:814
+#: ../include/functions.php:812
 msgid "Monthly"
 msgstr "Varje månad"
 
@@ -300,235 +300,234 @@ msgstr "Rekommendationer"
 msgid "Common"
 msgstr "Gemensamt"
 
-#: ../include/functions.php:1396
-#: ../include/functions.php:1411
+#: ../include/functions.php:1399
+#: ../include/functions.php:1414
 msgid "PHP"
-msgstr "PHP"
+msgstr ""
 
-#: ../include/functions.php:1397
-#: ../include/functions.php:1411
+#: ../include/functions.php:1400
+#: ../include/functions.php:1414
 msgid "MySQL"
-msgstr "MySQL"
+msgstr ""
 
-#: ../include/functions.php:1401
+#: ../include/functions.php:1404
 msgid "Requirements"
 msgstr "Krav"
 
-#: ../include/functions.php:1447
+#: ../include/functions.php:1456
+msgid "Run schedule manually"
+msgstr "Kör schemaläggning manuellt"
+
+#: ../include/functions.php:1461
 #, php-format
 msgid "Next scheduled %s"
 msgstr "Nästa schemaläggning %s"
 
-#: ../include/functions.php:1451
-msgid "Run schedule manually"
-msgstr "Kör schemaläggning manuellt"
-
-#: ../include/functions.php:1458
+#: ../include/functions.php:1465
 #, php-format
 msgid "Make sure that %s is added to %s"
 msgstr "Se till så att %s är med i %s"
 
-#: ../include/functions.php:1476
+#: ../include/functions.php:1483
 msgid "to brand the login and admin area"
 msgstr "för att ändra utseende på login"
 
-#: ../include/functions.php:1478
+#: ../include/functions.php:1485
+msgid "to debug Cron"
+msgstr "för att felsöka Cron"
+
+#: ../include/functions.php:1486
 msgid "to get a graphical interface to the database"
 msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
 
-#: ../include/functions.php:1479
+#: ../include/functions.php:1487
 msgid "to backup all files and database to an external source"
 msgstr "för att ta backup av alla filer och databasen, och skicka till en extern plats"
 
-#: ../include/functions.php:1480
+#: ../include/functions.php:1488
 msgid "to get a WYSIWYG widget editor"
 msgstr "för att kunna ha WYSIWYG-fält i widgets"
 
-#: ../include/functions.php:1481
+#: ../include/functions.php:1489
 msgid "to losslessly compress all uploaded images (Max 500 for free / month)"
 msgstr "för att komprimera bilder utan förlust av kvalité (Max 500 gratis / månad)"
 
-#: ../include/functions.php:1482
+#: ../include/functions.php:1490
 msgid "to log all outgoing e-mails"
 msgstr "för att logga alla utgående e-post"
 
-#: ../include/functions.php:1483
+#: ../include/functions.php:1491
 msgid "to be able to replace existing files by uploading a replacement"
 msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
-#: ../include/functions.php:1484
+#: ../include/functions.php:1492
 msgid "to add all the favicons needed"
 msgstr "för att kunna lägga till alla sk. favicons som kan behövas"
 
-#: ../include/functions.php:1485
+#: ../include/functions.php:1493
 msgid "to add a Sitemap XML to your site"
 msgstr "för att kunna skapa en Sitemap XML till din webbplats"
 
-#: ../include/functions.php:1486
+#: ../include/functions.php:1494
 msgid "to scan for potential time thiefs on your site"
 msgstr "för att skanna efter möjliga tidstjuvar på din webbsida"
 
-#: ../include/functions.php:1487
+#: ../include/functions.php:1495
 msgid "to monitor database queries, hooks, conditionals and more"
 msgstr "att övervaka databasfrågor mm."
 
-#: ../include/functions.php:1488
+#: ../include/functions.php:1496
 msgid "to redirect pages to internal or external URLs"
 msgstr "för att kunna dirigera om sidor till interna och externa URLer"
 
-#: ../include/functions.php:1489
+#: ../include/functions.php:1497
 msgid "to reorder posts with drag & drop"
 msgstr "för att sortera om sidor med musen"
 
-#: ../include/functions.php:1490
+#: ../include/functions.php:1498
 msgid "to losslessly compress all uploaded images"
 msgstr "för att komprimera bilder utan förlust av kvalité"
 
-#: ../include/functions.php:1492
+#: ../include/functions.php:1500
 msgid "to be able to add tables to posts"
 msgstr "för att kunna lägga in tabeller i texter"
 
-#: ../include/functions.php:1494
+#: ../include/functions.php:1502
 msgid "to be able to view video clips in modals"
 msgstr "för att kunna se videoklipp i popups"
 
-#: ../include/functions.php:1499
-#: ../include/functions.php:1504
-msgid "to increase the speed of the public site"
-msgstr "för att öka hastigheten på den publika sidan"
-
-#: ../include/functions.php:1519
+#: ../include/functions.php:1527
 msgid "Edit"
 msgstr "Redigera"
 
-#: ../include/functions.php:1628
+#: ../include/functions.php:1636
 msgid "I could not find any roles for this site...?"
 msgstr "Jag kunde inte hitta någon roll till denna webbplats...?"
 
-#: ../include/functions.php:1699
-#: ../include/functions.php:1705
+#: ../include/functions.php:1707
+#: ../include/functions.php:1713
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:1700
-#: ../include/functions.php:1706
+#: ../include/functions.php:1708
+#: ../include/functions.php:1714
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:1726
+#: ../include/functions.php:1734
 msgid "Super Admin"
 msgstr "Superadmin"
 
-#: ../include/functions.php:1765
+#: ../include/functions.php:1773
 msgid "Pages"
 msgstr "Sidor"
 
-#: ../include/functions.php:1790
+#: ../include/functions.php:1798
 msgid "Post Types"
 msgstr "Sidtyper"
 
-#: ../include/functions.php:1819
+#: ../include/functions.php:1827
 msgid "404"
-msgstr "404"
+msgstr ""
 
-#: ../include/functions.php:1823
+#: ../include/functions.php:1831
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:3110
+#: ../include/functions.php:3159
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:3230
+#: ../include/functions.php:3281
 #, php-format
 msgid "I am sorry but I did not have permission to access %s"
 msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 
-#: ../include/functions.php:3437
+#: ../include/functions.php:3483
 msgid "To view this protected post, enter the password below"
 msgstr "För att se innehållet på denna sida, skriv in lösenordet nedan"
 
-#: ../include/functions.php:3438
+#: ../include/functions.php:3484
 msgid "Password"
 msgstr "Lösenord"
 
-#: ../include/functions.php:3440
+#: ../include/functions.php:3486
 msgid "Submit"
 msgstr "Skicka"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:3462
+#: ../include/functions.php:3508
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:3473
+#: ../include/functions.php:3519
 msgid "Saturday"
 msgstr "Lördag"
 

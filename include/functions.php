@@ -636,11 +636,11 @@ function delete_files($data)
 	if(!isset($data['time_limit'])){	$data['time_limit'] = 60 * 60 * 24 * 2;} //2 days
 
 	$time_now = time();
-	$time_file = filemtime($data['file']);
+	$time_file = @filemtime($data['file']);
 
 	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
 	{
-		unlink($data['file']);
+		@unlink($data['file']);
 	}
 }
 

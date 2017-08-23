@@ -34,21 +34,6 @@ function get_site_url_clean($data = array())
 	return $out;
 }
 
-function compress_css($in)
-{
-	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/', '/(:|,) /', '/;}/');
-	$inkludera = array('', '', '$1', '}');
-
-	return preg_replace($exkludera, $inkludera, $in);
-}
-
-function compress_js($in)
-{
-	$exkludera = array('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '/(\n|\r|\t|\r\n|  |	)+/'); //"/(\/\/.*?\n)/",
-
-	return preg_replace($exkludera, '', $in);
-}
-
 function get_plugin_version($file)
 {
 	if(function_exists('get_plugin_data'))
@@ -234,81 +219,6 @@ function shorten_text($data)
 	else
 	{
 		$out = $data['string'];
-	}
-
-	return $out;
-}
-
-function show_flot_graph($data, $type = 'lines', $settings = '', $width = '', $height = '', $title = '')
-{
-	global $flot_count;
-
-	$globals['flot'] = true;
-
-	if(!($flot_count > 0))
-	{
-		$flot_count = 0;
-	}
-
-	$out = $type_xtra = "";
-
-	if($data != '')
-	{
-		if($settings == '')
-		{
-			$settings = "legend: {position: 'nw'},
-			xaxis: {mode: 'time'}";
-		}
-
-		if(preg_match("/\[tick_mb]/", $settings))
-		{
-			$settings = str_replace("[tick_mb]", "tickFormatter:
-				function suffixFormatter(val, axis)
-				{
-					if(val > 1000000){		return (val / 1000000).toFixed(axis.tickDecimals) + ' MB';}
-					else if(val > 1000){	return (val / 1000).toFixed(axis.tickDecimals) + ' kB';}
-					else{					return val.toFixed(axis.tickDecimals) + ' ';}
-				}",
-			$settings);
-		}
-
-		$style_cont = "";
-
-		if($width > 0)
-		{
-			$style_cont .= "width: ".$width."px;";
-		}
-
-		if($height > 0)
-		{
-			$style_cont .= "height: ".$height."px;";
-		}
-
-		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($title != '' ? " title='".$title."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>";
-
-		if(is_array($type))
-		{
-			$type_xtra = $type[1];
-			$type = $type[0];
-		}
-
-		$out .= "<script>
-			jQuery(function($)
-			{
-				$.plot($('#flot_".$flot_count."'),
-				["
-					.$data
-				."],
-				{
-					series: {".$type.": {show: true".$type_xtra."}},
-					grid: {hoverable: true},"
-					.($type == "lines" ? "points: {show: true, radius: 0.5}," : "")
-					.$settings
-				."});
-			});
-		</script>";
-
-		$flot_count++;
 	}
 
 	return $out;
@@ -563,43 +473,6 @@ function get_post_meta_file_src($data)
 	}
 
 	return $file_url;
-}
-
-function is_between($data)
-{
-	$out = false;
-
-	$value_min = $data['value'][0];
-	$value_max = isset($data['value'][1]) ? $data['value'][1] : "";
-	$compare_min = $data['compare'][0];
-	$compare_max = $data['compare'][1];
-
-	if($value_min >= $compare_min && $value_min <= $compare_max)
-	{
-		$out = true;
-	}
-
-	else if($value_max != '' && $value_max >= $compare_min && $value_max <= $compare_max)
-	{
-		$out = true;
-	}
-
-	if(isset($data['value'][1]))
-	{
-		$value_max = $data['value'][1];
-
-		if($compare_min >= $value_min && $compare_min <= $value_max)
-		{
-			$out = true;
-		}
-
-		else if($compare_max >= $value_min && $compare_max <= $value_max)
-		{
-			$out = true;
-		}
-	}
-
-	return $out;
 }
 
 function time_between_dates($data)
@@ -1031,46 +904,6 @@ function get_file_button($data)
 	</div>";
 }
 
-function get_attachment_callback($in, $callback)
-{
-	list($arr_files, $arr_ids) = get_attachment_to_send($in);
-
-	if(count($arr_ids) > 0)
-	{
-		foreach($arr_ids as $file_id)
-		{
-			if($file_id > 0)
-			{
-				if(is_callable($callback))
-				{
-					call_user_func($callback, $file_id);
-				}
-			}
-		}
-	}
-
-	if(count($arr_files) > 0)
-	{
-		foreach($arr_files as $file_url)
-		{
-			$file_id = get_attachment_id_by_url($file_url);
-
-			if($file_id > 0)
-			{
-				if(is_callable($callback))
-				{
-					call_user_func($callback, $file_id);
-				}
-			}
-
-			else
-			{
-				$error_text = __("The file couldn't be saved", 'lang_base')." (".$file_url.")";
-			}
-		}
-	}
-}
-
 function get_attachment_to_send($string)
 {
 	$arr_ids = $arr_files = array();
@@ -1101,24 +934,6 @@ function get_attachment_to_send($string)
 	}
 
 	return array($arr_files, $arr_ids);
-}
-
-function get_attachment_id_by_url($url)
-{
-	global $wpdb;
-
-	$out = "";
-
-	list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
-
-	$parsed_url = preg_replace("/\-\d+x\d+\./", ".", $parsed_url);
-
-	if($parsed_url != '')
-	{
-		$out = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid RLIKE %s", $parsed_url));
-	}
-
-	return $out;
 }
 
 function get_attachment_data_by_id($id)
@@ -1167,16 +982,6 @@ function get_install_link_tags($require_url, $required_name)
 	return array($a_start, $a_end);
 }
 
-function require_plugin($required_path, $required_name, $require_url = "")
-{
-	if(function_exists('is_plugin_active') && !is_plugin_active($required_path))
-	{
-		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
-
-		mf_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
-	}
-}
-
 function mf_trigger_error($message, $errno)
 {
 	if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
@@ -1190,65 +995,14 @@ function mf_trigger_error($message, $errno)
 	}
 }
 
-function get_site_language($data) //sv_SE, en_US etc.
+function require_plugin($required_path, $required_name, $require_url = "")
 {
-	if(!isset($data['type'])){	$data['type'] = "";}
-	if(!isset($data['uc'])){	$data['uc'] = true;}
-
-	if(preg_match("/\_/", $data['language']))
+	if(function_exists('is_plugin_active') && !is_plugin_active($required_path))
 	{
-		$arr_language = explode("_", $data['language']);
+		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
+
+		mf_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
 	}
-
-	else
-	{
-		$arr_language = explode("-", $data['language']);
-	}
-
-	$out = "";
-
-	if($data['type'] == "first")
-	{
-		if(isset($arr_language[0]))
-		{
-			$out = $arr_language[0];
-
-			if($data['uc'] == true)
-			{
-				$out = strtoupper($out);
-			}
-		}
-
-		else
-		{
-			do_log("Wrong lang[0]: ".var_export($data, true));
-		}
-	}
-
-	else if($data['type'] == "last")
-	{
-		if(isset($arr_language[1]))
-		{
-			$out = $arr_language[1];
-
-			if($data['uc'] == true)
-			{
-				$out = strtoupper($out);
-			}
-		}
-
-		else
-		{
-			do_log("Wrong lang[1]: ".var_export($data, true));
-		}
-	}
-
-	else
-	{
-		$out = $data['language'];
-	}
-
-	return $out;
 }
 
 function get_current_user_role($id = 0)
@@ -1282,36 +1036,33 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
 }
 
-if(!function_exists('point2int'))
+function point2int($in)
 {
-	function point2int($in)
+	$str_version = 0;
+	$multiplier = 1;
+
+	if($in != '')
 	{
-		$str_version = 0;
-		$multiplier = 1;
+		$arr_version = explode(".", $in);
 
-		if($in != '')
+		$count_temp = count($arr_version);
+
+		while($count_temp < 3)
 		{
-			$arr_version = explode(".", $in);
+			$arr_version[] = 0;
 
-			$count_temp = count($arr_version);
-
-			while($count_temp < 3)
-			{
-				$arr_version[] = 0;
-
-				$count_temp++;
-			}
-
-			for($i = 1; $i <= $count_temp; $i++)
-			{
-				$str_version += $arr_version[$count_temp - $i] * $multiplier;
-
-				$multiplier *= 100;
-			}
+			$count_temp++;
 		}
 
-		return $str_version;
+		for($i = 1; $i <= $count_temp; $i++)
+		{
+			$str_version += $arr_version[$count_temp - $i] * $multiplier;
+
+			$multiplier *= 100;
+		}
 	}
+
+	return $str_version;
 }
 
 function show_settings_fields($data)
@@ -1503,7 +1254,7 @@ function setting_base_recommend_callback()
 	if(!(is_plugin_active('tiny-compress-images/tiny-compress-images.php') || is_plugin_active('optimus/optimus.php') || is_plugin_active('wp-smushit/wp-smush.php')))
 	{
 		$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
-		$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB for free)", 'lang_base'));
+		$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
 		$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
 	}
 
@@ -1527,10 +1278,10 @@ function setting_base_recommend_callback()
 	}
 }
 
-function setting_all_options_callback()
+/*function setting_all_options_callback()
 {
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
-}
+}*/
 
 function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 {
@@ -2225,22 +1976,6 @@ function mf_redirect($location, $arr_vars = array())
 	}
 
 	exit;
-}
-
-if(!function_exists('wp_date_format'))
-{
-	function wp_date_format($data)
-	{
-		global $wpdb;
-
-		if(!isset($data['full_datetime'])){		$data['full_datetime'] = false;}
-
-		$date_format = $wpdb->get_var("SELECT option_value FROM ".$wpdb->options." WHERE option_name = '".($data['full_datetime'] == true ? "links_updated_date_format" : "date_format")."'");
-
-		return date($date_format, strtotime($data['date']));
-
-		//return format_date($data['date']);
-	}
 }
 
 function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty = false, $force_req_type = '')
@@ -3168,40 +2903,6 @@ function get_file_content($data)
 	return $content;
 }
 
-function hextostr($hex)
-{
-	$string = "";
-
-	foreach(explode("\n", trim(chunk_split($hex, 2))) as $h)
-	{
-		$string .= chr(hexdec($h));
-	}
-
-	return $string;
-}
-
-function get_hmac_prepared_string($array)
-{
-	$string = "";
-
-	ksort($array);
-
-	foreach($array as $key => $value)
-	{
-		if($key != "MAC")
-		{
-			if(strlen($string) > 1)
-			{
-				$string .= "&";
-			}
-
-			$string .= $key."=".$value;
-		}
-	}
-
-	return $string;
-}
-
 //
 #######################
 function get_match($regexp, $in, $all = true)
@@ -3526,43 +3227,6 @@ function day_name($day_no, $ucfirst = 1)
 	$out = $day_names[$day_no];
 
 	if($ucfirst == 0){$out = strtolower($out);}
-
-	return $out;
-}
-
-/*function get_meta_image_url($post_id, $meta_key)
-{
-	$image_id = get_post_meta($post_id, $meta_key, true);
-
-	$image_array = wp_get_attachment_image_src($image_id, 'full');
-
-	return $image_array[0];
-}*/
-
-function get_list_navigation($resultPagination)
-{
-	global $wpdb, $intLimitAmount, $strSearch;
-
-	$out = "";
-
-	$rowsPagination = $wpdb->num_rows;
-
-	if($rowsPagination > $intLimitAmount || $strSearch != '')
-	{
-		$out .= "<form method='post' action='".preg_replace("/\&paged\=\d+/", "", $_SERVER['REQUEST_URI'])."'>
-			<p class='search-box'>
-				<input type='search' name='s' value='".$strSearch."'>"
-				.show_button(array('text' => __("Search", 'lang_base'), 'class' => "button"))
-			."</p>
-		</form>";
-	}
-
-	if($rowsPagination > 0)
-	{
-		$pagination_obj = new pagination();
-
-		$out .= $pagination_obj->show(array('result' => $resultPagination));
-	}
 
 	return $out;
 }

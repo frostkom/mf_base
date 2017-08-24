@@ -346,6 +346,7 @@ function mf_uninstall_plugin($data)
 
 	if(!isset($data['uploads'])){			$data['uploads'] = "";}
 	if(!isset($data['options'])){			$data['options'] = array();}
+	if(!isset($data['post_types'])){		$data['post_types'] = array();}
 	if(!isset($data['tables'])){			$data['tables'] = array();}
 
 	if($data['uploads'] != '')
@@ -366,16 +367,36 @@ function mf_uninstall_plugin($data)
 		delete_site_option($option);
 	}
 
+	foreach($data['post_types'] as $post_type)
+	{
+		$i = 0;
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status != 'trash'", $post_type));
+
+		foreach($result as $r)
+		{
+			wp_trash_post($r->ID);
+
+			$i++;
+
+			if($i % 100 == 0)
+			{
+				sleep(0.1);
+				set_time_limit(60);
+			}
+		}
+	}
+
 	foreach($data['tables'] as $table)
 	{
-		$wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
+		$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
 
 		if($wpdb->num_rows > 0)
 		{
 			$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
 			$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
 
-			$wpdb->get_results("SHOW TABLES LIKE '".$wpdb->prefix.$table."'");
+			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
 
 			if($wpdb->num_rows > 0)
 			{

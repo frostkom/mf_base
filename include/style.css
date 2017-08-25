@@ -15,7 +15,7 @@
 		white-space: nowrap;
 	}
 
-	.error, .updated
+	.wp-admin .error, .wp-admin .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -24,17 +24,17 @@
 		padding: 5px;
 	}
 
-		.error
+		.wp-admin .error
 		{
 			border-color: #dd3d36;
 		}
 
-		.updated
+		.wp-admin .updated
 		{
 			border-color: #7ad03a;
 		}
 
-		.error p, .updated p
+		.wp-admin .error p, .wp-admin .updated p
 		{
 			margin-bottom: 0;
 		}

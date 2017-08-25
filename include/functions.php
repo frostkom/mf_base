@@ -818,10 +818,11 @@ function init_base()
 
 	reschedule_base();
 
-	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.php", get_plugin_version(__FILE__));
-	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", get_plugin_version(__FILE__));
+	$plugin_version = get_plugin_version(__FILE__);
 
-	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), get_plugin_version(__FILE__));
+	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.php", $plugin_version);
+	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", $plugin_version);
+	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), $plugin_version);
 }
 
 function get_file_icon($file)
@@ -866,12 +867,14 @@ function get_media_button($data = array())
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
-		mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", get_plugin_version(__FILE__));
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", $plugin_version);
 		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
-		), get_plugin_version(__FILE__));
+		), $plugin_version);
 
 		$out .= "<div class='mf_media_button'>";
 
@@ -896,8 +899,10 @@ function get_media_button($data = array())
 
 function get_file_button($data)
 {
+	$plugin_version = get_plugin_version(__FILE__);
+
 	wp_enqueue_style('thickbox');
-	mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", get_plugin_version(__FILE__));
+	mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", $plugin_version);
 
 	$add_file_text = __("Add Image", 'lang_base');
 	$change_file_text = __("Change Image", 'lang_base');
@@ -910,7 +915,7 @@ function get_file_button($data)
 		'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 		'unknown_title' => __("Unknown title", 'lang_base'),
 		'adminurl' => get_admin_url(), 'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text,
-	), get_plugin_version(__FILE__));
+	), $plugin_version);
 
 	return "<div class='mf_image_button'>
 		<div".($data['value'] != '' ? "" : " class='hide'").">
@@ -1109,10 +1114,12 @@ function settings_base()
 {
 	global $wpdb;
 
-	mf_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css", get_plugin_version(__FILE__));
+	$plugin_version = get_plugin_version(__FILE__);
+
+	mf_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css", $plugin_version);
 
 	wp_enqueue_script('jquery-ui-autocomplete');
-	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), get_plugin_version(__FILE__));
+	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
@@ -1320,6 +1327,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 	if($file != '')
 	{
 		$GLOBALS['mf_styles'][$handle] = array(
+			'type' => 'mf',
 			'file' => $file,
 			'version' => $version,
 		);
@@ -1344,6 +1352,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 	if($file != '')
 	{
 		$GLOBALS['mf_scripts'][$handle] = array(
+			'type' => 'mf',
 			'file' => $file,
 			'translation' => $translation,
 			'version' => $version,
@@ -1775,13 +1784,21 @@ function validate_url($value, $link = true, $http = true)
 		$value = str_replace($exkludera, $inkludera, $value);
 	}
 
-	if($http == true && $value != '' && substr($value, 0, 1) != "/")
+	if($http == true && $value != '')
 	{
-		$arr_prefix = array('http:', 'https:', 'ftp:', 'mms:');
-
-		if(!preg_match('/('. implode('|', $arr_prefix) .')/', $value))
+		if(substr($value, 0, 2) == "//")
 		{
-			$value = "http://".$value;
+			$value = "http:".$value;
+		}
+
+		if(substr($value, 0, 1) != "/")
+		{
+			$arr_prefix = array('http:', 'https:', 'ftp:', 'mms:');
+
+			if(!preg_match('/('. implode('|', $arr_prefix) .')/', $value))
+			{
+				$value = "http://".$value;
+			}
 		}
 	}
 

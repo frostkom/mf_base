@@ -818,11 +818,12 @@ function init_base()
 
 	reschedule_base();
 
+	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
-	mf_enqueue_style('font-awesome', plugin_dir_url(__FILE__)."font-awesome.php", $plugin_version);
-	mf_enqueue_style('style_base', plugin_dir_url(__FILE__)."style.css", $plugin_version);
-	mf_enqueue_script('script_base', plugin_dir_url(__FILE__)."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), $plugin_version);
+	mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
+	mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), $plugin_version);
 }
 
 function get_file_icon($file)
@@ -867,10 +868,11 @@ function get_media_button($data = array())
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", $plugin_version);
-		mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
+		mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
+		mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
@@ -899,10 +901,11 @@ function get_media_button($data = array())
 
 function get_file_button($data)
 {
+	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
 	wp_enqueue_style('thickbox');
-	mf_enqueue_style('style_media_button', plugin_dir_url(__FILE__)."style_media_button.css", $plugin_version);
+	mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 
 	$add_file_text = __("Add Image", 'lang_base');
 	$change_file_text = __("Change Image", 'lang_base');
@@ -910,7 +913,7 @@ function get_file_button($data)
 
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
-	mf_enqueue_script('script_media_button', plugin_dir_url(__FILE__)."script_media_button.js", array(
+	mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 		'multiple' => false,
 		'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 		'unknown_title' => __("Unknown title", 'lang_base'),
@@ -1114,12 +1117,13 @@ function settings_base()
 {
 	global $wpdb;
 
+	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
-	mf_enqueue_style('style_base_wp', plugin_dir_url(__FILE__)."style_wp.css", $plugin_version);
+	mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
 
 	wp_enqueue_script('jquery-ui-autocomplete');
-	mf_enqueue_script('script_base_wp', plugin_dir_url(__FILE__)."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
+	mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
 
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 

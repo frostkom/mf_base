@@ -15,29 +15,29 @@
 		white-space: nowrap;
 	}
 
-	.wp-admin .error, .wp-admin .updated
+	.wrap .error, .wrap .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
-		color: #333;
-		margin-bottom: 10px;
-		padding: 5px;
+		color: #444;
+		margin: 5px 15px 2px;
+		padding: 1px 12px;
 	}
 
-		.wp-admin .error
+		.wrap .error
 		{
 			border-color: #dd3d36;
 		}
 
-		.wp-admin .updated
+		.wrap .updated
 		{
 			border-color: #7ad03a;
 		}
 
-		.wp-admin .error p, .wp-admin .updated p
+		/*.wrap .error p, .wrap .updated p
 		{
 			margin-bottom: 0;
-		}
+		}*/
 
 	.toggler.open
 	{

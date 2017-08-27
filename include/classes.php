@@ -722,10 +722,11 @@ class settings_page
 
 	public function create_admin_page()
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base_settings', plugin_dir_url(__FILE__)."style_settings.css", $plugin_version);
-		mf_enqueue_script('script_base_settings', plugin_dir_url(__FILE__)."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
+		mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
+		mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
 
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>

@@ -455,7 +455,7 @@ function get_option_or_default($key, $default = '')
 function get_post_meta_file_src($data)
 {
 	if(!isset($data['is_image'])){		$data['is_image'] = true;}
-	if(!isset($data['image_size'])){	$data['image_size'] = "full";} //thumbnail, medium, large, or full
+	if(!isset($data['image_size'])){	$data['image_size'] = 'full';} //thumbnail, medium, large, or full
 	if(!isset($data['single'])){		$data['single'] = true;}
 
 	$file_ids = get_post_meta($data['post_id'], $data['meta_key'], $data['single']);
@@ -1323,19 +1323,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
-	if(!isset($GLOBALS['mf_styles']))
-	{
-		$GLOBALS['mf_styles'] = array();
-	}
-
-	if($file != '')
-	{
-		$GLOBALS['mf_styles'][$handle] = array(
-			'type' => 'mf',
-			'file' => $file,
-			'version' => $version,
-		);
-	}
+	do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
 
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
@@ -1348,20 +1336,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	if(!isset($GLOBALS['mf_scripts']))
-	{
-		$GLOBALS['mf_scripts'] = array();
-	}
-
-	if($file != '')
-	{
-		$GLOBALS['mf_scripts'][$handle] = array(
-			'type' => 'mf',
-			'file' => $file,
-			'translation' => $translation,
-			'version' => $version,
-		);
-	}
+	do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
 
 	if(count($translation) > 0)
 	{

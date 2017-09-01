@@ -278,7 +278,7 @@ function add_shortcode_display_base()
 	}
 }
 
-function get_page_content()
+function meta_page_content()
 {
 	global $wpdb;
 
@@ -315,7 +315,7 @@ function meta_boxes_base($meta_boxes)
 			array(
 				'id' => $meta_prefix.'content',
 				'type' => 'custom_html',
-				'callback' => 'get_page_content',
+				'callback' => 'meta_page_content',
 			),
 		)
 	);
@@ -450,6 +450,38 @@ function get_option_or_default($key, $default = '')
 	}
 
 	return $option;
+}
+
+function render_image_tag($data)
+{
+	$out = "";
+
+	if(!isset($data['id'])){	$data['id'] = 0;}
+	if(!isset($data['src'])){	$data['src'] = '';}
+
+	if(!($data['id'] > 0) && $data['src'] != '')
+	{
+		global $wpdb;
+
+		$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE guid = %s", $data['src']));
+
+		if($attachment_id > 0)
+		{
+			$data['id'] = $attachment_id;
+		}
+	}
+
+	if($data['id'] > 0)
+	{
+		$out .= wp_get_attachment_image($data['id'], 'full');
+	}
+
+	else if($data['src'] != '')
+	{
+		$out .= "<img src='".$data['src']."'>";
+	}
+
+	return $out;
 }
 
 function get_post_meta_file_src($data)

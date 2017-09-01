@@ -12,6 +12,7 @@
 		background: rgba(255, 255, 255, .5);
 		border: 2px solid #eee;
 		border-radius: .2em;
+		display: block;
 		margin-top: .5em;
 		margin-bottom: .5em;
 		padding: .5em 1em .3em;
@@ -32,6 +33,12 @@
 		margin: 0 0 .5em 0;
 		padding: .5em 1em;
 	}
+
+		.toggle_container ol, .toggle_container ul
+		{
+			margin: .5em 0 0;
+			list-style-position: inside;
+		}
 
 	.widget-content .mf_form:first-of-type
 	{

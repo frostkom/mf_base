@@ -190,15 +190,25 @@ class mf_list_table extends WP_List_Table
 			$query .= " WHERE ".$this->query_where;
 		}
 
-		$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
+		if(isset($this->query_group))
+		{
+			if($this->query_group != '')
+			{
+				$query_group = " GROUP BY ".$this->query_group;
+			}
+		}
+
+		else
+		{
+			$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
+		}
 
 		foreach($data['types'] as $key => $value)
 		{
 			$query_this = $query
 				.($this->query_where != '' ? " AND " : " WHERE ")
 				.$this->get_views_trash_string($key, $data['db_field'])
-				.$query_group
-			;
+				.$query_group;
 
 			$wpdb->query($query_this);
 

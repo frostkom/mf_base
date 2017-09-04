@@ -250,9 +250,9 @@ function add_shortcode_button_base($button)
 
 		if($count_shortcode_button > 0)
 		{
-			$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button' title='".__("Add Content", 'lang_base')."'>"
-				."<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span>"
-				." ".__("Add Content", 'lang_base')
+			$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button'>
+				<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span> "
+				.__("Add Content", 'lang_base')
 			."</a>";
 		}
 	}

@@ -58,11 +58,12 @@ function get_toggler_container($data)
 	if(!isset($data['open'])){						$data['open'] = false;}
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
+	if(!isset($data['icon'])){						$data['icon'] = "fa-caret-right";}
 
 	switch($data['type'])
 	{
 		case 'start':
-			$icon = "<i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : "fa-caret-right")."'></i>";
+			$icon = "<i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : $data['icon'])."'></i>";
 			$text = "<span>".$data['text']."</span>";
 
 			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";

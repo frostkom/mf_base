@@ -710,8 +710,6 @@ class pagination
 
 class settings_page
 {
-	//private $options;
-
 	public function __construct()
 	{
 		$this->options_page = "settings_mf_base";
@@ -1591,32 +1589,15 @@ class mf_export
 		}
 
 		$this->get_defaults();
-		$this->create_dir();
+
+		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
+
 		$this->fetch_request();
+
 		echo $this->save_data();
 	}
 
 	function get_defaults(){}
-
-	function create_dir()
-	{
-		//global $error_text;
-
-		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
-
-		/*if(!is_dir($this->upload_path))
-		{
-			if(!mkdir($this->upload_path, 0755, true))
-			{
-				$this->dir_exists = false;
-			}
-		}
-
-		if($this->dir_exists == false)
-		{
-			$error_text = sprintf(__("Could not create the folder %s. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $this->upload_path);
-		}*/
-	}
 
 	function fetch_request()
 	{

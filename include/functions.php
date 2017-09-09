@@ -1624,7 +1624,34 @@ function get_post_types_for_select($data = array())
 	{
 		$arr_data["is_404()"] = __("404", 'lang_base');
 		//$arr_data["is_archive()"] = __("Archive", 'lang_base');
-		//$arr_data["is_category()"] = __("Category", 'lang_base');
+
+		$arr_categories = get_categories(array(
+			//'order' => 'ASC',
+			//'orderby' => 'id',
+			'hierarchical' => 0,
+			'hide_empty' => 1,
+		));
+
+		if(count($arr_categories) > 0)
+		{
+			$arr_data["is_category()"] = __("Category", 'lang_base');
+
+			if($opt_groups == true)
+			{
+				$arr_data["opt_start_categories"] = __("Categories", 'lang_base');
+			}
+
+				foreach($arr_categories as $category)
+				{
+					$arr_data['is_category('.$category->cat_ID.')'] = $category->name;
+				}
+
+			if($opt_groups == true)
+			{
+				$arr_data["opt_end_categories"] = "";
+			}
+		}
+
 		//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
 		$arr_data["is_home()"] = __("Home", 'lang_base');
 		//$arr_data["is_page()"] = __("Page", 'lang_base');
@@ -3144,6 +3171,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){			$data['post_type'] = "page";}
 	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
+	if(!isset($data['where'])){				$data['where'] = '';}
 	if(!isset($data['order_by'])){			$data['order_by'] = "menu_order";}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['count'])){				$data['count'] = false;}
@@ -3169,19 +3197,17 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
-	$query_where = "";
-
 	if($data['post_status'] != '')
 	{
-		$query_where .= " AND post_status = '".$data['post_status']."'";
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status = '".$data['post_status']."'";
 	}
 
 	else
 	{
-		$query_where .= " AND post_status NOT IN('".implode("','", $exclude_post_status)."')";
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status NOT IN('".implode("','", $exclude_post_status)."')";
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".$query_where." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
 
 	if($data['count'] == true)
 	{

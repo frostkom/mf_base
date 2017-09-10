@@ -15,7 +15,7 @@
 		white-space: nowrap;
 	}
 
-	.wrap .error, .wrap .updated
+	.wrap .error, .wrap .updated, mf-content .error, mf-content .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -24,20 +24,15 @@
 		padding: 1px 12px;
 	}
 
-		.wrap .error
+		.wrap .error, mf-content .error
 		{
 			border-color: #dd3d36;
 		}
 
-		.wrap .updated
+		.wrap .updated, mf-content .updated
 		{
 			border-color: #7ad03a;
 		}
-
-		/*.wrap .error p, .wrap .updated p
-		{
-			margin-bottom: 0;
-		}*/
 
 	.toggler.open
 	{

@@ -3259,27 +3259,6 @@ function format_phone_no($no)
 	return "tel:".str_replace(array(" ", "-", "/"), "", $no);
 }
 
-function password_form_base()
-{
-	return "<form action='".site_url('wp-login.php?action=postpass', 'login_post')."' method='post' class='mf_form'>
-		<p>".__("To view this protected post, enter the password below", 'lang_base')."</p>"
-		.show_password_field(array('name' => "post_password", 'placeholder' => __("Password", 'lang_base'), 'maxlength' => 20))
-		."<div class='form_button'>"
-			.show_button(array('text' => __("Submit")))
-		."</div>
-	</form>";
-}
-
-function the_content_protected_base($html)
-{
-    if(post_password_required())
-	{
-		$html = password_form_base();
-	}
-
-	return $html;
-}
-
 function month_name($month_no, $ucfirst = 1)
 {
 	if($month_no < 1)

@@ -1679,30 +1679,28 @@ function get_post_types_for_select($data = array())
 		$arr_data["is_404()"] = __("404", 'lang_base');
 		//$arr_data["is_archive()"] = __("Archive", 'lang_base');
 
-		$arr_categories = get_categories(array(
-			//'order' => 'ASC',
-			//'orderby' => 'id',
-			'hierarchical' => 0,
-			'hide_empty' => 1,
-		));
+		$arr_categories = get_categories(array('hierarchical' => 1, 'hide_empty' => 1));
 
 		if(count($arr_categories) > 0)
 		{
 			$arr_data["is_category()"] = __("Category", 'lang_base');
 
-			if($opt_groups == true)
+			if(count($arr_categories) > 1)
 			{
-				$arr_data["opt_start_categories"] = __("Categories", 'lang_base');
-			}
-
-				foreach($arr_categories as $category)
+				if($opt_groups == true)
 				{
-					$arr_data['is_category('.$category->cat_ID.')'] = $category->name;
+					$arr_data["opt_start_categories"] = __("Categories", 'lang_base');
 				}
 
-			if($opt_groups == true)
-			{
-				$arr_data["opt_end_categories"] = "";
+					foreach($arr_categories as $category)
+					{
+						$arr_data['is_category('.$category->cat_ID.')'] = ($category->parent > 0 ? "&nbsp;&nbsp;&nbsp;" : "").$category->name;
+					}
+
+				if($opt_groups == true)
+				{
+					$arr_data["opt_end_categories"] = "";
+				}
 			}
 		}
 
@@ -3008,7 +3006,7 @@ function input_hidden($data)
 
 	if($data['value'] != '' || $data['value'] == 0 || $data['allow_empty'] == true)
 	{
-		return "<input type='hidden'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".$data['xtra'].">";
+		return "<input type='hidden'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
 	}
 }
 #####################

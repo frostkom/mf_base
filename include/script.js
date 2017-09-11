@@ -54,4 +54,26 @@ jQuery(function($)
 			toggle_container.toggleClass('hide');
 		}
 	});
+
+	$(document).on('keyup', 'input[type=url]', function()
+	{
+		var dom_obj = $(this),
+			dom_val = dom_obj.val();
+
+		if(dom_val.length == 1)
+		{
+			if(dom_val != 'h')
+			{
+				dom_obj.val("http://" + dom_val);
+			}
+		}
+
+		else if(dom_val.length > 4)
+		{
+			if(dom_val.substring(0, 4) != 'http')
+			{
+				dom_obj.val("http://" + dom_val);
+			}
+		}
+	});
 });

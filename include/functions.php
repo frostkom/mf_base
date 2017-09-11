@@ -1,5 +1,56 @@
 <?php
 
+function extend_tiny_base($init)
+{
+	$init['setup'] = "function(ed)
+	{
+		ed.onBeforeSetContent.add(function(ed, event)
+		{
+			if(event.content.indexOf('[mf_custom_list id=') !== -1)
+			{
+				event.content = event.content.replace(/\[mf_custom_list id\=(.*?)\]/g, function(match, shortcode_id)
+				{
+					return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_custom_list\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Custom List", 'lang_base')."</div>';
+				});
+			}
+
+			if(event.content.indexOf('[mf_form id=') !== -1)
+			{
+				event.content = event.content.replace(/\[mf_form id\=(.*?)\]/g, function(match, shortcode_id)
+				{
+					return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_form\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Form", 'lang_base')."</div>';
+				});
+			}
+		});
+
+		jQuery(document).on('click', '.mf_shortcode_placeholder', function()
+		{
+			console.log('Clicked');
+		});
+
+		ed.onPostProcess.add(function(ed, event)
+		{
+			if(event.get)
+			{
+				event.content = event.content.replace(/<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"(.*?)\" data-mce-id=\"(.*?)\".*?>.*?<\/div>/g, function(tag, shortcode, shortcode_id)
+				{
+					var match,
+						string;
+
+					if(tag.indexOf('data-mce-id=') !== -1)
+					{
+						string = '[' + shortcode + ' id=' + shortcode_id + ']';
+					}
+
+					return string || tag;
+				});
+			}
+		});
+	}";
+
+	return $init;
+}
+
 function get_site_url_clean($data = array())
 {
 	global $wpdb;
@@ -1152,6 +1203,9 @@ function settings_base()
 
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
+
+	//add_editor_style($plugin_include_url."font-awesome.php");
+	//add_editor_style($plugin_include_url."style_editor.css");
 
 	mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
 

@@ -1116,10 +1116,10 @@ class mf_import
 									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").$strRowField." = '".$value."'";
 								}
 
-								if($value != '')
-								{
+								/*if($value != '')
+								{*/
 									$query_xtra .= ($query_xtra != '' ? ", " : "").$strRowField." = '".$value."'";
-								}
+								//}
 							}
 						}
 

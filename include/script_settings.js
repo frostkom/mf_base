@@ -75,6 +75,14 @@ jQuery(function($)
 				$('#' + value.id).hide();
 			});
 		}
+
+		$('.settings-wrap h3.add_to_htacess').each(function()
+		{
+			var self = $(this),
+				tab_id = self.parents('.form-table').prev('div').attr('id');
+
+			$('#tab_' + tab_id).append(" <i class='fa fa-warning yellow'></i>");
+		});
 	}
 
 	else

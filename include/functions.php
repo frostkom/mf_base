@@ -51,6 +51,18 @@ function extend_tiny_base($init)
 	return $init;
 }
 
+function explode_and_trim($delimiter, $string)
+{
+	$array = explode($delimiter, $string);
+
+	foreach($array as $key => $value)
+	{
+		$array[$key] = trim($value);
+	}
+
+	return $array;
+}
+
 function get_site_url_clean($data = array())
 {
 	global $wpdb;

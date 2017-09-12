@@ -1,0 +1,27 @@
+@media all
+{
+	.mce-content-body .mf_shortcode_placeholder
+	{
+		background: #f2f2f2 no-repeat center center;
+		border: 1px solid #aaa;
+		cursor: pointer;
+		font-size: 2em;
+		height: 200px;
+		line-height: 7em;
+		outline: 0;
+		text-align: center;
+		width: 99%;
+	}
+
+	.mce-content-body .mf_shortcode_placeholder:hover
+	{
+		background-color: #ededed;
+		border-color: #72777c;
+	}
+
+	.mce-content-body .mf_shortcode_placeholder.wp-media-selected
+	{
+		background-color: #d8d8d8;
+		border-color: #72777c;
+	}
+}

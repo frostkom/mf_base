@@ -1113,12 +1113,12 @@ class mf_import
 
 								if(in_array($strRowField, $this->unique_columns))
 								{
-									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").$strRowField." = '".$value."'";
+									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 								}
 
 								/*if($value != '')
 								{*/
-									$query_xtra .= ($query_xtra != '' ? ", " : "").$strRowField." = '".$value."'";
+									$query_xtra .= ($query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 								//}
 							}
 						}
@@ -1133,8 +1133,8 @@ class mf_import
 								$table_created = "post_date";
 								$table_user = "post_author";
 
-								$query_search .= " AND post_type = '".$this->post_type."'";
-								$query_xtra .= ($query_xtra != '' ? ", " : "")."post_type = '".$this->post_type."'";
+								$query_search .= " AND post_type = '".esc_sql($this->post_type)."'";
+								$query_xtra .= ($query_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
 							}
 
 							else

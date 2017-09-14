@@ -788,6 +788,57 @@ class mf_encryption
 	}
 }
 
+/*
+$obj_microtime = new mf_microtime();
+echo $obj_microtime->output(__LINE__);
+*/
+class mf_microtime
+{
+	function __construct($data = array())
+	{
+		if(!isset($data['limit'])){	$data['limit'] = 0;}
+
+		$this->time_limit = $data['limit'];
+
+		$this->save_now();
+		$this->time_orig = $this->now;
+	}
+
+	function save_now()
+	{
+		list($usec, $sec) = explode(" ", microtime());
+
+		$this->now = (float) $usec + (float) $sec;
+	}
+
+	function check_time($limit)
+	{
+		$this->save_now();
+
+		return ($this->now - $this->time_orig) > $limit;
+	}
+
+	function output($string, $type = "ms")
+	{
+		$time_old = $this->now;
+		$this->save_now();
+
+		$time_diff = $this->now - $time_old;
+		$time_diff_orig = $this->now - $this->time_orig;
+
+		if($type == "ms")
+		{
+			$time_diff *= 1000;
+			$time_diff_orig *= 1000;
+		}
+
+		if($time_diff >= $this->time_limit)
+		{
+			return $string.": ".mf_format_number($time_diff, 4)." (".mf_format_number($time_diff_orig).")<br>";
+		}
+	}
+}
+
 class mf_font_icons
 {
 	function __construct($id = "")

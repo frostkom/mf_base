@@ -2091,13 +2091,13 @@ function run_queries($array)
 	}
 }
 
-function mf_redirect($location, $arr_vars = array())
+function mf_redirect($location, $arr_vars = array(), $method = 'post')
 {
 	$count_temp = count($arr_vars);
 
 	if(headers_sent() == true || $count_temp > 0)
 	{
-		echo "<form name='reload' action='".$location."' method='post'>";
+		echo "<form name='reload' action='".$location."' method='".$method."'>";
 
 			if($count_temp > 0)
 			{

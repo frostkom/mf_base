@@ -369,10 +369,10 @@ class mf_list_table extends WP_List_Table
 			}
 		}
 
-		else
+		/*else
 		{
 			do_log("Bulk delete: ".var_export($_GET, true));
-		}
+		}*/
 	}
 
 	function process_bulk_action()

@@ -1,9 +1,17 @@
 function on_load_base()
 {
-	jQuery('.mf_form :required, .mf_form .required').each(function()
+	if(script_base.required_field_text != '')
 	{
-		jQuery(this).siblings('label').append(" <span class='asterisk'>*</span>");
-	});
+		jQuery('.mf_form :required, .mf_form .required').each(function()
+		{
+			jQuery(this).siblings('label').append(" <span class='asterisk'>" + script_base.required_field_text + "</span>");
+		});
+	}
+}
+
+function scroll_to_top()
+{
+	jQuery('html, body').animate({scrollTop: 0}, 800);
 }
 
 jQuery(function($)

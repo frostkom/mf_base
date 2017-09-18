@@ -916,10 +916,13 @@ function init_base()
 
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
+	
+	$setting_base_external_links = get_option('setting_base_external_links', 'yes');
+	$setting_base_required_field_text = get_option('setting_base_required_field_text', '*');
 
 	mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
 	mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => get_option('setting_base_external_links', 'yes')), $plugin_version);
+	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => $setting_base_external_links, 'required_field_text' => $setting_base_required_field_text), $plugin_version);
 }
 
 function get_file_icon($file)
@@ -1234,6 +1237,7 @@ function settings_base()
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
+		'setting_base_required_field_text' => __("Required field text", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
 
@@ -1357,6 +1361,14 @@ function setting_base_external_links_callback()
 	$option = get_option($setting_key, 'yes');
 
 	echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+}
+
+function setting_base_required_field_text_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	echo show_textfield(array('name' => $setting_key, 'value' => $option, 'placeholder' => "*"));
 }
 
 function setting_base_recommend_callback()
@@ -3001,7 +3013,7 @@ function show_button($data)
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")
 		.($data['class'] != '' ? " class='".$data['class']."'" : " class='button-primary'")
-		.$data['xtra']
+		.($data['xtra'] != '' ? " ".$data['xtra'] : "")
 	.">"
 		.$data['text']
 	."</button>";

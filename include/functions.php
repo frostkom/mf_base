@@ -1776,16 +1776,11 @@ function get_posts_for_select($data)
 
 	else
 	{
-		$arr_exclude = array();
+		$arr_include = get_post_types(array('public' => true), 'names');
 
-		foreach(get_post_types(array('public' => false), 'objects') as $post_type)
+		if(count($arr_include) > 0)
 		{
-			$arr_exclude[] = $post_type->name;
-		}
-
-		if(count($arr_exclude) > 0)
-		{
-			$query_where .= " AND post_type NOT IN('".implode("','", $arr_exclude)."')";
+			$query_where .= " AND post_type IN('".implode("','", $arr_include)."')";
 		}
 	}
 

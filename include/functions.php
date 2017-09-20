@@ -1,5 +1,21 @@
 <?php
 
+function get_pages_from_shortcode($shortcode)
+{
+	global $wpdb;
+
+	$arr_ids = array();
+
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = 'publish' AND post_content LIKE %s", "%".addslashes($shortcode)."%")); //post_type != 'revision' AND 
+
+	foreach($result as $r)
+	{
+		$arr_ids[] = $r->ID;
+	}
+
+	return $arr_ids;
+}
+
 function extend_tiny_base($init)
 {
 	$init['setup'] = "function(ed)

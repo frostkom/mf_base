@@ -1167,10 +1167,7 @@ class mf_import
 									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 								}
 
-								/*if($value != '')
-								{*/
-									$query_xtra .= ($query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
-								//}
+								$query_xtra .= ($query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 							}
 						}
 

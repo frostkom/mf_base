@@ -244,7 +244,7 @@
 			box-sizing: border-box;
 			display: inline-block;
 			font: inherit;
-			height: auto;
+			/*height: auto;*/
 			margin: 0 0 .8em;
 			padding: .4em;
 			width: 100%;

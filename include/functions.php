@@ -966,9 +966,16 @@ function get_file_icon($file)
 
 function get_file_suffix($file)
 {
+	if(preg_match("/\?/", $file))
+	{
+		list($file, $rest) = explode("?", $file, 2);
+	}
+
 	$arr_file_name = explode(".", $file);
 
-	return $arr_file_name[count($arr_file_name) - 1];
+	$suffix = $arr_file_name[count($arr_file_name) - 1];
+
+	return $suffix;
 }
 
 function get_media_button($data = array())

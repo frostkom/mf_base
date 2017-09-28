@@ -934,7 +934,7 @@ function init_base()
 	$plugin_version = get_plugin_version(__FILE__);
 	
 	$setting_base_external_links = get_option('setting_base_external_links', 'yes');
-	$setting_base_required_field_text = get_option('setting_base_required_field_text', '*');
+	$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
 
 	mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
 	mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);

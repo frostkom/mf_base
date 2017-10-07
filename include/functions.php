@@ -2573,7 +2573,7 @@ function show_wp_editor($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 
-	return mf_editor($data['value'], $data['name'], $data);
+	return mf_editor(str_replace("\\", "", $data['value']), $data['name'], $data);
 }
 
 function mf_editor($content, $editor_id, $data = array())

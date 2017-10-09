@@ -1259,8 +1259,8 @@ function settings_base()
 	$arr_settings = array(
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-		'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
-		'setting_base_required_field_text' => __("Required field text", 'lang_base'),
+		//'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
+		//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
 

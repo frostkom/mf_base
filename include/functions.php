@@ -2573,15 +2573,7 @@ function show_wp_editor($data)
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 
-	return mf_editor(str_replace("\\", "", $data['value']), $data['name'], $data);
-}
-
-function mf_editor($content, $editor_id, $data = array())
-{
-	if(!isset($data['class'])){			$data['class'] = "";}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['required'])){		$data['required'] = false;}
+	$data['value'] = str_replace("\\", "", $data['value']);
 
 	$out = "";
 
@@ -2643,6 +2635,16 @@ function mf_editor($content, $editor_id, $data = array())
 	}
 
 	return $out;
+}
+
+function mf_editor($content, $editor_id, $data = array())
+{
+	$data['name'] = $editor_id;
+	$data['value'] = $content;
+
+	do_log("mf_editor is still in use");
+
+	return show_wp_editor($data);
 }
 
 ############################

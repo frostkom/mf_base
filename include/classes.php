@@ -157,13 +157,13 @@ class mf_list_table extends WP_List_Table
 
 		if(substr($db_field, -7) == "Deleted")
 		{
-			$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+			$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30) * 2;
 
 			$result = $wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
 			if($wpdb->num_rows > 0)
 			{
-				$error_text = sprintf(__("Use run_cron_delete() on %s"), $db_field);
+				$error_text = sprintf(__("Use delete_base() on %s"), $db_field);
 
 				do_log($error_text);
 			}

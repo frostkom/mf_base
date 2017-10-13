@@ -15,7 +15,7 @@
 		white-space: nowrap;
 	}
 
-	.wrap .error, .wrap .updated, #mf-content .error, mf-content .updated
+	.wrap .error, .wrap .updated, #mf-content .error, #mf-content .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -33,6 +33,19 @@
 		{
 			border-color: #7ad03a;
 		}
+
+		#mf-content .error, #mf-content .updated
+		{
+			background: #fff;
+			box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+			margin: .3em 0 1em;
+		}
+			
+			#mf-content .error p, #mf-content .updated p
+			{
+				margin: .3em 0;
+				padding: .15em;
+			}
 
 	.toggler.open
 	{

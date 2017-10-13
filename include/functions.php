@@ -2620,7 +2620,7 @@ function show_wp_editor($data)
 
 			ob_start();
 
-				wp_editor($content, $editor_id, $data);
+				wp_editor($data['value'], $data['name'], $data);
 
 			$out .= ob_get_clean();
 

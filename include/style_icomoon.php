@@ -1,15 +1,16 @@
 <?php
 
-header("Content-Type: text/css; charset=utf-8");
+$is_standalone = !defined('ABSPATH');
 
-if(!defined('ABSPATH'))
+if($is_standalone)
 {
+	header("Content-Type: text/css; charset=utf-8");
+
 	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
 
 	require_once($folder."wp-load.php");
 }
 
-$plugin_include_url = plugin_dir_url(__FILE__);
 $plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 
  echo "@font-face {

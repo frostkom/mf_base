@@ -923,7 +923,7 @@ class mf_font_icons
 
 		if($content == "")
 		{
-			$content = get_url_content("http://fortawesome.github.io/Font-Awesome/icons/");
+			$content = get_url_content("fortawesome.github.io/Font-Awesome/icons/");
 
 			//$arr_icons = get_match_all("/icon\/(.*?)\"/s", $content, false);
 			$arr_icons = get_match_all("/fa-(.*?)[ |\"]/s", $content, false);

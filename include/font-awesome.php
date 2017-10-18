@@ -1,20 +1,25 @@
 <?php
 
-/*!
- *  Font Awesome 4.4.0 by @davegandy - http://fontawesome.io - @fontawesome
- *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
- */
+$is_standalone = !defined('ABSPATH');
 
-header("Content-Type: text/css; charset=utf-8");
-
-if(!defined('ABSPATH'))
+if($is_standalone)
 {
+	header("Content-Type: text/css; charset=utf-8");
+
 	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
 
 	require_once($folder."wp-load.php");
 }
 
-$plugin_include_url = plugin_dir_url(__FILE__);
+?>
+
+/*!
+ *  Font Awesome 4.4.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+
+<?php
+
 $plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 
  echo "@font-face

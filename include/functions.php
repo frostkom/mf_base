@@ -1398,8 +1398,7 @@ function setting_base_required_field_text_callback()
 function setting_base_recommend_callback()
 {
 	$arr_recommendations = array(
-		array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
-		//array("Admin Menu Tree Page View", 'admin-menu-tree-page-view/index.php'),
+		//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 		array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
@@ -1424,16 +1423,6 @@ function setting_base_recommend_callback()
 		$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
 		$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
 	}
-
-	/*if(is_multisite())
-	{
-		$arr_recommendations[] = array("WP Super Cache", 'wp-super-cache/wp-cache.php', __("to increase the speed of the public site", 'lang_base'));
-	}
-
-	else
-	{
-		$arr_recommendations[] = array("WP Fastest Cache", 'wp-fastest-cache/wpFastestCache.php', __("to increase the speed of the public site", 'lang_base'));
-	}*/
 
 	foreach($arr_recommendations as $value)
 	{

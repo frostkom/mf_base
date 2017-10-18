@@ -893,6 +893,7 @@ function delete_base($data)
 function init_base()
 {
 	define('DEFAULT_DATE', "1982-08-04 23:15:00");
+	define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 
 	$is_super_admin = $is_admin = $is_editor = $is_author = false;
 
@@ -1457,6 +1458,8 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
+	$file = str_replace(array("http:", "https:"), "", $file);
+
 	do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
 
 	wp_enqueue_style($handle, $file, $dep, $version);
@@ -1469,6 +1472,8 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$version = $translation;
 		$translation = array();
 	}
+
+	$file = str_replace(array("http:", "https:"), "", $file);
 
 	do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
 
@@ -1921,7 +1926,7 @@ function validate_url($value, $link = true, $http = true)
 	{
 		if(substr($value, 0, 2) == "//")
 		{
-			$value = "http:".$value;
+			$value = (IS_HTTPS ? "https:" : "http:").$value;
 		}
 
 		if(substr($value, 0, 1) != "/")

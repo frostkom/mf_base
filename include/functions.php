@@ -1439,6 +1439,11 @@ function setting_base_recommend_callback()
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
 }*/
 
+function remove_protocol($url)
+{
+	return str_replace(array("http:", "https:"), "", $url);
+}
+
 function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 {
 	if(!is_array($dep))
@@ -1447,7 +1452,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
-	$file = str_replace(array("http:", "https:"), "", $file);
+	$file = remove_protocol($file);
 
 	do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
 
@@ -1462,7 +1467,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	$file = str_replace(array("http:", "https:"), "", $file);
+	$file = remove_protocol($file);
 
 	do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
 

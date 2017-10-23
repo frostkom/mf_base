@@ -467,7 +467,7 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
-		if(!isset($data['limit'])){		$data['limit'] = "";}
+		if(!isset($data['limit'])){		$data['limit'] = check_var('paged', 'int', true, '0');}
 		if(!isset($data['amount'])){	$data['amount'] = "";}
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}

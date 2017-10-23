@@ -1652,8 +1652,9 @@ function get_roles_for_select($data = array())
 
 function get_post_types_for_select($data = array())
 {
-	if(!isset($data['include'])){	$data['include'] = array('ids', 'types', 'special');}
-	if(!isset($data['add_is'])){	$data['add_is'] = true;}
+	if(!isset($data['include'])){		$data['include'] = array('ids', 'types', 'special');}
+	if(!isset($data['post_status'])){	$data['post_status'] = 'publish';}
+	if(!isset($data['add_is'])){		$data['add_is'] = true;}
 
 	$opt_groups = is_array($data['include']) && count($data['include']) > 1;
 
@@ -1662,7 +1663,7 @@ function get_post_types_for_select($data = array())
 	if(in_array('ids', $data['include']))
 	{
 		$arr_pages = array();
-		get_post_children(array(), $arr_pages);
+		get_post_children(array('post_status' => $data['post_status']), $arr_pages);
 
 		if(count($arr_pages) > 0)
 		{
@@ -3262,32 +3263,25 @@ function get_post_children($data, &$arr_data = array())
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
 	if(!isset($data['output_array'])){		$data['output_array'] = true;}
+	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
-	if(!isset($data['post_type'])){			$data['post_type'] = "page";}
-	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
+	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
+	if(!isset($data['post_status'])){		$data['post_status'] = 'publish';}
 	if(!isset($data['where'])){				$data['where'] = '';}
-	if(!isset($data['order_by'])){			$data['order_by'] = "menu_order";}
+	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['count'])){				$data['count'] = false;}
 
-	if(!isset($data['current_id'])){		$data['current_id'] = "";}
+	if(!isset($data['current_id'])){		$data['current_id'] = '';}
+	
+	$data['depth'] = !isset($data['depth']) ? 0 : $data['depth']++;
 
 	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');
 
 	if($data['add_choose_here'] == true)
 	{
 		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
-	}
-
-	if(!isset($data['depth']))
-	{
-		$data['depth'] = 0;
-	}
-
-	else
-	{
-		$data['depth']++;
 	}
 
 	$out = "";
@@ -3339,10 +3333,12 @@ function get_post_children($data, &$arr_data = array())
 				."</option>";
 			}
 
-			$data['post_id'] = $post_id;
-			//$data['depth']++;
+			if($data['allow_depth'] == true)
+			{
+				$data['post_id'] = $post_id;
 
-			$out .= get_post_children($data, $arr_data);
+				$out .= get_post_children($data, $arr_data);
+			}
 		}
 	}
 

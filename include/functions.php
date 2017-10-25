@@ -306,11 +306,11 @@ function shorten_text($data)
 
 function check_notifications()
 {
-	$arr_notifications = apply_filters('get_user_notifications', array());
+	$array = apply_filters('get_user_notifications', array());
 
 	$result = array(
 		'success' => true,
-		'notifications' => $arr_notifications,
+		'notifications' => $array,
 	);
 
 	echo json_encode($result);

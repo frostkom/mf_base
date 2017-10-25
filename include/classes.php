@@ -1502,10 +1502,11 @@ class mf_import
 
 					if(count($this->actions) > 1)
 					{
-						$arr_data = array();
-						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
-						$arr_data['delete'] = __("Delete", 'lang_base');
-						$arr_data['import'] = __("Import", 'lang_base');
+						$arr_data = array(
+							'' => "-- ".__("Choose here", 'lang_base')." --",
+							'delete' => __("Delete", 'lang_base'),
+							'import' => __("Import", 'lang_base'),
+						);
 
 						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action));
 					}

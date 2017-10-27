@@ -1406,27 +1406,47 @@ class mf_import
 					{
 						if($this->rows_updated > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-check green'></i></td><td>".$this->rows_updated."</td><td>".__("Updated", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-check green'></i></td>
+								<td>".$this->rows_updated."</td>
+								<td>".__("Updated", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_up_to_date > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-cloud'></i></td><td>".$this->rows_up_to_date."</td><td>".__("Already up to date", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-cloud'></i></td>
+								<td>".$this->rows_up_to_date."</td>
+								<td>".__("Already up to date", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_inserted > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-plus green'></i></td><td>".$this->rows_inserted."</td><td>".__("Inserted", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-plus green'></i></td>
+								<td>".$this->rows_inserted."</td>
+								<td>".__("Inserted", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_not_inserted > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-chain-broken red'></i></td><td>".$this->rows_not_inserted."</td><td>".__("Not inserted", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-chain-broken red'></i></td>
+								<td>".$this->rows_not_inserted."</td>
+								<td>".__("Not inserted", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_deleted > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-close red'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-close red'></i></td>
+								<td>".$this->rows_deleted."</td>
+								<td>".__("Deleted", 'lang_base')."</td>
+							</tr>";
 						}
 					}
 
@@ -1434,17 +1454,29 @@ class mf_import
 					{
 						if($this->rows_deleted > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-close red'></i></td><td>".$this->rows_deleted."</td><td>".__("Deleted", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-close red'></i></td>
+								<td>".$this->rows_deleted."</td>
+								<td>".__("Deleted", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_not_deleted > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-chain-broken red'></i></td><td>".$this->rows_not_deleted."</td><td>".__("Not deleted", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-chain-broken red'></i></td>
+								<td>".$this->rows_not_deleted."</td>
+								<td>".__("Not deleted", 'lang_base')."</td>
+							</tr>";
 						}
 
 						if($this->rows_not_exists > 0)
 						{
-							$out .= "<tr><td><i class='fa fa-lg fa-question'></i></td><td>".$this->rows_not_exists."</td><td>".__("Did not exist", 'lang_base')."</td></tr>";
+							$out .= "<tr>
+								<td><i class='fa fa-lg fa-question'></i></td>
+								<td>".$this->rows_not_exists."</td>
+								<td>".__("Did not exist", 'lang_base')."</td>
+							</tr>";
 						}
 					}
 

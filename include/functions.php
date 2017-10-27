@@ -132,6 +132,25 @@ function get_plugin_version($file)
 	}
 }
 
+function get_theme_version()
+{
+	if(function_exists('wp_get_theme'))
+	{
+		$arr_theme_data = wp_get_theme();
+
+		$theme_version = $arr_theme_data['Version'];
+	}
+
+	else
+	{
+		$theme_version = 0;
+	}
+
+	$theme_version = int2point(point2int($theme_version) + get_option_or_default('option_theme_version', 1));
+
+	return $theme_version;
+}
+
 function get_toggler_container($data)
 {
 	if(!isset($data['open'])){						$data['open'] = false;}
@@ -3032,7 +3051,7 @@ function show_button($data)
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")
-		.($data['class'] != '' ? " class='".$data['class']."'" : " class='button-primary'")
+		." class='".($data['class'] != '' ? $data['class'] : "button-primary")."'"
 		.($data['xtra'] != '' ? " ".$data['xtra'] : "")
 	.">"
 		.$data['text']

@@ -492,6 +492,7 @@ function mf_uninstall_plugin($data)
 
 		if($wpdb->num_rows > 0)
 		{
+			$wpdb->query("DELETE FROM ".$wpdb->prefix.$table." WHERE 1 = 1");
 			$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
 			$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
 
@@ -1423,6 +1424,7 @@ function setting_base_recommend_callback()
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
 		array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 		array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),

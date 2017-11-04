@@ -2690,6 +2690,8 @@ function show_select($data)
 
 	if($count_temp > 0)
 	{
+		$container_class = "form_select";
+
 		if(substr($data['name'], -2) == "[]")
 		{
 			if($count_temp > $data['maxsize'])
@@ -2710,12 +2712,7 @@ function show_select($data)
 			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
 			$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."multiple size='".$size."'";
 
-			$container_class = "form_select form_select_multiple";
-		}
-
-		else
-		{
-			$container_class = "form_select";
+			$container_class .= " form_select_multiple";
 		}
 
 		if($data['required'])
@@ -2754,6 +2751,15 @@ function show_select($data)
 
 					foreach($data['data'] as $key => $option)
 					{
+						$disabled = false;
+
+						if(substr($key, 0, 9) == "disabled_")
+						{
+							list($rest, $key) = explode("_", $key);
+
+							$disabled = true;
+						}
+
 						$data_value = $key;
 						$data_text = $option;
 
@@ -2771,7 +2777,12 @@ function show_select($data)
 						{
 							$out .= "<option value='".$data_value."'";
 
-								if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
+								if($disabled == true)
+								{
+									$out .= " disabled";
+								}
+
+								else if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
 								{
 									$out .= " selected";
 								}

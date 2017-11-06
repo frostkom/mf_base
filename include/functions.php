@@ -2509,6 +2509,8 @@ function show_password_field($data)
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	if($data['maxlength'] != '')
 	{
@@ -2527,8 +2529,19 @@ function show_password_field($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['xtra'].">
-	</div>";
+		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['xtra'].">";
+
+		if($data['suffix'] != '')
+		{
+			$out .= "<span class='description'>".$data['suffix']."</span>";
+		}
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
+		}
+
+	$out .= "</div>";
 
 	return $out;
 }

@@ -2468,7 +2468,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."' id='".$data['name']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
 
 		if($data['suffix'] != '')
 		{
@@ -3019,7 +3019,7 @@ function show_radio_input($data)
 	}
 
 	$out = "<div class='form_radio".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
-		<input type='radio' id='".$data['name']."_".$data['value']."' name='".$data['name']."' value='".$data['value']."'".$checked.$data['xtra'].">";
+		<input type='radio' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."_".$data['value']."'".$checked.$data['xtra'].">";
 
 		if($data['text'] != '')
 		{
@@ -3179,9 +3179,9 @@ function get_match_all($regexp, $in, $all = true)
 ##################
 function set_file_content($data)
 {
-	$success = false;
-
 	if(!isset($data['log'])){	$data['log'] = true;}
+
+	$success = false;
 
 	if(isset($data['realpath']) && $data['realpath'] == true)
 	{
@@ -3190,8 +3190,36 @@ function set_file_content($data)
 
 	if($data['file'] != '')
 	{
+		switch(get_file_suffix($data['file']))
+		{
+			case 'bz2':
+				if(!function_exists('bzcompress'))
+				{
+					$data['file'] = substr($data['file'], 0, -4);
+				}
+			break;
+
+			case 'gz':
+				if(!function_exists('gzencode'))
+				{
+					$data['file'] = substr($data['file'], 0, -3);
+				}
+			break;
+		}
+
 		if($fh = @fopen($data['file'], $data['mode']))
 		{
+			switch(get_file_suffix($data['file']))
+			{
+				case 'bz2':
+					$data['content'] = bzcompress($data['content']); //, 9
+				break;
+
+				case 'gz':
+					$data['content'] = gzencode($data['content']); //, 9
+				break;
+			}
+
 			if(fwrite($fh, $data['content']))
 			{
 				fclose($fh);

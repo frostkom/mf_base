@@ -68,7 +68,7 @@
 		overflow: hidden;
 	}
 
-		.wp-list-table .column-image img
+		.wp-list-table .column-image img, .rwmb-field img
 		{
 			max-height: 80px;
 			object-fit: cover;

@@ -6,7 +6,7 @@ function get_pages_from_shortcode($shortcode)
 
 	$arr_ids = array();
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = 'publish' AND post_content LIKE %s", "%".addslashes($shortcode)."%")); //post_type != 'revision' AND 
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = 'publish' AND post_content LIKE %s", "%".addslashes($shortcode)."%")); //post_type != 'revision' AND
 
 	foreach($result as $r)
 	{
@@ -953,7 +953,7 @@ function init_base()
 
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
-	
+
 	$setting_base_external_links = get_option('setting_base_external_links', 'yes');
 	$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
 
@@ -3347,7 +3347,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['count'])){				$data['count'] = false;}
 
 	if(!isset($data['current_id'])){		$data['current_id'] = '';}
-	
+
 	$data['depth'] = !isset($data['depth']) ? 0 : $data['depth']++;
 
 	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');

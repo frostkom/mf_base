@@ -1033,10 +1033,19 @@ function get_media_button($data = array())
 			}
 
 			$out .= "<div class='mf_media_raw'></div>
-			<table class='mf_media_list widefat striped'></table>"
-			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"))
-			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
-		."</div>";
+			<table class='mf_media_list widefat striped'></table>";
+
+			/*if(1 == 2)
+			{
+				$out .= "<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>";
+			}
+
+			else
+			{*/
+				$out .= input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"));
+			//}
+
+		$out .= "</div>";
 	}
 
 	return $out;
@@ -1102,6 +1111,11 @@ function get_attachment_to_send($string)
 					$arr_files[] = $file_url;
 				}
 			}
+		}
+
+		if(count($arr_ids) == 0 && count($arr_files) == 0)
+		{
+			do_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
 		}
 	}
 

@@ -274,7 +274,7 @@
 					margin-left: 1em;
 				}
 
-			.mf_form .form_textfield input, .mf_form select, .mf_form .form_password input
+			.mf_form .form_textfield input, .wrap .mf_form select, .mf_form .form_password input
 			{
 				min-height: 2.7em;
 			}

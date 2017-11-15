@@ -3355,6 +3355,8 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
 	if(!isset($data['post_status'])){		$data['post_status'] = 'publish';}
+	if(!isset($data['include'])){			$data['include'] = array();}
+	if(!isset($data['exclude'])){			$data['exclude'] = array();}
 	if(!isset($data['where'])){				$data['where'] = '';}
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
@@ -3381,6 +3383,16 @@ function get_post_children($data, &$arr_data = array())
 	else
 	{
 		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status NOT IN('".implode("','", $exclude_post_status)."')";
+	}
+
+	if(count($data['include']) > 0)
+	{
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."ID IN('".implode("','", $data['include'])."')";
+	}
+
+	if(count($data['exclude']) > 0)
+	{
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."ID NOT IN('".implode("','", $data['exclude'])."')";
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));

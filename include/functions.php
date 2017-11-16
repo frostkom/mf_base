@@ -728,7 +728,7 @@ function format_date($in)
 	return $out;
 }
 
-function get_uploads_folder($subfolder = "", $force_main_uploads = false)
+function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 {
 	global $error_text;
 

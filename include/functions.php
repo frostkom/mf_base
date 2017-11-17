@@ -809,7 +809,7 @@ function insert_attachment($data)
 	return $intFileID;
 }
 
-function do_log($data, $action = "insert")
+function do_log($data, $action = 'insert')
 {
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
 	{
@@ -822,10 +822,15 @@ function do_log($data, $action = "insert")
 		$obj_log->create($data, $action);
 	}
 
-	else if(IS_ADMIN)
+	else if('insert' == $action)
+	{
+		error_log($data);
+	}
+
+	/*else if(IS_ADMIN)
 	{
 		echo $data."<br>";
-	}
+	}*/
 }
 
 function schedules_base($schedules)

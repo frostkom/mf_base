@@ -79,6 +79,11 @@ function explode_and_trim($delimiter, $string)
 	return $array;
 }
 
+function mf_clean_url($url)
+{
+	return str_replace(array("http://", "https://"), "", $url);
+}
+
 function get_site_url_clean($data = array())
 {
 	global $wpdb;
@@ -102,7 +107,7 @@ function get_site_url_clean($data = array())
 
 	else
 	{
-		$out = str_replace(array("http://", "https://"), "", get_site_url());
+		$out = mf_clean_url(get_site_url());
 	}
 
 	if($data['trim'] != '')

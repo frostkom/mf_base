@@ -2407,6 +2407,7 @@ function show_textfield($data)
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
 	if(!isset($data['name'])){			$data['name'] = "";}
+	if(!isset($data['id'])){			$data['id'] = $data['name'];}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
@@ -2492,7 +2493,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."' id='".$data['name']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
 
 		if($data['suffix'] != '')
 		{

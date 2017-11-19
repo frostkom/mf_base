@@ -596,9 +596,9 @@ if(class_exists('RWMB_Field'))
 		static public function html($meta, $field)
 		{
 			return "<div class='map_wrapper'>"
-				.show_textfield(array('name' => "webshop_map_input", 'placeholder' => __("Search for your location", 'lang_base'), 'xtra' => "id='webshop_map_input'"))
+				.show_textfield(array('name' => "webshop_map_input", 'placeholder' => __("Search for your location", 'lang_base')))
 				."<div id='webshop_map'></div>"
-				.show_textfield(array('name' => $field['field_name'], 'value' => $meta, 'placeholder' => __("Coordinates will be displayed here", 'lang_base'), 'xtra' => "id='webshop_map_coords' class='rwmb-text'"))
+				.show_textfield(array('name' => $field['field_name'], 'value' => $meta, 'placeholder' => __("Coordinates will be displayed here", 'lang_base'), 'id' => "webshop_map_coords", 'xtra' => "class='rwmb-text'"))
 			."</div>";
 		}
 	}

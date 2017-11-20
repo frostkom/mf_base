@@ -1447,11 +1447,11 @@ function setting_base_recommend_callback()
 		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 		//array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
-		array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
+		//array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
+		//array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
 		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 		array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
@@ -3372,6 +3372,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['count'])){				$data['count'] = false;}
+	if(!isset($data['debug'])){				$data['debug'] = false;}
 
 	if(!isset($data['current_id'])){		$data['current_id'] = '';}
 
@@ -3407,13 +3408,19 @@ function get_post_children($data, &$arr_data = array())
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
+	$rows = $wpdb->num_rows;
+
+	if($data['debug'] == true)
+	{
+		do_log("get_post_children(): ".$wpdb->last_query);
+	}
 
 	if($data['count'] == true)
 	{
-		$out = $wpdb->num_rows;
+		$out = $rows;
 	}
 
-	else if($wpdb->num_rows > 0)
+	else if($rows > 0)
 	{
 		foreach($result as $r)
 		{

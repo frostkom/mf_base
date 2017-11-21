@@ -120,21 +120,18 @@ function get_site_url_clean($data = array())
 
 function get_plugin_version($file)
 {
-	if(function_exists('get_plugin_data'))
+	if(!function_exists('get_plugin_data'))
 	{
-		$plugin_dir = plugin_dir_path($file)."index.php";
-
-		$plugin_dir = str_replace("include/", "", $plugin_dir);
-
-		$arr_plugin_data = get_plugin_data($plugin_dir);
-
-		return $arr_plugin_data['Version'];
+		require_once(ABSPATH."wp-admin/includes/plugin.php");
 	}
 
-	else
-	{
-		return false;
-	}
+	$plugin_dir = plugin_dir_path($file)."index.php";
+
+	$plugin_dir = str_replace("include/", "", $plugin_dir);
+
+	$arr_plugin_data = get_plugin_data($plugin_dir);
+
+	return $arr_plugin_data['Version'];
 }
 
 function get_theme_version()
@@ -912,11 +909,6 @@ function delete_base($data)
 
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 		}
-
-		/*if($rows > 0)
-		{
-			do_log("Trashed ".$rows." posts in ".$child_table);
-		}*/
 	}
 }
 
@@ -2696,15 +2688,13 @@ function show_wp_editor($data)
 	return $out;
 }
 
-function mf_editor($content, $editor_id, $data = array())
+/*function mf_editor($content, $editor_id, $data = array())
 {
 	$data['name'] = $editor_id;
 	$data['value'] = $content;
 
-	do_log("mf_editor is still in use");
-
 	return show_wp_editor($data);
-}
+}*/
 
 ############################
 function show_select($data)

@@ -296,7 +296,30 @@ function send_email($data)
 			$data['content'] = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>".$data['content']."</body></html>";
 		}
 
-		return wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
+		$sent = wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
+
+		if($sent)
+		{
+			global $phpmailer;
+
+			$data_temp = $data;
+			unset($data_temp['content']);
+
+			$phpmailer_temp = $phpmailer;
+			unset($phpmailer_temp->Priority);
+			unset($phpmailer_temp->Body);
+			unset($phpmailer_temp->AltBody);
+			unset($phpmailer_temp->MIMEBody);
+
+			do_log(sprintf(__("Send message: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
+		}
+
+		else
+		{
+			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data, true)));
+		}
+
+		return $sent;
 	}
 }
 
@@ -811,7 +834,7 @@ function insert_attachment($data)
 	return $intFileID;
 }
 
-function do_log($data, $action = 'insert')
+function do_log($data, $action = 'publish')
 {
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
 	{
@@ -824,7 +847,7 @@ function do_log($data, $action = 'insert')
 		$obj_log->create($data, $action);
 	}
 
-	else if('insert' == $action)
+	else if('publish' == $action)
 	{
 		error_log($data);
 	}
@@ -1438,12 +1461,9 @@ function setting_base_recommend_callback()
 		array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 		array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 		array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-		//array("Black Studio TinyMCE Widget", 'black-studio-tinymce-widget/black-studio-tinymce-widget.php', __("to get a WYSIWYG widget editor", 'lang_base')),
-		//array("E-mail Log", 'email-log/email-log.php', __("to log all outgoing e-mails", 'lang_base')),
 		//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		//array("Google XML Sitemaps", 'google-sitemap-generator/sitemap.php', __("to add a Sitemap XML to your site", 'lang_base')),
 		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 		array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),

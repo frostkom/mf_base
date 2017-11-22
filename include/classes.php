@@ -113,7 +113,7 @@ class mf_list_table extends WP_List_Table
 			'per_page' => $this->get_items_per_page('edit_page_per_page', 20),
 			'query_from' => $wpdb->posts,
 			'query_select_id' => "ID",
-			'query_all_id' => "all",
+			'query_all_id' => 'all',
 			'query_trash_id' => array('trash', 'ignore'),
 			'has_autocomplete' => false,
 		);

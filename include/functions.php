@@ -502,7 +502,7 @@ function mf_uninstall_plugin($data)
 
 			if($wpdb->num_rows > 0)
 			{
-				$result = $wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
+				$wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
 
 				if($wpdb->num_rows > 0)
 				{
@@ -1128,7 +1128,7 @@ function get_attachment_data_by_id($id)
 {
 	global $wpdb;
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND ID = '%d'", $id));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND ID = '%d' LIMIT 0, 1", $id));
 
 	if($wpdb->num_rows > 0)
 	{
@@ -2073,7 +2073,7 @@ function add_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$result = $wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
+			$wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
 
 			if($wpdb->num_rows == 0)
 			{

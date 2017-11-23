@@ -603,16 +603,33 @@ if(class_exists('RWMB_Field'))
 		}
 	}
 
+	class RWMB_Social_Field extends RWMB_Field
+	{
+		static public function html($meta, $field)
+		{
+			if(is_plugin_active('mf_social_feed/index.php'))
+			{
+				$arr_data = array();
+				get_post_children(array('add_choose_here' => true, 'post_type' => 'mf_social_feed'), $arr_data);
+
+				return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'suffix' => "<a href='".admin_url("post-new.php?post_type=mf_social_feed")."'><i class='fa fa-lg fa-plus'></i></a>", 'xtra' => self::render_attributes($field['attributes'])));
+			}
+
+			else
+			{
+				return "<p>".sprintf(__("You have to install the plugin %s first", 'lang_base'), "MF Social Feed")."</p>";
+			}
+		}
+	}
+
 	class RWMB_Page_Field extends RWMB_Field
 	{
 		static public function html($meta, $field)
 		{
-			global $wpdb;
-
 			$arr_data = array();
 			get_post_children(array('add_choose_here' => true), $arr_data);
 
-			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'xtra' => self::render_attributes($field['attributes'])));
+			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'suffix' => "<a href='".admin_url("post-new.php?post_type=page")."'><i class='fa fa-lg fa-plus'></i></a>", 'xtra' => self::render_attributes($field['attributes'])));
 		}
 	}
 

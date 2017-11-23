@@ -311,7 +311,7 @@ function send_email($data)
 			unset($phpmailer_temp->AltBody);
 			unset($phpmailer_temp->MIMEBody);
 
-			do_log(sprintf(__("Send message: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
+			do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
 		}
 
 		else
@@ -2977,7 +2977,7 @@ function show_checkbox($data)
 	{
 		$is_array = true;
 
-		$new_class = preg_replace("/\[.*?\]/", "", $data['name']);
+		$new_class = preg_replace("/\[(.*?)\]/", "_$1", $data['name']);
 
 		$this_id = $new_class."_".$data['value'];
 

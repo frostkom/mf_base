@@ -22,11 +22,11 @@ if($is_standalone)
 
 $plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 
- echo "@font-face
- {
-	 font-family:'FontAwesome';
-	 src:url('".$plugin_fonts_url."fontawesome-webfont.eot?v=4.4.0');
-	 src:url('".$plugin_fonts_url."fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'),
+echo "@font-face
+{
+	font-family:'FontAwesome';
+	src:url('".$plugin_fonts_url."fontawesome-webfont.eot?v=4.4.0');
+	src:url('".$plugin_fonts_url."fontawesome-webfont.eot?#iefix&v=4.4.0') format('embedded-opentype'),
 		url('".$plugin_fonts_url."fontawesome-webfont.woff2?v=4.4.0') format('woff2'),
 		url('".$plugin_fonts_url."fontawesome-webfont.woff?v=4.4.0') format('woff'),
 		url('".$plugin_fonts_url."fontawesome-webfont.ttf?v=4.4.0') format('truetype'),

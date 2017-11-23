@@ -269,7 +269,7 @@
 				max-width: 50%;
 			}
 
-				.mf_form .has_suffix span.description
+				.mf_form .has_suffix span.description, .rwmb-field .has_suffix span.description
 				{
 					margin-left: 1em;
 				}

@@ -79,11 +79,6 @@ function explode_and_trim($delimiter, $string)
 	return $array;
 }
 
-function mf_clean_url($url)
-{
-	return str_replace(array("http://", "https://"), "", $url);
-}
-
 function get_site_url_clean($data = array())
 {
 	global $wpdb;
@@ -107,7 +102,7 @@ function get_site_url_clean($data = array())
 
 	else
 	{
-		$out = mf_clean_url(get_site_url());
+		$out = remove_protocol(array('url' => get_site_url(), 'clean' => true));
 	}
 
 	if($data['trim'] != '')
@@ -1276,6 +1271,69 @@ function point2int($in)
 	return $str_version;
 }
 
+function get_next_cron()
+{
+	return format_date(date("Y-m-d H:i:s", wp_next_scheduled('cron_base')));
+}
+
+function reschedule_base($option = '')
+{
+	if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}
+
+	$schedule = wp_get_schedule('cron_base');
+
+	if($schedule != $option)
+	{
+		deactivate_base();
+		activate_base();
+	}
+}
+
+function check_htaccess_base($data)
+{
+	if(basename($data['file']) == ".htaccess")
+	{
+		$content = get_file_content(array('file' => $data['file']));
+
+		$site_url = get_site_url();
+		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
+		@list($site_host, $rest) = explode("/", $site_url_clean);
+
+		$has_www = "www." == substr($site_url_clean, 0, 4);
+		$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
+
+
+		if(!preg_match("/BEGIN MF Base/", $content) || !preg_match("/".str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite)."/", $content))
+		{
+			$recommend_htaccess = "# BEGIN MF Base
+			<FILES .htaccess>
+				Order Allow,Deny
+				Deny from all
+			</FILES>
+
+			RewriteEngine On
+
+			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
+			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
+
+			if(preg_match("/https\:/", $site_url))
+			{
+				$recommend_htaccess .= "\n
+				RewriteCond %{HTTP_HOST}	^".$site_url_clean_opposite."$		[NC]
+				RewriteCond	%{HTTPS}		off
+				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]\n"; /* https://%{HTTP_HOST}/$1 */
+			}
+
+			$recommend_htaccess .= "# END MF Base";
+
+			echo "<div class='mf_form'>"
+				."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
+				."<p class='input'>".nl2br(htmlspecialchars($recommend_htaccess))."</p>"
+			."</div>";
+		}
+	}
+}
+
 function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
@@ -1384,24 +1442,6 @@ function setting_base_info_callback()
 	}
 }
 
-function get_next_cron()
-{
-	return format_date(date("Y-m-d H:i:s", wp_next_scheduled('cron_base')));
-}
-
-function reschedule_base($option = '')
-{
-	if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}
-
-	$schedule = wp_get_schedule('cron_base');
-
-	if($schedule != $option)
-	{
-		deactivate_base();
-		activate_base();
-	}
-}
-
 function setting_base_cron_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
@@ -1489,6 +1529,8 @@ function setting_base_recommend_callback()
 
 		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
+
+	get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess_base", 'allow_depth' => false));
 }
 
 /*function setting_all_options_callback()
@@ -1496,9 +1538,35 @@ function setting_base_recommend_callback()
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
 }*/
 
-function remove_protocol($url)
+function remove_protocol($data) //$url, $clean = false
 {
-	return str_replace(array("http:", "https:"), "", $url);
+	if(!is_array($data)){			$data = array('url' => $data);}
+
+	if(!isset($data['clean'])){		$data['clean'] = false;}
+	if(!isset($data['trim'])){		$data['trim'] = false;}
+
+	if(true == $data['clean'])
+	{
+		$data['url'] = str_replace(array("http://", "https://"), "", $data['url']);
+	}
+
+	else
+	{
+		$data['url'] = str_replace(array("http:", "https:"), "", $data['url']);
+	}
+
+	if(true == $data['trim'])
+	{
+		$data['url'] = trim($data['url'], "/");
+	}
+
+	return $data['url'];
+}
+
+//Can be removed later
+function mf_clean_url($url)
+{
+	return str_replace(array("http://", "https://"), "", $url);
 }
 
 function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
@@ -1509,7 +1577,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
-	$file = remove_protocol($file);
+	$file = remove_protocol(array('url' => $file));
 
 	do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
 
@@ -1524,7 +1592,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	$file = remove_protocol($file);
+	$file = remove_protocol(array('url' => $file));
 
 	do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
 

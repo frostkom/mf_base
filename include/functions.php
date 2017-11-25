@@ -1053,19 +1053,10 @@ function get_media_button($data = array())
 			}
 
 			$out .= "<div class='mf_media_raw'></div>
-			<table class='mf_media_list widefat striped'></table>";
-
-			/*if(1 == 2)
-			{
-				$out .= "<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>";
-			}
-
-			else
-			{*/
-				$out .= input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"));
-			//}
-
-		$out .= "</div>";
+			<table class='mf_media_list widefat striped'></table>"
+			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
+			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"))
+		."</div>";
 	}
 
 	return $out;
@@ -1289,21 +1280,46 @@ function reschedule_base($option = '')
 	}
 }
 
+function get_site_redirect_base($site_id)
+{
+	global $wpdb;
+
+	$site_url = get_site_url($site_id > 0 ? $site_id : $wpdb->blogid);
+	$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
+	@list($site_host, $rest) = explode("/", $site_url_clean);
+
+	$has_www = "www." == substr($site_url_clean, 0, 4);
+	$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
+	$is_subfolder = substr_count($site_url_clean, '/') > 0;
+
+	$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
+	$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
+
+	if(!$is_subdomain && !$is_subfolder)
+	{
+		$out = "\n
+		RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
+		RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
+
+		if(preg_match("/https\:/", $site_url))
+		{
+			$out .= "\n
+			RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
+			RewriteCond	%{HTTPS}		off
+			RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]"; /* https://%{HTTP_HOST}/$1 */
+		}
+	}
+
+	return $out;
+}
+
 function check_htaccess_base($data)
 {
 	if(basename($data['file']) == ".htaccess")
 	{
 		$content = get_file_content(array('file' => $data['file']));
 
-		$site_url = get_site_url();
-		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-		@list($site_host, $rest) = explode("/", $site_url_clean);
-
-		$has_www = "www." == substr($site_url_clean, 0, 4);
-		$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
-
-
-		if(!preg_match("/BEGIN MF Base/", $content) || !preg_match("/".str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite)."/", $content))
+		if(!preg_match("/BEGIN MF Base/", $content)) // || !preg_match("/".$site_url_clean_opposite_regexp."/", $content)
 		{
 			$recommend_htaccess = "# BEGIN MF Base
 			<FILES .htaccess>
@@ -1311,20 +1327,24 @@ function check_htaccess_base($data)
 				Deny from all
 			</FILES>
 
-			RewriteEngine On
+			RewriteEngine On";
 
-			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
-			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
-
-			if(preg_match("/https\:/", $site_url))
+			if(is_multisite())
 			{
-				$recommend_htaccess .= "\n
-				RewriteCond %{HTTP_HOST}	^".$site_url_clean_opposite."$		[NC]
-				RewriteCond	%{HTTPS}		off
-				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]\n"; /* https://%{HTTP_HOST}/$1 */
+				$result = get_sites();
+
+				foreach($result as $r)
+				{
+					$recommend_htaccess .= get_site_redirect_base($r->blog_id);
+				}
 			}
 
-			$recommend_htaccess .= "# END MF Base";
+			else
+			{
+				$recommend_htaccess .= get_site_redirect_base();
+			}
+
+			$recommend_htaccess .= "\n# END MF Base";
 
 			echo "<div class='mf_form'>"
 				."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"

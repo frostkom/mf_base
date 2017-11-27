@@ -301,10 +301,10 @@ function send_email($data)
 			unset($data_temp['content']);
 
 			$phpmailer_temp = $phpmailer;
-			@unset($phpmailer_temp->Priority);
-			@unset($phpmailer_temp->Body);
-			@unset($phpmailer_temp->AltBody);
-			@unset($phpmailer_temp->MIMEBody);
+			unset($phpmailer_temp->Priority);
+			unset($phpmailer_temp->Body);
+			unset($phpmailer_temp->AltBody);
+			unset($phpmailer_temp->MIMEBody);
 
 			do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
 		}

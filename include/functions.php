@@ -1280,7 +1280,7 @@ function reschedule_base($option = '')
 	}
 }
 
-function get_site_redirect_base($site_id)
+function get_site_redirect_base($site_id = 0)
 {
 	global $wpdb;
 
@@ -1295,9 +1295,11 @@ function get_site_redirect_base($site_id)
 	$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
 	$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
 
+	$out = '';
+
 	if(!$is_subdomain && !$is_subfolder)
 	{
-		$out = "\n
+		$out .= "\n
 		RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
 		RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
 
@@ -1321,13 +1323,7 @@ function check_htaccess_base($data)
 
 		if(!preg_match("/BEGIN MF Base/", $content)) // || !preg_match("/".$site_url_clean_opposite_regexp."/", $content)
 		{
-			$recommend_htaccess = "# BEGIN MF Base
-			<FILES .htaccess>
-				Order Allow,Deny
-				Deny from all
-			</FILES>
-
-			RewriteEngine On";
+			$recommend_htaccess_temp = '';
 
 			if(is_multisite())
 			{
@@ -1335,13 +1331,24 @@ function check_htaccess_base($data)
 
 				foreach($result as $r)
 				{
-					$recommend_htaccess .= get_site_redirect_base($r->blog_id);
+					$recommend_htaccess_temp .= get_site_redirect_base($r->blog_id);
 				}
 			}
 
 			else
 			{
-				$recommend_htaccess .= get_site_redirect_base();
+				$recommend_htaccess_temp .= get_site_redirect_base();
+			}
+
+			$recommend_htaccess = "# BEGIN MF Base
+			<FILES .htaccess>
+				Order Allow,Deny
+				Deny from all
+			</FILES>";
+
+			if($recommend_htaccess_temp != '')
+			{
+				$recommend_htaccess .= "RewriteEngine On".$recommend_htaccess_temp;
 			}
 
 			$recommend_htaccess .= "\n# END MF Base";

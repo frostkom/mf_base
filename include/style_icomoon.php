@@ -1,8 +1,6 @@
 <?php
 
-$is_standalone = !defined('ABSPATH');
-
-if($is_standalone)
+if(!defined('ABSPATH'))
 {
 	header("Content-Type: text/css; charset=utf-8");
 

@@ -284,12 +284,27 @@
 				-webkit-appearance: none;
 				-moz-appearance: none;
 				appearance: none;
-				background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAQCAYAAABz9a1kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyFpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxOUE4MkIyNTg0ODUxMUU1QTVFNTkyNjZGREI0MEIyNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxOUE4MkIyNjg0ODUxMUU1QTVFNTkyNjZGREI0MEIyNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjE5QTgyQjIzODQ4NTExRTVBNUU1OTI2NkZEQjQwQjI2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjE5QTgyQjI0ODQ4NTExRTVBNUU1OTI2NkZEQjQwQjI2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+/iuuqQAAAHZJREFUeNpi/P//P8NgAEwMgwSMOmTUIYQACymKt2/fXgqk6qHcf9g8BcyFDV5eXj00dQgQ9AIxFxA34JAHiffRPESgodAIpZvQ5OqAuJneaaSZkZGxFsaBspvplkaQAdDyFiDFCWNTWkIzjhbxow4ZKg4BCDAA/b8bYMCxGJEAAAAASUVORK5CYII=');
-				background-position: right center;
 				background-repeat: no-repeat;
 				cursor: pointer;
-				padding-right: 2.5em;
+				
+				/* SVG */
+				/*background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J2dyZXknIGhlaWdodD0nMjQnIHZpZXdCb3g9JzAgMCAyNCAyNCcgd2lkdGg9JzI0Jz48cGF0aCBkPSdNNyAxMGw1IDUgNS01eicvPjxwYXRoIGQ9J00wIDBoMjR2MjRIMHonIGZpbGw9J25vbmUnLz48L3N2Zz4=');
+				background-position: right center;
+				padding-right: 1.7em;*/
+
+				/* CSS gradients */
+				background-image: linear-gradient(45deg, transparent 50%, #999 50%), linear-gradient(135deg, #999 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
+				background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.2em) 0.5em;
+				background-size: 5px 5px, 5px 5px, 1px 1.5em;
+				padding-right: 2.1em;
 			}
+
+				.mf_form .form_select select:focus
+				{
+					background-image: linear-gradient(45deg, #999 50%, transparent 50%), linear-gradient(135deg, transparent 50%, #999 50%), linear-gradient(to right, #ccc, #ccc);
+					background-position: calc(100% - 10px) 1em, calc(100% - 15px) 1em, calc(100% - 2.2em) 0.5em;
+					outline: 0;
+				}
 
 				.mf_form .form_select_multiple > select
 				{

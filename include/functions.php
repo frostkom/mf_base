@@ -1353,7 +1353,7 @@ function check_htaccess_base($data)
 
 			if($recommend_htaccess_temp != '')
 			{
-				$recommend_htaccess .= "RewriteEngine On".$recommend_htaccess_temp;
+				$recommend_htaccess .= "\n\nRewriteEngine On".$recommend_htaccess_temp;
 			}
 
 			$recommend_htaccess .= "\n# END MF Base";

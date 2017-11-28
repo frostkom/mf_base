@@ -3474,6 +3474,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
 	if(!isset($data['output_array'])){		$data['output_array'] = true;}
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
+	if(!isset($data['depth'])){				$data['depth'] = 0;}
 
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
@@ -3487,8 +3488,6 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['debug'])){				$data['debug'] = false;}
 
 	if(!isset($data['current_id'])){		$data['current_id'] = '';}
-
-	$data['depth'] = !isset($data['depth']) ? 0 : $data['depth']++;
 
 	$exclude_post_status = array('auto-draft', 'ignore', 'inherit', 'trash');
 
@@ -3564,9 +3563,11 @@ function get_post_children($data, &$arr_data = array())
 
 			if($data['allow_depth'] == true)
 			{
-				$data['post_id'] = $post_id;
+				$data_temp = $data;
+				$data_temp['post_id'] = $post_id;
+				$data_temp['depth']++;
 
-				$out .= get_post_children($data, $arr_data);
+				$out .= get_post_children($data_temp, $arr_data);
 			}
 		}
 	}

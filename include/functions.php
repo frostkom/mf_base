@@ -301,7 +301,12 @@ function send_email($data)
 			unset($data_temp['content']);
 
 			$phpmailer_temp = $phpmailer;
-			unset($phpmailer_temp->Priority);
+
+			if(isset($phpmailer_temp->Priority))
+			{
+				unset($phpmailer_temp->Priority);
+			}
+
 			unset($phpmailer_temp->Body);
 			unset($phpmailer_temp->AltBody);
 			//unset($phpmailer_temp->MIMEBody);

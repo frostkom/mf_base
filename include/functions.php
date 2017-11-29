@@ -1346,6 +1346,11 @@ function check_htaccess_base($data)
 			}
 
 			$recommend_htaccess = "# BEGIN MF Base
+			ServerSignature Off
+
+			DirectoryIndex index.php
+			Options -Indexes +FollowSymlinks
+
 			<FILES .htaccess>
 				Order Allow,Deny
 				Deny from all
@@ -1563,6 +1568,8 @@ function setting_base_recommend_callback()
 	}
 
 	get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess_base", 'allow_depth' => false));
+
+	//phpinfo();
 }
 
 /*function setting_all_options_callback()

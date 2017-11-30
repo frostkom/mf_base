@@ -3582,9 +3582,10 @@ function get_post_children($data, &$arr_data = array())
 	return $out;
 }
 
-function format_phone_no($no)
+function format_phone_no($string)
 {
-	return "tel:".str_replace(array(" ", "-", "/"), "", $no);
+	//return "tel:".str_replace(array(" ", "-", "/"), "", $string);
+	return "tel:".preg_replace("/[^\d]/", "", $string);
 }
 
 function month_name($month_no, $ucfirst = 1)

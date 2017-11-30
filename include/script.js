@@ -55,13 +55,14 @@ jQuery(function($)
 		this.form.submit();
 	});
 
-	$(document).on('click', '.toggler', function()
+	$(document).on('click', '.toggler', function(e)
 	{
 		var toggler_rel = $(this).attr('rel'),
 			toggle_obj = $(".toggler[rel=" + toggler_rel + "]"),
-			toggle_container = $(".toggle_container[rel=" + toggler_rel + "]");
+			toggle_container = $(".toggle_container[rel=" + toggler_rel + "]"),
+			is_toggle_container = $(e.target).parents(".toggle_container").length > 0;
 
-		if(toggle_container.length > 0)
+		if(toggle_container.length > 0 && is_toggle_container == false)
 		{
 			toggle_obj.toggleClass('open').find(".fa.fa-caret-right, .fa.fa-caret-down").toggleClass('fa-caret-right fa-caret-down');
 			toggle_container.toggleClass('hide');

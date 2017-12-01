@@ -426,28 +426,6 @@ function meta_page_content()
 	return $out;
 }
 
-function meta_boxes_base($meta_boxes)
-{
-	$meta_prefix = "mf_base_";
-
-	$meta_boxes[] = array(
-		'id' => $meta_prefix.'content',
-		'title' => __("Added Content", 'lang_base'),
-		'post_types' => array('page'),
-		//'context' => 'side',
-		'priority' => 'low',
-		'fields' => array(
-			array(
-				'id' => $meta_prefix.'content',
-				'type' => 'custom_html',
-				'callback' => 'meta_page_content',
-			),
-		)
-	);
-
-	return $meta_boxes;
-}
-
 function meta_boxes_script_base()
 {
 	mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
@@ -465,6 +443,97 @@ function replace_option($data)
 	}
 }
 
+function mf_uninstall_uploads($data, $force_main_uploads)
+{
+	if($data['uploads'] != '')
+	{
+		list($upload_path, $upload_url) = get_uploads_folder($data['uploads'], $force_main_uploads);
+
+		if($upload_path != '')
+		{
+			get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
+
+			rmdir($upload_path);
+		}
+	}
+}
+
+function mf_uninstall_post_types($data)
+{
+	global $wpdb;
+
+	if(count($data['post_types']) > 0)
+	{
+		foreach($data['post_types'] as $post_type)
+		{
+			$i = 0;
+
+			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status != 'trash'", $post_type));
+
+			foreach($result as $r)
+			{
+				wp_trash_post($r->ID);
+
+				$i++;
+
+				if($i % 100 == 0)
+				{
+					sleep(0.1);
+					set_time_limit(60);
+				}
+			}
+		}
+	}
+}
+
+function mf_uninstall_options($data)
+{
+	if(count($data['options']) > 0)
+	{
+		foreach($data['options'] as $option)
+		{
+			delete_option($option);
+		}
+	}
+}
+
+function mf_uninstall_tables($data)
+{
+	global $wpdb;
+
+	if(count($data['tables']) > 0)
+	{
+		foreach($data['tables'] as $table)
+		{
+			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
+
+			if($wpdb->num_rows > 0)
+			{
+				$wpdb->query("DELETE FROM ".$wpdb->prefix.$table." WHERE 1 = 1");
+				$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
+				$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
+
+				$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
+
+				if($wpdb->num_rows > 0)
+				{
+					$wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
+
+					if($wpdb->num_rows > 0)
+					{
+						do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+					}
+
+					/*else
+					{
+						do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+					}*/
+				}
+			}
+		}
+	}
+}
+
 function mf_uninstall_plugin($data)
 {
 	global $wpdb;
@@ -474,72 +543,39 @@ function mf_uninstall_plugin($data)
 	if(!isset($data['post_types'])){		$data['post_types'] = array();}
 	if(!isset($data['tables'])){			$data['tables'] = array();}
 
-	if($data['uploads'] != '')
+	if(is_multisite())
 	{
-		list($upload_path, $upload_url) = get_uploads_folder($data['uploads']);
-
-		if($upload_path != '')
-		{
-			get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
-
-			rmdir($upload_path);
-		}
-	}
-
-	foreach($data['options'] as $option)
-	{
-		delete_option($option);
-		delete_site_option($option);
-	}
-
-	foreach($data['post_types'] as $post_type)
-	{
-		$i = 0;
-
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status != 'trash'", $post_type));
+		$result = get_sites();
 
 		foreach($result as $r)
 		{
-			wp_trash_post($r->ID);
+			//Switch to temp site
+			####################
+			$wpdbobj = clone $wpdb;
+			$wpdb->blogid = $r->blog_id;
+			$wpdb->set_prefix($wpdb->base_prefix);
+			####################
 
-			$i++;
+			mf_uninstall_uploads($data, false);
+			mf_uninstall_options($data);
+			mf_uninstall_post_types($data);
+			mf_uninstall_tables($data);
 
-			if($i % 100 == 0)
-			{
-				sleep(0.1);
-				set_time_limit(60);
-			}
+			//Switch back to orig site
+			###################
+			$wpdb = clone $wpdbobj;
+			###################
 		}
 	}
 
-	foreach($data['tables'] as $table)
+	else
 	{
-		$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
-
-		if($wpdb->num_rows > 0)
-		{
-			$wpdb->query("DELETE FROM ".$wpdb->prefix.$table." WHERE 1 = 1");
-			$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
-			$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
-
-			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
-
-			if($wpdb->num_rows > 0)
-			{
-				$wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
-
-				if($wpdb->num_rows > 0)
-				{
-					do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
-				}
-
-				/*else
-				{
-					do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
-				}*/
-			}
-		}
+		mf_uninstall_options($data);
+		mf_uninstall_post_types($data);
+		mf_uninstall_tables($data);
 	}
+
+	mf_uninstall_uploads($data, true);
 }
 
 function get_setting_key($function_name)
@@ -848,7 +884,7 @@ function do_log($data, $action = 'publish')
 		$obj_log->create($data, $action);
 	}
 
-	else if('publish' == $action)
+	else if($action == 'publish')
 	{
 		error_log($data);
 	}
@@ -2816,19 +2852,9 @@ function show_wp_editor($data)
 	return $out;
 }
 
-/*function mf_editor($content, $editor_id, $data = array())
-{
-	$data['name'] = $editor_id;
-	$data['value'] = $content;
-
-	return show_wp_editor($data);
-}*/
-
 ############################
 function show_select($data)
 {
-	$out = "";
-
 	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
@@ -2842,22 +2868,29 @@ function show_select($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	$count_temp = count($data['data']);
+	$obj_base = new mf_base();
+	$obj_base->init_form($data);
+
+	$out = "";
+
+	$count_temp = count($obj_base->data['data']);
 
 	if($count_temp > 0)
 	{
+		//$is_multiple = substr($obj_base->data['name'], -2) == "[]";
+
 		$container_class = "form_select";
 
-		if(substr($data['name'], -2) == "[]")
+		if($obj_base->is_multiple())
 		{
-			if($count_temp > $data['maxsize'])
+			if($count_temp > $obj_base->data['maxsize'])
 			{
-				$size = $data['maxsize'];
+				$size = $obj_base->data['maxsize'];
 			}
 
-			else if($count_temp < $data['minsize'])
+			else if($count_temp < $obj_base->data['minsize'])
 			{
-				$size = $data['minsize'];
+				$size = $obj_base->data['minsize'];
 			}
 
 			else
@@ -2865,55 +2898,57 @@ function show_select($data)
 				$size = $count_temp;
 			}
 
-			$data['class'] .= ($data['class'] != '' ? " " : "")."top";
-			$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."multiple size='".$size."'";
+			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
+			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".$size."'";
 
 			$container_class .= " form_select_multiple";
 		}
 
-		if($data['required'])
+		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
 		{
-			$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."required";
-		}
+			$out = $obj_base->get_hidden_field();
 
-		if($count_temp == 1 && $data['required'] && $data['text'] != '')
-		{
-			foreach($data['data'] as $key => $option)
+			/*foreach($obj_base->data['data'] as $key => $option)
 			{
 				if($key != '')
 				{
-					$out = input_hidden(array('name' => $data['name'], 'value' => $key));
+					$out = input_hidden(array('name' => $obj_base->data['name'], 'value' => $key));
 
 					break;
 				}
-			}
+			}*/
 		}
 
 		else
 		{
-			if($data['suffix'] != '')
+			if($obj_base->data['required'])
 			{
-				$data['class'] .= ($data['class'] != '' ? " " : "")."has_suffix";
+				$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."required";
 			}
 
-			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
+			if($obj_base->data['suffix'] != '')
+			{
+				$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."has_suffix";
+			}
 
-				if($data['text'] != '')
+			$out = "<div class='".$container_class.($obj_base->data['class'] != '' ? " ".$obj_base->data['class'] : "")."'>";
+
+				if($obj_base->data['text'] != '')
 				{
-					$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
+					$out .= "<label for='".$obj_base->data['name']."'>".$obj_base->data['text']."</label>";
 				}
 
-				$out .= "<select".($data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $data['name'])."' name='".$data['name']."'" : "").($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
+				$out .= "<select".($obj_base->data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $obj_base->data['name'])."' name='".$obj_base->data['name']."'" : "").($obj_base->data['xtra'] != '' ? " ".$obj_base->data['xtra'] : "").">";
 
-					foreach($data['data'] as $key => $option)
+					foreach($obj_base->data['data'] as $key => $option)
 					{
-						$disabled = false;
+						$is_disabled = false;
 
 						if(substr($key, 0, 9) == "disabled_")
 						{
 							list($rest, $key) = explode("_", $key);
 
-							$disabled = true;
+							$is_disabled = true;
 						}
 
 						$data_value = $key;
@@ -2931,35 +2966,34 @@ function show_select($data)
 
 						else
 						{
-							$out .= "<option value='".$data_value."'";
+							if($obj_base->is_multiple() && $data_value == '')
+							{
+								//Do nothing
+							}
 
-								if($disabled == true)
-								{
-									$out .= " disabled";
-								}
+							else
+							{
+								$out .= "<option value='".$data_value."'";
 
-								else if(is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value)
-								{
-									$out .= " selected";
-								}
+									if($is_disabled)
+									{
+										$out .= " disabled";
+									}
 
-							$out .= ">".$data_text."</option>";
+									else if(is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value)
+									{
+										$out .= " selected";
+									}
+
+								$out .= ">".$data_text."</option>";
+							}
 						}
 					}
 
-				$out .= "</select>";
-
-				if($data['suffix'] != '')
-				{
-					$out .= "<span class='description'>".$data['suffix']."</span>";
-				}
-
-				if($data['description'] != '')
-				{
-					$out .= "<p class='description'>".$data['description']."</p>";
-				}
-
-			$out .= "</div>";
+				$out .= "</select>"
+				.$obj_base->get_field_suffix()
+				.$obj_base->get_field_description()
+			."</div>";
 		}
 	}
 
@@ -2967,62 +3001,95 @@ function show_select($data)
 }
 ############################
 
-############################
 function show_checkboxes($data)
 {
+	do_log("show_checkboxes() is still used");
+
+	return show_form_alternatives($data);
+}
+
+############################
+function show_form_alternatives($data)
+{
+	if(!isset($data['is_select'])){		$data['is_select'] = true;}
+	if(!isset($data['data'])){			$data['data'] = array();}
+	if(!isset($data['name'])){			$data['name'] = '';}
+	if(!isset($data['text'])){			$data['text'] = '';}
+	if(!isset($data['value'])){			$data['value'] = '';}
+	if(!isset($data['xtra'])){			$data['xtra'] = '';}
+	if(!isset($data['required'])){		$data['required'] = false;}
+	if(!isset($data['class'])){			$data['class'] = '';}
+	if(!isset($data['suffix'])){		$data['suffix'] = '';}
+	if(!isset($data['description'])){	$data['description'] = '';}
+	
+	$obj_base = new mf_base();
+	$obj_base->init_form($data);
+
 	$out = "";
 
-	if(!isset($data['data'])){			$data['data'] = array();}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['value'])){			$data['value'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['required'])){		$data['required'] = false;}
-	if(!isset($data['class'])){			$data['class'] = "";}
-	if(!isset($data['suffix'])){		$data['suffix'] = "";}
-	if(!isset($data['description'])){	$data['description'] = "";}
-
-	$count_temp = count($data['data']);
+	$count_temp = count($obj_base->data['data']);
 
 	if($count_temp > 0)
 	{
-		$container_class = "form_checkbox_multiple";
+		//$is_multiple = substr($obj_base->data['name'], -2) == "[]";
 
-		if($data['required'])
+		if($obj_base->is_multiple())
 		{
-			$data['xtra'] .= " required";
-		}
-
-		if($count_temp == 1 && $data['required'] && $data['text'] != '')
-		{
-			foreach($data['data'] as $key => $option)
-			{
-				if($key != '')
-				{
-					$out = input_hidden(array('name' => $data['name'], 'value' => $key));
-
-					break;
-				}
-			}
+			$container_class = "form_checkbox_multiple";
 		}
 
 		else
 		{
-			if($data['suffix'] != '')
+			$container_class = "form_radio_multiple";
+		}
+
+		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
+		{
+			$out = $obj_base->get_hidden_field();
+
+			/*foreach($obj_base->data['data'] as $key => $option)
 			{
-				$data['class'] .= ($data['class'] != '' ? " " : "")."has_suffix";
+				if($key != '')
+				{
+					$out = input_hidden(array('name' => $obj_base->data['name'], 'value' => $key));
+
+					break;
+				}
+			}*/
+		}
+
+		else
+		{
+			if($obj_base->data['required'])
+			{
+				$obj_base->data['xtra'] .= " required";
 			}
 
-			$out = "<div class='".$container_class.($data['class'] != '' ? " ".$data['class'] : "")."'>";
+			if($obj_base->data['suffix'] != '')
+			{
+				$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."has_suffix";
+			}
 
-				if($data['text'] != '')
+			$out = "<div class='".$container_class.($obj_base->data['class'] != '' ? " ".$obj_base->data['class'] : "")."'>";
+
+				if($obj_base->data['text'] != '')
 				{
-					$out .= "<label>".$data['text']."</label>";
+					$out .= "<label".($obj_base->data['is_select'] ? " for='".$obj_base->data['name']."'" : "").">".$obj_base->data['text']."</label>";
 				}
 
 				$out .= "<ul>";
 
-					foreach($data['data'] as $key => $option)
+					foreach($obj_base->data['data'] as $key => $option)
 					{
+						$is_disabled = false;
+
+						if(substr($key, 0, 9) == "disabled_")
+						{
+							list($rest, $key) = explode("_", $key);
+
+							$is_disabled = true;
+						}
+
 						$data_value = $key;
 						$data_text = $option;
 
@@ -3039,25 +3106,40 @@ function show_checkboxes($data)
 
 						else
 						{
-							$compare = (is_array($data['value']) && in_array($data_value, $data['value']) || $data['value'] == $data_value) ? $data_value : -$data_value;
+							if($data_value == '') //$obj_base->is_multiple() && 
+							{
+								
+							}
 
-							$out .= show_checkbox(array('name' => $data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare));
+							else
+							{
+								if($is_disabled)
+								{
+									$compare = '';
+								}
+
+								else
+								{
+									$compare = (is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : -$data_value;
+								}
+
+								if($obj_base->is_multiple())
+								{
+									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'xtra' => ($is_disabled ? " disabled" : "")));
+								}
+
+								else
+								{
+									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'xtra' => ($is_disabled ? " disabled" : "")));
+								}
+							}
 						}
 					}
 
-				$out .= "</ul>";
-
-				if($data['suffix'] != '')
-				{
-					$out .= "<span class='description'>".$data['suffix']."</span>";
-				}
-
-				if($data['description'] != '')
-				{
-					$out .= "<p class='description'>".$data['description']."</p>";
-				}
-
-			$out .= "</div>";
+				$out .= "</ul>"
+				.$obj_base->get_field_suffix()
+				.$obj_base->get_field_description()
+			."</div>";
 		}
 	}
 

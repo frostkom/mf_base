@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 7.5.18
+Version: 7.6.1
 Author: Martin Fors
 Author URI: http://frostkom.se
 Text Domain: lang_base
@@ -38,7 +38,9 @@ if(is_admin())
 	add_action('admin_footer', 'add_shortcode_display_base', 0);
 	//add_filter('tiny_mce_before_init', 'extend_tiny_base');
 
-	add_action('rwmb_meta_boxes', 'meta_boxes_base');
+	$obj_base = new mf_base();
+
+	add_action('rwmb_meta_boxes', array($obj_base, 'meta_boxes'));
 	add_action('rwmb_enqueue_scripts', 'meta_boxes_script_base');
 
 	add_action('wp_ajax_check_notifications', 'check_notifications');

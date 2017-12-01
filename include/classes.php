@@ -1,5 +1,79 @@
 <?php
 
+class mf_base
+{
+	function __construct()
+	{
+		$this->meta_prefix = "mf_base_";
+	}
+
+	function meta_boxes($meta_boxes)
+	{
+		$meta_boxes[] = array(
+			'id' => $this->meta_prefix.'content',
+			'title' => __("Added Content", 'lang_base'),
+			'post_types' => array('page'),
+			//'context' => 'side',
+			'priority' => 'low',
+			'fields' => array(
+				array(
+					'id' => $this->meta_prefix.'content',
+					'type' => 'custom_html',
+					'callback' => 'meta_page_content',
+				),
+			)
+		);
+
+		return $meta_boxes;
+	}
+
+	/* Form */
+	############################
+	function init_form($data)
+	{
+		$this->data = $data;
+	}
+
+	function is_multiple()
+	{
+		return substr($this->data['name'], -2) == "[]";
+	}
+
+	function get_hidden_field()
+	{
+		$out = "";
+
+		foreach($this->data['data'] as $key => $option)
+		{
+			if($key != '')
+			{
+				$out = input_hidden(array('name' => $this->data['name'], 'value' => $key));
+
+				break;
+			}
+		}
+
+		return $out;
+	}
+
+	function get_field_suffix()
+	{
+		if($this->data['suffix'] != '')
+		{
+			return "<span class='description'>".$this->data['suffix']."</span>";
+		}
+	}
+
+	function get_field_description()
+	{
+		if($this->data['description'] != '')
+		{
+			return "<p class='description'>".$this->data['description']."</p>";
+		}
+	}
+	############################
+}
+
 class mf_cron
 {
 	function __construct()

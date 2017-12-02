@@ -28,18 +28,6 @@ jQuery(function($)
 		collect_on_load('on_load_base');
 	}
 
-	if(script_base.external_links == 'yes')
-	{
-		$(document).on('click', "a[rel=external]", function(e)
-		{
-			if(e.which != 3)
-			{
-				window.open($(this).attr('href'));
-				return false;
-			}
-		});
-	}
-
 	$(document).on('click', "a[rel=confirm], button[rel=confirm], .delete > a", function()
 	{
 		var confirm_text = $(this).attr('confirm_text') || script_base.confirm_question;

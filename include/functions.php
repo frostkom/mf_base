@@ -1016,12 +1016,11 @@ function init_base()
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
-	$setting_base_external_links = get_option('setting_base_external_links', 'yes');
 	$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
 
 	mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
 	mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'external_links' => $setting_base_external_links, 'required_field_text' => $setting_base_required_field_text), $plugin_version);
+	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
 }
 
 function get_file_icon($file)
@@ -1451,7 +1450,6 @@ function settings_base()
 	$arr_settings = array(
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-		//'setting_base_external_links' => __("Open external links in new window", 'lang_base'),
 		//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
@@ -1552,14 +1550,6 @@ function setting_base_cron_callback()
 	}
 }
 
-function setting_base_external_links_callback()
-{
-	$setting_key = get_setting_key(__FUNCTION__);
-	$option = get_option($setting_key, 'yes');
-
-	echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-}
-
 function setting_base_required_field_text_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
@@ -1605,8 +1595,6 @@ function setting_base_recommend_callback()
 	}
 
 	get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess_base", 'allow_depth' => false));
-
-	//phpinfo();
 }
 
 /*function setting_all_options_callback()
@@ -1614,14 +1602,14 @@ function setting_base_recommend_callback()
 	echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
 }*/
 
-function remove_protocol($data) //$url, $clean = false
+function remove_protocol($data)
 {
 	if(!is_array($data)){			$data = array('url' => $data);}
 
 	if(!isset($data['clean'])){		$data['clean'] = false;}
 	if(!isset($data['trim'])){		$data['trim'] = false;}
 
-	if(true == $data['clean'])
+	if($data['clean'] == true)
 	{
 		$data['url'] = str_replace(array("http://", "https://"), "", $data['url']);
 	}
@@ -1631,18 +1619,12 @@ function remove_protocol($data) //$url, $clean = false
 		$data['url'] = str_replace(array("http:", "https:"), "", $data['url']);
 	}
 
-	if(true == $data['trim'])
+	if($data['trim'] == true)
 	{
 		$data['url'] = trim($data['url'], "/");
 	}
 
 	return $data['url'];
-}
-
-//Can be removed later
-function mf_clean_url($url)
-{
-	return str_replace(array("http://", "https://"), "", $url);
 }
 
 function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)

@@ -1,10 +1,38 @@
 @media all
 {
+	.wrap .update-plugins
+	{
+		background-color: #d54e21;
+		border-radius: 10px;
+		color: #fff;
+		display: inline-block;
+		font-size: 9px;
+		font-weight: 600;
+		line-height: 17px;
+		margin: 1px 0 0 2px;
+	}
+
+		.wrap .update-plugins span
+		{
+			display: block;
+			padding: 0 6px;
+		}
+
 	#poststuff .add-new-h2
 	{
 		display: inline-block;
 		margin-bottom: .3em;
 		top: auto !important;
+	}
+
+	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
+	{
+		background: #fff;
+		background: rgba(255, 255, 255, .8);
+		margin-top: 0;
+		border: 1px solid #e1e1e1;
+		margin-bottom: .5em;
+		padding: .7em 1.1em 0 .7em;
 	}
 
 	.toggler

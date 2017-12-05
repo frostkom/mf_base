@@ -52,7 +52,7 @@ jQuery(function($)
 
 		if(toggle_container.length > 0 && is_toggle_container == false)
 		{
-			toggle_obj.toggleClass('open').find(".fa.fa-caret-right, .fa.fa-caret-down").toggleClass('fa-caret-right fa-caret-down');
+			toggle_obj.toggleClass('open'); /*.find(".fa.fa-caret-right, .fa.fa-caret-down").toggleClass('fa-caret-right fa-caret-down');*/
 			toggle_container.toggleClass('hide');
 		}
 	});

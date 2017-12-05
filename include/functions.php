@@ -154,11 +154,13 @@ function get_toggler_container($data)
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
 	if(!isset($data['icon'])){						$data['icon'] = "fa-caret-right";}
+	if(!isset($data['icon_open'])){					$data['icon_open'] = "fa-caret-down";}
 
 	switch($data['type'])
 	{
 		case 'start':
-			$icon = "<i class='fa fa-lg ".($data['open'] ? "fa-caret-down" : $data['icon'])."'></i>";
+			$icon = "<i class='fa fa-lg ".$data['icon']." toggle_icon_closed'></i>
+			<i class='fa fa-lg ".$data['icon_open']." toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";
 
 			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";
@@ -267,6 +269,7 @@ function send_email($data)
 
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
+	if(!isset($data['save_log'])){		$data['save_log'] = true;}
 
 	if($data['to'] == '')
 	{
@@ -292,32 +295,52 @@ function send_email($data)
 		}
 
 		$sent = wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
-
-		if($sent)
+		
+		if($data['save_log'] == true)
 		{
 			global $phpmailer;
 
 			$data_temp = $data;
 			unset($data_temp['content']);
+			
+			$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput');
 
-			$phpmailer_temp = $phpmailer;
+			$phpmailer_temp = array();
 
-			if(isset($phpmailer_temp->Priority))
+			foreach($phpmailer as $key => $value)
 			{
-				unset($phpmailer_temp->Priority);
+				if(is_array($value))
+				{
+					foreach($value as $key2 => $value2)
+					{
+						if(!in_array($key2, $arr_exclude) && trim($value2) != '')
+						{
+							$phpmailer_temp[$key][$key2] = $value2;
+						} 
+					}
+				}
+
+				else
+				{
+					if(!in_array($key, $arr_exclude) && trim($value) != '')
+					{
+						$phpmailer_temp[$key] = $value;
+					}
+				}
 			}
-
-			unset($phpmailer_temp->Body);
-			unset($phpmailer_temp->AltBody);
-			//unset($phpmailer_temp->MIMEBody);
-			unset($phpmailer_temp->Password);
-
-			do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
 		}
 
-		else
+		if($sent)
 		{
-			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data, true)));
+			if($data['save_log'] == true)
+			{
+				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
+			}
+		}
+
+		else if($data['save_log'] == true)
+		{
+			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
 		}
 
 		return $sent;
@@ -2934,7 +2957,18 @@ function show_select($data)
 						}
 
 						$data_value = $key;
-						$data_text = $option;
+
+						if(is_array($option))
+						{
+							$data_text = $option[0];
+							$data_desc = $option[1];
+						}
+
+						else
+						{
+							$data_text = $option;
+							$data_desc = '';
+						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
 						{
@@ -2993,7 +3027,6 @@ function show_checkboxes($data)
 ############################
 function show_form_alternatives($data)
 {
-	if(!isset($data['is_select'])){		$data['is_select'] = true;}
 	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['name'])){			$data['name'] = '';}
 	if(!isset($data['text'])){			$data['text'] = '';}
@@ -3013,8 +3046,6 @@ function show_form_alternatives($data)
 
 	if($count_temp > 0)
 	{
-		//$is_multiple = substr($obj_base->data['name'], -2) == "[]";
-
 		if($obj_base->is_multiple())
 		{
 			$container_class = "form_checkbox_multiple";
@@ -3028,16 +3059,6 @@ function show_form_alternatives($data)
 		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
 		{
 			$out = $obj_base->get_hidden_field();
-
-			/*foreach($obj_base->data['data'] as $key => $option)
-			{
-				if($key != '')
-				{
-					$out = input_hidden(array('name' => $obj_base->data['name'], 'value' => $key));
-
-					break;
-				}
-			}*/
 		}
 
 		else
@@ -3056,7 +3077,7 @@ function show_form_alternatives($data)
 
 				if($obj_base->data['text'] != '')
 				{
-					$out .= "<label".($obj_base->data['is_select'] ? " for='".$obj_base->data['name']."'" : "").">".$obj_base->data['text']."</label>";
+					$out .= "<label>".$obj_base->data['text']."</label>";
 				}
 
 				$out .= "<ul>";
@@ -3073,7 +3094,18 @@ function show_form_alternatives($data)
 						}
 
 						$data_value = $key;
-						$data_text = $option;
+
+						if(is_array($option))
+						{
+							$data_text = $option[0];
+							$data_desc = $option[1];
+						}
+
+						else
+						{
+							$data_text = $option;
+							$data_desc = '';
+						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
 						{
@@ -3090,7 +3122,7 @@ function show_form_alternatives($data)
 						{
 							if($data_value == '') //$obj_base->is_multiple() && 
 							{
-								
+								//Do nothing
 							}
 
 							else
@@ -3107,12 +3139,12 @@ function show_form_alternatives($data)
 
 								if($obj_base->is_multiple())
 								{
-									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'xtra' => ($is_disabled ? " disabled" : "")));
+									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => ($is_disabled ? " disabled" : ""), 'description' => $data_desc));
 								}
 
 								else
 								{
-									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'xtra' => ($is_disabled ? " disabled" : "")));
+									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => ($is_disabled ? " disabled" : ""), 'description' => $data_desc));
 								}
 							}
 						}
@@ -3137,6 +3169,7 @@ function show_checkbox($data)
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['compare'])){		$data['compare'] = 0;}
+	if(!isset($data['tag'])){			$data['tag'] = 'div';}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['switch'])){		$data['switch'] = 0;}
@@ -3181,7 +3214,7 @@ function show_checkbox($data)
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
 	}
 
-	$out = "<div class='form_checkbox".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
+	$out = "<".$data['tag']." class='form_checkbox".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
 		<input type='checkbox'";
 
 			if($data['name'] != '')
@@ -3206,7 +3239,7 @@ function show_checkbox($data)
 			$out .= "<p class='description'>".$data['description']."</p>";
 		}
 
-	$out .= "</div>";
+	$out .= "</".$data['tag'].">";
 
 	return $out;
 }
@@ -3217,8 +3250,11 @@ function show_radio_input($data)
 {
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['compare'])){		$data['compare'] = "";}
+	if(!isset($data['tag'])){			$data['tag'] = 'div';}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
+	if(!isset($data['suffix'])){		$data['suffix'] = "";}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	$checked = "";
 
@@ -3227,7 +3263,7 @@ function show_radio_input($data)
 		$checked = " checked";
 	}
 
-	$out = "<div class='form_radio".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
+	$out = "<".$data['tag']." class='form_radio".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>
 		<input type='radio' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."_".$data['value']."'".$checked.$data['xtra'].">";
 
 		if($data['text'] != '')
@@ -3235,7 +3271,17 @@ function show_radio_input($data)
 			$out .= "<label for='".$data['name']."_".$data['value']."'>".$data['text']."</label>";
 		}
 
-	$out .= "</div>";
+		if($data['suffix'] != '')
+		{
+			$out .= "<span class='description'>".$data['suffix']."</span>";
+		}
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
+		}
+
+	$out .= "</".$data['tag'].">";
 
 	return $out;
 }

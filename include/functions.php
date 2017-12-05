@@ -1328,7 +1328,24 @@ function point2int($in)
 
 function get_next_cron()
 {
-	return format_date(date("Y-m-d H:i:s", wp_next_scheduled('cron_base')));
+	$date_next_schedule = date("Y-m-d H:i:s", wp_next_scheduled('cron_base'));
+
+	$mins = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
+
+	if($mins > 0 && $mins < 60)
+	{
+		return sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
+	}
+
+	else if($mins == 0)
+	{
+		return __("now", 'lang_base');
+	}
+
+	else
+	{
+		return format_date($date_next_schedule);
+	}
 }
 
 function reschedule_base($option = '')
@@ -1534,6 +1551,11 @@ function setting_base_info_callback()
 	{
 		echo "<br>
 		<p><i class='fa ".($intDateDifference > 60 ? "fa-close red" : "fa-check green")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+	}
+
+	else
+	{
+		echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
 	}
 }
 

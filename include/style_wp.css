@@ -1,5 +1,10 @@
 @media all
 {
+	div, a, p, ol, ul, li, form, label, input, select, textarea
+	{
+		box-sizing: border-box;
+	}
+
 	.wrap .update-plugins
 	{
 		background-color: #d54e21;

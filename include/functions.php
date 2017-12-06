@@ -295,14 +295,14 @@ function send_email($data)
 		}
 
 		$sent = wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
-		
+
 		if($data['save_log'] == true)
 		{
 			global $phpmailer;
 
 			$data_temp = $data;
 			unset($data_temp['content']);
-			
+
 			$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput');
 
 			$phpmailer_temp = array();
@@ -316,7 +316,7 @@ function send_email($data)
 						if(!in_array($key2, $arr_exclude) && trim($value2) != '')
 						{
 							$phpmailer_temp[$key][$key2] = $value2;
-						} 
+						}
 					}
 				}
 
@@ -3058,7 +3058,7 @@ function show_form_alternatives($data)
 	if(!isset($data['class'])){			$data['class'] = '';}
 	if(!isset($data['suffix'])){		$data['suffix'] = '';}
 	if(!isset($data['description'])){	$data['description'] = '';}
-	
+
 	$obj_base = new mf_base();
 	$obj_base->init_form($data);
 
@@ -3142,7 +3142,7 @@ function show_form_alternatives($data)
 
 						else
 						{
-							if($data_value == '') //$obj_base->is_multiple() && 
+							if($data_value == '') //$obj_base->is_multiple() &&
 							{
 								//Do nothing
 							}

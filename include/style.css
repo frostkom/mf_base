@@ -239,8 +239,13 @@
 
 	.is_mobile .flex_flow
 	{
-		display: initial;
+		display: block;
 	}
+
+		.is_mobile span.flex_flow
+		{
+			display: inline;
+		}
 
 		.is_mobile .flex_flow > *
 		{
@@ -303,7 +308,7 @@
 				appearance: none;
 				background-repeat: no-repeat;
 				cursor: pointer;
-				
+
 				/* SVG */
 				/*background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J2dyZXknIGhlaWdodD0nMjQnIHZpZXdCb3g9JzAgMCAyNCAyNCcgd2lkdGg9JzI0Jz48cGF0aCBkPSdNNyAxMGw1IDUgNS01eicvPjxwYXRoIGQ9J00wIDBoMjR2MjRIMHonIGZpbGw9J25vbmUnLz48L3N2Zz4=');
 				background-position: right center;

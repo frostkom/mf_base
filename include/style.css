@@ -400,16 +400,16 @@
 			white-space: nowrap;
 		}
 
-			.form_button button .fa, .form_button .button .fa
-			{
-				margin-right: .3em;
-			}
-
-			/*.mf_form button, .mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
+			.mf_form button, .mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;
-			}*/
+			}
+
+				.form_button button .fa, .form_button .button .fa
+				{
+					margin-right: .3em;
+				}
 
 			.mf_settings #postbox-container-1 button
 			{

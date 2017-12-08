@@ -389,23 +389,27 @@
 					margin-left: -43px;
 				}
 
-		.form_button > button, .form_button > .button
+		.form_button button, .form_button .button
 		{
 			border: 0;
-			/*border-radius: .3em;*/
 			cursor: pointer;
 			display: inline-block;
 			font: inherit;
-			margin: 0 .7em .7em 0;
-			padding: .3em 1em .3em;
+			margin: 0 .5em .5em 0;
+			padding: .5em 1.5em;
 			white-space: nowrap;
 		}
 
-			.mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
+			.form_button button .fa, .form_button .button .fa
+			{
+				margin-right: .3em;
+			}
+
+			/*.mf_form button, .mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;
-			}
+			}*/
 
 			.mf_settings #postbox-container-1 button
 			{

@@ -1425,11 +1425,16 @@ function check_htaccess_base($data)
 			ServerSignature Off
 
 			DirectoryIndex index.php
-			Options -Indexes +FollowSymlinks
+			Options -Indexes
 
-			<FILES .htaccess>
+			<FILES ~ '^.*\.([Hh][Tt][Aa])'>
 				Order Allow,Deny
 				Deny from all
+			</FILES>
+			
+			<FILES wp-config.php>
+				order allow,deny
+				deny from all
 			</FILES>";
 
 			if($recommend_htaccess_temp != '')

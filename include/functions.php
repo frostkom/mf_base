@@ -317,6 +317,11 @@ function send_email($data)
 						{
 							$phpmailer_temp[$key][$key2] = $value2;
 						}
+
+						/*else
+						{
+							$phpmailer_temp[$key][$key2] = shorten_text(array('string' => htmlspecialchars($value2), 'limit' => 4));
+						}*/
 					}
 				}
 
@@ -326,6 +331,11 @@ function send_email($data)
 					{
 						$phpmailer_temp[$key] = $value;
 					}
+
+					/*else
+					{
+						$phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
+					}*/
 				}
 			}
 		}
@@ -381,6 +391,7 @@ function check_notifications()
 		'notifications' => $array,
 	);
 
+	header('Content-Type: application/json');
 	echo json_encode($result);
 	die();
 }
@@ -544,12 +555,12 @@ function mf_uninstall_tables($data)
 
 					if($wpdb->num_rows > 0)
 					{
-						do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+						error_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
 					}
 
 					/*else
 					{
-						do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+						error_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
 					}*/
 				}
 			}
@@ -1190,7 +1201,7 @@ function get_attachment_to_send($string)
 
 		if(count($arr_ids) == 0 && count($arr_files) == 0)
 		{
-			do_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
+			error_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
 		}
 	}
 
@@ -1618,8 +1629,8 @@ function setting_base_recommend_callback()
 		//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
 		array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-		array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
-		array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
+		//array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
+		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
@@ -1764,7 +1775,7 @@ function get_all_roles($data = array())
 
 	if(count($roles) == 0)
 	{
-		do_log(__("I could not find any roles for this site...?", 'lang_base'));
+		error_log(__("I could not find any roles for this site...?", 'lang_base'));
 	}
 
 	if(isset($data['allowed']))
@@ -3046,7 +3057,7 @@ function show_select($data)
 
 function show_checkboxes($data)
 {
-	do_log("show_checkboxes() is still used");
+	error_log("show_checkboxes() is still used");
 
 	return show_form_alternatives($data);
 }
@@ -3512,7 +3523,7 @@ function set_file_content($data)
 
 		else if($data['log'] == true)
 		{
-			do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
+			error_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
 		}
 	}
 
@@ -3592,7 +3603,6 @@ function show_table_header($arr_header, $shorten_text = true)
 				if(strlen($arr_header[$i]) > 15 && $shorten_text == true)
 				{
 					$title = $arr_header[$i];
-					//$content = substr($arr_header[$i], 0, 12)."&hellip;";
 					$content = shorten_text(array('string' => $arr_header[$i], 'limit' => 12));
 				}
 

@@ -239,7 +239,7 @@ class mf_list_table extends WP_List_Table
 			{
 				$error_text = sprintf(__("Use delete_base() on %s"), $db_field);
 
-				do_log($error_text);
+				error_log($error_text);
 			}
 		}
 	}
@@ -445,7 +445,7 @@ class mf_list_table extends WP_List_Table
 
 		/*else
 		{
-			do_log("Bulk delete: ".var_export($_GET, true));
+			error_log("Bulk delete: ".var_export($_GET, true));
 		}*/
 	}
 
@@ -1396,7 +1396,7 @@ class mf_import
 
 									else
 									{
-										do_log("wpdb->prepare made this query empty: INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'");
+										error_log("wpdb->prepare made this query empty: INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'");
 									}
 								}
 							}

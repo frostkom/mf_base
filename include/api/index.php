@@ -4,7 +4,7 @@ if(!defined('ABSPATH'))
 {
 	header('Content-Type: application/json');
 
-	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
+	$folder = str_replace("/wp-content/plugins/mf_base/include/api", "/", dirname(__FILE__));
 
 	require_once($folder."wp-load.php");
 }
@@ -29,11 +29,7 @@ if(get_current_user_id() > 0)
 			include_once("../../".$plugin_name."/include/classes.php");
 			include_once("../../".$plugin_name."/include/functions.php");
 
-			$json_output['result'] = call_user_func(array($type_class, 'get_result')); //, '__construct'
-
-			//$obj_import->fetch_request();
-
-			//$json_output['result'] = $obj_import->get_result();
+			$json_output['result'] = call_user_func(array($type_class, 'get_result'));
 
 			$json_output['success'] = true;
 		}

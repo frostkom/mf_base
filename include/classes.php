@@ -1852,7 +1852,7 @@ class mf_export
 					$error_text = __("There was nothing to export", 'lang_base');
 				}
 
-				get_file_info(array('path' => $this->upload_path, 'callback' => "delete_files"));
+				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));
 			}
 
 			else

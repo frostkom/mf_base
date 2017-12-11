@@ -11,7 +11,7 @@ jQuery(function($)
 			{
 				$.ajax(
 				{
-					url: script_base_wp.plugins_url + '/' + plugin_name + '/include/ajax.php?type=table_search',
+					url: script_base_wp.plugins_url + '/' + plugin_name + '/include/api/?type=table_search',
 					dataType: "json",
 					data: {
 						s: request.term

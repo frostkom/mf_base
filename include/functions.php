@@ -485,7 +485,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 		if($upload_path != '')
 		{
-			get_file_info(array('path' => $upload_path, 'callback' => "delete_files", 'time_limit' => 0));
+			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
 
 			rmdir($upload_path);
 		}
@@ -1080,9 +1080,9 @@ function get_file_icon($file)
 	return "<i class='fa fa-lg ".$class."'></i>";
 }
 
-function get_file_suffix($file)
+function get_file_suffix($file, $force_last = false)
 {
-	if(preg_match("/\?/", $file))
+	if($force_last == false && preg_match("/\?/", $file))
 	{
 		list($file, $rest) = explode("?", $file, 2);
 	}

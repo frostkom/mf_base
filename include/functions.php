@@ -1444,8 +1444,8 @@ function check_htaccess_base($data)
 			</FILES>
 			
 			<FILES wp-config.php>
-				order allow,deny
-				deny from all
+				Order Allow,Deny
+				Deny from all
 			</FILES>";
 
 			if($recommend_htaccess_temp != '')
@@ -3407,7 +3407,7 @@ function get_file_content($data)
 
 		else
 		{
-			insert_error(__("The file could not be opened", 'lang_base')." (".$data['file'].")");
+			do_log(__("The file could not be opened", 'lang_base')." (".$data['file'].")");
 		}
 	}
 

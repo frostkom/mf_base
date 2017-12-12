@@ -154,7 +154,7 @@ jQuery(function($)
 		return false;
 	});
 
-	//Single
+	/* Single */
 	$('.mf_image_button .button').click(function()
 	{
 		var restore_send_to_editor = window.send_to_editor,

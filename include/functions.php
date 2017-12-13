@@ -1548,8 +1548,10 @@ function setting_base_info_callback()
 	$php_required = "5.2.4";
 	$mysql_required = "5.0";
 
-	$has_required_php_version = point2int($php_version) > point2int($php_required);
-	$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
+	//$has_required_php_version = point2int($php_version) > point2int($php_required);
+	$has_required_php_version = version_compare($php_version, $php_required, ">");
+	//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
+	$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
 	echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
 	<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
@@ -2495,6 +2497,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
+	//filter_var($temp, FILTER_VALIDATE_URL)
 	else if($type == 'url' || $type2 == 'url')
 	{
 		$temp = trim($temp);
@@ -2569,6 +2572,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
+	//filter_var($temp, FILTER_SANITIZE_NUMBER_INT)
 	else if($type == 'int' || $type2 == 'int' || $type == 'zip' || $type2 == 'zip')
 	{
 		$temp = str_replace(" ", "", $temp);

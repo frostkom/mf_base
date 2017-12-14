@@ -1436,9 +1436,10 @@ function check_htaccess_base($data)
 			ServerSignature Off
 
 			DirectoryIndex index.php
-			Options -Indexes
+			Options -Indexes";
 
-			<FILES ~ '^.*\.([Hh][Tt][Aa])'>
+			/* Some hosts don't allow this */
+			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
 				Order Allow,Deny
 				Deny from all
 			</FILES>
@@ -1446,7 +1447,7 @@ function check_htaccess_base($data)
 			<FILES wp-config.php>
 				Order Allow,Deny
 				Deny from all
-			</FILES>";
+			</FILES>*/
 
 			if($recommend_htaccess_temp != '')
 			{

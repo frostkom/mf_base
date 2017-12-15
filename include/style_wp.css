@@ -1,6 +1,6 @@
 @media all
 {
-	div, a, p, ol, ul, li, form, label, input, select, textarea
+	div/*, a*/, p, ol, ul, li, form, label, input, select, textarea
 	{
 		box-sizing: border-box;
 	}

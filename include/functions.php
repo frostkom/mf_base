@@ -318,10 +318,10 @@ function send_email($data)
 							$phpmailer_temp[$key][$key2] = $value2;
 						}
 
-						/*else
+						else
 						{
 							$phpmailer_temp[$key][$key2] = shorten_text(array('string' => htmlspecialchars($value2), 'limit' => 4));
-						}*/
+						}
 					}
 				}
 
@@ -960,6 +960,7 @@ function delete_base($data)
 {
 	global $wpdb;
 
+	if(!isset($data['table_prefix'])){	$data['table_prefix'] = $wpdb->base_prefix;}
 	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
 
 	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
@@ -967,7 +968,7 @@ function delete_base($data)
 	$data['field_prefix'] = esc_sql($data['field_prefix']);
 	$data['table'] = esc_sql($data['table']);
 
-	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
+	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
 	foreach($result as $r)
 	{
@@ -979,12 +980,12 @@ function delete_base($data)
 		{
 			if($child_table_type['action'] == "trash")
 			{
-				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
+				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
 				$rows_temp = $wpdb->num_rows;
 
 				if($rows_temp > 0)
 				{
-					$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->base_prefix.$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
+					$wpdb->query($wpdb->prepare("UPDATE ".$data['table_prefix'].$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
 
 					$rows += $rows_temp;
 				}
@@ -997,11 +998,11 @@ function delete_base($data)
 			{
 				if($child_table_type['action'] == "delete")
 				{
-					$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+					$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 				}
 			}
 
-			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->base_prefix.$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 		}
 	}
 }

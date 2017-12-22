@@ -400,7 +400,8 @@
 			white-space: nowrap;
 		}
 
-			.mf_form button, .mf_form .button, .mf_form .button-primary, .mf_form .button-secondary
+			/* This messes up buttons Visual/Text above wp_editor() */
+			/*.mf_form button, .mf_form .button, */.mf_form .button-primary, .mf_form .button-secondary
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;

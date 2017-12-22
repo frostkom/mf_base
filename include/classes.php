@@ -72,6 +72,23 @@ class mf_base
 		}
 	}
 	############################
+
+	function get_templates($arr_type = array())
+	{
+		$out = "";
+
+		if(in_array('lost_connection', $arr_type))
+		{
+			$out .= "<div id='overlay_lost_connection'><span>".__("Lost Connection", 'lang_base')."</span></div>";
+		}
+
+		if(in_array('loading', $arr_type))
+		{
+			$out .= "<div id='overlay_loading'><span><i class='fa fa-spinner fa-spin fa-2x'></i></span></div>";
+		}
+
+		return $out;
+	}
 }
 
 class mf_cron

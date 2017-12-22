@@ -19,6 +19,12 @@ function scroll_to_top()
 	jQuery("html, body").animate({scrollTop: 0}, 800);
 }
 
+function preload(url)
+{
+	var img = new Image();
+	img.src = url;
+}
+
 jQuery(function($)
 {
 	on_load_base();

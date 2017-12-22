@@ -3208,17 +3208,27 @@ function show_form_alternatives($data)
 ######################################
 function show_checkbox($data)
 {
-	if(!isset($data['name'])){			$data['name'] = "";}
-	if(!isset($data['value'])){			$data['value'] = "";}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['required'])){		$data['required'] = false;}
-	if(!isset($data['compare'])){		$data['compare'] = 0;}
-	if(!isset($data['tag'])){			$data['tag'] = 'div';}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
-	if(!isset($data['switch'])){		$data['switch'] = 0;}
-	if(!isset($data['suffix'])){		$data['suffix'] = "";}
-	if(!isset($data['description'])){	$data['description'] = "";}
+	if(!isset($data['name'])){				$data['name'] = "";}
+	if(!isset($data['value'])){				$data['value'] = "";}
+	if(!isset($data['text'])){				$data['text'] = "";}
+	if(!isset($data['required'])){			$data['required'] = false;}
+	if(!isset($data['compare'])){			$data['compare'] = 0;}
+	if(!isset($data['tag'])){				$data['tag'] = 'div';}
+	if(!isset($data['xtra'])){				$data['xtra'] = "";}
+	if(!isset($data['xtra_class'])){		$data['xtra_class'] = "";}
+	if(!isset($data['suffix'])){			$data['suffix'] = "";}
+	if(!isset($data['description'])){		$data['description'] = "";}
+	if(!isset($data['switch'])){			$data['switch'] = 0;}
+
+	if(!isset($data['switch_icon_on']) || $data['switch_icon_on'] == '')
+	{
+		$data['switch_icon_on'] = "fa-lg fa-check-square-o green";
+	}
+
+	if(!isset($data['switch_icon_off']) || $data['switch_icon_off'] == '')
+	{
+		$data['switch_icon_off'] = "fa-lg fa-square-o";
+	}
 
 	$data['xtra'] .= ($data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "");
 
@@ -3250,7 +3260,7 @@ function show_checkbox($data)
 	if($data['switch'] == 1)
 	{
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<span><i class='fa fa-lg fa-check-square-o green checked'></i><i class='fa fa-lg fa-square-o unchecked'></i><i class='fa fa-lg fa-spinner fa-spin loading'></i></span>".$data['text'];
+		$data['text'] = "<span><i class='fa ".$data['switch_icon_on']." checked'></i><i class='fa ".$data['switch_icon_off']." unchecked'></i><i class='fa fa-lg fa-spinner fa-spin loading'></i></span>".$data['text'];
 	}
 
 	if($data['suffix'] != '')

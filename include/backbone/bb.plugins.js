@@ -6,13 +6,20 @@ jQuery.fn.callAPI = function(o)
 		url: '',
 		data: '',
 		send_type: 'post',
-		onBeforeSend: function(){},
+		onBeforeSend: function()
+		{
+			jQuery("#overlay_loading").show();
+		},
 		onSuccess: function(data){},
-		onAfterSend: function(){},
+		onAfterSend: function()
+		{
+			jQuery("#overlay_loading").hide();
+		},
 		onError: function(data)
 		{
 			setTimeout(function()
 			{
+				jQuery("#overlay_loading").hide();
 				jQuery("#overlay_lost_connection").show();
 			}, 2000);
 		}

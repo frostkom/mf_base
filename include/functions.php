@@ -1338,25 +1338,33 @@ function point2int($in)
 	return $str_version;
 }
 
-function get_next_cron()
+function get_next_cron($raw = false)
 {
 	$date_next_schedule = date("Y-m-d H:i:s", wp_next_scheduled('cron_base'));
 
 	$mins = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
 
-	if($mins > 0 && $mins < 60)
+	if($raw == true)
 	{
-		return sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
-	}
-
-	else if($mins == 0)
-	{
-		return __("now", 'lang_base');
+		return $date_next_schedule;
 	}
 
 	else
 	{
-		return format_date($date_next_schedule);
+		if($mins > 0 && $mins < 60)
+		{
+			return sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
+		}
+
+		else if($mins == 0)
+		{
+			return __("now", 'lang_base');
+		}
+
+		else
+		{
+			return format_date($date_next_schedule);
+		}
 	}
 }
 
@@ -1595,7 +1603,7 @@ function setting_base_cron_callback()
 		$arr_data[$key] = $value['display'];
 	}
 
-	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
+	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-10 minute")))
 	{
 		$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 

@@ -585,19 +585,23 @@ function mf_uninstall_plugin($data)
 		{
 			//Switch to temp site
 			####################
-			$wpdbobj = clone $wpdb;
+			/*$wpdbobj = clone $wpdb;
 			$wpdb->blogid = $r->blog_id;
-			$wpdb->set_prefix($wpdb->base_prefix);
+			$wpdb->set_prefix($wpdb->base_prefix);*/
 			####################
+
+			switch_to_blog($r->blog_id);
 
 			mf_uninstall_uploads($data, false);
 			mf_uninstall_options($data);
 			mf_uninstall_post_types($data);
 			mf_uninstall_tables($data);
 
+			restore_current_blog();
+
 			//Switch back to orig site
 			###################
-			$wpdb = clone $wpdbobj;
+			//$wpdb = clone $wpdbobj;
 			###################
 		}
 	}
@@ -1452,7 +1456,7 @@ function check_htaccess_base($data)
 				Order Allow,Deny
 				Deny from all
 			</FILES>
-			
+
 			<FILES wp-config.php>
 				Order Allow,Deny
 				Deny from all

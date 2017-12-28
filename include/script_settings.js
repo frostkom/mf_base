@@ -106,6 +106,6 @@ jQuery(function($)
 
 		$("html, body").scrollTop(0);
 
-		return false;
+		/*return false;*/
 	});
 });

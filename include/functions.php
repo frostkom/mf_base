@@ -1385,98 +1385,6 @@ function reschedule_base($option = '')
 	}
 }
 
-function get_site_redirect_base($site_id = 0)
-{
-	global $wpdb;
-
-	$site_url = get_site_url($site_id > 0 ? $site_id : $wpdb->blogid);
-	$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-	@list($site_host, $rest) = explode("/", $site_url_clean);
-
-	$has_www = "www." == substr($site_url_clean, 0, 4);
-	$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
-	$is_subfolder = substr_count($site_url_clean, '/') > 0;
-
-	$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
-	$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
-
-	$out = '';
-
-	if(!$is_subdomain && !$is_subfolder)
-	{
-		$out .= "\n
-		RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
-		RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
-
-		if(preg_match("/https\:/", $site_url))
-		{
-			$out .= "\n
-			RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
-			RewriteCond	%{HTTPS}		off
-			RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]"; /* https://%{HTTP_HOST}/$1 */
-		}
-	}
-
-	return $out;
-}
-
-function check_htaccess_base($data)
-{
-	if(basename($data['file']) == ".htaccess")
-	{
-		$content = get_file_content(array('file' => $data['file']));
-
-		if(!preg_match("/BEGIN MF Base/", $content)) // || !preg_match("/".$site_url_clean_opposite_regexp."/", $content)
-		{
-			$recommend_htaccess_temp = '';
-
-			if(is_multisite())
-			{
-				$result = get_sites();
-
-				foreach($result as $r)
-				{
-					$recommend_htaccess_temp .= get_site_redirect_base($r->blog_id);
-				}
-			}
-
-			else
-			{
-				$recommend_htaccess_temp .= get_site_redirect_base();
-			}
-
-			$recommend_htaccess = "# BEGIN MF Base
-			ServerSignature Off
-
-			DirectoryIndex index.php
-			Options -Indexes";
-
-			/* Some hosts don't allow this */
-			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
-				Order Allow,Deny
-				Deny from all
-			</FILES>
-
-			<FILES wp-config.php>
-				Order Allow,Deny
-				Deny from all
-			</FILES>*/
-
-			if($recommend_htaccess_temp != '')
-			{
-				$recommend_htaccess .= "\n\nRewriteEngine On".$recommend_htaccess_temp;
-			}
-
-			$recommend_htaccess .= "\n# END MF Base";
-
-			echo "<div class='mf_form'>"
-				."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
-				."<p class='input'>".nl2br(htmlspecialchars($recommend_htaccess))."</p>"
-			."</div>";
-		}
-	}
-}
-
 function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
@@ -1671,7 +1579,9 @@ function setting_base_recommend_callback()
 		new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 	}
 
-	get_file_info(array('path' => get_home_path(), 'callback' => "check_htaccess_base", 'allow_depth' => false));
+	$obj_base = new mf_base();
+
+	get_file_info(array('path' => get_home_path(), 'callback' => array($obj_base, 'check_htaccess'), 'allow_depth' => false));
 }
 
 /*function setting_all_options_callback()
@@ -2204,18 +2114,16 @@ function get_url_content($url, $catch_head = false, $password = "", $post = "", 
 	$url = validate_url($url, false);
 
 	$ch = curl_init();
-	$timeout = 5;
 
 	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; sv-SE; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.10");
 
 	if(ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off')
 	{
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-		//curl_setopt($ch, CURLOPT_MAXREDIRS, $mr);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 	}
 
 	if($password != '')

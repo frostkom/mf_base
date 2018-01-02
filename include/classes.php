@@ -73,6 +73,98 @@ class mf_base
 	}
 	############################
 
+	/* .htaccess */
+	############################
+	function get_site_redirect($site_id)
+	{
+		$site_url = get_site_url($site_id > 0 ? $site_id : $wpdb->blogid);
+		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
+		@list($site_host, $rest) = explode("/", $site_url_clean);
+
+		$has_www = "www." == substr($site_url_clean, 0, 4);
+		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
+		$is_subfolder = substr_count($site_url_clean, '/') > 0;
+
+		$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
+		$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
+
+		if(!$is_subdomain && !$is_subfolder)
+		{
+			$this->recommend_htaccess_temp .= "\n
+			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
+			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
+
+			/*if(substr($site_url, 0, 5) == 'https')
+			{
+				$this->recommend_htaccess_temp .= "\n
+				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
+				RewriteCond	%{HTTPS}		off
+				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
+			}*/
+
+			$this->last_redirect = "^".$site_url_clean_opposite."$";
+		}
+	}
+
+	function check_htaccess($data)
+	{
+		if(basename($data['file']) == ".htaccess")
+		{
+			$content = get_file_content(array('file' => $data['file']));
+
+			$this->recommend_htaccess_temp = $this->last_redirect = "";
+
+			if(is_multisite())
+			{
+				$result = get_sites();
+
+				foreach($result as $r)
+				{
+					$this->get_site_redirect($r->blog_id);
+				}
+			}
+
+			else
+			{
+				$this->get_site_redirect();
+			}
+
+			$recommend_htaccess = "# BEGIN MF Base
+			ServerSignature Off
+
+			DirectoryIndex index.php
+			Options -Indexes";
+
+			/* Some hosts don't allow this */
+			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
+				Order Allow,Deny
+				Deny from all
+			</FILES>
+
+			<FILES wp-config.php>
+				Order Allow,Deny
+				Deny from all
+			</FILES>*/
+
+			if($this->recommend_htaccess_temp != '')
+			{
+				$recommend_htaccess .= "\n
+				RewriteEngine On".$this->recommend_htaccess_temp;
+			}
+
+			$recommend_htaccess .= "\n# END MF Base";
+
+			if(!preg_match("/BEGIN MF Base/", $content) || strpos($content, $this->last_redirect) === false)
+			{
+				echo "<div class='mf_form'>"
+					."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
+					."<p class='input'>".nl2br(htmlspecialchars($recommend_htaccess))."</p>"
+				."</div>";
+			}
+		}
+	}
+	############################
+
 	function get_templates($arr_type = array())
 	{
 		$out = "";

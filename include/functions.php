@@ -218,14 +218,14 @@ function get_user_info($data = array())
 	}
 }
 
-function after_title_base()
+/*function after_title_base()
 {
 	global $post, $wp_meta_boxes;
 
 	do_meta_boxes(get_current_screen(), 'after_title', $post);
 
 	unset($wp_meta_boxes[get_post_type($post)]['after_title']);
-}
+}*/
 
 if(!function_exists('get_post_title'))
 {

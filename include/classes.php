@@ -221,7 +221,7 @@ class recommend_plugin
 		{
 			list($a_start, $a_end) = get_install_link_tags($data['url'], $data['name']);
 
-			if($pagenow == 'plugins.php' && $data['show_notice'] == true)
+			if($pagenow == 'plugins.php' && $data['show_notice'] == true && $data['name'] != '')
 			{
 				$this->message = sprintf(__("We highly recommend that you install %s aswell", 'lang_base'), $a_start.$data['name'].$a_end).($data['text'] != '' ? " ".$data['text'] : "");
 

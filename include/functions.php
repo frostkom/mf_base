@@ -1399,6 +1399,17 @@ function show_settings_fields($data)
 	}
 }
 
+function settings_save_site_wide($setting_key)
+{
+	if(isset($_REQUEST['settings-updated']) && $_REQUEST['settings-updated'] == true)
+	{
+		$option = get_option($setting_key);
+
+		update_site_option($setting_key, $option);
+		delete_option($setting_key);
+	}
+}
+
 function settings_header($id, $title)
 {
 	return "<div id='".$id."'><a href='#".$id."'><h3>".$title."</h3></a></div>";

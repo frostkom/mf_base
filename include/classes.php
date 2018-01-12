@@ -154,7 +154,7 @@ class mf_base
 
 			$recommend_htaccess .= "\n# END MF Base";
 
-			if(!preg_match("/BEGIN MF Base/", $content) || strpos($content, $this->last_redirect) === false)
+			if(!preg_match("/BEGIN MF Base/", $content) || $this->last_redirect != '' && strpos($content, $this->last_redirect) === false)
 			{
 				echo "<div class='mf_form'>"
 					."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"

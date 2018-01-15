@@ -583,13 +583,6 @@ function mf_uninstall_plugin($data)
 
 		foreach($result as $r)
 		{
-			//Switch to temp site
-			####################
-			/*$wpdbobj = clone $wpdb;
-			$wpdb->blogid = $r->blog_id;
-			$wpdb->set_prefix($wpdb->base_prefix);*/
-			####################
-
 			switch_to_blog($r->blog_id);
 
 			mf_uninstall_uploads($data, false);
@@ -598,11 +591,6 @@ function mf_uninstall_plugin($data)
 			mf_uninstall_tables($data);
 
 			restore_current_blog();
-
-			//Switch back to orig site
-			###################
-			//$wpdb = clone $wpdbobj;
-			###################
 		}
 	}
 
@@ -3352,7 +3340,7 @@ function get_file_content($data)
 
 	if(file_exists($data['file']) && filesize($data['file']) > 0)
 	{
-		if($fh = fopen(realpath($data['file']), 'r'))
+		if($fh = @fopen(realpath($data['file']), 'r'))
 		{
 			$content = fread($fh, filesize($data['file']));
 			fclose($fh);

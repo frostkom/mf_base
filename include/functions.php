@@ -1389,25 +1389,17 @@ function show_settings_fields($data)
 
 function settings_save_site_wide($setting_key)
 {
-	if(IS_SUPER_ADMIN && isset($_REQUEST['settings-updated']) && $_REQUEST['settings-updated'] == true)
+	if(IS_SUPER_ADMIN && is_multisite() && isset($_REQUEST['settings-updated']) && $_REQUEST['settings-updated'] == true)
 	{
 		$option = get_option($setting_key);
 
 		update_site_option($setting_key, $option);
 
-		if(is_multisite())
-		{
-			$result = get_sites();
+		$result = get_sites();
 
-			foreach($result as $r)
-			{
-				delete_blog_option($r->blog_id, $setting_key);
-			}
-		}
-
-		else
+		foreach($result as $r)
 		{
-			delete_option($setting_key);
+			delete_blog_option($r->blog_id, $setting_key);
 		}
 	}
 }

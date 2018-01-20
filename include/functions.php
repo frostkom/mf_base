@@ -1395,11 +1395,19 @@ function settings_save_site_wide($setting_key)
 
 		update_site_option($setting_key, $option);
 
-		$result = get_sites();
-
-		foreach($result as $r)
+		if(is_multisite())
 		{
-			delete_blog_option($r->blog_id, $setting_key);
+			$result = get_sites();
+
+			foreach($result as $r)
+			{
+				delete_blog_option($r->blog_id, $setting_key);
+			}
+		}
+
+		else
+		{
+			delete_option($setting_key);
 		}
 	}
 }

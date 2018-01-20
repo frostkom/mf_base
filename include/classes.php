@@ -75,8 +75,10 @@ class mf_base
 
 	/* .htaccess */
 	############################
-	function get_site_redirect($site_id)
+	function get_site_redirect($site_id = 0)
 	{
+		global $wpdb;
+
 		$site_url = get_site_url($site_id > 0 ? $site_id : $wpdb->blogid);
 		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
 		@list($site_host, $rest) = explode("/", $site_url_clean);
@@ -90,17 +92,22 @@ class mf_base
 
 		if(!$is_subdomain && !$is_subfolder)
 		{
-			$this->recommend_htaccess_temp .= "\n
+			$this->recommend_htaccess .= "\n
 			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
 			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
 
-			/*if(substr($site_url, 0, 5) == 'https')
+			if(substr($site_url, 0, 5) == 'https')
 			{
-				$this->recommend_htaccess_temp .= "\n
+				$this->recommend_htaccess_https .= "\n
 				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
 				RewriteCond	%{HTTPS}		off
 				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
-			}*/
+			}
+
+			else
+			{
+				$this->all_is_https = false;
+			}
 
 			$this->last_redirect = "^".$site_url_clean_opposite."$";
 		}
@@ -112,7 +119,8 @@ class mf_base
 		{
 			$content = get_file_content(array('file' => $data['file']));
 
-			$this->recommend_htaccess_temp = $this->last_redirect = "";
+			$this->all_is_https = true;
+			$this->recommend_htaccess = $this->recommend_htaccess_https = $this->last_redirect = "";
 
 			if(is_multisite())
 			{
@@ -146,15 +154,29 @@ class mf_base
 				Deny from all
 			</FILES>*/
 
-			if($this->recommend_htaccess_temp != '')
+			if($this->recommend_htaccess != '')
 			{
 				$recommend_htaccess .= "\n
-				RewriteEngine On".$this->recommend_htaccess_temp;
+				RewriteEngine On".$this->recommend_htaccess;
+
+				if($this->all_is_https == true)
+				{
+					$recommend_htaccess .= "\n
+					RewriteCond %{HTTPS} !=on
+					RewriteCond %{ENV:HTTPS} !=on
+					RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]";
+				}
+
+				else if($this->recommend_htaccess_https != '')
+				{
+					$recommend_htaccess .= "\n
+					".$this->recommend_htaccess_https;
+				}
 			}
 
 			$recommend_htaccess .= "\n# END MF Base";
 
-			if(!preg_match("/BEGIN MF Base/", $content) || $this->last_redirect != '' && strpos($content, $this->last_redirect) === false)
+			if(!preg_match("/BEGIN MF Base/", $content) || ($this->all_is_https == true && !preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->all_is_https == false && preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->last_redirect != '' && strpos($content, $this->last_redirect) === false))
 			{
 				echo "<div class='mf_form'>"
 					."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"

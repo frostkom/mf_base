@@ -1184,7 +1184,7 @@ function get_media_button($data = array())
 /* Deprecated as of 180123 */
 function get_file_button($data)
 {
-	do_log("get_file_button() is still in use");
+	do_log("get_file_button() is still in use (".var_export($data, true).")");
 
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);

@@ -1087,6 +1087,57 @@ function get_file_suffix($file, $force_last = false)
 	return $suffix;
 }
 
+function get_media_library($data)
+{
+	if(!isset($data['type'])){			$data['type'] = false;}
+	if(!isset($data['multiple'])){		$data['multiple'] = false;}
+	if(!isset($data['name'])){			$data['name'] = '';}
+	if(!isset($data['return_to'])){		$data['return_to'] = '';}
+	if(!isset($data['return_type'])){	$data['return_type'] = '';}
+	if(!isset($data['value'])){			$data['value'] = '';}
+
+	$add_file_text = __("Add File", 'lang_base');
+	$change_file_text = __("Change File", 'lang_base');
+	$insert_file_text = __("Insert File", 'lang_base');
+	$insert_text = __("Insert", 'lang_base');
+
+	$plugin_include_url = plugin_dir_url(__FILE__);
+	$plugin_version = get_plugin_version(__FILE__);
+
+	mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
+
+	wp_enqueue_media();
+	mf_enqueue_script('script_media_library', $plugin_include_url."script_media_library.js", array(
+		'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text, 'insert_text' => $insert_text,
+	), $plugin_version);
+
+	$out = "<div class='mf_media_library' data-type='".$data['type']."' data-multiple='".$data['multiple']."' data-return_to='".$data['return_to']."' data-return_type='".$data['return_type']."'>
+		<div>";
+
+			if($data['name'] != '')
+			{
+				$filetype = in_array(get_file_suffix($data['value']), array('gif', 'jpg', 'jpeg', 'png')) ? 'image' : 'file';
+
+				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
+					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
+					<span".($filetype == 'file' ? "" : " class='hide'").">".$data['value']."</span>
+					<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
+				</div>";
+			}
+
+			$out .= show_button(array('type' => 'button', 'text' => ($data['value'] != '' ? $change_file_text : $add_file_text), 'class' => "button"));
+
+			if($data['name'] != '')
+			{
+				$out .= input_hidden(array('name' => $data['name'], 'value' => $data['value']));
+			}
+
+		$out .= "</div>
+	</div>";
+
+	return $out;
+}
+
 function get_media_button($data = array())
 {
 	$out = "";
@@ -1130,17 +1181,20 @@ function get_media_button($data = array())
 	return $out;
 }
 
+/* Deprecated as of 180123 */
 function get_file_button($data)
 {
+	do_log("get_file_button() is still in use");
+
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
 	wp_enqueue_style('thickbox');
 	mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 
-	$add_file_text = __("Add Image", 'lang_base');
-	$change_file_text = __("Change Image", 'lang_base');
-	$insert_file_text = __("Insert Image", 'lang_base');
+	$add_file_text = __("Add File", 'lang_base');
+	$change_file_text = __("Change File", 'lang_base');
+	$insert_file_text = __("Insert File", 'lang_base');
 
 	wp_enqueue_script('media-upload');
 	wp_enqueue_script('thickbox');
@@ -1154,6 +1208,7 @@ function get_file_button($data)
 	return "<div class='mf_image_button'>
 		<div".($data['value'] != '' ? "" : " class='hide'").">
 			<img src='".$data['value']."'>
+			<span></span>
 			<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
 		</div>
 		<div>"

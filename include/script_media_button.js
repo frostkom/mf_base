@@ -129,9 +129,9 @@ jQuery(function($)
 				self.after("<div class='error'><p>" + script_media_button.no_attachment_link + "</p></div>");
 			}
 
-			dom_raw.empty();
-
 			render_attachment_list();
+
+			dom_raw.empty();
 
 			tb_remove();
 
@@ -166,15 +166,69 @@ jQuery(function($)
 
 			dom_raw.html(html);
 
-			var img_url = dom_raw.find('img').attr('src');
+			/*if(dom_raw.find('a').length > 0)
+			{
+				dom_raw.find('a').each(function()
+				{
+					var dom_a = $(this),
+						file_name = '',
+						file_url = '';
 
-			dom_raw.html('');
+					if(dom_a.children('img').length > 0)
+					{
+						file_name = dom_a.children('img').attr('alt');
+						file_url = dom_a.children('img').attr('src');
 
+						var file_class = dom_a.children('img').attr('class'),
+							file_id = file_class.match(/wp-image-(\d*)/)[1];
+
+						file_url += "|" + file_id;
+					}
+
+					else
+					{
+						file_name = dom_a.text();
+						file_url = dom_a.attr('href');
+					}
+
+					self.find("input[type='hidden']").val(file_url);
+					self.find("span").text(img_url).show().siblings("img").hide();
+
+					self.children('div:first-of-type').removeClass('hide');
+					self.find('button').text(script_media_button.change_file_text);
+				});
+			}
+
+			else */if(dom_raw.find('img').length > 0)
+			{
+				dom_raw.find('img').each(function()
+				{
+					var dom_img = $(this),
+						img_url = dom_img.attr('src');
+
+					self.find("input[type='hidden']").val(img_url);
+					self.find("img").attr('src', img_url).show().siblings("span").hide();
+
+					self.children('div:first-of-type').removeClass('hide');
+					self.find('button').text(script_media_button.change_file_text);
+				});
+			}
+
+			else
+			{
+				/*console.log("Error" , html);*/
+				/*self.after("<div class='error'><p>" + script_media_button.no_attachment_link + "</p></div>");*/
+			}
+
+			/*var img_url = dom_raw.find('img').attr('src');
+			
 			self.find("input[type='hidden']").val(img_url);
 			self.find("img").attr('src', img_url);
 
 			self.children('div:first-of-type').removeClass('hide');
-			self.find('button').text(script_media_button.change_file_text);
+			self.find('button').text(script_media_button.change_file_text);*/
+
+			dom_raw.empty();
 
 			tb_remove();
 

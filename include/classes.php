@@ -27,6 +27,35 @@ class mf_base
 		return $meta_boxes;
 	}
 
+	function file_shortcode($atts)
+	{
+		extract(shortcode_atts(array(
+			'id' => 0,
+			'filetype' => '',
+		), $atts));
+
+		$out = "";
+
+		switch($filetype)
+		{
+			case 'gif':
+			case 'jpg':
+			case 'jpeg':
+			case 'png':
+				$out .= render_image_tag(array('id' => $id));
+			break;
+
+			default:
+				$file_name = basename(get_attached_file($id));
+				$file_url = wp_get_attachment_url($id);
+
+				$out .= "<a href='".$file_url."' rel='external'>".$file_name."</a>";
+			break;
+		}
+
+		return $out;
+	}
+
 	/* Form */
 	############################
 	function init_form($data)

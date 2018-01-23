@@ -30,6 +30,7 @@
 
 		.mf_image_button img
 		{
+			display: block;
 			max-width: 150px;
 		}
 

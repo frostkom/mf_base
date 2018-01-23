@@ -47,10 +47,7 @@
 				padding: .15em;
 			}
 
-	.toggler
-	{
-
-	}
+	.toggler{}
 
 		.toggler.open
 		{
@@ -276,14 +273,17 @@
 			background: #fff;
 			background: rgba(255, 255, 255, .8);
 			border: 1px solid #e1e1e1;
-			/*box-sizing: border-box;*/
 			display: inline-block;
 			font: inherit;
-			/*height: auto;*/
 			margin: 0 0 .8em;
 			padding: .4em;
 			width: 100%;
         }
+
+			.mf_form input[readonly], .mf_form textarea[readonly]
+			{
+				background-color: #eee;
+			}
 
 			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
 			{

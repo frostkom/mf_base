@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-26 10:15+0100\n"
+"POT-Creation-Date: 2018-01-26 13:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -44,7 +44,7 @@ msgid "Delete"
 msgstr "Radera"
 
 #: ../include/classes.php:672
-#: ../include/functions.php:1987
+#: ../include/functions.php:1990
 msgid "Search"
 msgstr "Sök"
 
@@ -113,11 +113,11 @@ msgstr "Kolla"
 #: ../include/classes.php:1770
 #: ../include/classes.php:1837
 #: ../include/classes.php:1895
-#: ../include/functions.php:1823
-#: ../include/functions.php:1857
-#: ../include/functions.php:2033
-#: ../include/functions.php:2064
-#: ../include/functions.php:3647
+#: ../include/functions.php:1826
+#: ../include/functions.php:1860
+#: ../include/functions.php:2036
+#: ../include/functions.php:2067
+#: ../include/functions.php:3650
 msgid "Choose here"
 msgstr "Välj här"
 
@@ -420,130 +420,130 @@ msgstr "för att komprimera bilder utan förlust av kvalité (Max 100kb/fil grat
 msgid "to losslessly compress all uploaded images"
 msgstr "för att komprimera bilder utan förlust av kvalité"
 
-#: ../include/functions.php:1764
+#: ../include/functions.php:1767
 msgid "I could not find any roles for this site...?"
 msgstr "Jag kunde inte hitta någon roll till denna webbplats...?"
 
-#: ../include/functions.php:1835
-#: ../include/functions.php:1841
+#: ../include/functions.php:1838
+#: ../include/functions.php:1844
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:1836
-#: ../include/functions.php:1842
+#: ../include/functions.php:1839
+#: ../include/functions.php:1845
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:1862
+#: ../include/functions.php:1865
 msgid "Super Admin"
 msgstr "Superadmin"
 
-#: ../include/functions.php:1902
+#: ../include/functions.php:1905
 msgid "Pages"
 msgstr "Sidor"
 
-#: ../include/functions.php:1927
+#: ../include/functions.php:1930
 msgid "Post Types"
 msgstr "Sidtyper"
 
-#: ../include/functions.php:1956
+#: ../include/functions.php:1959
 msgid "404"
 msgstr "404"
 
-#: ../include/functions.php:1963
+#: ../include/functions.php:1966
 msgid "Category"
 msgstr "Kategori"
 
-#: ../include/functions.php:1969
+#: ../include/functions.php:1972
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../include/functions.php:1985
+#: ../include/functions.php:1988
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:3406
+#: ../include/functions.php:3409
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:3522
+#: ../include/functions.php:3525
 #, php-format
 msgid "I am sorry but I did not have permission to access %s"
 msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:3742
+#: ../include/functions.php:3745
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:3753
+#: ../include/functions.php:3756
 msgid "Saturday"
 msgstr "Lördag"
 

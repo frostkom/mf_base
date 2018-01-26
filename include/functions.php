@@ -1630,6 +1630,9 @@ function setting_base_recommend_callback()
 		$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
 	}
 
+	//wordpress.org/plugins/wp-hotel-booking/
+	//wordpress.org/plugins/easyreservations/
+
 	foreach($arr_recommendations as $value)
 	{
 		$name = $value[0];
@@ -2588,7 +2591,7 @@ function show_textfield($data)
 		$data['type'] = "number";
 	}
 
-	$arr_accepted_types = array('text', 'email', 'url', 'date', 'number', 'range', 'color');
+	$arr_accepted_types = array('text', 'email', 'url', 'date', 'time', 'number', 'range', 'color');
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
 	if(!isset($data['name'])){			$data['name'] = "";}
@@ -2607,7 +2610,7 @@ function show_textfield($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	if($data['type'] == "date")
+	/*if($data['type'] == "date")
 	{
 		mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
 		wp_enqueue_script('jquery-ui-datepicker');
@@ -2615,7 +2618,7 @@ function show_textfield($data)
 
 		$data['type'] = "text";
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";
-	}
+	}*/
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 

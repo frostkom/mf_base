@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-23 11:55+0100\n"
+"POT-Creation-Date: 2018-01-26 10:15+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -195,7 +195,7 @@ msgstr "Formulär"
 #: ../include/functions.php:276
 #, php-format
 msgid "The message had no recepient so '%s' could not be sent"
-msgstr "Meddelandet hade ingen mottagare so '%s' kunde inte skickas"
+msgstr "Meddelandet hade ingen mottagare så '%s' kunde inte skickas"
 
 #: ../include/functions.php:283
 #, php-format

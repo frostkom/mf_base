@@ -296,7 +296,7 @@ function send_email($data)
 
 		$sent = wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
 
-		if($data['save_log'] == true)
+		if($data['save_log'] == true || !$sent)
 		{
 			global $phpmailer;
 
@@ -348,7 +348,7 @@ function send_email($data)
 			}
 		}
 
-		else if($data['save_log'] == true)
+		else
 		{
 			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
 		}

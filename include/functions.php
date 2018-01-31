@@ -467,13 +467,35 @@ function meta_boxes_script_base()
 
 function replace_option($data)
 {
-	if(get_option($data['old']) != '')
+	$option_old = get_option($data['old']);
+
+	if($option_old != '')
 	{
-		update_option($data['new'], get_option($data['old']));
+		update_option($data['new'], $option_old);
 
 		mf_uninstall_plugin(array(
 			'options' => array($data['old']),
 		));
+	}
+}
+
+function replace_user_meta($data)
+{
+	if(!isset($data['single'])){	$data['single'] = true;}
+
+	$users = get_users(array(
+		'fields' => array('ID'),
+	));
+
+	foreach($users as $user)
+	{
+		$meta_old = get_user_meta($user->ID, $data['old'], $data['single']);
+
+		if($meta_old != '')
+		{
+			update_user_meta($user->ID, $data['new'], $meta_old);
+			delete_user_meta($user->ID, $data['old']);
+		}
 	}
 }
 
@@ -488,6 +510,24 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
 
 			rmdir($upload_path);
+		}
+	}
+}
+
+function mf_uninstall_meta($data)
+{
+	if(count($data['meta']) > 0)
+	{
+		$users = get_users(array(
+			'fields' => array('ID'),
+		));
+
+		foreach($users as $user)
+		{
+			foreach($data['meta'] as $meta_key)
+			{
+				delete_user_meta($user->ID, $meta_key);
+			}
 		}
 	}
 }
@@ -574,6 +614,7 @@ function mf_uninstall_plugin($data)
 
 	if(!isset($data['uploads'])){			$data['uploads'] = "";}
 	if(!isset($data['options'])){			$data['options'] = array();}
+	if(!isset($data['meta'])){				$data['meta'] = array();}
 	if(!isset($data['post_types'])){		$data['post_types'] = array();}
 	if(!isset($data['tables'])){			$data['tables'] = array();}
 
@@ -601,6 +642,7 @@ function mf_uninstall_plugin($data)
 		mf_uninstall_tables($data);
 	}
 
+	mf_uninstall_meta($data);
 	mf_uninstall_uploads($data, true);
 }
 
@@ -2591,7 +2633,7 @@ function show_textfield($data)
 		$data['type'] = "number";
 	}
 
-	$arr_accepted_types = array('text', 'email', 'url', 'date', 'time', 'number', 'range', 'color');
+	$arr_accepted_types = array('text', 'email', 'url', 'date', 'month', 'time', 'number', 'range', 'color');
 
 	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
 	if(!isset($data['name'])){			$data['name'] = "";}
@@ -2610,15 +2652,15 @@ function show_textfield($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	/*if($data['type'] == "date")
+	if($data['type'] == 'month') //'date'
 	{
 		mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
 		wp_enqueue_script('jquery-ui-datepicker');
 		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", get_plugin_version(__FILE__));
 
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
 		$data['type'] = "text";
-		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker";
-	}*/
+	}
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 

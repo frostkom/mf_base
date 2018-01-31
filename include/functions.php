@@ -797,6 +797,7 @@ function delete_files($data)
 	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
 	{
 		@unlink($data['file']);
+		do_log("Removed File: ".$data['file']);
 	}
 }
 

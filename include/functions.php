@@ -2627,40 +2627,61 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 ######################
 function show_textfield($data)
 {
+	if(!isset($data['name'])){				$data['name'] = "";}
+	if(!isset($data['id'])){				$data['id'] = $data['name'];}
+	if(!isset($data['text'])){				$data['text'] = "";}
+	if(!isset($data['value'])){				$data['value'] = "";}
+	if(!isset($data['maxlength'])){			$data['maxlength'] = "";}
+	if(!isset($data['size'])){				$data['size'] = 0;}
+	if(!isset($data['required'])){			$data['required'] = false;}
+	if(!isset($data['autocorrect'])){		$data['autocorrect'] = true;}
+	if(!isset($data['autocapitalize'])){	$data['autocapitalize'] = true;}
+	if(!isset($data['placeholder'])){		$data['placeholder'] = "";}
+	if(!isset($data['pattern'])){			$data['pattern'] = "";}
+	if(!isset($data['title'])){				$data['title'] = "";}
+	if(!isset($data['xtra'])){				$data['xtra'] = "";}
+	if(!isset($data['xtra_class'])){		$data['xtra_class'] = "";}
+	if(!isset($data['datalist'])){			$data['datalist'] = array();}
+	if(!isset($data['suffix'])){			$data['suffix'] = "";}
+	if(!isset($data['description'])){		$data['description'] = "";}
+
 	$arr_number_types = array('int', 'float');
 
 	if(isset($data['type']) && in_array($data['type'], $arr_number_types))
 	{
-		$data['type'] = "number";
+		do_log("Type (int/float) was used ".var_export($data, true));
+
+		$data['type'] = 'number';
 	}
 
 	$arr_accepted_types = array('text', 'email', 'url', 'date', 'month', 'time', 'number', 'range', 'color');
 
-	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types)){	$data['type'] = "text";}
-	if(!isset($data['name'])){			$data['name'] = "";}
-	if(!isset($data['id'])){			$data['id'] = $data['name'];}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['value'])){			$data['value'] = "";}
-	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
-	if(!isset($data['size'])){			$data['size'] = 0;}
-	if(!isset($data['required'])){		$data['required'] = false;}
-	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
-	if(!isset($data['pattern'])){		$data['pattern'] = "";}
-	if(!isset($data['title'])){			$data['title'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
-	if(!isset($data['datalist'])){		$data['datalist'] = array();}
-	if(!isset($data['suffix'])){		$data['suffix'] = "";}
-	if(!isset($data['description'])){	$data['description'] = "";}
-
-	if($data['type'] == 'month') //'date'
+	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types))
 	{
-		mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
-		wp_enqueue_script('jquery-ui-datepicker');
-		mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", get_plugin_version(__FILE__));
+		$data['type'] = 'text';
+	}
 
-		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
-		$data['type'] = "text";
+	switch($data['type'])
+	{
+		case 'month':
+		//case 'date':
+			mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
+			wp_enqueue_script('jquery-ui-datepicker');
+			mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", get_plugin_version(__FILE__));
+
+			$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
+			$data['type'] = "text";
+		break;
+
+		case 'email':
+		case 'url':
+			$data['autocorrect'] = false;
+			$data['autocapitalize'] = false;
+		break;
+
+		case 'number':
+			$data['xtra'] .= " step='any'";
+		break;
 	}
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
@@ -2668,6 +2689,16 @@ function show_textfield($data)
 	if($data['required'])
 	{
 		$data['xtra'] .= " required";
+	}
+
+	if($data['autocorrect'] == false)
+	{
+		$data['xtra'] .= " autocorrect='off'";
+	}
+
+	if($data['autocapitalize'] == false)
+	{
+		$data['xtra'] .= " autocapitalize='off'";
 	}
 
 	if($data['size'] > 0)
@@ -2693,16 +2724,6 @@ function show_textfield($data)
 	if($data['title'] != '')
 	{
 		$data['xtra'] .= " title='".$data['title']."'";
-	}
-
-	if($data['type'] == "email" || $data['type'] == "url")
-	{
-		$data['xtra'] .= " autocorrect='off' autocapitalize='off'";
-	}
-
-	else if($data['type'] == "number")
-	{
-		$data['xtra'] .= " step='any'";
 	}
 
 	$count_temp = count($data['datalist']);

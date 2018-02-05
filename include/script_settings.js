@@ -13,7 +13,7 @@ jQuery(function($)
 		{
 			var dom_section = $('#' + hash);
 
-			$('#tab_' + hash).parent('li').addClass('active').siblings('li').removeClass('active');
+			$("#tab_" + hash).parent("li").addClass('active').siblings("li").removeClass('active');
 
 			if(script_base_settings.settings_page)
 			{
@@ -21,12 +21,12 @@ jQuery(function($)
 
 				dom_section.show().next('table').show();
 
-				$('.wrap form input[name=_wp_http_referer]').val(location.href);
+				$(".wrap form input[name=_wp_http_referer]").val(location.href);
 			}
 
 			else
 			{
-				dom_section.show().siblings('.nav-target').hide();
+				dom_section.show().siblings(".nav-target").hide();
 			}
 		}
 	}
@@ -35,11 +35,11 @@ jQuery(function($)
 	{
 		var arr_tabs = [];
 
-		$('.wrap form > div > a').each(function()
+		$(".wrap form > div > a").each(function()
 		{
 			var dom_obj = $(this),
 				dom_id = dom_obj.attr('href').replace('#', ''),
-				dom_name = dom_obj.children('h3').text();
+				dom_name = dom_obj.children("h3").text();
 
 			arr_tabs.push({id: dom_id, name: dom_name});
 		});
@@ -64,15 +64,15 @@ jQuery(function($)
 
 				if(value.id == "settings_base")
 				{
-					$('.settings-nav ul').prepend(tab_label);
+					$(".settings-nav ul").prepend(tab_label);
 				}
 
 				else
 				{
-					$('.settings-nav ul').append(tab_label);
+					$(".settings-nav ul").append(tab_label);
 				}
 
-				$('#' + value.id).hide();
+				$("#" + value.id).hide();
 			});
 		}
 
@@ -87,7 +87,7 @@ jQuery(function($)
 
 	else
 	{
-		$('.nav-target').hide();
+		$(".nav-target").hide();
 	}
 
 	hash_action();
@@ -97,9 +97,9 @@ jQuery(function($)
 		hash_action();
 	});
 
-	$(document).on('click', '.settings-nav ul li a', function(e)
+	$(document).on('click', ".settings-nav ul li a", function(e)
 	{
-		var dom_li = $(this).parent('li'),
+		var dom_li = $(this).parent("li"),
 			dom_href = dom_li.find("a").attr("href");
 
 		location.hash = dom_href;

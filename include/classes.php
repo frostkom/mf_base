@@ -108,19 +108,28 @@ class mf_base
 	{
 		global $wpdb;
 
-		$site_url = get_site_url($site_id > 0 ? $site_id : $wpdb->blogid);
+		if($site_id > 0)
+		{
+			$site_url = get_site_url($site_id);
+		}
+
+		else
+		{
+			$site_url = get_site_url();
+		}
+
 		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-		@list($site_host, $rest) = explode("/", $site_url_clean);
+		//@list($site_host, $rest) = explode("/", $site_url_clean);
 
 		$has_www = "www." == substr($site_url_clean, 0, 4);
 		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
 		$is_subfolder = substr_count($site_url_clean, '/') > 0;
 
-		$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
-		$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
-
-		if(!$is_subdomain && !$is_subfolder)
+		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
 		{
+			$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
+			//$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
+
 			$this->recommend_htaccess .= "\n
 			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
 			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
@@ -139,6 +148,11 @@ class mf_base
 			}
 
 			$this->last_redirect = "^".$site_url_clean_opposite."$";
+		}
+
+		else
+		{
+			echo "Nope (".$site_url_clean.")";
 		}
 	}
 

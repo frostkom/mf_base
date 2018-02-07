@@ -67,8 +67,11 @@ function extend_tiny_base($init)
 	return $init;
 }
 
+/* Can be removed when Site Manager and Theme Core are up to date */
 function explode_and_trim($delimiter, $string)
 {
+	do_log("explode_and_trim() is still in use");
+
 	$array = explode($delimiter, $string);
 
 	foreach($array as $key => $value)

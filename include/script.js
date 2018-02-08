@@ -1,19 +1,3 @@
-function on_load_base()
-{
-	if(script_base.required_field_text != '')
-	{
-		jQuery(".mf_form :required, .mf_form .required").each(function()
-		{
-			jQuery(this).siblings('label').append(" <span class='asterisk'>" + script_base.required_field_text + "</span>");
-		});
-	}
-
-	jQuery(".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]").each(function()
-	{
-		jQuery(this).removeAttr('disabled');
-	});
-}
-
 function scroll_to_top()
 {
 	jQuery("html, body").animate({scrollTop: 0}, 800);
@@ -27,12 +11,18 @@ function preload(url)
 
 jQuery(function($)
 {
-	on_load_base();
-
-	if(typeof collect_on_load == 'function')
+	if(script_base.required_field_text != '')
 	{
-		collect_on_load('on_load_base');
+		$(".mf_form :required, .mf_form .required").each(function()
+		{
+			$(this).siblings('label').append(" <span class='asterisk'>" + script_base.required_field_text + "</span>");
+		});
 	}
+
+	$(".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]").each(function()
+	{
+		$(this).removeAttr('disabled');
+	});
 
 	$(document).on('click', "a[rel=confirm], button[rel=confirm], .delete > a", function()
 	{

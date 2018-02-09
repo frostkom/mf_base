@@ -1621,23 +1621,28 @@ function setting_base_cron_callback()
 		$arr_data[$key] = $value['display'];
 	}
 
+	if($option == "every_ten_seconds")
+	{
+		$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
+	}
+
+	else
+	{
+		$next_cron = get_next_cron();
+
+		if($next_cron != '')
+		{
+			$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
+		}
+	}
+
+	echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+
 	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-10 minute")))
 	{
 		$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 
 		echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a>";
-	}
-
-	else
-	{
-		$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), get_next_cron());
-
-		if($option == "every_ten_seconds")
-		{
-			$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
-		}
-
-		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
 	}
 }
 

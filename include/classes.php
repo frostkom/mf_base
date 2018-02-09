@@ -149,11 +149,6 @@ class mf_base
 
 			$this->last_redirect = "^".$site_url_clean_opposite."$";
 		}
-
-		else
-		{
-			echo "Nope (".$site_url_clean.")";
-		}
 	}
 
 	function check_htaccess($data)

@@ -147,7 +147,7 @@ class mf_base
 				$this->all_is_https = false;
 			}
 
-			$this->last_redirect = "^".$site_url_clean_opposite."$";
+			//$this->last_redirect = "^".$site_url_clean_opposite."$";
 		}
 	}
 
@@ -158,7 +158,7 @@ class mf_base
 			$content = get_file_content(array('file' => $data['file']));
 
 			$this->all_is_https = true;
-			$this->recommend_htaccess = $this->recommend_htaccess_https = $this->last_redirect = "";
+			$this->recommend_htaccess = $this->recommend_htaccess_https = ""; //$this->last_redirect = 
 
 			if(is_multisite())
 			{
@@ -175,8 +175,7 @@ class mf_base
 				$this->get_site_redirect();
 			}
 
-			$recommend_htaccess = "# BEGIN MF Base
-			ServerSignature Off
+			$recommend_htaccess = "ServerSignature Off
 
 			DirectoryIndex index.php
 			Options -Indexes";
@@ -212,13 +211,14 @@ class mf_base
 				}
 			}
 
-			$recommend_htaccess .= "\n# END MF Base";
+			$old_md5 = get_match("/BEGIN MF Base \((.*?)\)/is", $content, false);
+			$new_md5 = md5($recommend_htaccess);
 
-			if(!preg_match("/BEGIN MF Base/", $content) || ($this->all_is_https == true && !preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->all_is_https == false && preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->last_redirect != '' && strpos($content, $this->last_redirect) === false))
+			if($new_md5 != $old_md5) //!preg_match("/BEGIN MF Base/", $content) || ($this->all_is_https == true && !preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->all_is_https == false && preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->last_redirect != '' && strpos($content, $this->last_redirect) === false)
 			{
 				echo "<div class='mf_form'>"
 					."<h3 class='add_to_htacess'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
-					."<p class='input'>".nl2br(htmlspecialchars($recommend_htaccess))."</p>"
+					."<p class='input'>".nl2br("# BEGIN MF Base (".$new_md5.")\n".htmlspecialchars($recommend_htaccess)."\n# END MF Base")."</p>"
 				."</div>";
 			}
 		}

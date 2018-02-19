@@ -2984,8 +2984,6 @@ function show_select($data)
 
 	if($count_temp > 0)
 	{
-		//$is_multiple = substr($obj_base->data['name'], -2) == "[]";
-
 		$container_class = "form_select";
 
 		if($obj_base->is_multiple())
@@ -3014,16 +3012,6 @@ function show_select($data)
 		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
 		{
 			$out = $obj_base->get_hidden_field();
-
-			/*foreach($obj_base->data['data'] as $key => $option)
-			{
-				if($key != '')
-				{
-					$out = input_hidden(array('name' => $obj_base->data['name'], 'value' => $key));
-
-					break;
-				}
-			}*/
 		}
 
 		else
@@ -3084,10 +3072,7 @@ function show_select($data)
 
 						else
 						{
-							if($obj_base->is_multiple() && $data_value == '')
-							{
-								//Do nothing
-							}
+							if($obj_base->is_multiple() && $data_value == ''){}
 
 							else
 							{

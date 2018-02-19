@@ -76,12 +76,15 @@ jQuery(function($)
 			});
 		}
 
-		$(".settings-wrap h3.add_to_htacess, .settings-wrap h3.add_to_config").each(function()
+		$(".settings-wrap .display_warning").each(function()
 		{
 			var self = $(this),
 				tab_id = self.parents(".form-table").prev("div").attr('id');
 
-			$("#tab_" + tab_id).append(" <i class='fa fa-warning yellow'></i>");
+			if($("#tab_" + tab_id + " .fa-warning").length == 0)
+			{
+				$("#tab_" + tab_id).append(" <i class='fa fa-warning yellow'></i>");
+			}
 		});
 	}
 

@@ -2656,12 +2656,9 @@ function show_textfield($data)
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
 
-	$arr_number_types = array('int', 'float');
-
-	if(isset($data['type']) && in_array($data['type'], $arr_number_types))
+	/* Used by Form -> wp_form_check */
+	if(isset($data['type']) && in_array($data['type'], array('int', 'float')))
 	{
-		do_log("Type (int/float) was used ".var_export($data, true));
-
 		$data['type'] = 'number';
 	}
 

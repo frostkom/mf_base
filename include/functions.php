@@ -2891,6 +2891,7 @@ function show_wp_editor($data)
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
+	if(!isset($data['description'])){	$data['description'] = "";}
 
 	$data['value'] = str_replace("\\", "", $data['value']);
 
@@ -2946,6 +2947,11 @@ function show_wp_editor($data)
 		if($data['xtra'] != '')
 		{
 			$out .= "</div>";
+		}
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
 		}
 
 	if($data['class'] != '')
@@ -3101,12 +3107,12 @@ function show_select($data)
 }
 ############################
 
-function show_checkboxes($data)
+/*function show_checkboxes($data)
 {
 	error_log("show_checkboxes() is still used");
 
 	return show_form_alternatives($data);
-}
+}*/
 
 ############################
 function show_form_alternatives($data)

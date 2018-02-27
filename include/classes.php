@@ -256,6 +256,8 @@ class mf_cron
 	{
 		$this->file = ABSPATH.".is_running_".$type;
 
+		$this->set_is_running();
+
 		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'content' => date('Y-m-d H:i:s')));
 
 		if(!$success)
@@ -271,7 +273,7 @@ class mf_cron
 		return $this->schedules[$setting_base_cron]['interval'];
 	}
 
-	function is_running()
+	function set_is_running()
 	{
 		$file_exists = file_exists($this->file);
 
@@ -285,7 +287,7 @@ class mf_cron
 			}
 		}
 
-		return $file_exists;
+		$this->is_running = $file_exists;
 	}
 
 	function has_expired($data = array())

@@ -252,18 +252,56 @@ class mf_cron
 		$this->date_start = date("Y-m-d H:i:s");
 	}
 
-	function has_expired($data = array())
+	function start($type)
 	{
-		if(!isset($data['margin'])){		$data['margin'] = 1;}
+		$this->file = ABSPATH.".is_running_".$type;
 
+		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'content' => date('Y-m-d H:i:s')));
+
+		if(!$success)
+		{
+			do_log(sprintf(__("I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended", 'lang_base'), $this->file));
+		}
+	}
+
+	function get_interval()
+	{
 		$setting_base_cron = get_option('setting_base_cron');
 
-		$cron_interval_seconds = $this->schedules[$setting_base_cron]['interval'];
+		return $this->schedules[$setting_base_cron]['interval'];
+	}
 
-		$date_now = date("Y-m-d H:i:s");
-		$date_difference = time_between_dates(array('start' => $this->date_start, 'end' => $date_now, 'type' => "ceil", 'return' => "seconds"));
+	function is_running()
+	{
+		$file_exists = file_exists($this->file);
 
-		return $date_difference >= ($cron_interval_seconds * $data['margin']);
+		if($file_exists)
+		{
+			$file_time = date("Y-m-d H:i:s", filemtime($this->file));
+
+			if($this->has_expired(array('start' => $file_time, 'margin' => 1.2)))
+			{
+				do_log(sprintf(__("%s has been running since %s", 'lang_base'), $this->file, $file_time));
+			}
+		}
+
+		return $file_exists;
+	}
+
+	function has_expired($data = array())
+	{
+		if(!isset($data['start'])){			$data['start'] = $this->date_start;}
+		if(!isset($data['end'])){			$data['end'] = date("Y-m-d H:i:s");}
+		if(!isset($data['margin'])){		$data['margin'] = 1;}
+
+		$time_difference = time_between_dates(array('start' => $data['start'], 'end' => $data['end'], 'type' => "ceil", 'return' => "seconds"));
+
+		return $time_difference >= ($this->get_interval() * $data['margin']);
+	}
+
+	function end()
+	{
+		unlink($this->file);
 	}
 }
 

@@ -254,7 +254,9 @@ class mf_cron
 
 	function start($type)
 	{
-		$this->file = ABSPATH.".is_running_".$type;
+		global $wpdb;
+
+		$this->file = ABSPATH.".is_running_".$wpdb->prefix."_".$type;
 
 		$this->set_is_running();
 
@@ -275,9 +277,7 @@ class mf_cron
 
 	function set_is_running()
 	{
-		$file_exists = file_exists($this->file);
-
-		if($file_exists)
+		if($this->is_running = file_exists($this->file))
 		{
 			$file_time = date("Y-m-d H:i:s", filemtime($this->file));
 
@@ -286,8 +286,6 @@ class mf_cron
 				do_log(sprintf(__("%s has been running since %s", 'lang_base'), $this->file, $file_time));
 			}
 		}
-
-		$this->is_running = $file_exists;
 	}
 
 	function has_expired($data = array())

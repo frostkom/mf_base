@@ -200,7 +200,17 @@ function get_user_info($data = array())
 	switch($data['type'])
 	{
 		case 'name':
-			return $user_data->display_name;
+			if(isset($user_data->display_name))
+			{
+				return $user_data->display_name;
+			}
+
+			else
+			{
+				return '';
+
+				error_log(sprintf(__("There was no display name for %s (%d)", 'lang_base'), var_export($user_data, true), $data['id']));
+			}
 		break;
 
 		case 'shortname':
@@ -521,9 +531,7 @@ function mf_uninstall_meta($data)
 {
 	if(count($data['meta']) > 0)
 	{
-		$users = get_users(array(
-			'fields' => array('ID'),
-		));
+		$users = get_users(array('fields' => array('ID')));
 
 		foreach($users as $user)
 		{
@@ -969,7 +977,7 @@ function do_log($data, $action = 'publish')
 
 function schedules_base($schedules)
 {
-	$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
+	//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
 	$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
 	$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
 
@@ -1363,7 +1371,7 @@ function mf_trigger_error($message, $errno)
 
 function require_plugin($required_path, $required_name, $require_url = "")
 {
-	if(function_exists('is_plugin_active') && !is_plugin_active($required_path))
+	if(is_admin() && function_exists('is_plugin_active') && !is_plugin_active($required_path))
 	{
 		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
@@ -1623,29 +1631,52 @@ function setting_base_cron_callback()
 			$arr_data[$key] = $value['display'];
 		}
 
-		if($option == "every_ten_seconds")
+		/*if($option == "every_ten_seconds")
 		{
 			$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
 		}
 
 		else
-		{
+		{*/
 			$next_cron = get_next_cron();
 
 			if($next_cron != '')
 			{
 				$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
 			}
-		}
+
+			else
+			{
+				$select_suffix = "";
+			}
+		//}
 
 		echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
 	}
 
-	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-10 minute")))
+	if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-2 minute")))
 	{
 		$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 
-		echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a>";
+		echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
+	}
+
+	$option_cron_started = get_option('option_cron_started');
+	$option_cron_run = get_option('option_cron_run');
+
+	if($option_cron_run != '' && $option_cron_run > $option_cron_started)
+	{
+		echo "<em>".sprintf(__("Last run %s", 'lang_base'), format_date($option_cron_run))."</em>";
+	}
+
+	else if($option_cron_started > $option_cron_run)
+	{
+		echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
+	}
+
+	else
+	{
+		echo "<em>".__("Has never been run", 'lang_base')."</em>";
 	}
 }
 
@@ -1935,6 +1966,40 @@ function get_roles_for_select($data = array())
 	}
 
 	return $data['array'];
+}
+
+function get_users_for_select($data = array())
+{
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
+	if(!isset($data['callback'])){			$data['callback'] = '';}
+
+	$users = get_users(array(
+		'orderby' => 'display_name',
+		'order' => 'ASC',
+		'fields' => array('ID', 'display_name', 'user_email'),
+	));
+
+	$arr_data = array();
+
+	if($data['add_choose_here'] == true)
+	{
+		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+	}
+
+	foreach($users as $user)
+	{
+		if($data['callback'] != '' && is_callable($data['callback']))
+		{
+			$arr_data = call_user_func($data['callback'], $data, $user, $arr_data);
+		}
+
+		else
+		{
+			$arr_data[$user->ID] = $user->display_name;
+		}
+	}
+
+	return $arr_data;
 }
 
 function get_post_types_for_select($data = array())

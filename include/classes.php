@@ -27,6 +27,16 @@ class mf_base
 		return $meta_boxes;
 	}
 
+	function run_cron_start()
+	{
+		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+	}
+
+	function run_cron_end()
+	{
+		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
+	}
+
 	function file_shortcode($atts)
 	{
 		extract(shortcode_atts(array(

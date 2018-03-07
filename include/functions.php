@@ -2759,6 +2759,12 @@ function show_textfield($data)
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 
+	if(preg_match("/\[(.*)\]/", $data['id']))
+	{
+		$data['xtra'] .= " class='".preg_replace("/\[(.*)\]/", "", $data['id'])."'";
+		$data['id'] = '';
+	}
+
 	if($data['required'])
 	{
 		$data['xtra'] .= " required";

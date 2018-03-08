@@ -35,6 +35,7 @@ class mf_base
 	function run_cron_end()
 	{
 		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
+		delete_option('option_cron_started');
 	}
 
 	function file_shortcode($atts)

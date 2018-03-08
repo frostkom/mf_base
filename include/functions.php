@@ -485,10 +485,7 @@ function replace_option($data)
 	if($option_old != '')
 	{
 		update_option($data['new'], $option_old);
-
-		mf_uninstall_plugin(array(
-			'options' => array($data['old']),
-		));
+		delete_option($data['old']);
 	}
 }
 

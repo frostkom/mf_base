@@ -597,7 +597,7 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function column_cb($item)
 	{
-		return "<input type='checkbox' name='".$this->_args['singular']."[]' value='".$item['ID']."'>";
+		return "<input type='checkbox' name='".$this->_args['singular']."[]' value='".$item[$this->arr_settings['query_select_id']]."'>";
 	}
 
 	/** ************************************************************************

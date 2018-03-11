@@ -1,5 +1,86 @@
 <?php
 
+function show_flot_graph($data) //$data, $type = 'lines', $settings = '', $width = '', $height = '', $title = ''
+{
+	global $flot_count;
+
+	if(!isset($data['type'])){				$data['type'] = 'lines';}
+	if(!isset($data['type_settings'])){		$data['type_settings'] = '';}
+	if(!isset($data['settings'])){			$data['settings'] = '';}
+	if(!isset($data['width'])){				$data['width'] = '';}
+	if(!isset($data['height'])){			$data['height'] = '';}
+	if(!isset($data['title'])){				$data['title'] = '';}
+
+	if($data['settings'] == '')
+	{
+		$data['settings'] = ($data['settings'] != '' ? "," : "")."legend: {position: 'nw'},
+		xaxis: {mode: 'time'}";
+	}
+
+	switch($data['type'])
+	{
+		case 'lines':
+			$data['settings'] .= ($data['settings'] != '' ? "," : "")."points: {show: true, radius: 0.5}";
+		break;
+	}
+
+	mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7');
+
+	if(!($flot_count > 0))
+	{
+		$flot_count = 0;
+	}
+
+	$out = "";
+
+	if($data['data'] != '')
+	{
+		if(preg_match("/\[tick_mb]/", $data['settings']))
+		{
+			$data['settings'] = str_replace("[tick_mb]", "tickFormatter:
+				function suffixFormatter(val, axis)
+				{
+					if(val > 1000000){		return (val / 1000000).toFixed(axis.tickDecimals) + ' MB';}
+					else if(val > 1000){	return (val / 1000).toFixed(axis.tickDecimals) + ' kB';}
+					else{					return val.toFixed(axis.tickDecimals) + ' ';}
+				}",
+			$data['settings']);
+		}
+
+		$style_cont = "";
+
+		if($data['width'] > 0)
+		{
+			$style_cont .= "width: ".$data['width']."px;";
+		}
+
+		if($data['height'] > 0)
+		{
+			$style_cont .= "height: ".$data['height']."px;";
+		}
+
+		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>
+		<script>
+			jQuery(function($)
+			{
+				$.plot($('#flot_".$flot_count."'),
+				["
+					.$data['data']
+				."],
+				{
+					series: {".$data['type'].": {show: true".$data['type_settings']."}},
+					grid: {hoverable: true}"
+					.($data['settings'] != '' ? ",".$data['settings'] : "")
+				."});
+			});
+		</script>";
+
+		$flot_count++;
+	}
+
+	return $out;
+}
+
 function get_pages_from_shortcode($shortcode)
 {
 	global $wpdb;

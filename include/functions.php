@@ -63,6 +63,8 @@ function show_flot_graph($data) //$data, $type = 'lines', $settings = '', $width
 		<script>
 			jQuery(function($)
 			{
+				$(\"body\").append(\"<div id='tooltip' class='tooltip_box'></div>\");
+
 				$.plot($('#flot_".$flot_count."'),
 				["
 					.$data['data']
@@ -72,6 +74,22 @@ function show_flot_graph($data) //$data, $type = 'lines', $settings = '', $width
 					grid: {hoverable: true}"
 					.($data['settings'] != '' ? ",".$data['settings'] : "")
 				."});
+
+				$('#flot_".$flot_count."').on('plothover', function (event, pos, item)
+				{
+					if(item)
+					{
+						var x = parseInt(item.datapoint[0].toFixed(0));
+
+						if(x > 10000000)
+						{
+							var date = new Date(x);
+							x = date.getDate() + '/' + (date.getMonth() + 1) + ' ' + date.getFullYear();
+						}
+
+						$('#tooltip').css({top: item.pageY + 5, left: item.pageX + 5}).html('<strong>' + item.series.label + '</strong><br><span>' + x + ': ' + item.datapoint[1].toFixed(2).replace('.00', '') + '</span>').show();
+					}
+				});
 			});
 		</script>";
 
@@ -868,9 +886,9 @@ function time_between_dates($data)
 
 	switch($data['type'])
 	{
-		case 'ceil':	$out = ceil($out);		break;
-		case 'round':	$out = round($out);		break;
-		case 'floor':	$out = floor($out);		break;
+		case 'ceil':			$out = ceil($out);		break;
+		default: case 'round':	$out = round($out);		break;
+		case 'floor':			$out = floor($out);		break;
 	}
 
 	return $out;
@@ -1084,7 +1102,7 @@ function delete_base($data)
 {
 	global $wpdb;
 
-	if(!isset($data['table_prefix'])){	$data['table_prefix'] = $wpdb->base_prefix;}
+	if(!isset($data['table_prefix'])){	$data['table_prefix'] = $wpdb->prefix;}
 	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
 
 	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;

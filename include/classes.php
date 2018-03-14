@@ -267,7 +267,9 @@ class mf_cron
 	{
 		global $wpdb;
 
-		$this->file = ABSPATH.".is_running_".$wpdb->prefix."_".$type;
+		list($upload_path, $upload_url) = get_uploads_folder();
+
+		$this->file = $upload_path.".is_running_".$wpdb->prefix.$type;
 
 		$this->set_is_running();
 
@@ -312,7 +314,10 @@ class mf_cron
 
 	function end()
 	{
-		unlink($this->file);
+		if(file_exists($this->file))
+		{
+			unlink($this->file);
+		}
 	}
 }
 

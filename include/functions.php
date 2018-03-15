@@ -1,6 +1,6 @@
 <?php
 
-function show_flot_graph($data) //$data, $type = 'lines', $settings = '', $width = '', $height = '', $title = ''
+function show_flot_graph($data)
 {
 	global $flot_count;
 
@@ -1581,12 +1581,21 @@ function reschedule_base($option = '')
 function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = "";}
+	if(!isset($data['object'])){	$data['object'] = '';}
 	if(!isset($data['settings'])){	$data['settings'] = array();}
 	if(!isset($data['callback'])){	$data['callback'] = '';}
 
 	foreach($data['settings'] as $handle => $text)
 	{
-		add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area']);
+		if($data['object'] != '')
+		{
+			add_settings_field($handle, $text, array($data['object'], $handle."_callback"), BASE_OPTIONS_PAGE, $data['area']);
+		}
+
+		else
+		{
+			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area']);
+		}
 
 		register_setting(BASE_OPTIONS_PAGE, $handle, $data['callback']);
 	}
@@ -1801,6 +1810,7 @@ function setting_base_recommend_callback()
 		//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 		array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 		//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
+		array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
 		array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
 	);
 
@@ -2455,14 +2465,14 @@ function get_notification()
 		$error_text = "";
 	}
 
-	if(isset($notice_text) && $notice_text != '')
+	else if(isset($notice_text) && $notice_text != '')
 	{
 		$out .= "<div class='update-nag'>".$notice_text."</div>";
 
 		$notice_text = "";
 	}
 
-	if(isset($done_text) && $done_text != '')
+	else if(isset($done_text) && $done_text != '')
 	{
 		$out .= "<div class='updated'>
 			<p>".$done_text."</p>

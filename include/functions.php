@@ -90,6 +90,11 @@ function show_flot_graph($data)
 						$('#tooltip').css({top: item.pageY + 5, left: item.pageX + 5}).html('<strong>' + item.series.label + '</strong><br><span>' + x + ': ' + item.datapoint[1].toFixed(2).replace('.00', '') + '</span>').show();
 					}
 				});
+
+				$('.flot_graph').on('mouseout', function()
+				{
+					$('#tooltip').hide();
+				});
 			});
 		</script>";
 

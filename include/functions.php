@@ -2466,15 +2466,11 @@ function get_notification()
 		$out .= "<div class='error'>
 			<p>".$error_text."</p>
 		</div>";
-
-		$error_text = "";
 	}
 
 	else if(isset($notice_text) && $notice_text != '')
 	{
 		$out .= "<div class='update-nag'>".$notice_text."</div>";
-
-		$notice_text = "";
 	}
 
 	else if(isset($done_text) && $done_text != '')
@@ -2482,9 +2478,9 @@ function get_notification()
 		$out .= "<div class='updated'>
 			<p>".$done_text."</p>
 		</div>";
-
-		$done_text = "";
 	}
+	
+	$error_text = $notice_text = $done_text = "";
 
 	return $out;
 }

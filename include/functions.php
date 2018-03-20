@@ -2479,7 +2479,7 @@ function get_notification()
 			<p>".$done_text."</p>
 		</div>";
 	}
-	
+
 	$error_text = $notice_text = $done_text = "";
 
 	return $out;

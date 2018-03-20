@@ -221,7 +221,7 @@ jQuery(function($)
 			}
 
 			/*var img_url = dom_raw.find('img').attr('src');
-			
+
 			self.find("input[type='hidden']").val(img_url);
 			self.find("img").attr('src', img_url);
 

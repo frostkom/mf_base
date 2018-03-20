@@ -161,6 +161,11 @@
 		margin-bottom: 1em;
 	}
 
+	.flot_graph
+	{
+		margin: 1em 0;
+	}
+
 	.tooltip_box
 	{
 		background: #fff;

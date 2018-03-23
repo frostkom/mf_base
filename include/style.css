@@ -271,7 +271,7 @@
         .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input
         {
 			background: #fff;
-			background: rgba(255, 255, 255, .8);
+			background: rgba(255, 255, 255, .9);
 			border: 1px solid #e1e1e1;
 			display: inline-block;
 			font: inherit;
@@ -355,6 +355,11 @@
 		{
 			margin: -.3em 0 .6em;
 		}
+
+			.mf_form .description .fa
+			{
+				line-height: 0;
+			}
 
 			.mf_form .form_checkbox_multiple > label, .mf_form .form_radio_multiple > label
 			{

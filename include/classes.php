@@ -683,6 +683,62 @@ class mf_list_table extends WP_List_Table
 		}
 	}
 
+	protected function extra_tablenav( $which )
+	{
+		echo "<div class='alignleft actions'>";
+
+			if('top' === $which && !is_singular())
+			{
+				ob_start();
+
+				//$this->months_dropdown( $this->screen->post_type );
+				//$this->categories_dropdown( $this->screen->post_type );
+
+				/**
+				 * Fires before the Filter button on the Posts and Pages list tables.
+				 *
+				 * The Filter button allows sorting by date and/or category on the
+				 * Posts list table, and sorting by date on the Pages list table.
+				 *
+				 * @since 2.1.0
+				 * @since 4.4.0 The `$post_type` parameter was added.
+				 * @since 4.6.0 The `$which` parameter was added.
+				 *
+				 * @param string $post_type The post type slug.
+				 * @param string $which     The location of the extra table nav markup:
+				 *                          'top' or 'bottom' for WP_Posts_List_Table,
+				 *                          'bar' for WP_Media_List_Table.
+				 */
+				do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which); //$this->screen->post_type
+
+				$output = ob_get_clean();
+
+				if(!empty($output))
+				{
+					echo $output;
+
+					submit_button( __( 'Filter' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+				}
+			}
+
+			if($this->is_trash && current_user_can(get_post_type_object($this->screen->post_type)->cap->edit_others_posts) && $this->has_items())
+			{
+				submit_button( __( 'Empty Trash' ), 'apply', 'delete_all', false );
+			}
+
+		echo "</div>";
+
+		/**
+		 * Fires immediately following the closing "actions" div in the tablenav for the posts
+		 * list table.
+		 *
+		 * @since 4.4.0
+		 *
+		 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
+		 */
+		do_action( 'manage_posts_extra_tablenav', $which );
+	}
+
 	/** ************************************************************************
 	 * REQUIRED! This is where you prepare your data for display. This method will
 	 * usually be used to query the database, sort and filter the data, and generally
@@ -770,6 +826,8 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
 		if(!isset($data['order'])){		$data['order'] = $this->order;}
 		if(!isset($data['sort_data'])){	$data['sort_data'] = true;}
+
+		$data = apply_filters('pre_select_data', $data, ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type));
 
 		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
 

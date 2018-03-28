@@ -154,7 +154,7 @@
 			color: #e47676;
 		}
 
-	.grey, .color_grey
+	.grey, .color_grey, .grey > a
 	{
 		color: #999;
 	}

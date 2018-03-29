@@ -1199,11 +1199,24 @@ function init_base()
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
-	$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
+	$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
+	//$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
+	$setting_base_required_field_text = '*';
 
-	mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
-	mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-	mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
+	if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
+	{
+		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
+	}
+
+	if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+	{
+		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+	}
+
+	if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+	{
+		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
+	}
 }
 
 function get_file_icon($file)
@@ -1653,6 +1666,7 @@ function settings_base()
 	$arr_settings = array(
 		'setting_base_info' => __("Versions", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+		'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
 		//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
@@ -1789,6 +1803,20 @@ function setting_base_cron_callback()
 	{
 		echo "<em>".__("Has never been run", 'lang_base')."</em>";
 	}
+}
+
+function setting_base_exclude_sources_callback()
+{
+	$setting_key = get_setting_key(__FUNCTION__);
+	$option = get_option($setting_key);
+
+	$arr_data = array(
+		'font_awesome' => __("Font Awesome", 'lang_base'),
+		'style' => __("Style", 'lang_base'),
+		'script' => __("Script", 'lang_base'),
+	);
+
+	echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
 }
 
 function setting_base_required_field_text_callback()

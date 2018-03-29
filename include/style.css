@@ -309,15 +309,10 @@
 				background-repeat: no-repeat;
 				cursor: pointer;
 
-				/* SVG */
-				/*background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIGZpbGw9J2dyZXknIGhlaWdodD0nMjQnIHZpZXdCb3g9JzAgMCAyNCAyNCcgd2lkdGg9JzI0Jz48cGF0aCBkPSdNNyAxMGw1IDUgNS01eicvPjxwYXRoIGQ9J00wIDBoMjR2MjRIMHonIGZpbGw9J25vbmUnLz48L3N2Zz4=');
-				background-position: right center;
-				padding-right: 1.7em;*/
-
 				/* CSS gradients */
 				background-image: linear-gradient(45deg, transparent 50%, #999 50%), linear-gradient(135deg, #999 50%, transparent 50%), linear-gradient(to right, #ccc, #ccc);
-				background-position: calc(100% - 15px) calc(1em + 2px), calc(100% - 10px) calc(1em + 2px), calc(100% - 2.2em) 0.5em;
-				background-size: 5px 5px, 5px 5px, 1px 1.5em;
+				background-position: calc(100% - 1.1em) center, calc(100% - .7em) center, calc(100% - 2.2em) center;
+				background-size: .4em .4em, .4em .4em, .1em 1.5em;
 				padding-right: 2.6em;
 			}
 

@@ -268,7 +268,7 @@
 			min-height: 1.8em;
         }
 
-        .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input
+        .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input, #comments #comment
         {
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
@@ -394,7 +394,7 @@
 					margin-left: -43px;
 				}
 
-		.form_button button, .form_button .button
+		.form_button button, .form_button .button, #comments #submit
 		{
 			border: 0;
 			cursor: pointer;

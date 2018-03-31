@@ -229,7 +229,6 @@ function get_plugin_version($file)
 	}
 
 	$plugin_dir = plugin_dir_path($file)."index.php";
-
 	$plugin_dir = str_replace("include/", "", $plugin_dir);
 
 	$arr_plugin_data = get_plugin_data($plugin_dir);
@@ -242,7 +241,6 @@ function get_theme_version()
 	if(function_exists('wp_get_theme'))
 	{
 		$arr_theme_data = wp_get_theme();
-
 		$theme_version = $arr_theme_data['Version'];
 	}
 

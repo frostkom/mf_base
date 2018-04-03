@@ -1439,6 +1439,11 @@ function get_attachment_data_by_id($id)
 
 function mf_format_number($in, $dec = 2)
 {
+	if(is_string($in))
+	{
+		$in = (float)$in;
+	}
+
 	$out = number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
 
 	return $out;

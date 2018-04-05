@@ -392,6 +392,7 @@ class mf_list_table extends WP_List_Table
 	var $orderby = "";
 	var $order = "";
 	var $page = "";
+	var $total_pages = "";
 
 	function __construct()
 	{
@@ -717,13 +718,13 @@ class mf_list_table extends WP_List_Table
 				{
 					echo $output;
 
-					submit_button( __( 'Filter' ), '', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+					submit_button( __('Filter'), '', 'filter_action', false, array('id' => 'post-query-submit'));
 				}
 			}
 
 			if($this->is_trash && current_user_can(get_post_type_object($this->screen->post_type)->cap->edit_others_posts) && $this->has_items())
 			{
-				submit_button( __( 'Empty Trash' ), 'apply', 'delete_all', false );
+				submit_button( __('Empty Trash'), 'apply', 'delete_all', false );
 			}
 
 		echo "</div>";
@@ -736,7 +737,7 @@ class mf_list_table extends WP_List_Table
 		 *
 		 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 		 */
-		do_action( 'manage_posts_extra_tablenav', $which );
+		do_action('manage_posts_extra_tablenav', $which);
 	}
 
 	/** ************************************************************************
@@ -772,10 +773,12 @@ class mf_list_table extends WP_List_Table
 
 		$this->items = $this->data = array_slice($this->data, (($current_page - 1) * $this->arr_settings['per_page']), $this->arr_settings['per_page']);
 
+		$this->total_pages = ceil($this->num_rows / $this->arr_settings['per_page']);
+
 		$this->set_pagination_args(array(
 			'total_items' => $this->num_rows,
 			'per_page'	=> $this->arr_settings['per_page'],
-			'total_pages' => ceil($this->num_rows / $this->arr_settings['per_page'])
+			'total_pages' => $this->total_pages
 		));
 	}
 

@@ -383,7 +383,6 @@ class mf_list_table extends WP_List_Table
 	var $views = array();
 	var $columns = array();
 	var $sortable_columns = array();
-	//var $default_column = '';
 	var $data = "";
 	var $num_rows = 0;
 	var $query_join = "";
@@ -767,7 +766,7 @@ class mf_list_table extends WP_List_Table
 		/**
 		 * REQUIRED. Finally, we build an array to be used by the class for column headers. The $this->_column_headers property takes an array which contains 3 other arrays. One for all columns, one for hidden columns, and one for sortable columns.
 		 */
-		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns); //, $this->default_column
+		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
 
 		$current_page = $this->get_pagenum();
 
@@ -1107,40 +1106,6 @@ class settings_page
 				echo "</div>
 			</div>
 		</div>";
-	}
-}
-
-class mf_encryption
-{
-	function __construct($type)
-	{
-		$this->set_key($type);
-		$this->iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-	}
-
-	function set_key($type)
-	{
-		$this->key = substr("mf_crypt".$type, 0, 32);
-	}
-
-	function encrypt($text, $key = "")
-	{
-		if($key != '')
-		{
-			$this->set_key($key);
-		}
-
-		return base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
-	}
-
-	function decrypt($text, $key = "")
-	{
-		if($key != '')
-		{
-			$this->set_key($key);
-		}
-
-		return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
 	}
 }
 
@@ -2018,6 +1983,7 @@ class mf_export
 		$this->actions = array(
 			'' => "-- ".__("Choose here", 'lang_base')." --",
 			'csv' => "CSV",
+			'json' => "JSON",
 		);
 
 		if($this->has_excel_support)
@@ -2035,14 +2001,17 @@ class mf_export
 	}
 
 	function get_defaults(){}
+	function fetch_request_xtra(){}
+	function get_export_data(){}
+	function get_form_xtra(){}
 
 	function fetch_request()
 	{
 		$this->type = check_var('intExportType');
-		$this->action = check_var('strExportAction');
-	}
+		$this->action = check_var('strExportFormat');
 
-	function get_export_data(){}
+		$this->fetch_request_xtra();
+	}
 
 	function save_data()
 	{
@@ -2060,74 +2029,89 @@ class mf_export
 				{
 					$file = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("YmdHis").".".$this->action;
 
-					if($this->action == 'csv')
+					switch($this->action)
 					{
-						$field_separator = ",";
-						$row_separator = "\n";
+						case 'csv':
+							$field_separator = ",";
+							$row_separator = "\n";
 
-						$out_temp = "";
+							$out_temp = "";
 
-						foreach($this->data as $row)
-						{
-							$out_temp .= ($out_temp != '' ? $row_separator : "");
-
-							$count_temp = count($row);
-
-							for($i = 0; $i < $count_temp; $i++)
+							foreach($this->data as $row)
 							{
-								$row_value = preg_replace("/(\r\n|\r|\n|".$field_separator.")/", " ", $row[$i]);
+								$out_temp .= ($out_temp != '' ? $row_separator : "");
 
-								$out_temp .= ($i > 0 ? $field_separator : "").$row_value;
+								$count_temp = count($row);
+
+								for($i = 0; $i < $count_temp; $i++)
+								{
+									$row_value = preg_replace("/(\r\n|\r|\n|".$field_separator.")/", " ", $row[$i]);
+
+									$out_temp .= ($i > 0 ? $field_separator : "").(is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value);
+								}
 							}
-						}
 
-						$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
+							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
 
-						if($success == true)
-						{
+							if($success == true)
+							{
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							}
+
+							else
+							{
+								$error_text = __("It was not possible to export", 'lang_base');
+							}
+						break;
+
+						case 'json':
+							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => json_encode($this->data)));
+
+							if($success == true)
+							{
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							}
+
+							else
+							{
+								$error_text = __("It was not possible to export", 'lang_base');
+							}
+						break;
+
+						case 'xls':
+							$arr_alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
+							$objPHPExcel = new PHPExcel();
+
+							foreach($this->data as $row_key => $row_value)
+							{
+								foreach($row_value as $col_key => $col_value)
+								{
+									$cell = "";
+
+									$count_temp = count($arr_alphabet);
+
+									while($col_key >= $count_temp)
+									{
+										$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
+
+										$col_key = $col_key % $count_temp;
+									}
+
+									$cell .= $arr_alphabet[$col_key].($row_key + 1);
+
+									if($col_value != '')
+									{
+										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value));
+									}
+								}
+							}
+
+							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
+							$objWriter->save($this->upload_path.$file);
+
 							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
-						}
-
-						else
-						{
-							$error_text = __("It was not possible to export", 'lang_base');
-						}
-					}
-
-					else if($this->action == 'xls')
-					{
-						$arr_alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-
-						$objPHPExcel = new PHPExcel();
-
-						foreach($this->data as $row_key => $row_value)
-						{
-							foreach($row_value as $col_key => $col_value)
-							{
-								$cell = "";
-
-								$count_temp = count($arr_alphabet);
-
-								while($col_key >= $count_temp)
-								{
-									$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
-
-									$col_key = $col_key % $count_temp;
-								}
-
-								$cell .= $arr_alphabet[$col_key].($row_key + 1);
-
-								if($col_value != '')
-								{
-									$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, $col_value);
-								}
-							}
-						}
-
-						$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
-						$objWriter->save($this->upload_path.$file);
-
-						$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+						break;
 					}
 				}
 
@@ -2163,10 +2147,12 @@ class mf_export
 
 					if(count($this->actions) > 0)
 					{
-						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportAction', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
+						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
 					}
 
-					$out .= show_button(array('name' => "btnExportRun", 'text' => __("Run", 'lang_base')))
+					$out .= $this->get_form_xtra();
+
+					$out .= show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('export_run', '_wpnonce', true, false)
 				."</div>
 			</div>

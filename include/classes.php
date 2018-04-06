@@ -660,9 +660,9 @@ class mf_list_table extends WP_List_Table
 	{
 		if(isset($_GET[$this->post_type]))
 		{
-			foreach($_GET[$this->post_type] as $id)
+			foreach($_GET[$this->post_type] as $post_id)
 			{
-				wp_trash_post($id);
+				wp_trash_post($post_id);
 			}
 		}
 
@@ -819,15 +819,15 @@ class mf_list_table extends WP_List_Table
 			}
 		}*/
 
+		if(!isset($data['sort_data'])){	$data['sort_data'] = false;}
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
 		if(!isset($data['where'])){		$data['where'] = "";}
-		if(!isset($data['limit'])){		$data['limit'] = check_var('paged', 'int', true, '0');}
-		if(!isset($data['amount'])){	$data['amount'] = "";}
 		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
 		if(!isset($data['order'])){		$data['order'] = $this->order;}
-		if(!isset($data['sort_data'])){	$data['sort_data'] = true;}
+		if(!isset($data['limit'])){		$data['limit'] = check_var('paged', 'int', true, '0');}
+		if(!isset($data['amount'])){	$data['amount'] = "";}
 
 		$data = apply_filters('pre_select_data', $data, ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type));
 
@@ -858,7 +858,7 @@ class mf_list_table extends WP_List_Table
 			$query .= " ORDER BY ".$data['order_by']." ".$data['order'];
 		}
 
-		if($data['amount'] != '')
+		if($data['amount'] > 0)
 		{
 			$query .= " LIMIT ".$data['limit'].", ".$data['amount'];
 		}
@@ -885,11 +885,10 @@ class mf_list_table extends WP_List_Table
 		{
 			if(isset($data['debug']) && $data['debug'] == true)
 			{
-				echo __("Sorting...", 'lang_base')."<br>";
+				echo __("Sorting", 'lang_base')."&hellip;<br>";
 			}
 
 			$this->sort_data();
-
 			$this->num_rows = count($this->data);
 
 			if(isset($data['debug']) && $data['debug'] == true)
@@ -1286,6 +1285,13 @@ class mf_import
 {
 	function __construct()
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_style('style_import_wp', $plugin_include_url."style_import_wp.css", $plugin_version);
+		mf_enqueue_script('script_import_wp', $plugin_include_url."script_import_wp.js", $plugin_version);
+
+		$this->prefix = $wpdb->prefix;
 		$this->table = $this->post_type = $this->actions = "";
 		$this->columns = $this->unique_columns = $this->validate_columns = $this->result = array();
 
@@ -1331,6 +1337,11 @@ class mf_import
 		return $str_separator;
 	}
 
+	function is_json($string)
+	{
+		return is_array(json_decode($string, true)) ? true : false;
+	}
+
 	function fetch_request()
 	{
 		$this->data = array();
@@ -1342,40 +1353,48 @@ class mf_import
 
 		if($this->text != '')
 		{
-			$this->text_filtered = $this->text;
-			$this->value_separator = $this->get_used_separator(array('string' => $this->text));
-
-			$this->text_filtered = preg_replace("/\".*?(\n).*?\"/s", "", $this->text_filtered);
-			$this->text_filtered = str_replace('"', "", $this->text_filtered);
-
-			$arr_rows = explode($this->row_separator, $this->text_filtered);
-			$count_temp_rows = count($arr_rows);
-
-			for($i = 0; $i < $count_temp_rows; $i++)
+			if($this->is_json(stripslashes($this->text)))
 			{
-				$row = trim($arr_rows[$i]);
+				$this->data = json_decode(stripslashes($this->text), true);
+			}
 
-				if($this->value_separator != '')
+			else
+			{
+				$this->text_filtered = $this->text;
+				$this->value_separator = $this->get_used_separator(array('string' => $this->text));
+
+				$this->text_filtered = preg_replace("/\".*?(\n).*?\"/s", "", $this->text_filtered);
+				$this->text_filtered = str_replace('"', "", $this->text_filtered);
+
+				$arr_rows = explode($this->row_separator, $this->text_filtered);
+				$count_temp_rows = count($arr_rows);
+
+				for($i = 0; $i < $count_temp_rows; $i++)
 				{
-					$arr_values = explode($this->value_separator, $row);
-				}
+					$row = trim($arr_rows[$i]);
 
-				else
-				{
-					$arr_values = array($row);
-				}
+					if($this->value_separator != '')
+					{
+						$arr_values = explode($this->value_separator, $row);
+					}
 
-				$count_temp_values = count($arr_values);
+					else
+					{
+						$arr_values = array($row);
+					}
 
-				for($j = 0; $j < $count_temp_values; $j++)
-				{
-					$value = $arr_values[$j];
-					$value = stripslashes($value);
-					$value = trim($value, '"');
-					$value = trim($value);
-					$value = addslashes($value);
+					$count_temp_values = count($arr_values);
 
-					$this->data[$i][$j] = $value;
+					for($j = 0; $j < $count_temp_values; $j++)
+					{
+						$value = $arr_values[$j];
+						$value = stripslashes($value);
+						$value = trim($value, '"');
+						$value = trim($value);
+						$value = addslashes($value);
+
+						$this->data[$i][$j] = $value;
+					}
 				}
 			}
 		}
@@ -1435,9 +1454,25 @@ class mf_import
 
 	function update_options($id)
 	{
-		foreach($this->query_option as $key => $value)
+		switch($this->table)
 		{
-			update_post_meta($id, $key, $value);
+			case 'posts':
+				foreach($this->query_option as $key => $value)
+				{
+					update_post_meta($id, $key, $value);
+				}
+			break;
+
+			case 'users':
+				foreach($this->query_option as $key => $value)
+				{
+					update_user_meta($id, $key, $value);
+				}
+			break;
+
+			default:
+				//Do nothing
+			break;
 		}
 	}
 
@@ -1458,7 +1493,7 @@ class mf_import
 
 					for($i = $i_start; $i < $count_temp_rows; $i++)
 					{
-						$query_search = $query_xtra = "";
+						$this->query_search = $this->query_xtra = "";
 						$this->query_option = array();
 
 						$arr_values = $this->data[$i];
@@ -1483,37 +1518,50 @@ class mf_import
 
 								$this->get_external_value($strRowField, $value);
 
-								if(in_array($strRowField, $this->unique_columns))
+								if($strRowField != '')
 								{
-									$query_search .= ($query_search != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
-								}
+									if(in_array($strRowField, $this->unique_columns))
+									{
+										$this->query_search .= ($this->query_search != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+									}
 
-								$query_xtra .= ($query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+									$this->query_xtra .= ($this->query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+								}
 							}
 						}
 
-						if($query_xtra != '' && $query_search != '')
+						if($this->query_xtra != '' && $this->query_search != '')
 						{
-							$table_name = $wpdb->base_prefix.$this->table;
+							$table_name = $this->prefix.$this->table;
 
-							if($this->table == "posts")
+							switch($this->table)
 							{
-								$table_id = "ID";
-								$table_created = "post_date";
-								$table_user = "post_author";
+								case 'posts':
+									$table_id = "ID";
+									$table_created = "post_date";
+									$table_user = "post_author";
 
-								$query_search .= " AND post_type = '".esc_sql($this->post_type)."'";
-								$query_xtra .= ($query_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
+									$this->query_search .= " AND post_type = '".esc_sql($this->post_type)."'";
+									$this->query_xtra .= ($this->query_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
+								break;
+
+								case 'users':
+									$table_id = "ID";
+									$table_created = "user_registered";
+									$table_user = '';
+
+									//$this->query_search .= " AND post_type = '".esc_sql($this->post_type)."'";
+									//$this->query_xtra .= ($this->query_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
+								break;
+
+								default:
+									$table_id = $this->table."ID";
+									$table_created = $this->table."Created";
+									$table_user = "userID";
+								break;
 							}
 
-							else
-							{
-								$table_id = $this->table."ID";
-								$table_created = $this->table."Created";
-								$table_user = "userID";
-							}
-
-							$query_select = "SELECT ".$table_id." AS ID FROM ".$table_name." WHERE ".$query_search." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+							$query_select = "SELECT ".$table_id." AS ID FROM ".$table_name." WHERE ".$this->query_search." ORDER BY ".$table_created." ASC LIMIT 0, 5";
 
 							$result = $wpdb->get_results($query_select);
 							$rows = $wpdb->num_rows;
@@ -1530,34 +1578,32 @@ class mf_import
 										{
 											$id = $r->ID;
 
-											if($this->table == "posts")
+											switch($this->table)
 											{
-												$query_update = "UPDATE ".$table_name." SET post_status = 'publish', ".$query_xtra." WHERE ".$table_id." = '".$id."'";
+												case 'posts':
+													$query_update = "UPDATE ".$table_name." SET post_status = 'publish', ".$this->query_xtra." WHERE ".$table_id." = '".$id."'";
+												break;
 
-												$wpdb->query($query_update);
+												case 'users':
+													$query_update = "UPDATE ".$table_name." SET ".$this->query_xtra." WHERE ".$table_id." = '".$id."'";
+												break;
 
-												/*$post_data = array(
-													'ID' => $id,
-													'post_type' => $this->post_type,
-													'post_status' => 'publish',
-													//$query_xtra?
-												);
-
-												wp_update_post($post_data);*/
+												default:
+													$query_update = "UPDATE ".$table_name." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$this->query_xtra." WHERE ".$table_id." = '".$id."'"; //$this->query_search
+												break;
 											}
+											
+											$wpdb->query($query_update);
 
-											else
+											$rows_affected = $wpdb->rows_affected;
+
+											$this->update_options($id);
+
+											$rows_affected += $wpdb->rows_affected;
+
+											if($rows_affected > 0)
 											{
-												$query_update = "UPDATE ".$table_name." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$query_xtra." WHERE ".$table_id." = '".$id."'"; //$query_search
-
-												$wpdb->query($query_update);
-											}
-
-											$this->updated_new($id);
-
-											if($wpdb->rows_affected > 0)
-											{
-												$this->update_options($id);
+												$this->updated_new($id);
 
 												$this->rows_updated++;
 
@@ -1590,62 +1636,42 @@ class mf_import
 
 										$k++;
 									}
-
-									/*if($rows > 1)
-									{
-										$this->if_more_than_one($result);
-									}*/
 								}
 
 								else
 								{
-									$query_insert = "INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '".get_current_user_id()."'";
+									$query_insert = "INSERT INTO ".$table_name." SET ".$this->query_xtra.", ".$table_created." = NOW()";
 
-									/*if($this->table == "posts")
+									if($table_user != '')
 									{
-										$post_data = array(
-											'post_type' => $this->post_type,
-											'post_status' => 'publish',
-											//$query_xtra?
+										$query_insert .= ", ".$table_user." = '".get_current_user_id()."'";
+									}
+
+									$wpdb->query($query_insert);
+
+									if($wpdb->rows_affected > 0)
+									{
+										$id = $wpdb->insert_id;
+
+										$this->inserted_new($id);
+										$this->update_options($id);
+
+										$this->rows_inserted++;
+
+										$this->result[] = array(
+											'action' => 'fa-plus',
+											'value' => $query_insert,
 										);
-
-										wp_insert_post($post_data);
-									}*/
-
-									if($query_insert != '')
-									{
-										$wpdb->query($query_insert);
-
-										if($wpdb->rows_affected > 0)
-										{
-											$id = $wpdb->insert_id;
-
-											$this->update_options($id);
-
-											$this->inserted_new($id);
-
-											$this->rows_inserted++;
-
-											$this->result[] = array(
-												'action' => 'fa-plus',
-												'value' => $query_insert,
-											);
-										}
-
-										else
-										{
-											$this->rows_not_inserted++;
-
-											$this->result[] = array(
-												'action' => 'fa-chain-broken',
-												'value' => $query_insert,
-											);
-										}
 									}
 
 									else
 									{
-										error_log("wpdb->prepare made this query empty: INSERT INTO ".$table_name." SET ".$query_xtra.", ".$table_created." = NOW(), ".$table_user." = '%d'");
+										$this->rows_not_inserted++;
+
+										$this->result[] = array(
+											'action' => 'fa-chain-broken',
+											'value' => $query_insert,
+										);
 									}
 								}
 							}
@@ -1654,18 +1680,23 @@ class mf_import
 							{
 								if($rows > 0)
 								{
-									if($this->table == "posts")
+									switch($this->table)
 									{
-										$id = $wpdb->get_var("SELECT ".$table_id." FROM ".$table_name." WHERE ".$query_search);
+										case 'posts':
+											$id = $wpdb->get_var("SELECT ".$table_id." FROM ".$table_name." WHERE ".$this->query_search);
 
-										wp_trash_post($id);
-									}
+											wp_trash_post($id);
+										break;
 
-									else
-									{
-										$query_delete = $wpdb->prepare("UPDATE ".$table_name." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$query_search, get_current_user_id());
+										case 'users':
+											//Do nothing
+										break;
 
-										$wpdb->query($query_delete);
+										default:
+											$query_delete = $wpdb->prepare("UPDATE ".$table_name." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$this->query_search, get_current_user_id());
+
+											$wpdb->query($query_delete);
+										break;
 									}
 
 									if($wpdb->rows_affected > 0)
@@ -1846,9 +1877,7 @@ class mf_import
 	{
 		global $wpdb;
 
-		$out = "";
-
-		$out .= "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import' rel='import/check/".get_class($this)."'>"
+		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import' rel='import/check/".get_class($this)."'>"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";
@@ -1920,7 +1949,7 @@ class mf_import
 					{
 						$import_text = $arr_values[$i];
 
-						$strRowField = check_var('strRowCheck'.$i);
+						$strRowField = check_var('strRowCheck'.$i, 'char', true, $import_text);
 
 						$arr_data = array();
 						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
@@ -1934,7 +1963,7 @@ class mf_import
 					}
 
 					$out .= "&nbsp;"
-					.show_button(array('name' => "btnImportRun", 'text' => __("Run", 'lang_base')))
+					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('import_run', '_wpnonce', true, false)
 				."</div>
 			</div>";

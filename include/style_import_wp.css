@@ -1,0 +1,12 @@
+@media all
+{
+	#import_result .form_select.has_value
+	{
+		opacity: .3;
+	}
+
+		#import_result .form_select.has_value:hover
+		{
+			opacity: 1;
+		}
+}

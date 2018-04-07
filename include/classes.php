@@ -809,16 +809,6 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		/*if(!isset($data['select']))
-		{
-			$data['select'] = "";
-
-			foreach($this->columns as $key => $value)
-			{
-				$data['select'] .= ($data['select'] != '' ? ", " : "").$key;
-			}
-		}*/
-
 		if(!isset($data['sort_data'])){	$data['sort_data'] = false;}
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
@@ -827,43 +817,48 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
 		if(!isset($data['order'])){		$data['order'] = $this->order;}
 		if(!isset($data['limit'])){		$data['limit'] = check_var('paged', 'int', true, '0');}
-		if(!isset($data['amount'])){	$data['amount'] = "";}
+		if(!isset($data['amount'])){	$data['amount'] = ($data['sort_data'] == true ? "" : $this->arr_settings['per_page']);}
+		if(!isset($data['debug'])){		$data['debug'] = false;}
 
 		$data = apply_filters('pre_select_data', $data, ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type));
 
-		$query = "SELECT ".$data['select']." FROM ".$this->arr_settings['query_from'].$this->query_join.$data['join'];
+		$query_from = $this->arr_settings['query_from'];
+		$query_join = $this->query_join.$data['join'];
+		$query_where = $query_group = $query_order = $query_limit = "";
 
 		if($this->query_where != '' || $data['where'] != '')
 		{
-			$query .= " WHERE ";
+			$query_where .= " WHERE ";
 
 			if($this->query_where != '')
 			{
-				$query .= $this->query_where;
+				$query_where .= $this->query_where;
 			}
 
 			if($data['where'])
 			{
-				$query .= ($this->query_where != '' ? " AND " : "").$data['where'];
+				$query_where .= ($this->query_where != '' ? " AND " : "").$data['where'];
 			}
 		}
 
 		if($data['group_by'] != '')
 		{
-			$query .= " GROUP BY ".$data['group_by'];
+			$query_group .= " GROUP BY ".$data['group_by'];
 		}
 
 		if($data['order_by'] != '')
 		{
-			$query .= " ORDER BY ".$data['order_by']." ".$data['order'];
+			$query_order .= " ORDER BY ".$data['order_by']." ".$data['order'];
 		}
 
 		if($data['amount'] > 0)
 		{
-			$query .= " LIMIT ".$data['limit'].", ".$data['amount'];
+			$query_limit .= " LIMIT ".$data['limit'].", ".$data['amount'];
 		}
 
-		if(isset($data['debug']) && $data['debug'] == true)
+		$query = "SELECT ".$data['select']." FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit;
+
+		if($data['debug'] == true)
 		{
 			echo "<br>mf_list_table->select_data() query: ".$query."<br>";
 		}
@@ -872,29 +867,37 @@ class mf_list_table extends WP_List_Table
 
 		$this->num_rows = count($result);
 
-		if(isset($data['debug']) && $data['debug'] == true)
+		if($data['debug'] == true)
 		{
-			//$this->debug_query = $query;
-
 			echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
 		}
 
 		$this->data = json_decode(json_encode($result), true);
 
-		if($this->num_rows > 0 && $data['sort_data'] == true)
+		if($data['sort_data'] == true)
 		{
-			if(isset($data['debug']) && $data['debug'] == true)
+			if($this->num_rows > 0)
 			{
-				echo __("Sorting", 'lang_base')."&hellip;<br>";
-			}
+				if($data['debug'] == true)
+				{
+					echo __("Sorting", 'lang_base')."&hellip;<br>";
+				}
 
-			$this->sort_data();
-			$this->num_rows = count($this->data);
+				$this->sort_data();
+				$this->num_rows = count($this->data);
 
-			if(isset($data['debug']) && $data['debug'] == true)
-			{
-				echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
+				if($data['debug'] == true)
+				{
+					echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
+				}
 			}
+		}
+
+		else if($this->num_rows == $data['amount'])
+		{
+			$wpdb->query("SELECT 1 FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit);
+
+			$this->num_rows = $wpdb->num_rows;
 		}
 	}
 
@@ -1281,6 +1284,198 @@ class mf_font_icons
 	}
 }
 
+class mf_export
+{
+	function __construct()
+	{
+		$this->has_excel_support = is_plugin_active('mf_phpexcel/index.php');
+		$this->dir_exists = true;
+
+		$this->upload_path = $this->upload_url = $this->plugin = $this->type_name = $this->name = "";
+		$this->types = $this->data = array();
+
+		$this->actions = array(
+			'' => "-- ".__("Choose here", 'lang_base')." --",
+			'csv' => "CSV",
+			'json' => "JSON",
+		);
+
+		if($this->has_excel_support)
+		{
+			$this->actions['xls'] = "XLS";
+		}
+
+		$this->get_defaults();
+
+		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
+
+		$this->fetch_request();
+
+		echo $this->save_data();
+	}
+
+	function get_defaults(){}
+	function fetch_request_xtra(){}
+	function get_export_data(){}
+	function get_form_xtra(){}
+
+	function fetch_request()
+	{
+		$this->type = check_var('intExportType');
+		$this->action = check_var('strExportFormat');
+
+		$this->fetch_request_xtra();
+	}
+
+	function save_data()
+	{
+		global $wpdb, $error_text, $done_text;
+
+		$out = "";
+
+		if(isset($_REQUEST['btnExportRun']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'export_run'))
+		{
+			if($this->action != '')
+			{
+				$this->get_export_data();
+
+				if(count($this->data) > 0)
+				{
+					$file = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("YmdHis").".".$this->action;
+
+					switch($this->action)
+					{
+						case 'csv':
+							$field_separator = ",";
+							$row_separator = "\n";
+
+							$out_temp = "";
+
+							foreach($this->data as $row)
+							{
+								$out_temp .= ($out_temp != '' ? $row_separator : "");
+
+								$count_temp = count($row);
+
+								for($i = 0; $i < $count_temp; $i++)
+								{
+									$row_value = preg_replace("/(\r\n|\r|\n|".$field_separator.")/", " ", $row[$i]);
+
+									$out_temp .= ($i > 0 ? $field_separator : "").(is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value);
+								}
+							}
+
+							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
+
+							if($success == true)
+							{
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							}
+
+							else
+							{
+								$error_text = __("It was not possible to export", 'lang_base');
+							}
+						break;
+
+						case 'json':
+							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => json_encode($this->data)));
+
+							if($success == true)
+							{
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							}
+
+							else
+							{
+								$error_text = __("It was not possible to export", 'lang_base');
+							}
+						break;
+
+						case 'xls':
+							$arr_alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+
+							$objPHPExcel = new PHPExcel();
+
+							foreach($this->data as $row_key => $row_value)
+							{
+								foreach($row_value as $col_key => $col_value)
+								{
+									$cell = "";
+
+									$count_temp = count($arr_alphabet);
+
+									while($col_key >= $count_temp)
+									{
+										$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
+
+										$col_key = $col_key % $count_temp;
+									}
+
+									$cell .= $arr_alphabet[$col_key].($row_key + 1);
+
+									if($col_value != '')
+									{
+										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value));
+									}
+								}
+							}
+
+							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
+							$objWriter->save($this->upload_path.$file);
+
+							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+						break;
+					}
+				}
+
+				else
+				{
+					$error_text = __("There was nothing to export", 'lang_base');
+				}
+
+				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));
+			}
+
+			else
+			{
+				$error_text = __("You have to choose a file type to export to", 'lang_base');
+			}
+		}
+	}
+
+	function get_form()
+	{
+		global $wpdb, $error_text;
+
+		$out = get_notification()
+		."<form action='#' method='post' class='mf_form mf_settings'>"
+			."<div id='poststuff' class='postbox'>
+				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
+				<div class='inside'>";
+
+					if(count($this->types) > 0)
+					{
+						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'value' => $this->type));
+					}
+
+					if(count($this->actions) > 0)
+					{
+						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
+					}
+
+					$out .= $this->get_form_xtra();
+
+					$out .= show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
+					.wp_nonce_field('export_run', '_wpnonce', true, false)
+				."</div>
+			</div>
+		</form>";
+
+		return $out;
+	}
+}
+
 class mf_import
 {
 	function __construct()
@@ -1302,7 +1497,7 @@ class mf_import
 
 		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = 0;
 
-		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
+		$this->has_excel_support = is_plugin_active('mf_phpexcel/index.php');
 
 		$this->get_defaults();
 		$this->fetch_request();
@@ -1984,7 +2179,14 @@ class mf_import
 
 								for($j = 0; $j < $count_temp_values; $j++)
 								{
-									$out .= "<".$cell_tag.">".$arr_values[$j]."</".$cell_tag.">";
+									$string = $arr_values[$j];
+
+									if(strlen($string) > 20)
+									{
+										$string = shorten_text(array('string' => $string, 'limit' => 20));
+									}
+
+									$out .= "<".$cell_tag.">".$string."</".$cell_tag.">";
 								}
 
 							$out .= "</tr>";
@@ -1994,198 +2196,6 @@ class mf_import
 				</div>
 			</div>";
 		}
-
-		return $out;
-	}
-}
-
-class mf_export
-{
-	function __construct()
-	{
-		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
-		$this->dir_exists = true;
-
-		$this->upload_path = $this->upload_url = $this->plugin = $this->type_name = $this->name = "";
-		$this->types = $this->data = array();
-
-		$this->actions = array(
-			'' => "-- ".__("Choose here", 'lang_base')." --",
-			'csv' => "CSV",
-			'json' => "JSON",
-		);
-
-		if($this->has_excel_support)
-		{
-			$this->actions['xls'] = "XLS";
-		}
-
-		$this->get_defaults();
-
-		list($this->upload_path, $this->upload_url) = get_uploads_folder($this->plugin);
-
-		$this->fetch_request();
-
-		echo $this->save_data();
-	}
-
-	function get_defaults(){}
-	function fetch_request_xtra(){}
-	function get_export_data(){}
-	function get_form_xtra(){}
-
-	function fetch_request()
-	{
-		$this->type = check_var('intExportType');
-		$this->action = check_var('strExportFormat');
-
-		$this->fetch_request_xtra();
-	}
-
-	function save_data()
-	{
-		global $wpdb, $error_text, $done_text;
-
-		$out = "";
-
-		if(isset($_REQUEST['btnExportRun']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'export_run'))
-		{
-			if($this->action != '')
-			{
-				$this->get_export_data();
-
-				if(count($this->data) > 0)
-				{
-					$file = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("YmdHis").".".$this->action;
-
-					switch($this->action)
-					{
-						case 'csv':
-							$field_separator = ",";
-							$row_separator = "\n";
-
-							$out_temp = "";
-
-							foreach($this->data as $row)
-							{
-								$out_temp .= ($out_temp != '' ? $row_separator : "");
-
-								$count_temp = count($row);
-
-								for($i = 0; $i < $count_temp; $i++)
-								{
-									$row_value = preg_replace("/(\r\n|\r|\n|".$field_separator.")/", " ", $row[$i]);
-
-									$out_temp .= ($i > 0 ? $field_separator : "").(is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value);
-								}
-							}
-
-							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
-
-							if($success == true)
-							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
-							}
-
-							else
-							{
-								$error_text = __("It was not possible to export", 'lang_base');
-							}
-						break;
-
-						case 'json':
-							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => json_encode($this->data)));
-
-							if($success == true)
-							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
-							}
-
-							else
-							{
-								$error_text = __("It was not possible to export", 'lang_base');
-							}
-						break;
-
-						case 'xls':
-							$arr_alphabet = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
-
-							$objPHPExcel = new PHPExcel();
-
-							foreach($this->data as $row_key => $row_value)
-							{
-								foreach($row_value as $col_key => $col_value)
-								{
-									$cell = "";
-
-									$count_temp = count($arr_alphabet);
-
-									while($col_key >= $count_temp)
-									{
-										$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
-
-										$col_key = $col_key % $count_temp;
-									}
-
-									$cell .= $arr_alphabet[$col_key].($row_key + 1);
-
-									if($col_value != '')
-									{
-										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value));
-									}
-								}
-							}
-
-							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
-							$objWriter->save($this->upload_path.$file);
-
-							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
-						break;
-					}
-				}
-
-				else
-				{
-					$error_text = __("There was nothing to export", 'lang_base');
-				}
-
-				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));
-			}
-
-			else
-			{
-				$error_text = __("You have to choose a file type to export to", 'lang_base');
-			}
-		}
-	}
-
-	function get_form()
-	{
-		global $wpdb, $error_text;
-
-		$out = get_notification()
-		."<form action='#' method='post' class='mf_form mf_settings'>"
-			."<div id='poststuff' class='postbox'>
-				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
-				<div class='inside'>";
-
-					if(count($this->types) > 0)
-					{
-						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'value' => $this->type));
-					}
-
-					if(count($this->actions) > 0)
-					{
-						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
-					}
-
-					$out .= $this->get_form_xtra();
-
-					$out .= show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
-					.wp_nonce_field('export_run', '_wpnonce', true, false)
-				."</div>
-			</div>
-		</form>";
 
 		return $out;
 	}

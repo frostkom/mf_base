@@ -4,12 +4,17 @@ if(!defined('ABSPATH'))
 {
 	header("Content-Type: text/css; charset=utf-8");
 
-	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
+	/*$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
 
-	require_once($folder."wp-load.php");
+	require_once($folder."wp-load.php");*/
+	
+	$plugin_fonts_url = "/wp-content/plugins/mf_base/fonts/";
 }
 
-$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
+else
+{
+	$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
+}
 
  echo "@font-face {
 	font-family: 'icomoon';

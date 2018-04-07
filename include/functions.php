@@ -1983,7 +1983,7 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php") && function_exists('hide_roles'))
+		if(function_exists('is_plugin_active') && is_plugin_active('mf_users/index.php') && function_exists('hide_roles'))
 		{
 			hide_roles();
 		}
@@ -2878,9 +2878,13 @@ function show_textfield($data)
 	{
 		case 'month':
 		//case 'date':
-			mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
+
+			//mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
+			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css", '1.8.2');
 			wp_enqueue_script('jquery-ui-datepicker');
-			mf_enqueue_script('script_base_datepicker', plugin_dir_url(__FILE__)."script_datepicker.js", get_plugin_version(__FILE__));
+			mf_enqueue_script('script_base_datepicker', $plugin_include_url."script_datepicker.js", $plugin_version);
 
 			$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
 			$data['type'] = "text";
@@ -3318,13 +3322,6 @@ function show_select($data)
 }
 ############################
 
-/*function show_checkboxes($data)
-{
-	error_log("show_checkboxes() is still used");
-
-	return show_form_alternatives($data);
-}*/
-
 ############################
 function show_form_alternatives($data)
 {
@@ -3533,7 +3530,7 @@ function show_checkbox($data)
 				$out .= " name='".$data['name']."' id='".$this_id."'";
 			}
 
-		$out .= " value='".$data['value']."'".$data['xtra'].">";
+		$out .= " value='".$data['value']."'".($data['xtra'] != '' ? " ".trim($data['xtra']) : "").">";
 
 		if($data['text'] != '')
 		{

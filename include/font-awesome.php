@@ -7,6 +7,13 @@ if(!defined('ABSPATH'))
 	/*$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
 
 	require_once($folder."wp-load.php");*/
+
+	$plugin_fonts_url = "/wp-content/plugins/mf_base/fonts/";
+}
+
+else
+{
+	$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 }
 
 ?>
@@ -17,11 +24,6 @@ if(!defined('ABSPATH'))
  */
 
 <?php
-
-//$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
-$plugin_fonts_url = "/wp-content/plugins/mf_base/fonts/";
-
-//do_log("FA: ".$plugin_fonts_url." -> ".$plugin_fonts_url2);
 
 echo "@font-face
 {

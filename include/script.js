@@ -39,6 +39,12 @@ jQuery(function($)
 		this.form.submit();
 	});
 
+	/* This is only to make the arrow inside selects turn down again when it closes */
+	$(document).on('change', ".mf_form select", function()
+	{
+		$(this).blur();
+	});
+
 	$(document).on('click', '.toggler', function(e)
 	{
 		var toggler_rel = $(this).attr('rel'),

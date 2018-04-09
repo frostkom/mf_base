@@ -817,7 +817,8 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
 		if(!isset($data['order'])){		$data['order'] = $this->order;}
 		if(!isset($data['limit'])){		$data['limit'] = check_var('paged', 'int', true, '0');}
-		if(!isset($data['amount'])){	$data['amount'] = ($data['sort_data'] == true ? "" : $this->arr_settings['per_page']);}
+		//if(!isset($data['amount'])){	$data['amount'] = ($data['sort_data'] == true ? "" : $this->arr_settings['per_page']);}
+		if(!isset($data['amount'])){	$data['amount'] = "";}
 		if(!isset($data['debug'])){		$data['debug'] = false;}
 
 		$data = apply_filters('pre_select_data', $data, ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type));
@@ -895,9 +896,10 @@ class mf_list_table extends WP_List_Table
 
 		else if($this->num_rows == $data['amount'])
 		{
-			$wpdb->query("SELECT 1 FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit);
+			/*$wpdb->query("SELECT 1 FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit);
 
-			$this->num_rows = $wpdb->num_rows;
+			do_log("Testing performance improvement: ".$this->num_rows." -> ".$wpdb->num_rows);*/
+			//$this->num_rows = ;
 		}
 	}
 

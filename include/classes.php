@@ -1480,6 +1480,8 @@ class mf_import
 {
 	function __construct()
 	{
+		global $wpdb;
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
@@ -1508,6 +1510,7 @@ class mf_import
 	function if_more_than_one($id){}
 	function inserted_new($id){}
 	function updated_new($id){}
+	function update_options_extend($id){}
 
 	function get_used_separator($data)
 	{
@@ -1666,7 +1669,7 @@ class mf_import
 			break;
 
 			default:
-				//Do nothing
+				$this->update_options_extend($id);
 			break;
 		}
 	}
@@ -1750,8 +1753,18 @@ class mf_import
 								break;
 
 								default:
-									$table_id = $this->table."ID";
-									$table_created = $this->table."Created";
+									if(preg_match("/\_/", $this->table))
+									{
+										list($rest, $table_field_prefix) = explode("_", $this->table);
+									}
+
+									else
+									{
+										$table_field_prefix = $this->table;
+									}
+
+									$table_id = $table_field_prefix."ID";
+									$table_created = $table_field_prefix."Created";
 									$table_user = "userID";
 								break;
 							}
@@ -1784,7 +1797,7 @@ class mf_import
 												break;
 
 												default:
-													$query_update = "UPDATE ".$table_name." SET ".$this->table."Deleted = '0', ".$this->table."DeletedDate = '', ".$this->table."DeletedID = '', ".$this->query_xtra." WHERE ".$table_id." = '".$id."'"; //$this->query_search
+													$query_update = "UPDATE ".$table_name." SET ".$table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', ".$this->query_xtra." WHERE ".$table_id." = '".$id."'"; //$this->query_search
 												break;
 											}
 											
@@ -1888,7 +1901,7 @@ class mf_import
 										break;
 
 										default:
-											$query_delete = $wpdb->prepare("UPDATE ".$table_name." SET ".$this->table."Deleted = '1', ".$this->table."DeletedDate = NOW(), ".$this->table."DeletedID = '%d' WHERE ".$this->query_search, get_current_user_id());
+											$query_delete = $wpdb->prepare("UPDATE ".$table_name." SET ".$table_field_prefix."Deleted = '1', ".$table_field_prefix."DeletedDate = NOW(), ".$table_field_prefix."DeletedID = '%d' WHERE ".$this->query_search, get_current_user_id());
 
 											$wpdb->query($query_delete);
 										break;
@@ -2144,7 +2157,7 @@ class mf_import
 					{
 						$import_text = $arr_values[$i];
 
-						$strRowField = check_var('strRowCheck'.$i, 'char', true, $import_text);
+						$strRowField = check_var('strRowCheck'.$i);
 
 						$arr_data = array();
 						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
@@ -2152,6 +2165,19 @@ class mf_import
 						foreach($this->columns as $key => $value)
 						{
 							$arr_data[$key] = $value;
+
+							if($strRowField == '')
+							{
+								if($key == $import_text)
+								{
+									$strRowField = $key;
+								}
+
+								else if($value == $import_text)
+								{
+									$strRowField = $key;
+								}
+							}
 						}
 
 						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));

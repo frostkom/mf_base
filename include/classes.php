@@ -1416,7 +1416,7 @@ class mf_export
 
 									if($col_value != '')
 									{
-										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($row_value) ? "[".implode("|", $row_value)."]" : $row_value));
+										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($col_value) ? "[".implode("|", $col_value)."]" : stripslashes($col_value)));
 									}
 								}
 							}

@@ -1,5 +1,6 @@
 jQuery(function($)
 {
+	/* Search */
 	var dom_form = $("form .search-box input[name='s']"),
 		plugin_name = dom_form.parents('form').attr('rel');
 
@@ -37,7 +38,37 @@ jQuery(function($)
 		});
 	}
 
+	/* Tables */
 	$('.wp-list-table').removeClass('fixed');
+
+	$('.wp-list-table tr').each(function()
+	{
+		var self = $(this);
+
+		if(self.find('.set_tr_color').length > 0)
+		{
+			self.find('.set_tr_color').each(function()
+			{
+				var add_class = $(this).attr('rel');
+
+				if(add_class != '')
+				{
+					self.addClass(add_class);
+				}
+			});
+		}
+	});
+
+	function toggle_table(dom_obj)
+	{
+		dom_obj.toggleClass('fa-eye-slash fa-eye').parents("tr").next("tr").toggleClass('hide');
+	}
+
+	$(".view_data .fa").on('click', function()
+	{
+		toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa.fa-eye-slash"));
+		toggle_table($(this));
+	});
 
 	/* Look for user notifications */
 	function send_notification(value)
@@ -98,24 +129,4 @@ jQuery(function($)
 			check_notifications();
 		}, 120000);
 	}
-	/* ############### */
-
-	/* Set tr color */
-	$('.wp-list-table tr').each(function()
-	{
-		var self = $(this);
-
-		if(self.find('.set_tr_color').length > 0)
-		{
-			self.find('.set_tr_color').each(function()
-			{
-				var add_class = $(this).attr('rel');
-
-				if(add_class != '')
-				{
-					self.addClass(add_class);
-				}
-			});
-		}
-	});
 });

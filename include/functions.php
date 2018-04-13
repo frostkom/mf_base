@@ -24,7 +24,7 @@ function show_flot_graph($data)
 		break;
 	}
 
-	mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7');
+	mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7'); //Should be moved to admin_init
 
 	if(!($flot_count > 0))
 	{
@@ -541,7 +541,7 @@ function add_shortcode_display_base()
 
 	if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 	{
-		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", get_plugin_version(__FILE__));
+		mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", get_plugin_version(__FILE__)); //Should be moved to admin_init
 
 		echo "<div id='mf_shortcode_container' class='hide'>
 			<div class='mf_form mf_shortcode_wrapper'>"
@@ -1193,28 +1193,6 @@ function init_base()
 	}
 
 	reschedule_base();
-
-	$plugin_include_url = plugin_dir_url(__FILE__);
-	$plugin_version = get_plugin_version(__FILE__);
-
-	$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
-	//$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
-	$setting_base_required_field_text = '*';
-
-	if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
-	{
-		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
-	}
-
-	if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-	{
-		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-	}
-
-	if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-	{
-		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
-	}
 }
 
 function get_file_icon($file)
@@ -1349,7 +1327,7 @@ function get_media_button($data = array())
 }
 
 /* Deprecated as of 180123 */
-function get_file_button($data)
+/*function get_file_button($data)
 {
 	do_log("get_file_button() is still in use (".var_export($data, true).")");
 
@@ -1384,7 +1362,7 @@ function get_file_button($data)
 		."</div>
 		<div class='mf_file_raw'></div>
 	</div>";
-}
+}*/
 
 function get_attachment_to_send($string)
 {
@@ -1647,19 +1625,6 @@ function settings_header($id, $title)
 
 function settings_base()
 {
-	global $wpdb;
-
-	$plugin_include_url = plugin_dir_url(__FILE__);
-	$plugin_version = get_plugin_version(__FILE__);
-
-	//add_editor_style($plugin_include_url."font-awesome.php");
-	//add_editor_style($plugin_include_url."style_editor.css");
-
-	mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
-
-	wp_enqueue_script('jquery-ui-autocomplete');
-	mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
-
 	define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
 	$options_area = __FUNCTION__;
@@ -1935,7 +1900,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 
 	if(count($translation) > 0)
 	{
-		wp_register_script($handle, $file, array('jquery'), $version);
+		wp_register_script($handle, $file, array('jquery'), $version, true);
 		wp_localize_script($handle, $handle, $translation);
 		wp_enqueue_script($handle);
 	}
@@ -2881,7 +2846,6 @@ function show_textfield($data)
 			$plugin_include_url = plugin_dir_url(__FILE__);
 			$plugin_version = get_plugin_version(__FILE__);
 
-			//mf_enqueue_style('jquery-ui-css', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css', '1.8.2');
 			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css", '1.8.2');
 			wp_enqueue_script('jquery-ui-datepicker');
 			mf_enqueue_script('script_base_datepicker', $plugin_include_url."script_datepicker.js", $plugin_version);

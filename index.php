@@ -35,6 +35,7 @@ if(is_admin())
 	register_uninstall_hook(__FILE__, 'uninstall_base');
 
 	add_action('admin_init', 'settings_base', 0);
+	add_action('admin_init', array($obj_base, 'admin_init'), 0);
 
 	add_filter('plugin_action_links', 'plugin_actions_base', 10, 2);
 	add_filter('network_admin_plugin_action_links', 'plugin_actions_base', 10, 2);
@@ -49,6 +50,12 @@ if(is_admin())
 	add_action('wp_ajax_check_notifications', 'check_notifications');
 
 	//add_action('edit_form_after_title', 'after_title_base');
+}
+
+else
+{
+	add_action('login_init', array($obj_base, 'login_init'));
+	add_action('wp_head', array($obj_base, 'wp_head'), 0);
 }
 
 add_action('phpmailer_init', 'phpmailer_init_base');

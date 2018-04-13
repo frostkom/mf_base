@@ -7,6 +7,60 @@ class mf_base
 		$this->meta_prefix = "mf_base_";
 	}
 
+	function admin_init()
+	{
+		global $pagenow;
+
+		$this->wp_head();
+
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		//add_editor_style($plugin_include_url."font-awesome.php");
+		//add_editor_style($plugin_include_url."style_editor.css");
+
+		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
+
+		wp_enqueue_script('jquery-ui-autocomplete');
+		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
+
+		if($pagenow == 'options-general.php' && check_var('page') == 'settings_mf_base')
+		{
+			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
+			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
+		}
+	}
+
+	function login_init()
+	{
+		$this->wp_head();
+	}
+
+	function wp_head()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
+		//$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
+		$setting_base_required_field_text = '*';
+
+		if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
+		{
+			mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
+		}
+
+		if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+		{
+			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+		}
+
+		if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+		{
+			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
+		}
+	}
+
 	function meta_boxes($meta_boxes)
 	{
 		$meta_boxes[] = array(
@@ -1087,12 +1141,6 @@ class settings_page
 
 	public function create_admin_page()
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
-		mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
-
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
 			<div class='settings-wrap'>

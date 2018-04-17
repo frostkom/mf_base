@@ -516,7 +516,7 @@ class mf_list_table extends WP_List_Table
 			{
 				$error_text = sprintf(__("Use delete_base() on %s"), $db_field);
 
-				error_log($error_text);
+				do_log($error_text);
 			}
 		}
 	}
@@ -722,7 +722,7 @@ class mf_list_table extends WP_List_Table
 
 		/*else
 		{
-			error_log("Bulk delete: ".var_export($_GET, true));
+			do_log("Bulk delete: ".var_export($_GET, true));
 		}*/
 	}
 

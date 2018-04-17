@@ -1,5 +1,21 @@
 <?php
 
+function show_final_size($in)
+{
+	$arr_suffix = array("B", "kB", "MB", "GB", "TB");
+
+	$count_temp = count($arr_suffix);
+
+	for($i = 0; ($in > 1024 || $i < 1) && $i < $count_temp; $i++) //Forces at least kB
+	{
+		$in /= 1024;
+	}
+
+	$out = strlen(round($in)) < 3 ? round($in, 1) : round($in); //If less than 3 digits, show one decimal aswell
+
+	return $out."&nbsp;".$arr_suffix[$i];
+}
+
 function show_flot_graph($data)
 {
 	global $flot_count;
@@ -312,7 +328,7 @@ function get_user_info($data = array())
 			{
 				return '';
 
-				error_log(sprintf(__("There was no display name for %s (%d)", 'lang_base'), var_export($user_data, true), $data['id']));
+				do_log(sprintf(__("There was no display name for %s (%d)", 'lang_base'), var_export($user_data, true), $data['id']));
 			}
 		break;
 
@@ -706,12 +722,12 @@ function mf_uninstall_tables($data)
 
 					if($wpdb->num_rows > 0)
 					{
-						error_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+						do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
 					}
 
 					/*else
 					{
-						error_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+						do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
 					}*/
 				}
 			}
@@ -1394,7 +1410,7 @@ function get_attachment_to_send($string)
 
 		if(count($arr_ids) == 0 && count($arr_files) == 0)
 		{
-			error_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
+			do_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
 		}
 	}
 
@@ -1958,7 +1974,7 @@ function get_all_roles($data = array())
 
 	if(count($roles) == 0)
 	{
-		error_log(__("I could not find any roles for this site...?", 'lang_base'));
+		do_log(__("I could not find any roles for this site...?", 'lang_base'));
 	}
 
 	if(isset($data['allowed']))
@@ -3757,7 +3773,7 @@ function set_file_content($data)
 
 		else if($data['log'] == true)
 		{
-			error_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
+			do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
 		}
 	}
 

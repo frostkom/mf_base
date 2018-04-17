@@ -105,18 +105,62 @@
 				color: inherit;
 			}
 
-	.widefat
+	#wrapper .widefat
 	{
+		background: #fff;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 		border-spacing: 0;
 		clear: both;
 		margin: 0;
 		width: 100%;
 	}
 
-		.widefat th
+		#wrapper .widefat *
 		{
-			vertical-align: top;
+			word-wrap: break-word;
 		}
+
+			#wrapper .widefat td, #wrapper .widefat th
+			{
+				color: #555;
+				padding: .8em 1em;
+				vertical-align: top;
+			}
+
+			#wrapper .widefat th
+			{
+				border-bottom: 1px solid #e1e1e1;
+				color: #32373c;
+				cursor: pointer;
+				font-size: .9em;
+				text-align: left;
+				white-space: nowrap;
+			}
+
+			#wrapper .alternate, #wrapper .striped > tbody > *:nth-child(2n+1)
+			{
+				background-color: #f9f9f9;
+			}
+
+				#wrapper .widefat td
+				{
+					font-family: inherit;
+					font-size: inherit;
+					font-weight: inherit;
+					line-height: inherit;
+				}
+
+					#wrapper .widefat td, #wrapper .widefat td ol, #wrapper .widefat td p, #wrapper .widefat td ul
+					{
+						font-size: .9em;
+						line-height: 1.5em;
+					}
+
+					#wrapper .widefat a
+					{
+						text-decoration: none;
+					}
 
 	.striped > tbody > tr:nth-child(2n+1), ul.striped > li:nth-child(2n+1)
 	{

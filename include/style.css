@@ -47,8 +47,6 @@
 				padding: .15em;
 			}
 
-	.toggler{}
-
 		.toggler.open
 		{
 			margin-bottom: 0;
@@ -138,7 +136,7 @@
 				white-space: nowrap;
 			}
 
-			#wrapper .alternate, #wrapper .striped > tbody > *:nth-child(2n+1)
+			#wrapper .alternate, #wrapper .striped > tbody > *:nth-child(2n+1), #wrapper ul.striped > li:nth-child(2n+1)
 			{
 				background-color: #f9f9f9;
 			}
@@ -156,16 +154,6 @@
 						font-size: .9em;
 						line-height: 1.5em;
 					}
-
-					#wrapper .widefat a
-					{
-						text-decoration: none;
-					}
-
-	.striped > tbody > tr:nth-child(2n+1), ul.striped > li:nth-child(2n+1)
-	{
-		background-color: #f9f9f9;
-	}
 
 	.row-actions
 	{
@@ -415,11 +403,6 @@
 					white-space: nowrap;
 				}
 
-		/*.mf_form .form_checkbox, .mf_form .form_radio
-        {
-			margin-bottom: .5em;
-        }*/
-
 			.mf_form .form_checkbox label, .mf_form .form_radio label
 			{
 				display: inline-block;
@@ -449,8 +432,7 @@
 			white-space: nowrap;
 		}
 
-			/* This messes up buttons Visual/Text above wp_editor() */
-			/*.mf_form button, .mf_form .button, */.mf_form .button-primary, .mf_form .button-secondary
+			.mf_form .button-primary, .mf_form .button-secondary
 			{
 				margin-right: .5em !important;
 				margin-bottom: .5em !important;

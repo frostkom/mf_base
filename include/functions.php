@@ -23,7 +23,7 @@ function show_flot_graph($data)
 	if(!isset($data['type'])){				$data['type'] = 'lines';}
 	if(!isset($data['type_settings'])){		$data['type_settings'] = '';}
 	if(!isset($data['settings'])){			$data['settings'] = '';}
-	if(!isset($data['width'])){				$data['width'] = '';}
+	//if(!isset($data['width'])){			$data['width'] = '';}
 	if(!isset($data['height'])){			$data['height'] = '';}
 	if(!isset($data['title'])){				$data['title'] = '';}
 
@@ -40,8 +40,6 @@ function show_flot_graph($data)
 		break;
 	}
 
-	mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7'); //Should be moved to admin_init
-
 	if(!($flot_count > 0))
 	{
 		$flot_count = 0;
@@ -49,8 +47,10 @@ function show_flot_graph($data)
 
 	$out = "";
 
-	if($data['data'] != '')
+	if(count($data['data']) > 0)
 	{
+		mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7'); //Should be moved to admin_init
+
 		if(preg_match("/\[tick_mb]/", $data['settings']))
 		{
 			$data['settings'] = str_replace("[tick_mb]", "tickFormatter:
@@ -65,11 +65,10 @@ function show_flot_graph($data)
 
 		$style_cont = "";
 
-		if($data['width'] > 0)
-		{
-			//$style_cont .= "width: ".$data['width']."px;";
+		/*if($data['width'] > 0)
+		{*/
 			$style_cont .= "width: 95%;";
-		}
+		//}
 
 		if($data['height'] > 0)
 		{
@@ -80,12 +79,39 @@ function show_flot_graph($data)
 		<script>
 			jQuery(function($)
 			{
-				$(\"body\").append(\"<div id='tooltip' class='tooltip_box'></div>\");
+				$('body').append(\"<div id='tooltip' class='tooltip_box'></div>\");
 
 				$.plot($('#flot_".$flot_count."'),
-				["
-					.$data['data']
-				."],
+				[";
+
+					$i = 0;
+
+					foreach($data['data'] as $arr_type)
+					{
+						$out .= ($i > 0 ? "," : "")."{label:'".$arr_type['label']."', data:[";
+
+							$j = 0;
+						
+							foreach($arr_type['data'] as $arr_point)
+							{
+								$out .= ($j > 0 ? "," : "")."[".(strtotime($arr_point['date']." UTC") * 1000).",".$arr_point['value']."]";
+
+								$j++;
+							}
+
+						$out .= "]";
+
+						if(isset($arr_type['yaxis']))
+						{
+							$out .= ", yaxis: ".$arr_type['yaxis'];
+						}
+						
+						$out .= "}";
+
+						$i++;
+					}
+				
+				$out .= "],
 				{
 					series: {".$data['type'].": {show: true".$data['type_settings']."}},
 					grid: {hoverable: true}"

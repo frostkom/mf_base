@@ -82,7 +82,7 @@ jQuery(function($)
 			dom_parent = dom_obj.parents(".rwmb-field"),
 			condition_type = dom_obj.attr('condition_type'),
 			condition_selector = dom_obj.attr('condition_selector'),
-			condition_value = dom_obj.attr('condition_value');
+			condition_value = dom_obj.attr('condition_value') || '';
 
 		$("#" + condition_selector).each(function()
 		{

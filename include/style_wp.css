@@ -101,6 +101,13 @@
 		overflow: hidden;
 	}
 
+		.wp-list-table thead tr
+		{
+			background: #fff;
+			position: sticky;
+			top: 30px;
+		}
+
 		.wp-list-table .column-image img, .wp-list-table .column-username img, .rwmb-field img, .post-revisions img, .defaultavatarpicker img
 		{
 			max-height: 80px;

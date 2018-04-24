@@ -21,7 +21,7 @@ function show_flot_graph($data)
 	global $flot_count;
 
 	if(!isset($data['type'])){				$data['type'] = 'lines';}
-	if(!isset($data['type_settings'])){		$data['type_settings'] = '';}
+	//if(!isset($data['type_settings'])){	$data['type_settings'] = '';}
 	if(!isset($data['settings'])){			$data['settings'] = '';}
 	//if(!isset($data['width'])){			$data['width'] = '';}
 	if(!isset($data['height'])){			$data['height'] = '';}
@@ -30,7 +30,15 @@ function show_flot_graph($data)
 	if($data['settings'] == '')
 	{
 		$data['settings'] = ($data['settings'] != '' ? "," : "")."legend: {position: 'nw'},
-		xaxis: {mode: 'time'}";
+		xaxis: {mode: 'time'},
+		yaxis: {
+			tickFormatter: function suffixFormatter(val, axis)
+			{
+				console.log(val);
+
+				return parseInt(val).toLocaleString();
+			}
+		}";
 	}
 
 	switch($data['type'])
@@ -49,19 +57,12 @@ function show_flot_graph($data)
 
 	if(count($data['data']) > 0)
 	{
-		mf_enqueue_script('jquery-flot', plugins_url()."/mf_base/include/jquery.flot.min.0.7.js", '0.7'); //Should be moved to admin_init
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
 
-		if(preg_match("/\[tick_mb]/", $data['settings']))
-		{
-			$data['settings'] = str_replace("[tick_mb]", "tickFormatter:
-				function suffixFormatter(val, axis)
-				{
-					if(val > 1000000){		return (val / 1000000).toFixed(axis.tickDecimals) + ' MB';}
-					else if(val > 1000){	return (val / 1000).toFixed(axis.tickDecimals) + ' kB';}
-					else{					return val.toFixed(axis.tickDecimals) + ' ';}
-				}",
-			$data['settings']);
-		}
+		mf_enqueue_style('style_flot', $plugin_include_url."style_flot.css", $plugin_version);
+		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js", $plugin_version); //Should be moved to admin_init
+		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js", $plugin_version);
 
 		$style_cont = "";
 
@@ -75,25 +76,26 @@ function show_flot_graph($data)
 			$style_cont .= "height: ".$data['height']."px;";
 		}
 
-		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>
-		<script>
-			jQuery(function($)
+		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>";
+
+		$out .= "<script>
+			function plot_flot_".$flot_count."()
 			{
-				$('body').append(\"<div id='tooltip' class='tooltip_box'></div>\");
-
-				$.plot($('#flot_".$flot_count."'),
+				jQuery.plot(jQuery('#flot_".$flot_count."'),
 				[";
-
+				
 					$i = 0;
 
-					foreach($data['data'] as $arr_type)
+					foreach($data['data'] as $type_key => $arr_type)
 					{
 						$out .= ($i > 0 ? "," : "")."{label:'".$arr_type['label']."', data:[";
 
 							$j = 0;
 						
-							foreach($arr_type['data'] as $arr_point)
+							foreach($arr_type['data'] as $point_key => $arr_point)
 							{
+								$data['data'][$type_key][$point_key]['date'] = (strtotime($arr_point['date']." UTC") * 1000);
+
 								$out .= ($j > 0 ? "," : "")."[".(strtotime($arr_point['date']." UTC") * 1000).",".$arr_point['value']."]";
 
 								$j++;
@@ -110,36 +112,21 @@ function show_flot_graph($data)
 
 						$i++;
 					}
-				
+
 				$out .= "],
-				{
-					series: {".$data['type'].": {show: true".$data['type_settings']."}},
-					grid: {hoverable: true}"
-					.($data['settings'] != '' ? ",".$data['settings'] : "")
-				."});
+				{series: {".$data['type'].": {show: true}}," //".$data['type_settings']."
+				."grid: {hoverable: true}"
+				.($data['settings'] != '' ? ",".$data['settings'] : "")."});
+			}
 
-				$('#flot_".$flot_count."').on('plothover', function (event, pos, item)
-				{
-					if(item)
-					{
-						var x = parseInt(item.datapoint[0].toFixed(0));
-
-						if(x > 10000000)
-						{
-							var date = new Date(x);
-							x = date.getDate() + '/' + (date.getMonth() + 1) + ' ' + date.getFullYear();
-						}
-
-						$('#tooltip').css({top: item.pageY + 5, left: item.pageX + 5}).html('<strong>' + item.series.label + '</strong><br><span>' + x + ': ' + item.datapoint[1].toFixed(2).replace('.00', '') + '</span>').show();
-					}
-				});
-
-				$('.flot_graph').on('mouseout', function()
-				{
-					$('#tooltip').hide();
-				});
-			});
+			if(typeof arr_flot_functions === 'undefined')
+			{
+				var arr_flot_functions = [];
+			}
+			
+			arr_flot_functions.push('plot_flot_".$flot_count."');
 		</script>";
+
 
 		$flot_count++;
 	}
@@ -724,6 +711,15 @@ function mf_uninstall_options($data)
 	}
 }
 
+function does_table_exist($table)
+{
+	global $wpdb;
+
+	$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+
+	return ($wpdb->num_rows > 0);
+}
+
 function mf_uninstall_tables($data)
 {
 	global $wpdb;
@@ -732,17 +728,13 @@ function mf_uninstall_tables($data)
 	{
 		foreach($data['tables'] as $table)
 		{
-			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
-
-			if($wpdb->num_rows > 0)
+			if(does_table_exist($wpdb->prefix.$table))
 			{
 				$wpdb->query("DELETE FROM ".$wpdb->prefix.$table." WHERE 1 = 1");
 				$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
 				$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
 
-				$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix.$table));
-
-				if($wpdb->num_rows > 0)
+				if(does_table_exist($wpdb->prefix.$table))
 				{
 					$wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
 
@@ -1166,7 +1158,7 @@ function delete_base($data)
 
 		foreach($data['child_tables'] as $child_table => $child_table_type)
 		{
-			if($child_table_type['action'] == "trash")
+			if($child_table_type['action'] == "trash" && does_table_exist($data['table_prefix'].$child_table))
 			{
 				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
 				$rows_temp = $wpdb->num_rows;
@@ -3639,10 +3631,10 @@ function show_submit($data)
 
 function show_button($data)
 {
-	if(!isset($data['name'])){	$data['name'] = "";}
-	if(!isset($data['xtra'])){	$data['xtra'] = "";}
 	if(!isset($data['type'])){	$data['type'] = "submit";}
+	if(!isset($data['name'])){	$data['name'] = "";}
 	if(!isset($data['class'])){	$data['class'] = "";}
+	if(!isset($data['xtra'])){	$data['xtra'] = "";}
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")

@@ -443,6 +443,21 @@
 					margin-right: .3em;
 				}
 
+			.mf_form .button.delete
+			{
+				background: #ba0000;
+				border-color: #aa0000 #900 #900;
+				box-shadow: 0 1px 0 #900;
+				color: #fff;
+				text-shadow: 0 -1px 1px #900, 1px 0 1px #900, 0 1px 1px #900, -1px 0 1px #900;
+			}
+			
+				.mf_form .button.delete:hover
+				{
+					background: #c20000;
+					border-color: #900;
+				}
+
 			.mf_settings #postbox-container-1 button
 			{
 				margin: .6em .6em 0 0;

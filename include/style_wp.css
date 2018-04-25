@@ -108,6 +108,11 @@
 			top: 30px;
 		}
 
+		.wp-list-table tfoot, .wp-list-table + .tablenav.bottom
+		{
+			display: none;
+		}
+
 		.wp-list-table .column-image img, .wp-list-table .column-username img, .rwmb-field img, .post-revisions img, .defaultavatarpicker img
 		{
 			max-height: 80px;

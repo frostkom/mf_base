@@ -2434,13 +2434,26 @@ function validate_url($value, $link = true, $http = true)
 }
 #################
 
-function get_url_content($url, $catch_head = false, $password = "", $post = "", $post_data = array())
+function get_url_content($data = array(), $catch_head = false, $password = "", $post = "", $post_data = array())
 {
-	$url = validate_url($url, false);
+	if(!is_array($data))
+	{
+		$data = array(
+			'url' => $data,
+		);
+	}
+
+	if(!isset($data['catch_head'])){	$data['catch_head'] = $catch_head;}
+	if(!isset($data['content_type'])){	$data['content_type'] = '';}
+	if(!isset($data['password'])){		$data['password'] = $password;}
+	if(!isset($data['post'])){			$data['post'] = $post;}
+	if(!isset($data['post_data'])){		$data['post_data'] = $post_data;}
+
+	$data['url'] = validate_url($data['url'], false);
 
 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_URL, $data['url']);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -2451,26 +2464,36 @@ function get_url_content($url, $catch_head = false, $password = "", $post = "", 
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 	}
 
-	if($password != '')
+	if($data['password'] != '')
 	{
-		curl_setopt($ch, CURLOPT_USERPWD, $password);
+		curl_setopt($ch, CURLOPT_USERPWD, $data['password']);
 	}
 
-	if($post != '')
+	if($data['post'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$post);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$data['post']);
 	}
 
-	else if(count($post_data) > 0)
+	else if(count($data['post_data']) > 0)
 	{
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
+	}
+
+	if($data['content_type'] != '')
+	{
+		$arr_headers = array(
+			'Accept: '.$data['content_type'],
+			'Content-Type: '.$data['content_type'],
+		);
+
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $arr_headers);
 	}
 
 	$content = curl_exec($ch);
 
-	if($catch_head == true)
+	if($data['catch_head'] == true)
 	{
 		$headers = curl_getinfo($ch);
 

@@ -101,13 +101,6 @@
 		overflow: hidden;
 	}
 
-		.wp-list-table thead tr
-		{
-			background: #fff;
-			position: sticky;
-			top: 30px;
-		}
-
 		.wp-list-table tfoot, .wp-list-table + .tablenav.bottom
 		{
 			display: none;
@@ -171,6 +164,16 @@
 	{
 		margin-left: 1em;
 		margin-bottom: 1em;
+	}
+}
+
+@media (min-width: 783px)
+{
+	.wp-list-table thead tr
+	{
+		background: #fff;
+		position: sticky;
+		top: 30px;
 	}
 }
 

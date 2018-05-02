@@ -438,6 +438,7 @@ class mf_list_table extends WP_List_Table
 	var $columns = array();
 	var $sortable_columns = array();
 	var $data = "";
+	var $data_full = "";
 	var $num_rows = 0;
 	var $query_join = "";
 	var $query_where = "";
@@ -863,6 +864,7 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
+		if(!isset($data['full_data'])){	$data['full_data'] = false;}
 		if(!isset($data['sort_data'])){	$data['sort_data'] = false;}
 		if(!isset($data['select'])){	$data['select'] = "*";}
 		if(!isset($data['join'])){		$data['join'] = "";}
@@ -928,6 +930,11 @@ class mf_list_table extends WP_List_Table
 		}
 
 		$this->data = json_decode(json_encode($result), true);
+
+		if($data['full_data'] == true)
+		{
+			$this->data_full = $this->data;
+		}
 
 		if($data['sort_data'] == true)
 		{

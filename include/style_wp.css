@@ -101,7 +101,7 @@
 		overflow: hidden;
 	}
 
-		.wp-list-table tfoot, .wp-list-table + .tablenav.bottom
+		.wp-list-table tfoot/*, .wp-list-table + .tablenav.bottom*/
 		{
 			display: none;
 		}

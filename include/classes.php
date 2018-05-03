@@ -344,11 +344,13 @@ class mf_cron
 
 	function set_is_running()
 	{
-		if($this->is_running = file_exists($this->file))
+		$this->is_running = file_exists($this->file);
+
+		if($this->is_running)
 		{
 			$file_time = date("Y-m-d H:i:s", filemtime($this->file));
 
-			if($this->has_expired(array('start' => $file_time, 'margin' => 1.2)))
+			if($file_time > DEFAULT_DATE && $this->has_expired(array('start' => $file_time, 'margin' => 1.2)))
 			{
 				do_log(sprintf(__("%s has been running since %s", 'lang_base'), $this->file, $file_time));
 			}

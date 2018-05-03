@@ -1920,7 +1920,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
+function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false, $add2array = true)
 {
 	if(!is_array($translation))
 	{
@@ -1930,7 +1930,10 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 
 	$file = remove_protocol(array('url' => $file));
 
-	do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
+	if($add2array == true)
+	{
+		do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
+	}
 
 	if(count($translation) > 0)
 	{

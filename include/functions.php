@@ -1,5 +1,29 @@
 <?php
 
+function get_or_set_table_filter($data)
+{
+	if(!isset($data['save'])){	$data['save'] = false;}
+
+	$value = '';
+
+	if(isset($_GET['filter_action']) || isset($_GET[$data['key']]))
+	{
+		$value = check_var($data['key']);
+
+		if($data['save'] == true)
+		{
+			update_user_meta(get_current_user_id(), 'meta_table_filter_'.$data['key'], $value);
+		}
+	}
+
+	else
+	{
+		$value = get_the_author_meta('meta_table_filter_'.$data['key'], get_current_user_id());
+	}
+
+	return $value;
+}
+
 function show_final_size($in)
 {
 	$arr_suffix = array("B", "kB", "MB", "GB", "TB");

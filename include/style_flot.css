@@ -8,11 +8,13 @@
 	.tooltip_box
 	{
 		background: #fff;
-		border: 3px solid #999;
+		border: .2em solid #999;
+		border-radius: .3em;
 		color: #000;
+		font-size: 1.2em;
 		line-height: 1.25em;
 		opacity: .9;
-		padding: 5px;
+		padding: .5em;
 	}
 
 	.tooltip_box

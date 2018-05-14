@@ -450,7 +450,7 @@ class mf_list_table extends WP_List_Table
 	var $page = "";
 	var $total_pages = "";
 
-	function __construct()
+	function __construct($data = array())
 	{
 		global $wpdb;
 
@@ -460,19 +460,27 @@ class mf_list_table extends WP_List_Table
 			'ajax' => false //does this table support ajax?
 		));
 
+		if(!isset($data['per_page'])){			$data['per_page'] = $this->get_items_per_page('edit_page_per_page', 20);}
+		if(!isset($data['query_from'])){		$data['query_from'] = $wpdb->posts;}
+		if(!isset($data['query_select_id'])){	$data['query_select_id'] = "ID";}
+		if(!isset($data['query_all_id'])){		$data['query_all_id'] = 'all';}
+		if(!isset($data['query_trash_id'])){	$data['query_trash_id'] = array('trash', 'ignore');}
+		if(!isset($data['has_autocomplete'])){	$data['has_autocomplete'] = false;}
+		if(!isset($data['remember_search'])){	$data['remember_search'] = false;}
+
+		$this->arr_settings = $data;
+
+		$this->set_default();
+
 		$this->page = check_var('page', 'char');
 		$this->search = check_var('s', 'char', true);
 
-		$this->arr_settings = array(
-			'per_page' => $this->get_items_per_page('edit_page_per_page', 20),
-			'query_from' => $wpdb->posts,
-			'query_select_id' => "ID",
-			'query_all_id' => 'all',
-			'query_trash_id' => array('trash', 'ignore'),
-			'has_autocomplete' => false,
-		);
+		if($data['remember_search'] == true)
+		{
+			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => 's', 'save' => true));
+		}
 
-		$this->set_default();
+		$this->init_fetch();
 
 		if($this->post_type != '')
 		{
@@ -490,6 +498,7 @@ class mf_list_table extends WP_List_Table
 	}
 
 	function set_default(){}
+	function init_fetch(){}
 	function sort_data(){}
 
 	function set_columns($columns)
@@ -841,6 +850,44 @@ class mf_list_table extends WP_List_Table
 	protected function get_table_classes()
 	{
 		return array('widefat', 'striped'); //, 'fixed', $this->_args['plural']
+	}
+
+	function search_box($text, $input_id)
+	{
+		if($this->search == '' && !$this->has_items())
+		{
+			return;
+		}
+
+		$input_id = $input_id.'-search-input';
+
+		if(!empty($_REQUEST['orderby']))
+		{
+			echo '<input type="hidden" name="orderby" value="'.esc_attr($_REQUEST['orderby']).'">';
+		}
+
+		if(!empty($_REQUEST['order']))
+		{
+			echo '<input type="hidden" name="order" value="'.esc_attr($_REQUEST['order']).'">';
+		}
+
+		/*if ( ! empty( $_REQUEST['post_mime_type'] ) )
+		{
+			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
+		}
+
+		if ( ! empty( $_REQUEST['detached'] ) )
+		{
+			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
+		}*/
+
+		echo "<p class='search-box'>
+			<label class='screen-reader-text' for='".esc_attr($input_id)."'>".$text.":</label>
+			<input type='search' id='".esc_attr($input_id)."' name='s' value='".$this->search."'>";
+
+			submit_button($text, '', '', false, array('id' => 'search-submit'));
+
+		echo "</p>";
 	}
 
 	function show_search_form()

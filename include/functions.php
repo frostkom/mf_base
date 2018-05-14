@@ -2,26 +2,38 @@
 
 function get_or_set_table_filter($data)
 {
-	if(!isset($data['save'])){	$data['save'] = false;}
+	if(!isset($data['prefix'])){	$data['prefix'] = '';}
+	if(!isset($data['save'])){		$data['save'] = false;}
 
-	$value = '';
+	$meta_value = '';
+
+	$user_id = get_current_user_id();
+	$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
 
 	if(isset($_GET['filter_action']) || isset($_GET[$data['key']]))
 	{
-		$value = check_var($data['key']);
+		$meta_value = check_var($data['key']);
 
 		if($data['save'] == true)
 		{
-			update_user_meta(get_current_user_id(), 'meta_table_filter_'.$data['key'], $value);
+			if($meta_value != '')
+			{
+				update_user_meta(get_current_user_id(), $meta_key, $meta_value);
+			}
+
+			else
+			{
+				delete_user_meta(get_current_user_id(), $meta_key, $meta_value);
+			}
 		}
 	}
 
 	else
 	{
-		$value = get_the_author_meta('meta_table_filter_'.$data['key'], get_current_user_id());
+		$meta_value = get_the_author_meta($meta_key, $user_id);
 	}
 
-	return $value;
+	return $meta_value;
 }
 
 function show_final_size($in)

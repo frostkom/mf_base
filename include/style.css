@@ -120,12 +120,12 @@
 		}
 
 			/* For this to work, a few parents with overflow: hidden has to be changed and tested */
-			/*#wrapper .widefat thead tr
+			#wrapper .widefat thead tr
 			{
 				background: #fff;
-				position: sticky;
-				top: 0;
-			}*/
+				/*position: sticky;
+				top: 0;*/
+			}
 
 			#wrapper .widefat td, #wrapper .widefat th
 			{

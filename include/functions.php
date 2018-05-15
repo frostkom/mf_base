@@ -1702,7 +1702,7 @@ function settings_base()
 	add_settings_section($options_area, "",	$options_area."_callback", BASE_OPTIONS_PAGE);
 
 	$arr_settings = array(
-		'setting_base_info' => __("Versions", 'lang_base'),
+		'setting_base_info' => __("Status", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
 		//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
@@ -1722,6 +1722,30 @@ function settings_base_callback()
 	$setting_key = get_setting_key(__FUNCTION__);
 
 	echo settings_header($setting_key, __("Common", 'lang_base'));
+}
+
+function return_bytes($val)
+{
+    $val = trim($val);
+    $last = strtolower($val[strlen($val) - 1]);
+
+    switch($last)
+	{
+        // The 'G' modifier is available since PHP 5.1.0
+        case 'g':
+            $val *= pow(1024, 3);
+		break;
+
+        case 'm':
+            $val *= pow(1024, 2);
+		break;
+
+        case 'k':
+            $val *= 1024;
+		break;
+    }
+
+    return $val;
 }
 
 function setting_base_info_callback()
@@ -1774,6 +1798,10 @@ function setting_base_info_callback()
 	{
 		echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
 	}
+
+	$memory_limit = return_bytes(ini_get('memory_limit'));
+
+	echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>";
 }
 
 function setting_base_cron_callback()

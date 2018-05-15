@@ -470,9 +470,10 @@ class mf_list_table extends WP_List_Table
 
 		$this->arr_settings = $data;
 
+		$this->page = check_var('page', 'char');
+
 		$this->set_default();
 
-		$this->page = check_var('page', 'char');
 		$this->search = check_var('s', 'char', true);
 
 		if($data['remember_search'] == true)

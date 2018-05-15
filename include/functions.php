@@ -1776,8 +1776,8 @@ function setting_base_info_callback()
 	//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
 	$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
-	echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
-	<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+	echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+	<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
 
 	if(!($has_required_php_version && $has_required_mysql_version))
 	{
@@ -1791,7 +1791,7 @@ function setting_base_info_callback()
 	if($intDateDifference > 60)
 	{
 		echo "<br>
-		<p><i class='fa ".($intDateDifference > 60 ? "fa-close red" : "fa-check green")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+		<p><i class='fa ".($intDateDifference < 60 ? "fa-check green" : "fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
 	}
 
 	else
@@ -1801,7 +1801,7 @@ function setting_base_info_callback()
 
 	$memory_limit = return_bytes(ini_get('memory_limit'));
 
-	echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>";
+	echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>";
 }
 
 function setting_base_cron_callback()

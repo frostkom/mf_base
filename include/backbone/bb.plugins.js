@@ -14,7 +14,7 @@ jQuery.fn.callAPI = function(o)
 		onAfterSend: function()
 		{
 			jQuery("#overlay_loading").hide();
-		},
+		}/*,
 		onError: function(data)
 		{
 			setTimeout(function()
@@ -22,7 +22,7 @@ jQuery.fn.callAPI = function(o)
 				jQuery("#overlay_loading").hide();
 				jQuery("#overlay_lost_connection").show();
 			}, 2000);
-		}
+		}*/
 	}, o);
 
 	jQuery.ajax(

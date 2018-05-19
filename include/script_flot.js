@@ -5,10 +5,13 @@ jQuery(function($)
 		$("body").append("<div id='tooltip' class='tooltip_box'></div>");
 	}
 
-	$.each(arr_flot_functions, function(key, value)
+	if(typeof arr_flot_functions !== 'undefined')
 	{
-		eval(value + "();");
-	});
+		$.each(arr_flot_functions, function(key, value)
+		{
+			eval(value + "();");
+		});
+	}
 
 	$(".flot_graph").on('plothover', function(event, pos, item)
 	{

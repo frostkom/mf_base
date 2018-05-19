@@ -119,7 +119,7 @@ function show_flot_graph($data)
 			{
 				jQuery.plot(jQuery('#flot_".$flot_count."'),
 				[";
-				
+
 					$i = 0;
 
 					foreach($data['data'] as $type_key => $arr_type)
@@ -127,7 +127,7 @@ function show_flot_graph($data)
 						$out .= ($i > 0 ? "," : "")."{label:'".$arr_type['label']."', data:[";
 
 							$j = 0;
-						
+
 							foreach($arr_type['data'] as $point_key => $arr_point)
 							{
 								$data['data'][$type_key][$point_key]['date'] = (strtotime($arr_point['date']." UTC") * 1000);
@@ -143,7 +143,7 @@ function show_flot_graph($data)
 						{
 							$out .= ", yaxis: ".$arr_type['yaxis'];
 						}
-						
+
 						$out .= "}";
 
 						$i++;
@@ -159,7 +159,7 @@ function show_flot_graph($data)
 			{
 				var arr_flot_functions = [];
 			}
-			
+
 			arr_flot_functions.push('plot_flot_".$flot_count."');
 		</script>";
 

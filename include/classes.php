@@ -1808,7 +1808,7 @@ class mf_import
 													$query_update = "UPDATE ".$table_name." SET ".$table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', ".$this->query_xtra." WHERE ".$table_id." = '".$id."'"; //$this->query_search
 												break;
 											}
-											
+
 											$wpdb->query($query_update);
 
 											$rows_affected = $wpdb->rows_affected;

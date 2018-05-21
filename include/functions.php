@@ -1704,7 +1704,7 @@ function settings_base()
 	$arr_settings = array(
 		'setting_base_info' => __("Status", 'lang_base'),
 		'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-		'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
+		//'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
 		//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
 		//'setting_all_options' => __("All options", 'lang_base'),
 	);
@@ -1871,7 +1871,7 @@ function setting_base_cron_callback()
 	}
 }
 
-function setting_base_exclude_sources_callback()
+/*function setting_base_exclude_sources_callback()
 {
 	$setting_key = get_setting_key(__FUNCTION__);
 	$option = get_option($setting_key);
@@ -1883,7 +1883,7 @@ function setting_base_exclude_sources_callback()
 	);
 
 	echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
-}
+}*/
 
 function setting_base_required_field_text_callback()
 {

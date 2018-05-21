@@ -41,24 +41,24 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
+		//$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
 		//$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
 		$setting_base_required_field_text = '*';
 
-		if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
-		{
+		/*if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
+		{*/
 			mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
-		}
+		//}
 
-		if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-		{
+		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+		{*/
 			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-		}
+		//}
 
-		if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-		{
+		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
+		{*/
 			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
-		}
+		//}
 	}
 
 	function meta_boxes($meta_boxes)

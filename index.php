@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 8.5.10
+Version: 8.5.12
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -25,6 +25,7 @@ $obj_base = new mf_base();
 
 add_action('init', 'init_base', 0);
 add_filter('cron_schedules', 'schedules_base');
+add_action('cron_base', 'activate_base', mt_rand(1, 10));
 add_action('cron_base', array($obj_base, 'run_cron_start'), 0);
 add_action('cron_base', array($obj_base, 'run_cron_end'), 11);
 
@@ -65,10 +66,13 @@ load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/
 
 function activate_base()
 {
-	set_cron('cron_base', 'setting_base_cron');
+	if(is_admin())
+	{
+		set_cron('cron_base', 'setting_base_cron');
+	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('setting_base_info', 'setting_base_recommend', 'setting_base_external_links'),
+		'options' => array('setting_base_info', 'setting_base_recommend', 'setting_base_external_links', 'setting_base_exclude_sources'),
 	));
 }
 

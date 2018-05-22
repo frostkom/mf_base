@@ -1472,9 +1472,8 @@ class mf_export
 						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
 					}
 
-					$out .= $this->get_form_xtra();
-
-					$out .= show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
+					$out .= $this->get_form_xtra()
+					.show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('export_run', '_wpnonce', true, false)
 				."</div>
 			</div>

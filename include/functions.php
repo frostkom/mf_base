@@ -2941,6 +2941,7 @@ function show_textfield($data)
 	if(!isset($data['required'])){			$data['required'] = false;}
 	if(!isset($data['autocorrect'])){		$data['autocorrect'] = true;}
 	if(!isset($data['autocapitalize'])){	$data['autocapitalize'] = true;}
+	if(!isset($data['readonly'])){			$data['readonly'] = false;}
 	if(!isset($data['placeholder'])){		$data['placeholder'] = "";}
 	if(!isset($data['pattern'])){			$data['pattern'] = "";}
 	if(!isset($data['title'])){				$data['title'] = "";}
@@ -3010,6 +3011,11 @@ function show_textfield($data)
 	if($data['autocapitalize'] == false)
 	{
 		$data['xtra'] .= " autocapitalize='off'";
+	}
+
+	if($data['readonly'] == true)
+	{
+		$data['xtra'] .= " readonly";
 	}
 
 	if($data['size'] > 0)

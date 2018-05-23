@@ -22,8 +22,17 @@ jQuery(function($)
 
 			if(x_axis > 10000000)
 			{
-				var date = new Date(x_axis);
-				x_axis = date.getDate() + '/' + (date.getMonth() + 1) + ' ' + date.getFullYear();
+				var date = new Date(x_axis),
+					year = date.getFullYear(),
+					month = date.getMonth() + 1,
+					day = date.getDate();
+				
+				x_axis = year + '-' + (month >= 10 ? month : '0' + month);
+
+				if(day > 1)
+				{
+					x_axis += '-' + (day >= 10 ? day : '0' + day);
+				}
 			}
 
 			$("#tooltip").css({top: item.pageY + 5, left: item.pageX + 5}).html("<strong>" + item.series.label + "</strong><br><span>" + x_axis + ": " + parseInt(y_axis).toLocaleString() + "</span>").show();

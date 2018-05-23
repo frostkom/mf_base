@@ -374,6 +374,11 @@
 				height: 2em;
 				width: 4em;
 			}
+			
+			.mf_form .form_textfield input[type='date'], .mf_form .form_textfield input[type='time']
+			{
+				-webkit-appearance: none;
+			}
 
 		.mf_form .wp-editor-wrap
 		{

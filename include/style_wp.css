@@ -30,6 +30,11 @@
 		top: auto !important;
 	}
 
+	#poststuff .mf_form h4
+	{
+		margin: 1em 0 .5em;
+	}
+
 	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
 	{
 		background: #fff;

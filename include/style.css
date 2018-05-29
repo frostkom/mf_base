@@ -418,10 +418,14 @@
 
 			.mf_form .form_checkbox label, .mf_form .form_radio label
 			{
-				/*display: inline-block;*/ /* Needs to be inline when there are long texts and a tight column, for example in a sidebar widget */
-				display: inline;
+				display: inline-block;
 				padding: .25em 0;
 			}
+
+				.widget .mf_form .form_checkbox label, .widget .mf_form .form_radio label
+				{
+					display: inline;
+				}
 
             .mf_form .form_checkbox input, .mf_form .form_radio input
             {

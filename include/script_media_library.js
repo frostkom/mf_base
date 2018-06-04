@@ -85,7 +85,8 @@ jQuery(function($)
 
 						else
 						{
-							dom_parent.find("span").text(first.url).removeClass('hide').siblings("img").addClass('hide');
+							dom_parent.find("span").removeClass('hide').children(".fa").attr({'title': first.url});
+							dom_parent.find("span").siblings("img").addClass('hide');
 						}
 
 						dom_parent.find("div > div").removeClass('hide');

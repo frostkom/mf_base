@@ -1310,6 +1310,7 @@ function get_media_library($data)
 	if(!isset($data['return_to'])){		$data['return_to'] = '';}
 	if(!isset($data['return_type'])){	$data['return_type'] = '';}
 	if(!isset($data['value'])){			$data['value'] = '';}
+	if(!isset($data['description'])){	$data['description'] = '';}
 
 	$add_file_text = __("Add File", 'lang_base');
 	$change_file_text = __("Change File", 'lang_base');
@@ -1335,7 +1336,7 @@ function get_media_library($data)
 
 				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
 					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
-					<span".($filetype == 'file' ? "" : " class='hide'").">".$data['value']."</span>
+					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='fa fa-file-o fa-5x' title='".$data['value']."'></i></span>
 					<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
 				</div>";
 			}
@@ -1347,8 +1348,14 @@ function get_media_library($data)
 				$out .= input_hidden(array('name' => $data['name'], 'value' => $data['value']));
 			}
 
-		$out .= "</div>
-	</div>";
+		$out .= "</div>";
+
+		if($data['description'] != '')
+		{
+			$out .= "<p class='description'>".$data['description']."</p>";
+		}
+
+	$out .= "</div>";
 
 	return $out;
 }

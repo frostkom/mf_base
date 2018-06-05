@@ -2238,14 +2238,14 @@ function get_post_types_for_select($data = array())
 		{
 			if($opt_groups == true)
 			{
-				$arr_data["opt_start_pages"] = __("Pages", 'lang_base');
+				$arr_data['opt_start_pages'] = __("Pages", 'lang_base');
 			}
 
 				foreach($arr_pages as $post_id => $post_title)
 				{
 					if($data['add_is'] == true)
 					{
-						$arr_data["is_page(".$post_id.")"] = $post_title;
+						$arr_data['is_page('.$post_id.')'] = $post_title;
 					}
 
 					else
@@ -2256,14 +2256,14 @@ function get_post_types_for_select($data = array())
 
 			if($opt_groups == true)
 			{
-				$arr_data["opt_end_pages"] = "";
+				$arr_data['opt_end_pages'] = "";
 			}
 		}
 	}
 
 	if($opt_groups == true)
 	{
-		$arr_data["opt_start_post_types"] = __("Post Types", 'lang_base');
+		$arr_data['opt_start_post_types'] = __("Post Types", 'lang_base');
 	}
 
 		if(in_array('types', $data['include']))
@@ -2287,25 +2287,25 @@ function get_post_types_for_select($data = array())
 
 	if($opt_groups == true)
 	{
-		$arr_data["opt_end_post_types"] = "";
+		$arr_data['opt_end_post_types'] = "";
 	}
 
 	if(in_array('special', $data['include']))
 	{
-		$arr_data["is_404()"] = __("404", 'lang_base');
-		//$arr_data["is_archive()"] = __("Archive", 'lang_base');
+		$arr_data['is_404()'] = __("404", 'lang_base');
+		//$arr_data['is_archive()'] = __("Archive", 'lang_base');
 
 		$arr_categories = get_categories(array('hierarchical' => 1, 'hide_empty' => 1));
 
 		if(count($arr_categories) > 0)
 		{
-			$arr_data["is_category()"] = __("Category", 'lang_base');
+			$arr_data['is_category()'] = __("Category", 'lang_base');
 
 			if(count($arr_categories) > 1)
 			{
 				if($opt_groups == true)
 				{
-					$arr_data["opt_start_categories"] = __("Categories", 'lang_base');
+					$arr_data['opt_start_categories'] = __("Categories", 'lang_base');
 				}
 
 					foreach($arr_categories as $category)
@@ -2315,17 +2315,17 @@ function get_post_types_for_select($data = array())
 
 				if($opt_groups == true)
 				{
-					$arr_data["opt_end_categories"] = "";
+					$arr_data['opt_end_categories'] = "";
 				}
 			}
 		}
 
-		//$arr_data["is_front_page()"] = __("Front Page", 'lang_base');
-		$arr_data["is_home()"] = __("Home", 'lang_base');
-		//$arr_data["is_page()"] = __("Page", 'lang_base');
-		$arr_data["is_search()"] = __("Search", 'lang_base');
-		//$arr_data["is_single()"] = __("Single", 'lang_base');
-		//$arr_data["is_sticky()"] = __("Sticky", 'lang_base');
+		//$arr_data['is_front_page()'] = __("Front Page", 'lang_base');
+		$arr_data['is_home()'] = __("Home", 'lang_base');
+		//$arr_data['is_page()'] = __("Page", 'lang_base');
+		$arr_data['is_search()'] = __("Search", 'lang_base');
+		//$arr_data['is_single()'] = __("Single", 'lang_base');
+		//$arr_data['is_sticky()'] = __("Sticky", 'lang_base');
 	}
 
 	return $arr_data;
@@ -2382,10 +2382,10 @@ function get_posts_for_select($data)
 		{
 			if($data['optgroup'] == true && $opt_start_open == true)
 			{
-				$arr_data["opt_end_".$post_type] = "";
+				$arr_data['opt_end_'.$post_type] = "";
 			}
 
-			$arr_data["opt_start_".$post_type] = "-- ".$post_type." --";
+			$arr_data['opt_start_'.$post_type] = "-- ".$post_type." --";
 			$opt_start_open = true;
 
 			$post_type_temp = $post_type;
@@ -2939,6 +2939,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 ######################
 function show_textfield($data)
 {
+	if(!isset($data['custom_tag'])){		$data['custom_tag'] = 'div';}
 	if(!isset($data['name'])){				$data['name'] = "";}
 	if(!isset($data['id'])){				$data['id'] = $data['name'];}
 	if(!isset($data['text'])){				$data['text'] = "";}
@@ -3062,7 +3063,7 @@ function show_textfield($data)
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
 	}
 
-	$out = "<div class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
+	$out = "<".$data['custom_tag']." class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
 
 		if($data['text'] != '')
 		{
@@ -3093,7 +3094,7 @@ function show_textfield($data)
 			$out .= "</datalist>";
 		}
 
-	$out .= "</div>";
+	$out .= "</".$data['custom_tag'].">";
 
 	return $out;
 }

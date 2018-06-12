@@ -374,7 +374,7 @@
 				height: 2em;
 				width: 4em;
 			}
-			
+
 			.mf_form .form_textfield input[type='date'], .mf_form .form_textfield input[type='time']
 			{
 				-webkit-appearance: none;
@@ -418,14 +418,8 @@
 
 			.mf_form .form_checkbox label, .mf_form .form_radio label
 			{
-				display: inline-block;
-				padding: .25em 0;
+				display: inline;
 			}
-
-				.widget .mf_form .form_checkbox label, .widget .mf_form .form_radio label
-				{
-					display: inline;
-				}
 
             .mf_form .form_checkbox input, .mf_form .form_radio input
             {

@@ -1303,7 +1303,7 @@ class mf_export
 		$this->types = $this->data = array();
 
 		$this->actions = array(
-			'' => "-- ".__("Choose here", 'lang_base')." --",
+			'' => "-- ".__("Choose Here", 'lang_base')." --",
 			'csv' => "CSV",
 			'json' => "JSON",
 		);
@@ -2100,7 +2100,7 @@ class mf_import
 					if(count($this->actions) > 1)
 					{
 						$arr_data = array(
-							'' => "-- ".__("Choose here", 'lang_base')." --",
+							'' => "-- ".__("Choose Here", 'lang_base')." --",
 							'delete' => __("Delete", 'lang_base'),
 							'import' => __("Import", 'lang_base'),
 						);
@@ -2166,8 +2166,9 @@ class mf_import
 
 						$strRowField = check_var('strRowCheck'.$i);
 
-						$arr_data = array();
-						$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+						$arr_data = array(
+							'' => "-- ".__("Choose Here", 'lang_base')." --"
+						);
 
 						foreach($this->columns as $key => $value)
 						{

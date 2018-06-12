@@ -4,6 +4,7 @@ function get_or_set_table_filter($data)
 {
 	if(!isset($data['prefix'])){	$data['prefix'] = '';}
 	if(!isset($data['save'])){		$data['save'] = false;}
+	if(!isset($data['default'])){	$data['default'] = '';}
 
 	$meta_value = '';
 
@@ -31,6 +32,11 @@ function get_or_set_table_filter($data)
 	else
 	{
 		$meta_value = get_the_author_meta($meta_key, $user_id);
+	}
+
+	if($meta_value == '')
+	{
+		$meta_value = $data['default'];
 	}
 
 	return $meta_value;
@@ -1912,6 +1918,7 @@ function setting_base_recommend_callback()
 		array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 		//array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 		array("Plugin Dependencies", 'plugin-dependencies/plugin-dependencies.php', __("to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on", 'lang_base')),
+		array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 		//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 		array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 		array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
@@ -2125,7 +2132,7 @@ function get_role_first_capability($role)
 function get_yes_no_for_select($data = array())
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
-	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose here", 'lang_base');}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 
 	$arr_data = array();
@@ -2159,7 +2166,7 @@ function get_roles_for_select($data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$data['array'][''] = "-- ".__("Choose here", 'lang_base')." --";
+		$data['array'][''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	if(is_multisite() && $data['use_capability'] == true)
@@ -2200,7 +2207,7 @@ function get_users_for_select($data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	foreach($users as $user)
@@ -2369,7 +2376,7 @@ function get_posts_for_select($data)
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	foreach($result as $r)
@@ -2400,7 +2407,7 @@ function get_posts_for_select($data)
 function get_sidebars_for_select()
 {
 	$arr_data = array();
-	$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+	$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 
 	foreach($GLOBALS['wp_registered_sidebars'] as $sidebar)
 	{
@@ -4020,7 +4027,7 @@ function get_post_children($data, &$arr_data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose here", 'lang_base')." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	$out = "";

@@ -20,9 +20,8 @@ class mf_base
 		//add_editor_style($plugin_include_url."style_editor.css");
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
-
 		wp_enqueue_script('jquery-ui-autocomplete');
-		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php')), $plugin_version);
+		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", 'lang_base')), $plugin_version);
 
 		if($pagenow == 'options-general.php' && check_var('page') == 'settings_mf_base')
 		{
@@ -1341,7 +1340,7 @@ class mf_export
 
 		$out = "";
 
-		if(isset($_REQUEST['btnExportRun']) && wp_verify_nonce($_REQUEST['_wpnonce'], 'export_run'))
+		if(isset($_REQUEST['btnExportRun']) && wp_verify_nonce($_REQUEST['_wpnonce_export_run'], 'export_run'))
 		{
 			if($this->action != '')
 			{
@@ -1474,7 +1473,7 @@ class mf_export
 
 					$out .= $this->get_form_xtra()
 					.show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
-					.wp_nonce_field('export_run', '_wpnonce', true, false)
+					.wp_nonce_field('export_run', '_wpnonce_export_run', true, false)
 				."</div>
 			</div>
 		</form>";
@@ -1654,7 +1653,7 @@ class mf_import
 			}
 		}
 
-		$this->is_run = isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce'], 'import_run') && $this->action != '' && count($this->data) > 0;
+		$this->is_run = isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce_import_run'], 'import_run') && $this->action != '' && count($this->data) > 0;
 	}
 
 	function update_options($id)
@@ -2193,7 +2192,7 @@ class mf_import
 
 					$out .= "&nbsp;"
 					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", 'lang_base')))
-					.wp_nonce_field('import_run', '_wpnonce', true, false)
+					.wp_nonce_field('import_run', '_wpnonce_import_run', true, false)
 				."</div>
 			</div>";
 

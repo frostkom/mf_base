@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-12 10:17+0100\n"
+"POT-Creation-Date: 2018-06-13 12:46+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -15,92 +15,96 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../include/classes.php:60
+#: ../include/classes.php:24
+msgid "Toggle All Data"
+msgstr "Visa/dölj all data"
+
+#: ../include/classes.php:59
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/classes.php:68
+#: ../include/classes.php:67
 msgid "Added Content"
 msgstr "Tilllagt innehåll"
 
-#: ../include/classes.php:285
+#: ../include/classes.php:284
 #, php-format
 msgid "Add this to the beginning of %s"
 msgstr "Lägg till detta i början av %s"
 
-#: ../include/classes.php:299
+#: ../include/classes.php:298
 msgid "Lost Connection"
 msgstr "Tappade uppkopplingen"
 
-#: ../include/classes.php:334
+#: ../include/classes.php:333
 #, php-format
 msgid "I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended"
 msgstr "Jag kunde inte skapa %s, var vänlig se till så att jag har behörighet att lägga till denna fil för att schemaläggning ska funkera som det är tänkt"
 
-#: ../include/classes.php:355
+#: ../include/classes.php:354
 #, php-format
 msgid "%s has been running since %s"
 msgstr "%s har körts sedan %s"
 
-#: ../include/classes.php:396
+#: ../include/classes.php:395
 #, php-format
 msgid "We highly recommend that you install %s aswell"
 msgstr "Vi rekommenderar att du installerar %s också"
 
-#: ../include/classes.php:529
+#: ../include/classes.php:528
 #, php-format
 msgid "Use delete_base() on %s"
 msgstr "Använd delete_base() på %s"
 
-#: ../include/classes.php:712
-#: ../include/classes.php:2104
+#: ../include/classes.php:711
+#: ../include/classes.php:2103
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:786
+#: ../include/classes.php:785
 msgid "Filter"
 msgstr "Filtrera"
 
-#: ../include/classes.php:792
+#: ../include/classes.php:791
 msgid "Empty Trash"
 msgstr "Töm papperskorg"
 
-#: ../include/classes.php:897
+#: ../include/classes.php:896
 #: ../include/functions.php:2333
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:978
-#: ../include/classes.php:1002
-#: ../include/classes.php:2158
+#: ../include/classes.php:977
+#: ../include/classes.php:1001
+#: ../include/classes.php:2157
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:994
+#: ../include/classes.php:993
 msgid "Sorting"
 msgstr "Sortering"
 
-#: ../include/classes.php:1068
+#: ../include/classes.php:1067
 msgid "Search for an address and find its position"
 msgstr "Sök efter en adress och hitta dess position"
 
-#: ../include/classes.php:1070
+#: ../include/classes.php:1069
 msgid "Coordinates will be displayed here"
 msgstr "Koordinater kommer att visas här"
 
-#: ../include/classes.php:1091
+#: ../include/classes.php:1090
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
+#: ../include/classes.php:1112
 #: ../include/classes.php:1113
-#: ../include/classes.php:1114
-#: ../include/classes.php:1124
+#: ../include/classes.php:1123
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:1306
-#: ../include/classes.php:2103
-#: ../include/classes.php:2170
+#: ../include/classes.php:1305
+#: ../include/classes.php:2102
+#: ../include/classes.php:2169
 #: ../include/functions.php:2135
 #: ../include/functions.php:2169
 #: ../include/functions.php:2210
@@ -110,102 +114,102 @@ msgstr "Mina inställningar"
 msgid "Choose Here"
 msgstr "Välj här"
 
-#: ../include/classes.php:1380
-#: ../include/classes.php:1394
-#: ../include/classes.php:1435
+#: ../include/classes.php:1379
+#: ../include/classes.php:1393
+#: ../include/classes.php:1434
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:1385
-#: ../include/classes.php:1399
+#: ../include/classes.php:1384
+#: ../include/classes.php:1398
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:1442
+#: ../include/classes.php:1441
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:1450
+#: ../include/classes.php:1449
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:1462
+#: ../include/classes.php:1461
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:1472
+#: ../include/classes.php:1471
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/classes.php:1476
-#: ../include/classes.php:2156
-#: ../include/classes.php:2195
+#: ../include/classes.php:1475
+#: ../include/classes.php:2155
+#: ../include/classes.php:2194
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:1979
+#: ../include/classes.php:1978
 msgid "Updated"
 msgstr "Uppdaterade"
 
-#: ../include/classes.php:1988
+#: ../include/classes.php:1987
 msgid "Already up to date"
 msgstr "Redan uppdaterade"
 
-#: ../include/classes.php:1997
+#: ../include/classes.php:1996
 msgid "Inserted"
 msgstr "Inlagda"
 
-#: ../include/classes.php:2006
+#: ../include/classes.php:2005
 msgid "Not inserted"
 msgstr "Inte inlagda"
 
-#: ../include/classes.php:2015
-#: ../include/classes.php:2027
+#: ../include/classes.php:2014
+#: ../include/classes.php:2026
 msgid "Deleted"
 msgstr "Borttagen"
 
-#: ../include/classes.php:2036
+#: ../include/classes.php:2035
 msgid "Not deleted"
 msgstr "Inte borttagna"
 
-#: ../include/classes.php:2045
+#: ../include/classes.php:2044
 msgid "Did not exist"
 msgstr "Fanns inte"
 
-#: ../include/classes.php:2097
-#: ../include/classes.php:2127
+#: ../include/classes.php:2096
+#: ../include/classes.php:2126
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:2105
+#: ../include/classes.php:2104
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:2108
+#: ../include/classes.php:2107
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:2118
+#: ../include/classes.php:2117
 msgid "Text"
 msgstr "Text"
 
-#: ../include/classes.php:2118
+#: ../include/classes.php:2117
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:2123
+#: ../include/classes.php:2122
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:2126
+#: ../include/classes.php:2125
 msgid "Skip first row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:2191
+#: ../include/classes.php:2190
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:2201
+#: ../include/classes.php:2200
 msgid "Example"
 msgstr "Exempel"
 

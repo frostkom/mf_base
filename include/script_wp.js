@@ -59,16 +59,28 @@ jQuery(function($)
 		}
 	});
 
-	function toggle_table(dom_obj)
-	{
-		dom_obj.toggleClass('fa-eye-slash fa-eye').parents("tr").next("tr").toggleClass('hide');
-	}
+	var dom_obj_toggle = $(".view_data .fa");
 
-	$(".view_data .fa").on('click', function()
+	if(dom_obj_toggle.length > 0)
 	{
-		toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa.fa-eye-slash"));
-		toggle_table($(this));
-	});
+		function toggle_table(dom_obj)
+		{
+			dom_obj.toggleClass('fa-eye-slash fa-eye').parents("tr").next("tr").toggleClass('hide');
+		}
+
+		$(".wrap > h2:first-child").append("<a href='#' class='add-new-h2 toggle_all_data'>" + script_base_wp.toggle_all_data_text + "</a>");
+
+		$(".toggle_all_data").on('click', function()
+		{
+			toggle_table(dom_obj_toggle);
+		});
+
+		dom_obj_toggle.on('click', function()
+		{
+			toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa.fa-eye-slash"));
+			toggle_table($(this));
+		});
+	}
 
 	/* Look for user notifications */
 	function send_notification(value)

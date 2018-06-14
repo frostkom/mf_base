@@ -97,7 +97,7 @@ function show_flot_graph($data)
 
 	$out = "";
 
-	if(count($data['data']) > 0)
+	if(is_array($data['data']) && count($data['data']) > 0)
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
@@ -118,9 +118,8 @@ function show_flot_graph($data)
 			$style_cont .= "height: ".$data['height']."px;";
 		}
 
-		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>";
-
-		$out .= "<script>
+		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>
+		<script>
 			function plot_flot_".$flot_count."()
 			{
 				jQuery.plot(jQuery('#flot_".$flot_count."'),

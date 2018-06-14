@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 8.5.30
+Version: 8.5.33
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: http://frostkom.se
@@ -78,7 +78,11 @@ function activate_base()
 
 function deactivate_base()
 {
+	global $wpdb;
+
 	unset_cron('cron_base');
+
+	$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->usermeta." WHERE meta_key LIKE %s", "%meta_table_filter_%"));
 }
 
 function uninstall_base()

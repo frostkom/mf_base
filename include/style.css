@@ -401,6 +401,11 @@
 				line-height: 0;
 			}
 
+		.mf_form .form_checkbox
+		{
+			margin: 0 0 .8em;
+		}
+
 			.mf_form .form_checkbox_multiple > label, .mf_form .form_radio_multiple > label
 			{
 				font-weight: bold;

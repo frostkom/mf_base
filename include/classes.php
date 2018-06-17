@@ -433,7 +433,7 @@ class mf_list_table extends WP_List_Table
 	var $arr_settings = array();
 	var $post_type = "";
 	var $orderby_default = "post_title";
-	var $orderby_default_order = "asc";
+	var $orderby_default_order = "ASC";
 
 	var $views = array();
 	var $columns = array();
@@ -464,6 +464,7 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['query_select_id'])){	$data['query_select_id'] = "ID";}
 		if(!isset($data['query_all_id'])){		$data['query_all_id'] = 'all';}
 		if(!isset($data['query_trash_id'])){	$data['query_trash_id'] = array('trash', 'ignore');}
+		if(!isset($data['display_search'])){	$data['display_search'] = true;}
 		if(!isset($data['has_autocomplete'])){	$data['has_autocomplete'] = false;}
 		if(!isset($data['remember_search'])){	$data['remember_search'] = false;}
 
@@ -477,6 +478,11 @@ class mf_list_table extends WP_List_Table
 		if($data['remember_search'] == true)
 		{
 			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => 's', 'save' => true));
+		}
+
+		if($this->post_type != '')
+		{
+			$this->query_where .= ($this->query_where != '' ? " AND " : "")."post_type = '".$this->post_type."'";
 		}
 
 		$this->init_fetch();
@@ -538,10 +544,10 @@ class mf_list_table extends WP_List_Table
 
 		$this->empty_trash($data['db_field']);
 
-		if($this->post_type != '')
+		/*if($this->post_type != '')
 		{
 			$this->query_where .= ($this->query_where != '' ? " AND " : "")."post_type = '".$this->post_type."'";
-		}
+		}*/
 
 		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
 
@@ -756,8 +762,8 @@ class mf_list_table extends WP_List_Table
 			{
 				ob_start();
 
-				//$this->months_dropdown( $this->screen->post_type );
-				//$this->categories_dropdown( $this->screen->post_type );
+				//$this->months_dropdown($this->screen->post_type);
+				//$this->categories_dropdown($this->screen->post_type);
 
 				/**
 				 * Fires before the Filter button on the Posts and Pages list tables.
@@ -1024,7 +1030,11 @@ class mf_list_table extends WP_List_Table
 		$this->prepare_items();
 
 		$this->views();
-		$this->show_search_form();
+
+		if($this->arr_settings['display_search'] == true)
+		{
+			$this->show_search_form();
+		}
 
 		$this->show_before_display();
 		$this->display();

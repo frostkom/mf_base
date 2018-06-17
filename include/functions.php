@@ -1,5 +1,43 @@
 <?php
 
+function override_capability($data)
+{
+	$capability = $data['default'];
+
+	$option = get_option('setting_admin_menu_roles');
+
+	if(is_array($option) && count($option) > 0)
+	{
+		foreach($option as $key => $value)
+		{
+			$arr_item = explode('|', $key);
+
+			if(count($arr_item) == 2)
+			{
+				$item_parent = false;
+				$item_url = $arr_item[0];
+				$item_name = $arr_item[1];
+			}
+
+			else
+			{
+				$item_parent = $arr_item[0];
+				$item_url = $arr_item[1];
+				$item_name = $arr_item[2];
+			}
+
+			if($data['page'] == $item_url)
+			{
+				$capability = $value;
+
+				break;
+			}
+		}
+	}
+
+	return $capability;
+}
+
 function get_or_set_table_filter($data)
 {
 	if(!isset($data['prefix'])){	$data['prefix'] = '';}

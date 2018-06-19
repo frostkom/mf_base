@@ -480,6 +480,7 @@ class mf_list_table extends WP_List_Table
 			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => 's', 'save' => true));
 		}
 
+		// Has to be here too
 		if($this->post_type != '')
 		{
 			$this->query_where .= ($this->query_where != '' ? " AND " : "")."post_type = '".$this->post_type."'";
@@ -544,10 +545,11 @@ class mf_list_table extends WP_List_Table
 
 		$this->empty_trash($data['db_field']);
 
-		/*if($this->post_type != '')
+		// Has to be here too
+		if($this->post_type != '')
 		{
 			$this->query_where .= ($this->query_where != '' ? " AND " : "")."post_type = '".$this->post_type."'";
-		}*/
+		}
 
 		$db_value = check_var($data['db_field'], 'char', true, $this->arr_settings['query_all_id']);
 

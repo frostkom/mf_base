@@ -66,7 +66,7 @@ jQuery(function($)
 
 		if(dom_val.length == 1)
 		{
-			if(dom_val != 'h')
+			if(dom_val != 'h' && dom_val != '/')
 			{
 				dom_obj.val("http://" + dom_val);
 			}
@@ -74,7 +74,7 @@ jQuery(function($)
 
 		else if(dom_val.length > 4)
 		{
-			if(dom_val.substring(0, 4) != 'http')
+			if(dom_val.substring(0, 4) != 'http' && dom_val.substring(0, 2) != '//')
 			{
 				dom_obj.val("http://" + dom_val);
 			}

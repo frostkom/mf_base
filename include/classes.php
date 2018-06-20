@@ -1090,7 +1090,7 @@ if(class_exists('RWMB_Field'))
 			$arr_data = array();
 			get_post_children(array('add_choose_here' => true), $arr_data);
 
-			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'suffix' => "<a href='".admin_url("post-new.php?post_type=page")."'><i class='fa fa-lg fa-plus'></i></a>", 'xtra' => self::render_attributes($field['attributes'])));
+			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'xtra' => self::render_attributes($field['attributes'])));
 		}
 	}
 

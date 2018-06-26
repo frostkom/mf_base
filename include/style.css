@@ -363,6 +363,12 @@
 					outline: 0;
 				}
 
+				.mf_form .form_select select option:disabled
+				{
+					background: #eee;
+					color: #ccc;
+				}
+
 				.mf_form .form_select_multiple > select
 				{
 					background-image: none !important;

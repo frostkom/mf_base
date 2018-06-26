@@ -9,4 +9,12 @@
 		{
 			opacity: 1;
 		}
+
+	/*table.import_result tbody td:last-child .row-actions
+	{
+		display: inline;
+		font-size: .7em;
+		margin-left: 1em;
+		white-space: unset;
+	}*/
 }

@@ -2396,7 +2396,7 @@ function get_posts_for_select($data)
 
 	else
 	{
-		$arr_include = get_post_types(array('public' => true), 'names');
+		$arr_include = get_post_types(array('public' => true, 'exclude_from_search' => false), 'names');
 
 		if(count($arr_include) > 0)
 		{

@@ -28,6 +28,11 @@ class mf_base
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
 		}
+
+		/*else if($pagenow == 'widgets.php')
+		{
+			mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js", $plugin_version);
+		}*/
 	}
 
 	function login_init()
@@ -56,7 +61,7 @@ class mf_base
 
 		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
 		{*/
-			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text), $plugin_version);
+			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text, 'read_more' => __("Read More", 'lang_base')), $plugin_version);
 		//}
 	}
 
@@ -1701,7 +1706,7 @@ class mf_import
 			break;
 		}
 	}
-	
+
 	function get_untouched()
 	{
 		global $wpdb;
@@ -2098,7 +2103,7 @@ class mf_import
 								<td>".__("Deleted because there were duplicates", 'lang_base')."</td>
 							</tr>";
 						}
-						
+
 						if($this->rows_untouched > 0)
 						{
 							$out .= "<tr rel='untouched'>

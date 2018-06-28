@@ -795,7 +795,7 @@ class mf_list_table extends WP_List_Table
 				{
 					echo $output;
 
-					submit_button( __('Filter'), '', 'filter_action', false, array('id' => 'post-query-submit'));
+					submit_button(__("Filter", 'lang_base'), '', 'filter_action', false, array('id' => 'post-query-submit'));
 				}
 			}
 

@@ -87,6 +87,8 @@ jQuery(function($)
 			toggle_obj.toggleClass('open');
 			toggle_container.toggleClass('hide');
 		}
+
+		return false;
 	});
 
 	$(document).on('keyup', "input[type=url]", function()

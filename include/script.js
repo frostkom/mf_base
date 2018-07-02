@@ -112,4 +112,13 @@ jQuery(function($)
 			}
 		}
 	});
+
+	$(document).on('click', "a[rel='external']", function(e)
+	{
+		if(e.which != 3)
+		{
+			window.open($(this).attr('href'));
+			return false;
+		}
+	});
 });

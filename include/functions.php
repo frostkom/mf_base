@@ -2441,10 +2441,30 @@ function get_posts_for_select($data)
 	return $arr_data;
 }
 
+function get_categories_for_select($data = array())
+{
+	if(!isset($data['hierarchical'])){		$data['hierarchical'] = true;}
+
+	$arr_data = array();
+
+	$arr_categories = get_categories(array(
+		'hierarchical' => $data['hierarchical'],
+		'hide_empty' => 1,
+	));
+
+	foreach($arr_categories as $category)
+	{
+		$arr_data[$category->cat_ID] = ($data['hierarchical'] && $category->parent > 0 ? "&nbsp;&nbsp;&nbsp;" : "").$category->name;
+	}
+
+	return $arr_data;
+}
+
 function get_sidebars_for_select()
 {
-	$arr_data = array();
-	$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
+	$arr_data = array(
+		'' => "-- ".__("Choose Here", 'lang_base')." --"
+	);
 
 	foreach($GLOBALS['wp_registered_sidebars'] as $sidebar)
 	{

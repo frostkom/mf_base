@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 09:07+0100\n"
+"POT-Creation-Date: 2018-07-02 15:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -486,12 +486,12 @@ msgstr ""
 #: ../include/functions.php:2184
 #: ../include/functions.php:2190
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../include/functions.php:2185
 #: ../include/functions.php:2191
 msgid "No"
-msgstr ""
+msgstr "Nei"
 
 #: ../include/functions.php:2211
 msgid "Super Admin"

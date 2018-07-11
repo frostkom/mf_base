@@ -114,7 +114,7 @@ function show_flot_graph($data)
 		yaxis: {
 			tickFormatter: function suffixFormatter(val, axis)
 			{
-				console.log(val);
+				/*console.log(val);*/
 
 				return parseInt(val).toLocaleString();
 			}

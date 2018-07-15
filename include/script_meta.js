@@ -56,26 +56,6 @@ jQuery(function($)
 		check_condition($(this), ".rwmb-field");
 	});
 
-	/*$(".form_textfield input[condition_field]").each(function()
-	{
-		check_condition($(this), ".form_textfield");
-	});
-
-	$(document).on('blur', ".form_textfield input[condition_field]", function()
-	{
-		check_condition($(this), ".form_textfield");
-	});
-
-	$(".form_select select[condition_field]").each(function()
-	{
-		check_condition($(this), ".form_select");
-	});
-
-	$(document).on('change', ".form_select select[condition_field]", function()
-	{
-		check_condition($(this), ".form_select");
-	});*/
-
 	function check_selector_condition(dom_obj_selector, condition_type, condition_value, dom_obj_action)
 	{
 		var dom_value = dom_obj_selector.val();
@@ -83,14 +63,41 @@ jQuery(function($)
 		switch(condition_type)
 		{
 			case 'show_this_if':
-				if(dom_value == condition_value)
+				if($.isArray(dom_value))
 				{
-					dom_obj_action.removeClass('hide');
+					var arr_condition_value = JSON.parse(condition_value),
+						value_exists = false;
+
+					$.each(dom_value, function(key, value)
+					{
+						if($.inArray(value, arr_condition_value))
+						{
+							value_exists = true;
+						}
+					});
+
+					if(value_exists == true)
+					{
+						dom_obj_action.removeClass('hide');
+					}
+
+					else
+					{
+						dom_obj_action.addClass('hide');
+					}
 				}
 
 				else
 				{
-					dom_obj_action.addClass('hide');
+					if(dom_value == condition_value)
+					{
+						dom_obj_action.removeClass('hide');
+					}
+
+					else
+					{
+						dom_obj_action.addClass('hide');
+					}
 				}
 			break;
 
@@ -130,16 +137,6 @@ jQuery(function($)
 	{
 		init_conditions($(this), ".rwmb-field");
 	});
-
-	/*$(".form_texfield *[condition_selector]").each(function()
-	{
-		init_conditions($(this), ".form_texfield");
-	});
-
-	$(".form_select *[condition_selector]").each(function()
-	{
-		init_conditions($(this), ".form_select");
-	});*/
 
 	$(".rwmb-custom_html-wrapper .rwmb-input:empty").each(function()
 	{

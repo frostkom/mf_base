@@ -305,7 +305,8 @@
 			color: inherit;
 			cursor: pointer;
             display: block;
-			min-height: 1.8em;
+			/*min-height: 1.8em;*/
+			line-height: 1.8;
         }
 
         .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input, #comments #comment

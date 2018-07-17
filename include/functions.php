@@ -2312,7 +2312,7 @@ function get_post_types_for_select($data = array())
 
 		if(in_array('types', $data['include']))
 		{
-			foreach(get_post_types(array('exclude_from_search' => false), 'objects') as $post_type) //'public' => true, 'publicly_queryable' => true, 
+			foreach(get_post_types(array('exclude_from_search' => false), 'objects') as $post_type) //'public' => true, 'publicly_queryable' => true,
 			{
 				if(!in_array($post_type->name, array('attachment')))
 				{

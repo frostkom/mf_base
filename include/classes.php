@@ -227,7 +227,7 @@ class mf_base
 			$content = get_file_content(array('file' => $data['file']));
 
 			$this->all_is_https = true;
-			$this->recommend_htaccess = $this->recommend_htaccess_https = ""; //$this->last_redirect = 
+			$this->recommend_htaccess = $this->recommend_htaccess_https = ""; //$this->last_redirect =
 
 			if(is_multisite())
 			{
@@ -476,7 +476,7 @@ class mf_list_table extends WP_List_Table
 		$this->arr_settings = $data;
 
 		$this->page = check_var('page', 'char');
-		$this->search = check_var('s', 'char', true);
+		$this->search = check_var('s', 'char', true, (isset($data['search']) ? $data['search'] : ''));
 
 		$this->set_default();
 
@@ -1844,7 +1844,7 @@ class mf_import
 										break;
 
 										default:
-											$query_update .= $table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', "; 
+											$query_update .= $table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', ";
 										break;
 									}
 

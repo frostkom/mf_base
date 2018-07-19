@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 07:59+0100\n"
+"POT-Creation-Date: 2018-07-19 08:11+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -61,7 +61,7 @@ msgid "Use delete_base() on %s"
 msgstr "Använd delete_base() på %s"
 
 #: ../include/classes.php:724
-#: ../include/classes.php:2229
+#: ../include/classes.php:2217
 msgid "Delete"
 msgstr "Radera"
 
@@ -80,7 +80,7 @@ msgstr "Sök"
 
 #: ../include/classes.php:990
 #: ../include/classes.php:1014
-#: ../include/classes.php:2292
+#: ../include/classes.php:2280
 msgid "Rows"
 msgstr "Rader"
 
@@ -88,139 +88,131 @@ msgstr "Rader"
 msgid "Sorting"
 msgstr "Sortering"
 
-#: ../include/classes.php:1084
-msgid "Search for an address and find its position"
-msgstr "Sök efter en adress och hitta dess position"
-
-#: ../include/classes.php:1086
-msgid "Coordinates will be displayed here"
-msgstr "Koordinater kommer att visas här"
-
-#: ../include/classes.php:1107
+#: ../include/classes.php:1095
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
-#: ../include/classes.php:1129
-#: ../include/classes.php:1130
-#: ../include/classes.php:1140
+#: ../include/classes.php:1117
+#: ../include/classes.php:1118
+#: ../include/classes.php:1128
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:1327
-#: ../include/classes.php:2228
-#: ../include/classes.php:2281
+#: ../include/classes.php:1315
+#: ../include/classes.php:2216
+#: ../include/classes.php:2269
 #: ../include/functions.php:2172
 #: ../include/functions.php:2206
 #: ../include/functions.php:2247
 #: ../include/functions.php:2416
-#: ../include/functions.php:2447
-#: ../include/functions.php:4067
+#: ../include/functions.php:2466
+#: ../include/functions.php:4087
 msgid "Choose Here"
 msgstr "Välj här"
 
-#: ../include/classes.php:1406
-#: ../include/classes.php:1420
-#: ../include/classes.php:1461
+#: ../include/classes.php:1394
+#: ../include/classes.php:1408
+#: ../include/classes.php:1449
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:1411
-#: ../include/classes.php:1425
+#: ../include/classes.php:1399
+#: ../include/classes.php:1413
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:1468
+#: ../include/classes.php:1456
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:1476
+#: ../include/classes.php:1464
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:1488
+#: ../include/classes.php:1476
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:1498
+#: ../include/classes.php:1486
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/classes.php:1502
-#: ../include/classes.php:2290
-#: ../include/classes.php:2326
+#: ../include/classes.php:1490
+#: ../include/classes.php:2278
+#: ../include/classes.php:2314
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:2067
+#: ../include/classes.php:2055
 msgid "Updated because something had changed"
 msgstr "Uppdaterade eftersom något hade ändrats"
 
-#: ../include/classes.php:2076
+#: ../include/classes.php:2064
 msgid "Already up to date"
 msgstr "Redan uppdaterade"
 
-#: ../include/classes.php:2085
+#: ../include/classes.php:2073
 msgid "Inserted"
 msgstr "Inlagda"
 
-#: ../include/classes.php:2094
+#: ../include/classes.php:2082
 msgid "Not inserted because something went wrong"
 msgstr "Inte inlgada eftersom något gick fel"
 
-#: ../include/classes.php:2103
+#: ../include/classes.php:2091
 msgid "Deleted because there were duplicates"
 msgstr "Borttagna eftersom det fanns dubletter"
 
-#: ../include/classes.php:2112
+#: ../include/classes.php:2100
 msgid "Untouched because they were not in the import file"
 msgstr "Orörda eftersom de inte fanns med i den importerade filen"
 
-#: ../include/classes.php:2124
+#: ../include/classes.php:2112
 msgid "Deleted"
 msgstr "Borttagen"
 
-#: ../include/classes.php:2133
+#: ../include/classes.php:2121
 msgid "Not Deleted"
 msgstr "Inte borttagna"
 
-#: ../include/classes.php:2142
+#: ../include/classes.php:2130
 msgid "Did not exist"
 msgstr "Fanns inte"
 
-#: ../include/classes.php:2222
-#: ../include/classes.php:2252
+#: ../include/classes.php:2210
+#: ../include/classes.php:2240
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:2230
+#: ../include/classes.php:2218
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:2233
+#: ../include/classes.php:2221
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:2243
+#: ../include/classes.php:2231
 msgid "Text"
 msgstr "Text"
 
-#: ../include/classes.php:2243
+#: ../include/classes.php:2231
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:2248
+#: ../include/classes.php:2236
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:2251
+#: ../include/classes.php:2239
 msgid "Skip first row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:2322
+#: ../include/classes.php:2310
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:2332
+#: ../include/classes.php:2320
 msgid "Example"
 msgstr "Exempel"
 
@@ -239,7 +231,7 @@ msgstr "Det finns inget visningsnamn för %s (%d)"
 
 #: ../include/functions.php:500
 #, php-format
-msgid "The message had no recepient so '%s' could not be sent"
+msgid "The message had no recipient so '%s' could not be sent"
 msgstr "Meddelandet hade ingen mottagare så '%s' kunde inte skickas"
 
 #: ../include/functions.php:507
@@ -519,88 +511,93 @@ msgstr "Kategorier"
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:3826
+#: ../include/functions.php:3846
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:3942
+#: ../include/functions.php:3962
 #, php-format
 msgid "I am sorry but I did not have permission to access %s"
 msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:4162
+#: ../include/functions.php:4182
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:4173
+#: ../include/functions.php:4193
 msgid "Saturday"
 msgstr "Lördag"
 
+#~ msgid "Search for an address and find its position"
+#~ msgstr "Sök efter en adress och hitta dess position"
+
+#~ msgid "Coordinates will be displayed here"
+#~ msgstr "Koordinater kommer att visas här"

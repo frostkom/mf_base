@@ -497,7 +497,7 @@ function send_email($data)
 
 	if($data['to'] == '')
 	{
-		$error_text = sprintf(__("The message had no recepient so '%s' could not be sent", 'lang_base'), $data['subject']);
+		$error_text = sprintf(__("The message had no recipient so '%s' could not be sent", 'lang_base'), $data['subject']);
 
 		return false;
 	}

@@ -3356,6 +3356,7 @@ function show_select($data)
 	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['attributes'])){	$data['attributes'] = array();}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
@@ -3402,7 +3403,29 @@ function show_select($data)
 		{
 			if($obj_base->data['required'])
 			{
-				$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."required";
+				//$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."required";
+				$data['attributes']['required'] = '';
+			}
+
+			if(count($data['attributes']) > 0)
+			{
+				foreach($data['attributes'] as $key => $value)
+				{
+					if(is_array($value))
+					{
+						$value = wp_json_encode($value);
+					}
+
+					$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "").$key.($value != '' ? " = '".$value."'" : '');
+
+					if($key == 'condition_selector')
+					{
+						$plugin_include_url = plugin_dir_url(__FILE__);
+						$plugin_version = get_plugin_version(__FILE__);
+
+						mf_enqueue_script('script_base_conditions', $plugin_include_url."script_conditions.js", $plugin_version);
+					}
+				}
 			}
 
 			if($obj_base->data['suffix'] != '')

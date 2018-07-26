@@ -1349,6 +1349,7 @@ function get_media_library($data)
 {
 	if(!isset($data['type'])){			$data['type'] = false;}
 	if(!isset($data['multiple'])){		$data['multiple'] = false;}
+	if(!isset($data['label'])){			$data['label'] = '';}
 	if(!isset($data['name'])){			$data['name'] = '';}
 	if(!isset($data['return_to'])){		$data['return_to'] = '';}
 	if(!isset($data['return_type'])){	$data['return_type'] = '';}
@@ -1372,6 +1373,11 @@ function get_media_library($data)
 
 	$out = "<div class='mf_media_library' data-type='".$data['type']."' data-multiple='".$data['multiple']."' data-return_to='".$data['return_to']."' data-return_type='".$data['return_type']."'>
 		<div>";
+
+			if($data['label'] != '')
+			{
+				$out .= "<label>".$data['label']."</label>";
+			}
 
 			if($data['name'] != '')
 			{
@@ -2586,6 +2592,7 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 	if(!isset($data['password'])){		$data['password'] = $password;}
 	if(!isset($data['post'])){			$data['post'] = $post;}
 	if(!isset($data['post_data'])){		$data['post_data'] = $post_data;}
+	if(!isset($data['cert_path'])){		$data['cert_path'] = '';}
 
 	$data['url'] = validate_url($data['url'], false);
 
@@ -2600,6 +2607,14 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 	if(ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off')
 	{
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	}
+
+	if($data['cert_path'] != '')
+	{
+		curl_setopt($config, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($config, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($config, CURLOPT_CAINFO, $data['cert_path']);
+		curl_setopt($config, CURLOPT_CAPATH, $data['cert_path']);
 	}
 
 	if($data['password'] != '')
@@ -2630,6 +2645,11 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 	}
 
 	$content = curl_exec($ch);
+
+	/*if(curl_errno($handle))
+	{
+		do_log(__("CURL Error", 'lang_base').": ".curl_error($ch));
+	}*/
 
 	if($data['catch_head'] == true)
 	{

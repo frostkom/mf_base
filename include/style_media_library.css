@@ -14,7 +14,7 @@
 			max-width: 150px;
 		}
 
-		.mf_media_library a
+		.mf_media_library > div a
 		{
 			background: rgba(0, 0, 0, .3);
 			border-radius: .4em;

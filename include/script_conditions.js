@@ -24,7 +24,7 @@ jQuery(function($)
 
 		switch(condition_type)
 		{
-			case 'show_this_if':				
+			case 'show_this_if':
 				if(value_exists == true)
 				{
 					dom_obj_action.removeClass('hide');

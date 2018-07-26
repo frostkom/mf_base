@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-19 08:11+0100\n"
+"POT-Creation-Date: 2018-07-26 07:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -106,7 +106,7 @@ msgstr "Mina inställningar"
 #: ../include/functions.php:2247
 #: ../include/functions.php:2416
 #: ../include/functions.php:2466
-#: ../include/functions.php:4087
+#: ../include/functions.php:4124
 msgid "Choose Here"
 msgstr "Välj här"
 
@@ -511,93 +511,88 @@ msgstr "Kategorier"
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:3846
+#: ../include/functions.php:3883
 msgid "The file could not be opened"
 msgstr "Filen kunde inte öppnas"
 
-#: ../include/functions.php:3962
+#: ../include/functions.php:3999
 #, php-format
 msgid "I am sorry but I did not have permission to access %s"
 msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "April"
 msgstr "April"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:4182
+#: ../include/functions.php:4219
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:4193
+#: ../include/functions.php:4230
 msgid "Saturday"
 msgstr "Lördag"
 
-#~ msgid "Search for an address and find its position"
-#~ msgstr "Sök efter en adress och hitta dess position"
-
-#~ msgid "Coordinates will be displayed here"
-#~ msgstr "Koordinater kommer att visas här"

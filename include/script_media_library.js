@@ -1,6 +1,6 @@
 jQuery(function($)
 {
-	$(".mf_media_library button").on('click', function()
+	$(document).on('click', ".mf_media_library button", function()
 	{
 		var dom_parent = $(this).parents(".mf_media_library"),
 			type = dom_parent.attr('data-type'),
@@ -102,7 +102,7 @@ jQuery(function($)
 		return false;
 	});
 
-	$(".mf_media_library a").on('click', function()
+	$(document).on('click', ".mf_media_library > div a", function()
 	{
 		var dom_parent = $(this).parents(".mf_media_library");
 

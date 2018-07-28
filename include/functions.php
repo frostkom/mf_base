@@ -2611,10 +2611,10 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 
 	if($data['cert_path'] != '')
 	{
-		curl_setopt($config, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($config, CURLOPT_SSL_VERIFYPEER, 1);
-		curl_setopt($config, CURLOPT_CAINFO, $data['cert_path']);
-		curl_setopt($config, CURLOPT_CAPATH, $data['cert_path']);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($ch, CURLOPT_CAINFO, $data['cert_path']);
+		curl_setopt($ch, CURLOPT_CAPATH, $data['cert_path']);
 	}
 
 	if($data['password'] != '')

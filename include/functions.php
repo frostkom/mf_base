@@ -912,6 +912,7 @@ function render_image_tag($data)
 
 	if(!isset($data['id'])){	$data['id'] = 0;}
 	if(!isset($data['src'])){	$data['src'] = '';}
+	if(!isset($data['size'])){	$data['size'] = 'full';}
 
 	if(!($data['id'] > 0) && $data['src'] != '')
 	{
@@ -927,7 +928,7 @@ function render_image_tag($data)
 
 	if($data['id'] > 0)
 	{
-		$out .= wp_get_attachment_image($data['id'], 'full');
+		$out .= wp_get_attachment_image($data['id'], $data['size']);
 	}
 
 	else if($data['src'] != '')

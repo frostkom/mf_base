@@ -3868,6 +3868,11 @@ function input_hidden($data)
 
 	if($data['value'] != '' || $data['value'] == 0 || $data['allow_empty'] == true)
 	{
+		if(is_array($data['value']))
+		{
+			do_log("Error - input_hidden: ".var_export($data, true));
+		}
+
 		return "<input type='hidden'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
 	}
 }

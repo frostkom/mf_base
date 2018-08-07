@@ -59,7 +59,7 @@ jQuery(function($)
 	function check_selector_condition(dom_obj_selector, condition_type, condition_value, dom_obj_action)
 	{
 		var dom_value = dom_obj_selector.val(),
-			arr_condition_value = JSON.parse(condition_value),
+			arr_condition_value = $.isArray(condition_value) ? JSON.parse(condition_value) : [],
 			value_exists = false;
 
 		if($.isArray(dom_value))

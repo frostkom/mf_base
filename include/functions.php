@@ -1022,7 +1022,11 @@ function delete_files($data)
 	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
 	{
 		@unlink($data['file']);
-		do_log("Removed File: ".$data['file']);
+
+		if(!preg_match("/(uploads\/mf_form\/)/", $data['file']))
+		{
+			do_log("Removed File: ".$data['file']);
+		}
 	}
 }
 
@@ -2601,6 +2605,7 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 
 	curl_setopt($ch, CURLOPT_URL, $data['url']);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; sv-SE; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.10");
@@ -2612,8 +2617,8 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 
 	if($data['cert_path'] != '')
 	{
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($ch, CURLOPT_CAINFO, $data['cert_path']);
 		curl_setopt($ch, CURLOPT_CAPATH, $data['cert_path']);
 	}
@@ -2625,13 +2630,13 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 
 	if($data['post'] != '')
 	{
-		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$data['post']);
 	}
 
 	else if(count($data['post_data']) > 0)
 	{
-		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
 	}
 

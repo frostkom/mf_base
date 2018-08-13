@@ -2631,7 +2631,7 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 	if($data['post'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$data['post']);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post']); //"status=".
 	}
 
 	else if(count($data['post_data']) > 0)

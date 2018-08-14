@@ -2587,15 +2587,18 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 {
 	if(!is_array($data))
 	{
+		do_log("get_url_content(): ".$data);
+
 		$data = array(
 			'url' => $data,
 		);
 	}
 
 	if(!isset($data['catch_head'])){	$data['catch_head'] = $catch_head;}
+	if(!isset($data['headers'])){		$data['headers'] = array();}
 	if(!isset($data['content_type'])){	$data['content_type'] = '';}
 	if(!isset($data['password'])){		$data['password'] = $password;}
-	if(!isset($data['post'])){			$data['post'] = $post;}
+	//if(!isset($data['post'])){		$data['post'] = $post;}
 	if(!isset($data['post_data'])){		$data['post_data'] = $post_data;}
 	if(!isset($data['cert_path'])){		$data['cert_path'] = '';}
 
@@ -2628,26 +2631,27 @@ function get_url_content($data = array(), $catch_head = false, $password = "", $
 		curl_setopt($ch, CURLOPT_USERPWD, $data['password']);
 	}
 
-	if($data['post'] != '')
+	if($data['content_type'] != '')
 	{
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post']); //"status=".
+		$data['headers'][] = 'Accept: '.$data['content_type'];
+		$data['headers'][] = 'Content-Type: '.$data['content_type'];
 	}
 
-	else if(count($data['post_data']) > 0)
+	if(count($data['headers']) > 0)
+	{
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
+	}
+
+	/*if($data['post'] != '')
+	{
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$data['post']);
+	}
+
+	else */if($data['post_data'] != '') //count($data['post_data']) > 0
 	{
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
-	}
-
-	if($data['content_type'] != '')
-	{
-		$arr_headers = array(
-			'Accept: '.$data['content_type'],
-			'Content-Type: '.$data['content_type'],
-		);
-
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $arr_headers);
 	}
 
 	$content = curl_exec($ch);

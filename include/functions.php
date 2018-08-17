@@ -2583,7 +2583,7 @@ function validate_url($value, $link = true, $http = true)
 }
 #################
 
-function get_url_content($data = array(), $catch_head = false, $password = "", $post = "", $post_data = array())
+function get_url_content($data = array(), $catch_head = false, $password = '', $post = '', $post_data = '')
 {
 	if(!is_array($data))
 	{

@@ -2805,7 +2805,7 @@ function mf_redirect($location, $arr_vars = array(), $method = 'post')
 {
 	$count_temp = count($arr_vars);
 
-	if(headers_sent() == true || $count_temp > 0)
+	if(headers_sent() || $count_temp > 0)
 	{
 		echo "<form name='reload' action='".$location."' method='".$method."'>";
 

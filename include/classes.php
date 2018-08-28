@@ -7,6 +7,350 @@ class mf_base
 		$this->meta_prefix = "mf_base_";
 	}
 
+	function reschedule_base($option = '')
+	{
+		if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}
+
+		$schedule = wp_get_schedule('cron_base');
+
+		if($schedule != $option)
+		{
+			deactivate_base();
+			activate_base();
+		}
+	}
+
+	function init()
+	{
+		define('DEFAULT_DATE', "1982-08-04 23:15:00");
+		define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
+
+		$is_super_admin = $is_admin = $is_editor = $is_author = false;
+
+		if(current_user_can('update_core'))
+		{
+			$is_super_admin = $is_admin = $is_editor = $is_author = true;
+		}
+
+		else if(current_user_can('manage_options'))
+		{
+			$is_admin = $is_editor = $is_author = true;
+		}
+
+		else if(current_user_can('edit_pages'))
+		{
+			$is_editor = $is_author = true;
+		}
+
+		else if(current_user_can('upload_files'))
+		{
+			$is_author = true;
+		}
+
+		define('IS_SUPER_ADMIN', $is_super_admin);
+		define('IS_ADMIN', $is_admin);
+		define('IS_EDITOR', $is_editor);
+		define('IS_AUTHOR', $is_author);
+
+		$timezone_string = get_option('timezone_string');
+
+		if($timezone_string != '')
+		{
+			date_default_timezone_set($timezone_string);
+		}
+
+		$this->reschedule_base();
+	}
+
+	function cron_schedules($schedules)
+	{
+		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
+		$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
+		$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
+
+		$schedules['weekly'] = array('interval' => 60 * 60 * 24 * 7, 'display' => __("Weekly", 'lang_base'));
+		$schedules['monthly'] = array('interval' => 60 * 60 * 24 * 7 * 4, 'display' => __("Monthly", 'lang_base'));
+
+		return $schedules;
+	}
+
+	function run_cron_start()
+	{
+		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+	}
+
+	function run_cron_end()
+	{
+		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
+		delete_option('option_cron_started');
+	}
+
+	function settings_base()
+	{
+		define('BASE_OPTIONS_PAGE', "settings_mf_base");
+
+		$options_area = __FUNCTION__;
+
+		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
+
+		$arr_settings = array(
+			'setting_base_info' => __("Status", 'lang_base'),
+			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+			//'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
+			//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
+			//'setting_all_options' => __("All options", 'lang_base'),
+		);
+
+		if(IS_SUPER_ADMIN)
+		{
+			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
+		}
+
+		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
+	}
+
+	function settings_base_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+
+		echo settings_header($setting_key, __("Common", 'lang_base'));
+	}
+
+	function return_bytes($val)
+	{
+		$val = trim($val);
+		$last = strtolower($val[strlen($val) - 1]);
+
+		switch($last)
+		{
+			// The 'G' modifier is available since PHP 5.1.0
+			case 'g':
+				$val *= pow(1024, 3);
+			break;
+
+			case 'm':
+				$val *= pow(1024, 2);
+			break;
+
+			case 'k':
+				$val *= 1024;
+			break;
+		}
+
+		return $val;
+	}
+
+	function setting_base_info_callback()
+	{
+		global $wpdb;
+
+		$php_version = explode("-", phpversion());
+		$php_version = $php_version[0];
+
+		$mysql_version = '';
+
+		if(function_exists('mysql_get_server_info'))
+		{
+			$mysql_version = explode("-", @mysql_get_server_info());
+			$mysql_version = $mysql_version[0];
+		}
+
+		if($mysql_version == '')
+		{
+			$mysql_version = int2point(mysqli_get_client_version());
+		}
+
+		$php_required = "5.2.4";
+		$mysql_required = "5.0";
+
+		//$has_required_php_version = point2int($php_version) > point2int($php_required);
+		$has_required_php_version = version_compare($php_version, $php_required, ">");
+		//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
+		$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
+
+		echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+		<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+
+		if(!($has_required_php_version && $has_required_mysql_version))
+		{
+			echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+		}
+
+		$intDBDate = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
+		$intFileDate = strtotime(date("Y-m-d H:i:s"));
+		$intDateDifference = abs($intDBDate - $intFileDate);
+
+		if($intDateDifference > 60)
+		{
+			echo "<br>
+			<p><i class='fa ".($intDateDifference < 60 ? "fa-check green" : "fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+		}
+
+		else
+		{
+			echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
+		}
+
+		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
+
+		echo "<br>
+		<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>";
+
+		$load = sys_getloadavg();
+
+		echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>";
+		echo "<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>";
+		echo "<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
+
+		/*$memory_used = memory_get_usage();
+		$memory_allocated = memory_get_usage(true);
+		$memory_peak_used = memory_get_peak_usage();
+		$memory_peak_allocated = memory_get_peak_usage(false);
+
+		echo "<p><i class='fa ".($memory_used < ($memory_total * .8) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>";*/
+	}
+
+	function setting_base_cron_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key, 'every_ten_minutes');
+
+		$this->reschedule_base($option);
+
+		if(!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false)
+		{
+			$arr_schedules = wp_get_schedules();
+
+			$arr_data = array();
+
+			foreach($arr_schedules as $key => $value)
+			{
+				$arr_data[$key] = $value['display'];
+			}
+
+			/*if($option == "every_ten_seconds")
+			{
+				$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
+			}
+
+			else
+			{*/
+				$next_cron = get_next_cron();
+
+				if($next_cron != '')
+				{
+					$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
+				}
+
+				else
+				{
+					$select_suffix = "";
+				}
+			//}
+
+			echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+		}
+
+		if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-2 minute")))
+		{
+			$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
+
+			echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
+		}
+
+		$option_cron_started = get_option('option_cron_started');
+		$option_cron_run = get_option('option_cron_run');
+
+		if($option_cron_run != '' && $option_cron_run > $option_cron_started)
+		{
+			echo "<em>".sprintf(__("Last run %s", 'lang_base'), format_date($option_cron_run))."</em>";
+		}
+
+		else if($option_cron_started > $option_cron_run)
+		{
+			echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
+		}
+
+		else
+		{
+			echo "<em>".__("Has never been run", 'lang_base')."</em>";
+		}
+	}
+
+	/*function setting_base_exclude_sources_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		$arr_data = array(
+			'font_awesome' => __("Font Awesome", 'lang_base'),
+			'style' => __("Style", 'lang_base'),
+			'script' => __("Script", 'lang_base'),
+		);
+
+		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
+	}*/
+
+	function setting_base_required_field_text_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		echo show_textfield(array('name' => $setting_key, 'value' => $option, 'placeholder' => "*"));
+	}
+
+	function setting_base_recommend_callback()
+	{
+		$arr_recommendations = array(
+			//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
+			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
+			array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
+			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+			//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
+			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
+			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+			//array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
+			array("Plugin Dependencies", 'plugin-dependencies/plugin-dependencies.php', __("to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on", 'lang_base')),
+			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
+			//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
+			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
+			//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
+			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
+			//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
+			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
+			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
+		);
+
+		if(!(is_plugin_active('tiny-compress-images/tiny-compress-images.php') || is_plugin_active('optimus/optimus.php') || is_plugin_active('wp-smushit/wp-smush.php')))
+		{
+			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
+			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
+			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
+		}
+
+		//wordpress.org/plugins/wp-hotel-booking/
+		//wordpress.org/plugins/easyreservations/
+
+		foreach($arr_recommendations as $value)
+		{
+			$name = $value[0];
+			$path = $value[1];
+			$text = isset($value[2]) ? $value[2] : "";
+
+			new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
+		}
+
+		$obj_base = new mf_base();
+
+		get_file_info(array('path' => get_home_path(), 'callback' => array($obj_base, 'check_htaccess'), 'allow_depth' => false));
+	}
+
+	/*function setting_all_options_callback()
+	{
+		echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
+	}*/
+
 	function admin_init()
 	{
 		global $pagenow;
@@ -34,6 +378,179 @@ class mf_base
 			mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js", $plugin_version);
 		}*/
 	}
+
+	function plugin_action_links($actions, $plugin_file)
+	{
+		if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
+		{
+			unset($actions['deactivate']);
+		}
+
+		return $actions;
+	}
+
+	function media_buttons_context($button)
+	{
+		global $pagenow;
+
+		$out = "";
+
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		{
+			$count_shortcode_button = 0;
+			$count_shortcode_button = apply_filters('count_shortcode_button', $count_shortcode_button);
+
+			if($count_shortcode_button > 0)
+			{
+				$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button'>
+					<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span> "
+					.__("Add Content", 'lang_base')
+				."</a>";
+			}
+		}
+
+		return $button.$out;
+	}
+
+	function admin_footer()
+	{
+		global $pagenow;
+
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		{
+			mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", get_plugin_version(__FILE__)); //Should be moved to admin_init
+
+			echo "<div id='mf_shortcode_container' class='hide'>
+				<div class='mf_form mf_shortcode_wrapper'>"
+					.apply_filters('get_shortcode_output', '')
+					.show_button(array('text' => __("Insert", 'lang_base')))
+					.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary"))
+				."</div>
+			</div>";
+		}
+	}
+
+	function tiny_mce_before_init($init)
+	{
+		$init['setup'] = "function(ed)
+		{
+			ed.onBeforeSetContent.add(function(ed, event)
+			{
+				if(event.content.indexOf('[mf_custom_list id=') !== -1)
+				{
+					event.content = event.content.replace(/\[mf_custom_list id\=(.*?)\]/g, function(match, shortcode_id)
+					{
+						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_custom_list\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Custom List", 'lang_base')."</div>';
+					});
+				}
+
+				if(event.content.indexOf('[mf_form id=') !== -1)
+				{
+					event.content = event.content.replace(/\[mf_form id\=(.*?)\]/g, function(match, shortcode_id)
+					{
+						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_form\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Form", 'lang_base')."</div>';
+					});
+				}
+			});
+
+			jQuery(document).on('click', '.mf_shortcode_placeholder', function()
+			{
+				console.log('Clicked');
+			});
+
+			ed.onPostProcess.add(function(ed, event)
+			{
+				if(event.get)
+				{
+					event.content = event.content.replace(/<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"(.*?)\" data-mce-id=\"(.*?)\".*?>.*?<\/div>/g, function(tag, shortcode, shortcode_id)
+					{
+						var match,
+							string;
+
+						if(tag.indexOf('data-mce-id=') !== -1)
+						{
+							string = '[' + shortcode + ' id=' + shortcode_id + ']';
+						}
+
+						return string || tag;
+					});
+				}
+			});
+		}";
+
+		return $init;
+	}
+
+	function meta_page_content()
+	{
+		global $wpdb;
+
+		$out = "";
+
+		$post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT);
+
+		if($post_id > 0)
+		{
+			list($post_id, $content_list) = apply_filters('get_shortcode_list', array($post_id, ''));
+
+			if($content_list != '')
+			{
+				$out .= "<ul class='meta_list'>"
+					.$content_list
+				."</ul>";
+			}
+		}
+
+		return $out;
+	}
+
+	function rwmb_meta_boxes($meta_boxes)
+	{
+		$meta_boxes[] = array(
+			'id' => $this->meta_prefix.'content',
+			'title' => __("Added Content", 'lang_base'),
+			'post_types' => array('page'),
+			//'context' => 'side',
+			'priority' => 'low',
+			'fields' => array(
+				array(
+					'id' => $this->meta_prefix.'content',
+					'type' => 'custom_html',
+					'callback' => array($this, 'meta_page_content'),
+				),
+			)
+		);
+
+		return $meta_boxes;
+	}
+
+	function rwmb_enqueue_scripts()
+	{
+		mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
+	}
+
+	function check_notifications()
+	{
+		$array = apply_filters('get_user_notifications', array());
+
+		$result = array(
+			'success' => true,
+			'notifications' => $array,
+		);
+
+		header('Content-Type: application/json');
+		echo json_encode($result);
+		die();
+	}
+
+	/*function edit_form_after_title()
+	{
+		global $post, $wp_meta_boxes;
+
+		do_meta_boxes(get_current_screen(), 'after_title', $post);
+
+		unset($wp_meta_boxes[get_post_type($post)]['after_title']);
+	}*/
 
 	function login_init()
 	{
@@ -65,35 +582,12 @@ class mf_base
 		//}
 	}
 
-	function meta_boxes($meta_boxes)
+	function phpmailer_init($phpmailer)
 	{
-		$meta_boxes[] = array(
-			'id' => $this->meta_prefix.'content',
-			'title' => __("Added Content", 'lang_base'),
-			'post_types' => array('page'),
-			//'context' => 'side',
-			'priority' => 'low',
-			'fields' => array(
-				array(
-					'id' => $this->meta_prefix.'content',
-					'type' => 'custom_html',
-					'callback' => 'meta_page_content',
-				),
-			)
-		);
-
-		return $meta_boxes;
-	}
-
-	function run_cron_start()
-	{
-		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
-	}
-
-	function run_cron_end()
-	{
-		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
-		delete_option('option_cron_started');
+		if($phpmailer->ContentType == 'text/html')
+		{
+			$phpmailer->AltBody = strip_tags($phpmailer->Body);
+		}
 	}
 
 	function file_shortcode($atts)

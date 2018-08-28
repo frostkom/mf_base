@@ -168,46 +168,48 @@ class mf_base
 		//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
 		$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
-		echo "<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
-		<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
-
-		if(!($has_required_php_version && $has_required_mysql_version))
-		{
-			echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
-		}
-
 		$intDBDate = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
 		$intFileDate = strtotime(date("Y-m-d H:i:s"));
 		$intDateDifference = abs($intDBDate - $intFileDate);
 
-		if($intDateDifference > 60)
-		{
-			echo "<br>
-			<p><i class='fa ".($intDateDifference < 60 ? "fa-check green" : "fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
-		}
-
-		else
-		{
-			echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
-		}
-
 		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
-
-		echo "<br>
-		<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>";
-
 		$load = sys_getloadavg();
-
-		echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>";
-		echo "<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>";
-		echo "<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
 
 		/*$memory_used = memory_get_usage();
 		$memory_allocated = memory_get_usage(true);
 		$memory_peak_used = memory_get_peak_usage();
-		$memory_peak_allocated = memory_get_peak_usage(false);
+		$memory_peak_allocated = memory_get_peak_usage(false);*/
 
-		echo "<p><i class='fa ".($memory_used < ($memory_total * .8) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>";*/
+		echo "<div class='flex_flow tight'>
+			<div>
+				<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+				<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+
+				if(!($has_required_php_version && $has_required_mysql_version))
+				{
+					echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+				}
+
+				if($intDateDifference > 60)
+				{
+					echo "<p><i class='fa ".($intDateDifference < 60 ? "fa-check green" : "fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+				}
+
+				else
+				{
+					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
+				}
+
+				echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>
+			</div>
+			<div>
+				
+				<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
+				<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
+				<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
+				//."<p><i class='fa ".($memory_used < ($memory_total * .8) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
+			."</div>
+		</div>";
 	}
 
 	function setting_base_cron_callback()

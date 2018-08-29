@@ -27,4 +27,9 @@
 			overflow: hidden;
 			padding: .5em 2em;
 		}
+
+		.settings-wrap .display_warning:first-child
+		{
+			margin-top: 0;
+		}
 }

@@ -314,6 +314,7 @@
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
 			border: 1px solid #e1e1e1;
+			box-sizing: border-box;
 			display: inline-block;
 			font: inherit;
 			margin: 0 0 .8em;

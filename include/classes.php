@@ -203,7 +203,6 @@ class mf_base
 				echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>
 			</div>
 			<div>
-				
 				<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
 				<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
 				<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
@@ -303,6 +302,8 @@ class mf_base
 
 	function setting_base_recommend_callback()
 	{
+		get_file_info(array('path' => get_home_path(), 'callback' => array($this, 'check_htaccess'), 'allow_depth' => false));
+
 		$arr_recommendations = array(
 			//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
@@ -342,10 +343,6 @@ class mf_base
 
 			new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 		}
-
-		$obj_base = new mf_base();
-
-		get_file_info(array('path' => get_home_path(), 'callback' => array($obj_base, 'check_htaccess'), 'allow_depth' => false));
 	}
 
 	/*function setting_all_options_callback()

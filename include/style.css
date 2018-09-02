@@ -10,6 +10,11 @@
 		display: block;
 	}
 
+	.inline
+	{
+		display: inline;
+	}
+
 	.nowrap
 	{
 		white-space: nowrap;

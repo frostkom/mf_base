@@ -871,7 +871,7 @@ function delete_files($data)
 	{
 		@unlink($data['file']);
 
-		if(!preg_match("/(uploads\/mf_form\/)/", $data['file']))
+		if(!preg_match("/(uploads\/(mf_form|mf_group)\/)/", $data['file']))
 		{
 			do_log("Removed File: ".$data['file']);
 		}

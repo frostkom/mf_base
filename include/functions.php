@@ -2680,6 +2680,7 @@ function show_password_field($data)
 {
 	$out = "";
 
+	if(!isset($data['xtra_class'])){	$data['xtra_class'] = "";}
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
@@ -2699,7 +2700,7 @@ function show_password_field($data)
 		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
 	}
 
-	$out .= "<div class='form_password'>";
+	$out .= "<div class='form_password".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
 
 		if($data['text'] != '')
 		{

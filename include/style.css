@@ -404,7 +404,7 @@
 				outline: none;
 			}
 
-		.mf_form .form_textfield .description, .mf_form .form_select .description, .mf_form .form_textarea .description
+		.mf_form .form_textfield .description, .mf_form .form_select .description, .mf_form .form_textarea .description, .mf_form .form_password .description
 		{
 			margin: -.3em 0 .6em;
 		}

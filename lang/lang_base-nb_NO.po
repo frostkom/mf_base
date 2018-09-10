@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-02 15:43+0100\n"
+"POT-Creation-Date: 2018-09-07 13:21+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -15,594 +15,162 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../include/classes.php:24
-msgid "Toggle All Data"
-msgstr ""
+msgid "Every 2 Minutes"
+msgstr "Hver 2 Minutter"
 
-#: ../include/classes.php:64
-msgid "Are you sure?"
-msgstr ""
+msgid "Every 10 Minutes"
+msgstr "Hver 10 Minutter"
 
-#: ../include/classes.php:64
+msgid "Scheduled to run"
+msgstr "Planlagt å kjøre"
+
+msgid "All options"
+msgstr "Alle valg"
+
+msgid "PHP"
+msgstr "PHP"
+
+msgid "MySQL"
+msgstr "MySQL"
+
+msgid "Requirements"
+msgstr "Krav"
+
+msgid "Font Awesome"
+msgstr "Font Awesome"
+
+msgid "Style"
+msgstr "Stil"
+
+msgid "Script"
+msgstr "Script"
+
+msgid "Edit"
+msgstr "Redigere"
+
 msgid "Read More"
 msgstr "Les mer"
 
-#: ../include/classes.php:72
-msgid "Added Content"
-msgstr ""
-
-#: ../include/classes.php:289
-#, php-format
-msgid "Add this to the beginning of %s"
-msgstr ""
-
-#: ../include/classes.php:303
-msgid "Lost Connection"
-msgstr ""
-
-#: ../include/classes.php:338
-#, php-format
-msgid "I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended"
-msgstr ""
-
-#: ../include/classes.php:359
-#, php-format
-msgid "%s has been running since %s"
-msgstr ""
-
-#: ../include/classes.php:400
-#, php-format
-msgid "We highly recommend that you install %s aswell"
-msgstr ""
-
-#: ../include/classes.php:540
-#, php-format
-msgid "Use delete_base() on %s"
-msgstr ""
-
-#: ../include/classes.php:724
-#: ../include/classes.php:2229
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
-#: ../include/classes.php:798
 msgid "Filter"
-msgstr ""
+msgstr "Filter"
 
-#: ../include/classes.php:804
-msgid "Empty Trash"
-msgstr ""
-
-#: ../include/classes.php:909
-#: ../include/functions.php:2370
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
-#: ../include/classes.php:990
-#: ../include/classes.php:1014
-#: ../include/classes.php:2292
 msgid "Rows"
-msgstr ""
+msgstr "Rader"
 
-#: ../include/classes.php:1006
-#, fuzzy
 msgid "Sorting"
-msgstr "Innstillinger"
+msgstr "Sortering"
 
-#: ../include/classes.php:1084
-msgid "Search for an address and find its position"
-msgstr ""
-
-#: ../include/classes.php:1086
-msgid "Coordinates will be displayed here"
-msgstr ""
-
-#: ../include/classes.php:1107
-msgid "001-888-342-324"
-msgstr ""
-
-#: ../include/classes.php:1129
-#: ../include/classes.php:1130
-#: ../include/classes.php:1140
-#, fuzzy
 msgid "My Settings"
-msgstr "Innstillinger"
+msgstr "Mine Innstillinger"
 
-#: ../include/classes.php:1327
-#: ../include/classes.php:2228
-#: ../include/classes.php:2281
-#: ../include/functions.php:2172
-#: ../include/functions.php:2206
-#: ../include/functions.php:2247
-#: ../include/functions.php:2416
-#: ../include/functions.php:2447
-#: ../include/functions.php:4067
 msgid "Choose Here"
 msgstr "Velg Her"
 
-#: ../include/classes.php:1406
-#: ../include/classes.php:1420
-#: ../include/classes.php:1461
-msgid "Download the exported file here"
-msgstr ""
-
-#: ../include/classes.php:1411
-#: ../include/classes.php:1425
-msgid "It was not possible to export"
-msgstr ""
-
-#: ../include/classes.php:1468
-msgid "There was nothing to export"
-msgstr ""
-
-#: ../include/classes.php:1476
-msgid "You have to choose a file type to export to"
-msgstr ""
-
-#: ../include/classes.php:1488
 msgid "Settings"
 msgstr "Innstillinger"
 
-#: ../include/classes.php:1498
-msgid "File type"
-msgstr ""
-
-#: ../include/classes.php:1502
-#: ../include/classes.php:2290
-#: ../include/classes.php:2326
-msgid "Run"
-msgstr ""
-
-#: ../include/classes.php:2067
-msgid "Updated because something had changed"
-msgstr ""
-
-#: ../include/classes.php:2076
-msgid "Already up to date"
-msgstr ""
-
-#: ../include/classes.php:2085
-msgid "Inserted"
-msgstr ""
-
-#: ../include/classes.php:2094
-msgid "Not inserted because something went wrong"
-msgstr ""
-
-#: ../include/classes.php:2103
-msgid "Deleted because there were duplicates"
-msgstr ""
-
-#: ../include/classes.php:2112
-msgid "Untouched because they were not in the import file"
-msgstr ""
-
-#: ../include/classes.php:2124
 msgid "Deleted"
-msgstr ""
+msgstr "Slettet"
 
-#: ../include/classes.php:2133
 msgid "Not Deleted"
-msgstr ""
+msgstr "Ikke Slettet"
 
-#: ../include/classes.php:2142
 msgid "Did not exist"
-msgstr ""
+msgstr "Finnes ikke"
 
-#: ../include/classes.php:2222
-#: ../include/classes.php:2252
-msgid "Check"
-msgstr ""
-
-#: ../include/classes.php:2230
 msgid "Import"
-msgstr ""
+msgstr "Importere"
 
-#: ../include/classes.php:2233
-msgid "Action"
-msgstr ""
-
-#: ../include/classes.php:2243
 msgid "Text"
-msgstr ""
+msgstr "Tekst"
 
-#: ../include/classes.php:2243
-msgid "Value 1\tValue 2\tValue 3"
-msgstr ""
-
-#: ../include/classes.php:2248
 msgid "File"
-msgstr ""
+msgstr "Fil"
 
-#: ../include/classes.php:2251
-msgid "Skip first row"
-msgstr ""
-
-#: ../include/classes.php:2322
-msgid "Column"
-msgstr ""
-
-#: ../include/classes.php:2332
 msgid "Example"
-msgstr ""
+msgstr "Eksempel"
 
-#: ../include/functions.php:242
-msgid "Custom List"
-msgstr ""
-
-#: ../include/functions.php:250
-msgid "Form"
-msgstr ""
-
-#: ../include/functions.php:423
-#, php-format
-msgid "There was no display name for %s (%d)"
-msgstr ""
-
-#: ../include/functions.php:500
-#, php-format
-msgid "The message had no recepient so '%s' could not be sent"
-msgstr ""
-
-#: ../include/functions.php:507
-#, php-format
-msgid "The message was empty so I could not send '%s' to '%s'"
-msgstr ""
-
-#: ../include/functions.php:571
-#, php-format
-msgid "Message sent: %s"
-msgstr ""
-
-#: ../include/functions.php:577
-#, php-format
 msgid "I could not send the email to %s"
-msgstr ""
+msgstr "Jeg kunne ikke sende e-post til %s"
 
-#: ../include/functions.php:638
-msgid "Add Content"
-msgstr ""
-
-#: ../include/functions.php:657
-#: ../include/functions.php:1361
-msgid "Insert"
-msgstr ""
-
-#: ../include/functions.php:658
-msgid "Cancel"
-msgstr ""
-
-#: ../include/functions.php:822
-#, php-format
-msgid "I was not allowed to drop %s and it still has data"
-msgstr ""
-
-#: ../include/functions.php:1063
-msgid "Yesterday"
-msgstr ""
-
-#: ../include/functions.php:1120
-#, php-format
-msgid "Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder"
-msgstr ""
-
-#: ../include/functions.php:1160
-msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
-msgstr ""
-
-#: ../include/functions.php:1194
-msgid "Every 2 Minutes"
-msgstr ""
-
-#: ../include/functions.php:1195
-msgid "Every 10 Minutes"
-msgstr ""
-
-#: ../include/functions.php:1197
-msgid "Weekly"
-msgstr ""
-
-#: ../include/functions.php:1198
-msgid "Monthly"
-msgstr ""
-
-#: ../include/functions.php:1358
 msgid "Add File"
-msgstr ""
+msgstr "Legg Til Fil"
 
-#: ../include/functions.php:1359
 msgid "Change File"
-msgstr ""
+msgstr "Endre Fil"
 
-#: ../include/functions.php:1360
-msgid "Insert File"
-msgstr ""
-
-#: ../include/functions.php:1411
-msgid "Add Attachment"
-msgstr ""
-
-#: ../include/functions.php:1424
-msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
-msgstr ""
-
-#: ../include/functions.php:1425
-msgid "Unknown title"
-msgstr ""
-
-#: ../include/functions.php:1517
-#, php-format
-msgid "The file %s could not be found in the DB"
-msgstr ""
-
-#: ../include/functions.php:1594
-#, php-format
-msgid "You need to install the plugin %s%s%s first"
-msgstr ""
-
-#: ../include/functions.php:1607
 msgid "Unknown"
-msgstr ""
+msgstr "Ukjent"
 
-#: ../include/functions.php:1673
-#, php-format
-msgid "in %d minute"
-msgstr ""
-
-#: ../include/functions.php:1673
-#, php-format
-msgid "in %d minutes"
-msgstr ""
-
-#: ../include/functions.php:1678
-msgid "now"
-msgstr ""
-
-#: ../include/functions.php:1755
-msgid "Status"
-msgstr ""
-
-#: ../include/functions.php:1756
-msgid "Scheduled to run"
-msgstr ""
-
-#: ../include/functions.php:1764
-msgid "Recommendations"
-msgstr ""
-
-#: ../include/functions.php:1774
-msgid "Common"
-msgstr ""
-
-#: ../include/functions.php:1829
-#: ../include/functions.php:1844
-msgid "PHP"
-msgstr ""
-
-#: ../include/functions.php:1830
-#: ../include/functions.php:1844
-msgid "MySQL"
-msgstr ""
-
-#: ../include/functions.php:1834
-msgid "Requirements"
-msgstr ""
-
-#: ../include/functions.php:1849
-msgid "Time on Server"
-msgstr ""
-
-#: ../include/functions.php:1854
-msgid "Memory Limit"
-msgstr ""
-
-#: ../include/functions.php:1886
-#, php-format
-msgid "Next scheduled %s"
-msgstr ""
-
-#: ../include/functions.php:1902
-msgid "Run schedule manually"
-msgstr ""
-
-#: ../include/functions.php:1910
-#, php-format
-msgid "Last run %s"
-msgstr ""
-
-#: ../include/functions.php:1915
-#, php-format
-msgid "Last started %s but has not finished"
-msgstr ""
-
-#: ../include/functions.php:1920
-msgid "Has never been run"
-msgstr ""
-
-#: ../include/functions.php:1950
-msgid "to debug Cron"
-msgstr ""
-
-#: ../include/functions.php:1951
-msgid "to get a graphical interface to the database"
-msgstr ""
-
-#: ../include/functions.php:1952
-msgid "to backup all files and database to an external source"
-msgstr ""
-
-#: ../include/functions.php:1954
-msgid "to be able to replace existing files by uploading a replacement"
-msgstr ""
-
-#: ../include/functions.php:1955
-msgid "to add all the favicons needed"
-msgstr ""
-
-#: ../include/functions.php:1957
-msgid "to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on"
-msgstr ""
-
-#: ../include/functions.php:1958
-msgid "to send notifications to users when new posts are published"
-msgstr ""
-
-#: ../include/functions.php:1960
-msgid "to redirect pages to internal or external URLs"
-msgstr ""
-
-#: ../include/functions.php:1961
-msgid "to reorder posts with drag & drop"
-msgstr ""
-
-#: ../include/functions.php:1963
-msgid "to be able to add tables to posts"
-msgstr ""
-
-#: ../include/functions.php:1965
-msgid "to be able to change usernames"
-msgstr ""
-
-#: ../include/functions.php:1966
-msgid "to be able to view video clips in modals"
-msgstr ""
-
-#: ../include/functions.php:1971
-msgid "to losslessly compress all uploaded images (Max 500 for free / month)"
-msgstr ""
-
-#: ../include/functions.php:1972
-msgid "to losslessly compress all uploaded images (Max 100kB/file for free)"
-msgstr ""
-
-#: ../include/functions.php:1973
-msgid "to losslessly compress all uploaded images"
-msgstr ""
-
-#: ../include/functions.php:2113
-msgid "I could not find any roles for this site...?"
-msgstr ""
-
-#: ../include/functions.php:2184
-#: ../include/functions.php:2190
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:2185
-#: ../include/functions.php:2191
 msgid "No"
 msgstr "Nei"
 
-#: ../include/functions.php:2211
-msgid "Super Admin"
-msgstr ""
-
-#: ../include/functions.php:2285
 msgid "Pages"
-msgstr ""
+msgstr "Sider"
 
-#: ../include/functions.php:2310
-msgid "Post Types"
-msgstr ""
-
-#: ../include/functions.php:2339
-msgid "404"
-msgstr ""
-
-#: ../include/functions.php:2346
-msgid "Category"
-msgstr ""
-
-#: ../include/functions.php:2352
-msgid "Categories"
-msgstr ""
-
-#: ../include/functions.php:2368
 msgid "Home"
-msgstr ""
+msgstr "Hjem"
 
-#: ../include/functions.php:3826
-msgid "The file could not be opened"
-msgstr ""
+msgid "Page"
+msgstr "Side"
 
-#: ../include/functions.php:3942
-#, php-format
-msgid "I am sorry but I did not have permission to access %s"
-msgstr ""
-
-#: ../include/functions.php:4162
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
-#: ../include/functions.php:4162
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
-#: ../include/functions.php:4162
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
-#: ../include/functions.php:4162
 msgid "April"
-msgstr ""
+msgstr "April"
 
-#: ../include/functions.php:4162
-msgid "May"
-msgstr ""
-
-#: ../include/functions.php:4162
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
-#: ../include/functions.php:4162
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
-#: ../include/functions.php:4162
 msgid "August"
-msgstr ""
+msgstr "August"
 
-#: ../include/functions.php:4162
 msgid "September"
-msgstr ""
+msgstr "September"
 
-#: ../include/functions.php:4162
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
-#: ../include/functions.php:4162
 msgid "November"
-msgstr ""
+msgstr "November"
 
-#: ../include/functions.php:4162
-msgid "December"
-msgstr ""
-
-#: ../include/functions.php:4173
 msgid "Sunday"
-msgstr ""
+msgstr "Søndag"
 
-#: ../include/functions.php:4173
 msgid "Monday"
-msgstr ""
+msgstr "Mandag"
 
-#: ../include/functions.php:4173
 msgid "Tuesday"
-msgstr ""
+msgstr "Tirsdag"
 
-#: ../include/functions.php:4173
 msgid "Wednesday"
-msgstr ""
+msgstr "Onsdag"
 
-#: ../include/functions.php:4173
 msgid "Thursday"
-msgstr ""
+msgstr "Torsdag"
 
-#: ../include/functions.php:4173
 msgid "Friday"
-msgstr ""
+msgstr "Fredag"
 
-#: ../include/functions.php:4173
 msgid "Saturday"
-msgstr ""
+msgstr "Lørdag"
 

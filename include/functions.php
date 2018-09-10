@@ -2757,7 +2757,7 @@ function show_textarea($data)
 
 		if($data['wysiwyg'] == true)
 		{
-			$out .= show_wp_editor(array('name' => $data['name'], 'value' => stripslashes($data['value']), 'textarea_rows' => 5));
+			$out .= show_wp_editor(array('name' => $data['name'], 'value' => stripslashes($data['value']), 'editor_height' => 100));
 		}
 
 		else

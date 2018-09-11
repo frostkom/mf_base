@@ -18,11 +18,16 @@ $type_action = $arr_input[0];
 $type_action_type = isset($arr_input[1]) ? $arr_input[1] : '';
 $type_class = isset($arr_input[2]) ? $arr_input[2] : '';
 
-if(get_current_user_id() > 0)
+switch($type_action)
 {
-	if($type_action == "import")
-	{
-		if($type_action_type == "check")
+	case 'my_ip':
+		$json_output['ip'] = $_SERVER['REMOTE_ADDR'];
+
+		$json_output['success'] = true;
+	break;
+
+	case 'import':
+		if(get_current_user_id() > 0 && $type_action_type == "check")
 		{
 			$plugin_name = substr($type_class, 0, -7);
 
@@ -33,7 +38,7 @@ if(get_current_user_id() > 0)
 
 			$json_output['success'] = true;
 		}
-	}
+	break;
 }
 
 echo json_encode($json_output);

@@ -772,6 +772,9 @@ class mf_base
 					".$this->recommend_htaccess_https;
 				}
 			}
+			
+			$recommend_htaccess .= "\n
+			RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
 
 			$old_md5 = get_match("/BEGIN MF Base \((.*?)\)/is", $content, false);
 			$new_md5 = md5($recommend_htaccess);

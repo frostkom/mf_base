@@ -38,7 +38,7 @@ jQuery(function($)
 						}
 
 					output_list += "</td>"
-					+ "<td><a href='#' rel='" + index + "'><i class='fa fa-lg fa-trash red'></i></a></td>"
+					+ "<td><a href='#' rel='" + index + "'><i class='fas fa-trash-alt fa-lg red'></i></a></td>"
 				+ "</tr>";
 
 				output_urls += (output_urls != '' ? "," : "") + value;

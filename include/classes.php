@@ -182,8 +182,8 @@ class mf_base
 
 		echo "<div class='flex_flow tight'>
 			<div>
-				<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
-				<p><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-close red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
+				<p><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-close red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
 
 				if(!($has_required_php_version && $has_required_mysql_version))
 				{
@@ -192,7 +192,7 @@ class mf_base
 
 				if($intDateDifference > 60)
 				{
-					echo "<p><i class='fa ".($intDateDifference < 60 ? "fa-check green" : "fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+					echo "<p><i class='".($intDateDifference < 60 ? "fa fa-check green" : "fa fa-close red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
 				}
 
 				else
@@ -200,13 +200,13 @@ class mf_base
 					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
 				}
 
-				echo "<p><i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>
+				echo "<p><i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-close red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>
 			</div>
 			<div>
-				<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
-				<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-				<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
-				//."<p><i class='fa ".($memory_used < ($memory_total * .8) ? "fa-check green" : "fa-close red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
+				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
+				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
+				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-close red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
+				//."<p><i class='".($memory_used < ($memory_total * .8) ? "fa fa-check green" : "fa fa-close red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
 			."</div>
 		</div>";
 	}
@@ -359,7 +359,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		//add_editor_style($plugin_include_url."font-awesome.php");
+		//add_editor_style($plugin_include_url."font-awesome-5.3.1.php");
 		//add_editor_style($plugin_include_url."style_editor.css");
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
@@ -439,7 +439,7 @@ class mf_base
 				{
 					event.content = event.content.replace(/\[mf_custom_list id\=(.*?)\]/g, function(match, shortcode_id)
 					{
-						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_custom_list\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Custom List", 'lang_base')."</div>';
+						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_custom_list\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"far fa-envelope fa-lg\"></i> ".__("Custom List", 'lang_base')."</div>';
 					});
 				}
 
@@ -447,7 +447,7 @@ class mf_base
 				{
 					event.content = event.content.replace(/\[mf_form id\=(.*?)\]/g, function(match, shortcode_id)
 					{
-						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_form\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-lg fa-envelope-o\"></i> ".__("Form", 'lang_base')."</div>';
+						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_form\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"far fa-envelope fa-lg\"></i> ".__("Form", 'lang_base')."</div>';
 					});
 				}
 			});
@@ -567,7 +567,7 @@ class mf_base
 
 		/*if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
 		{*/
-			mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome.php", $plugin_version);
+			mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.3.1.php", $plugin_version);
 		//}
 
 		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
@@ -782,7 +782,7 @@ class mf_base
 			if($new_md5 != $old_md5) //!preg_match("/BEGIN MF Base/", $content) || ($this->all_is_https == true && !preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->all_is_https == false && preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->last_redirect != '' && strpos($content, $this->last_redirect) === false)
 			{
 				echo "<div class='mf_form'>"
-					."<h3 class='display_warning'><i class='fa fa-warning yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
+					."<h3 class='display_warning'><i class='fas fa-exclamation-triangle yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
 					."<p class='input'>".nl2br("# BEGIN MF Base (".$new_md5.")\n".htmlspecialchars($recommend_htaccess)."\n# END MF Base")."</p>"
 				."</div>";
 			}
@@ -2211,7 +2211,7 @@ class mf_import
 		{
 			$this->result[] = array(
 				'type' => 'untouched',
-				'action' => 'fa-check green',
+				'action' => 'fa fa-check green',
 				'id' => $r->ID,
 				'data' => $r,
 				'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
@@ -2362,7 +2362,7 @@ class mf_import
 
 										$this->result[] = array(
 											'type' => 'updated',
-											'action' => 'fa-check green',
+											'action' => 'fa fa-check green',
 											'id' => $id,
 											'data' => $arr_values,
 											'value' => $query_update,
@@ -2375,7 +2375,7 @@ class mf_import
 
 										$this->result[] = array(
 											'type' => 'up_to_date',
-											'action' => 'fa-cloud blue',
+											'action' => 'fa fa-cloud blue',
 											'id' => $id,
 											'data' => $arr_values,
 											'value' => $query_update,
@@ -2389,7 +2389,7 @@ class mf_import
 
 									$this->result[] = array(
 										'type' => 'duplicate',
-										'action' => 'fa-copy',
+										'action' => 'far fa-copy',
 										'id' => $r->ID,
 										'data' => $arr_values,
 										'value' => $query_select,
@@ -2422,7 +2422,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'inserted',
-									'action' => 'fa-plus',
+									'action' => 'fa fa-plus',
 									'id' => $id,
 									'data' => $arr_values,
 									'value' => $query_insert,
@@ -2435,7 +2435,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'not_inserted',
-									'action' => 'fa-chain-broken',
+									'action' => 'fas fa-unlink',
 									'id' => '',
 									'data' => $arr_values,
 									'value' => $query_insert,
@@ -2473,7 +2473,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'deleted',
-									'action' => 'fa-close',
+									'action' => 'fa fa-close',
 									'id' => '',
 									'data' => $arr_values,
 									'value' => $query_delete,
@@ -2486,7 +2486,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'not_deleted',
-									'action' => 'fa-chain-broken',
+									'action' => 'fas fa-unlink',
 									'id' => '',
 									'data' => $arr_values,
 									'value' => $query_delete,
@@ -2500,7 +2500,7 @@ class mf_import
 
 							$this->result[] = array(
 								'type' => 'not_exists',
-								'action' => 'fa-question',
+								'action' => 'fa fa-question',
 								'id' => '',
 								'data' => $arr_values,
 								'value' => $query_select,
@@ -2514,7 +2514,7 @@ class mf_import
 							'type' => '',
 							'id' => '',
 							'data' => $arr_values,
-							'action' => 'fa-question',
+							'action' => 'fa fa-question',
 						);
 					}
 				}
@@ -2523,7 +2523,7 @@ class mf_import
 				{
 					$this->result[] = array(
 						'type' => '',
-						'action' => 'fa-heartbeat',
+						'action' => 'fa fa-heartbeat',
 						'data' => $arr_values,
 						'value' => var_export($arr_values, true),
 					);
@@ -2546,7 +2546,7 @@ class mf_import
 						if($this->rows_updated > 0)
 						{
 							$out .= "<tr rel='updated'>
-								<td><i class='fa fa-lg fa-check green'></i></td>
+								<td><i class='fa fa-check fa-lg green'></i></td>
 								<td>".$this->rows_updated."</td>
 								<td>".__("Updated because something had changed", 'lang_base')."</td>
 							</tr>";
@@ -2555,7 +2555,7 @@ class mf_import
 						if($this->rows_up_to_date > 0)
 						{
 							$out .= "<tr rel='up_to_date'>
-								<td><i class='fa fa-lg fa-cloud blue'></i></td>
+								<td><i class='fa fa-cloud fa-lg blue'></i></td>
 								<td>".$this->rows_up_to_date."</td>
 								<td>".__("Already up to date", 'lang_base')."</td>
 							</tr>";
@@ -2564,7 +2564,7 @@ class mf_import
 						if($this->rows_inserted > 0)
 						{
 							$out .= "<tr rel='inserted'>
-								<td><i class='fa fa-lg fa-plus green'></i></td>
+								<td><i class='fa fa-plus fa-lg green'></i></td>
 								<td>".$this->rows_inserted."</td>
 								<td>".__("Inserted", 'lang_base')."</td>
 							</tr>";
@@ -2573,7 +2573,7 @@ class mf_import
 						if($this->rows_not_inserted > 0)
 						{
 							$out .= "<tr rel='not_inserted'>
-								<td><i class='fa fa-lg fa-chain-broken red'></i></td>
+								<td><i class='fas fa-unlink fa-lg red'></i></td>
 								<td>".$this->rows_not_inserted."</td>
 								<td>".__("Not inserted because something went wrong", 'lang_base')."</td>
 							</tr>";
@@ -2582,7 +2582,7 @@ class mf_import
 						if($this->rows_deleted > 0)
 						{
 							$out .= "<tr rel='deleted'>
-								<td><i class='fa fa-lg fa-close red'></i></td>
+								<td><i class='fa fa-close fa-lg red'></i></td>
 								<td>".$this->rows_deleted."</td>
 								<td>".__("Deleted because there were duplicates", 'lang_base')."</td>
 							</tr>";
@@ -2591,7 +2591,7 @@ class mf_import
 						if($this->rows_untouched > 0)
 						{
 							$out .= "<tr rel='untouched'>
-								<td><i class='fa fa-lg fa-check green'></i></td>
+								<td><i class='fa fa-check fa-lg green'></i></td>
 								<td>".$this->rows_untouched."</td>
 								<td>".__("Untouched because they were not in the import file", 'lang_base')."</td>
 							</tr>";
@@ -2603,7 +2603,7 @@ class mf_import
 						if($this->rows_deleted > 0)
 						{
 							$out .= "<tr rel='deleted'>
-								<td><i class='fa fa-lg fa-close red'></i></td>
+								<td><i class='fa fa-close fa-lg red'></i></td>
 								<td>".$this->rows_deleted."</td>
 								<td>".__("Deleted", 'lang_base')."</td>
 							</tr>";
@@ -2612,7 +2612,7 @@ class mf_import
 						if($this->rows_not_deleted > 0)
 						{
 							$out .= "<tr rel='not_deleted'>
-								<td><i class='fa fa-lg fa-chain-broken red'></i></td>
+								<td><i class='fas fa-unlink fa-lg red'></i></td>
 								<td>".$this->rows_not_deleted."</td>
 								<td>".__("Not Deleted", 'lang_base')."</td>
 							</tr>";
@@ -2621,7 +2621,7 @@ class mf_import
 						if($this->rows_not_exists > 0)
 						{
 							$out .= "<tr rel='not_exists'>
-								<td><i class='fa fa-lg fa-question'></i></td>
+								<td><i class='fa fa-question fa-lg'></i></td>
 								<td>".$this->rows_not_exists."</td>
 								<td>".__("Did not exist", 'lang_base')."</td>
 							</tr>";
@@ -2660,7 +2660,7 @@ class mf_import
 						/*foreach($this->result as $row)
 						{
 							$out .= "<tr class='".$row['type']."'>
-								<td><i class='fa fa-lg ".$row['action']."'></i></td>
+								<td><i class='".$row['action']." fa-lg'></i></td>
 								<td>".$row['id']."</td>
 								<td colspan='2'>"
 									//."<div class='row-actions'>"

@@ -315,14 +315,14 @@ function get_toggler_container($data)
 	if(!isset($data['open'])){						$data['open'] = false;}
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
-	if(!isset($data['icon'])){						$data['icon'] = "fa-caret-right";}
-	if(!isset($data['icon_open'])){					$data['icon_open'] = "fa-caret-down";}
+	if(!isset($data['icon'])){						$data['icon'] = "fa fa-caret-right";}
+	if(!isset($data['icon_open'])){					$data['icon_open'] = "fa fa-caret-down";}
 
 	switch($data['type'])
 	{
 		case 'start':
-			$icon = "<i class='fa fa-lg ".$data['icon']." toggle_icon_closed'></i>
-			<i class='fa fa-lg ".$data['icon_open']." toggle_icon_open'></i>";
+			$icon = "<i class='".$data['icon']." fa-lg toggle_icon_closed'></i>
+			<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";
 
 			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";
@@ -1113,21 +1113,21 @@ function get_file_icon($file)
 
 	switch($suffix)
 	{
-		default:														$class = "fa-file-o";				break;
+		default:														$class = "far fa-file";					break;
 
-		case 'pdf':														$class = "fa-file-pdf-o";			break;
-		case 'mp3': case 'ogg':											$class = "fa-file-audio-o";			break;
-		case 'xls': case 'xlsx':										$class = "fa-file-excel-o";			break;
-		case 'css':														$class = "fa-file-code-o";			break;
-		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa-file-image-o";			break;
-		case 'ppt': case 'pptx':										$class = "fa-file-powerpoint-o";	break;
-		case 'wmv': case 'avi':	case 'mpg':								$class = "fa-file-video-o";			break;
-		case 'doc': case 'docx':										$class = "fa-file-word-o";			break;
-		case 'zip': case 'tar':											$class = "fa-file-zip-o";			break;
-		case 'txt':														$class = "fa-file-text-o";			break;
+		case 'pdf':														$class = "far fa-file-pdf";				break;
+		case 'mp3': case 'ogg':											$class = "far fa-file-audio";			break;
+		case 'xls': case 'xlsx':										$class = "far fa-file-excel";			break;
+		case 'css':														$class = "far fa-file-code";			break;
+		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "far fa-file-image";			break;
+		case 'ppt': case 'pptx':										$class = "far fa-file-powerpoint";		break;
+		case 'wmv': case 'avi':	case 'mpg':								$class = "far fa-file-video";			break;
+		case 'doc': case 'docx':										$class = "far fa-file-word";			break;
+		case 'zip': case 'tar':											$class = "far fa-file-archive";			break;
+		case 'txt':														$class = "far fa-file-alt";				break;
 	}
 
-	return "<i class='fa fa-lg ".$class."'></i>";
+	return "<i class='".$class." fa-lg'></i>";
 }
 
 function get_file_suffix($file, $force_last = false)
@@ -1184,8 +1184,8 @@ function get_media_library($data)
 
 				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
 					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
-					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='fa fa-file-o fa-5x' title='".$data['value']."'></i></span>
-					<a href='#' rel='confirm'><i class='fa fa-lg fa-trash'></i></a>
+					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='far fa-file fa-5x' title='".$data['value']."'></i></span>
+					<a href='#' rel='confirm'><i class='fas fa-trash-alt fa-lg'></i></a>
 				</div>";
 			}
 
@@ -1935,9 +1935,15 @@ function get_posts_for_select($data)
 
 function get_categories_for_select($data = array())
 {
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
 	if(!isset($data['hierarchical'])){		$data['hierarchical'] = true;}
 
 	$arr_data = array();
+
+	if($data['add_choose_here'] == true)
+	{
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_education')." --";
+	}
 
 	$arr_categories = get_categories(array(
 		'hierarchical' => $data['hierarchical'],
@@ -3177,12 +3183,12 @@ function show_checkbox($data)
 
 	if(!isset($data['switch_icon_on']) || $data['switch_icon_on'] == '')
 	{
-		$data['switch_icon_on'] = "fa-lg fa-check-square-o green";
+		$data['switch_icon_on'] = "far fa-check-square fa-lg green";
 	}
 
 	if(!isset($data['switch_icon_off']) || $data['switch_icon_off'] == '')
 	{
-		$data['switch_icon_off'] = "fa-lg fa-square-o";
+		$data['switch_icon_off'] = "far fa-square fa-lg";
 	}
 
 	$data['xtra'] .= ($data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "");
@@ -3215,7 +3221,7 @@ function show_checkbox($data)
 	if($data['switch'] == 1)
 	{
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<span><i class='fa ".$data['switch_icon_on']." checked'></i><i class='fa ".$data['switch_icon_off']." unchecked'></i><i class='fa fa-lg fa-spinner fa-spin loading'></i></span>".$data['text'];
+		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i><i class='fa fa-spinner fa-spin fa-lg loading'></i></span>".$data['text'];
 	}
 
 	if($data['suffix'] != '')

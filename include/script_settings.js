@@ -81,9 +81,9 @@ jQuery(function($)
 			var self = $(this),
 				tab_id = self.parents(".form-table").prev("div").attr('id');
 
-			if($("#tab_" + tab_id + " .fa-warning").length == 0)
+			if($("#tab_" + tab_id + " .exclamation-triangle").length == 0)
 			{
-				$("#tab_" + tab_id).append(" <i class='fa fa-warning yellow'></i>");
+				$("#tab_" + tab_id).append(" <i class='fas fa-exclamation-triangle yellow'></i>");
 			}
 		});
 	}

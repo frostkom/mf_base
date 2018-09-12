@@ -56,24 +56,41 @@ jQuery(function($)
 		check_condition($(this), ".rwmb-field");
 	});
 
+	function check_required(dom_obj, display)
+	{
+		var dom_child = dom_obj.find("input, select, textarea"),
+			attr_required = dom_child.attr('required'),
+			attr_required_hidden = dom_child.attr('required_hidden');
+
+		if(display == false && typeof attr_required !== 'undefined')
+		{
+			dom_child.attr({'required_hidden': true}).removeAttr('required');
+		}
+
+		if(display == true && typeof attr_required_hidden !== 'undefined')
+		{
+			dom_child.attr({'required': true}).removeAttr('required_hidden');
+		}
+	}
+
 	function check_selector_condition(dom_obj_selector, condition_type, condition_value, dom_obj_action)
 	{
 		var dom_value = dom_obj_selector.val(),
-			arr_condition_value = $.isArray(condition_value) ? JSON.parse(condition_value) : [],
+			arr_condition_value = JSON.parse(condition_value),
 			value_exists = false;
 
 		if($.isArray(dom_value))
 		{
 			$.each(dom_value, function(key, value)
 			{
-				if($.inArray(value, arr_condition_value) !== -1)
+				if(value == condition_value || condition_value.match('\"' + value + '\"') || $.inArray(value, arr_condition_value) !== -1)
 				{
 					value_exists = true;
 				}
 			});
 		}
 
-		else if(dom_value == condition_value || $.inArray(dom_value, arr_condition_value) !== -1)
+		else if(dom_value == condition_value || condition_value.match('\"' + value + '\"') || $.inArray(dom_value, arr_condition_value) !== -1)
 		{
 			value_exists = true;
 		}
@@ -84,11 +101,15 @@ jQuery(function($)
 				if(value_exists == true)
 				{
 					dom_obj_action.removeClass('hide');
+
+					check_required(dom_obj_action, true);
 				}
 
 				else
 				{
 					dom_obj_action.addClass('hide');
+
+					check_required(dom_obj_action, false);
 				}
 			break;
 
@@ -96,11 +117,15 @@ jQuery(function($)
 				if(value_exists == true)
 				{
 					dom_obj_action.addClass('hide');
+
+					check_required(dom_obj_action, false);
 				}
 
 				else
 				{
 					dom_obj_action.removeClass('hide');
+
+					check_required(dom_obj_action, true);
 				}
 			break;
 		}

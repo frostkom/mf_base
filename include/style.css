@@ -174,7 +174,7 @@
 		white-space: nowrap;
 	}
 
-	.fa, .pointer, .toggler
+	.fa, .fab, .far, .fas, .pointer, .toggler
 	{
 		cursor: pointer;
 	}

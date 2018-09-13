@@ -59,7 +59,7 @@ jQuery(function($)
 		}
 	});
 
-	var dom_obj_toggle = $(".view_data .fa");
+	var dom_obj_toggle = $(".view_data i");
 
 	if(dom_obj_toggle.length > 0)
 	{
@@ -77,7 +77,7 @@ jQuery(function($)
 
 		dom_obj_toggle.on('click', function()
 		{
-			toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa.fa-eye-slash"));
+			toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa-eye-slash"));
 			toggle_table($(this));
 		});
 	}

@@ -772,7 +772,7 @@ class mf_base
 					".$this->recommend_htaccess_https;
 				}
 			}
-			
+
 			$recommend_htaccess .= "\n
 			RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
 

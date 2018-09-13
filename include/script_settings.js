@@ -83,7 +83,7 @@ jQuery(function($)
 
 			if($("#tab_" + tab_id + " .exclamation-triangle").length == 0)
 			{
-				$("#tab_" + tab_id).append(" <i class='fas fa-exclamation-triangle yellow'></i>");
+				$("#tab_" + tab_id).append(" <i class='fa fa-exclamation-triangle yellow'></i>");
 			}
 		});
 	}

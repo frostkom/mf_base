@@ -76,7 +76,7 @@ jQuery(function($)
 	function check_selector_condition(dom_obj_selector, condition_type, condition_value, dom_obj_action)
 	{
 		var dom_value = dom_obj_selector.val(),
-			arr_condition_value = JSON.parse(condition_value),
+			arr_condition_value = condition_value.substr(0, 1) == '[' ? JSON.parse(condition_value) : [],
 			value_exists = false;
 
 		if($.isArray(dom_value))
@@ -90,7 +90,7 @@ jQuery(function($)
 			});
 		}
 
-		else if(dom_value == condition_value || condition_value.match('\"' + value + '\"') || $.inArray(dom_value, arr_condition_value) !== -1)
+		else if(dom_value == condition_value || condition_value.match('\"' + dom_value + '\"') || $.inArray(dom_value, arr_condition_value) !== -1)
 		{
 			value_exists = true;
 		}

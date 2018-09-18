@@ -10,10 +10,11 @@
 		display: block;
 	}
 
-	.inline
+	/* This is in conflict with WP update-message */
+	/*.inline
 	{
 		display: inline;
-	}
+	}*/
 
 	.nowrap
 	{

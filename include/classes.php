@@ -372,6 +372,11 @@ class mf_base
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
 		}
 
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		{
+			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js", $plugin_version);
+		}
+
 		/*else if($pagenow == 'widgets.php')
 		{
 			mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js", $plugin_version);
@@ -396,8 +401,7 @@ class mf_base
 
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 		{
-			$count_shortcode_button = 0;
-			$count_shortcode_button = apply_filters('count_shortcode_button', $count_shortcode_button);
+			$count_shortcode_button = apply_filters('count_shortcode_button', 0);
 
 			if($count_shortcode_button > 0)
 			{
@@ -417,8 +421,6 @@ class mf_base
 
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
 		{
-			mf_enqueue_script('script_base_shortcode', plugin_dir_url(__FILE__)."script_shortcode.js", get_plugin_version(__FILE__)); //Should be moved to admin_init
-
 			echo "<div id='mf_shortcode_container' class='hide'>
 				<div class='mf_form mf_shortcode_wrapper'>"
 					.apply_filters('get_shortcode_output', '')

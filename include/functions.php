@@ -2649,7 +2649,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".$data['value']."\"".$data['xtra'].">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".$data['value']."\"".($data['xtra'] != '' ? " ".trim($data['xtra']) : '').">";
 
 		if($data['suffix'] != '')
 		{

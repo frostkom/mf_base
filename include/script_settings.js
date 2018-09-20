@@ -81,7 +81,7 @@ jQuery(function($)
 			var self = $(this),
 				tab_id = self.parents(".form-table").prev("div").attr('id');
 
-			if($("#tab_" + tab_id + " .exclamation-triangle").length == 0)
+			if($("#tab_" + tab_id + " .fa-exclamation-triangle").length == 0)
 			{
 				$("#tab_" + tab_id).append(" <i class='fa fa-exclamation-triangle yellow'></i>");
 			}

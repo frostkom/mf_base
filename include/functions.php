@@ -2083,9 +2083,9 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	if(!isset($data['catch_head'])){	$data['catch_head'] = $catch_head;}
 	if(!isset($data['headers'])){		$data['headers'] = array();}
+	if(!isset($data['request'])){		$data['request'] = 'get';}
 	if(!isset($data['content_type'])){	$data['content_type'] = '';}
 	if(!isset($data['password'])){		$data['password'] = $password;}
-	//if(!isset($data['post'])){		$data['post'] = $post;}
 	if(!isset($data['post_data'])){		$data['post_data'] = $post_data;}
 	if(!isset($data['cert_path'])){		$data['cert_path'] = '';}
 
@@ -2129,15 +2129,13 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
 	}
 
-	/*if($data['post'] != '')
+	if($data['request'] == 'post' || $data['post_data'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "status=".$data['post']);
 	}
 
-	else */if($data['post_data'] != '') //count($data['post_data']) > 0
+	if($data['post_data'] != '')
 	{
-		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
 	}
 

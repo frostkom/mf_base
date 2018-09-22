@@ -718,8 +718,13 @@ function mf_uninstall_plugin($data)
 	mf_uninstall_uploads($data, true);
 }
 
-function get_setting_key($function_name)
+function get_setting_key($function_name, $args = array())
 {
+	if(isset($args['post_type']) && $args['post_type'] != '')
+	{
+		$function_name."_".$args['post_type'];
+	}
+
 	return str_replace("_callback", "", $function_name);
 }
 
@@ -1444,21 +1449,22 @@ function get_next_cron($raw = false)
 
 function show_settings_fields($data)
 {
-	if(!isset($data['area'])){		$data['area'] = "";}
+	if(!isset($data['area'])){		$data['area'] = '';}
 	if(!isset($data['object'])){	$data['object'] = '';}
 	if(!isset($data['settings'])){	$data['settings'] = array();}
+	if(!isset($data['args'])){		$data['args'] = array();}
 	if(!isset($data['callback'])){	$data['callback'] = '';}
 
 	foreach($data['settings'] as $handle => $text)
 	{
 		if($data['object'] != '')
 		{
-			add_settings_field($handle, $text, array($data['object'], $handle."_callback"), BASE_OPTIONS_PAGE, $data['area']);
+			add_settings_field($handle, $text, array($data['object'], $handle."_callback"), BASE_OPTIONS_PAGE, $data['area'], $data['args']);
 		}
 
 		else
 		{
-			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area']);
+			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area'], $data['args']);
 		}
 
 		register_setting(BASE_OPTIONS_PAGE, $handle, $data['callback']);

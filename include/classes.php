@@ -2391,7 +2391,7 @@ class mf_import
 
 									$this->result[] = array(
 										'type' => 'duplicate',
-										'action' => 'far fa-copy',
+										'action' => 'fa fa-copy',
 										'id' => $r->ID,
 										'data' => $arr_values,
 										'value' => $query_select,
@@ -2437,7 +2437,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'not_inserted',
-									'action' => 'fas fa-unlink',
+									'action' => 'fa fa-unlink',
 									'id' => '',
 									'data' => $arr_values,
 									'value' => $query_insert,
@@ -2488,7 +2488,7 @@ class mf_import
 
 								$this->result[] = array(
 									'type' => 'not_deleted',
-									'action' => 'fas fa-unlink',
+									'action' => 'fa fa-unlink',
 									'id' => '',
 									'data' => $arr_values,
 									'value' => $query_delete,
@@ -2575,7 +2575,7 @@ class mf_import
 						if($this->rows_not_inserted > 0)
 						{
 							$out .= "<tr rel='not_inserted'>
-								<td><i class='fas fa-unlink fa-lg red'></i></td>
+								<td><i class='fa fa-unlink fa-lg red'></i></td>
 								<td>".$this->rows_not_inserted."</td>
 								<td>".__("Not inserted because something went wrong", 'lang_base')."</td>
 							</tr>";
@@ -2614,7 +2614,7 @@ class mf_import
 						if($this->rows_not_deleted > 0)
 						{
 							$out .= "<tr rel='not_deleted'>
-								<td><i class='fas fa-unlink fa-lg red'></i></td>
+								<td><i class='fa fa-unlink fa-lg red'></i></td>
 								<td>".$this->rows_not_deleted."</td>
 								<td>".__("Not Deleted", 'lang_base')."</td>
 							</tr>";

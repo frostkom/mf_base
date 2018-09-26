@@ -537,6 +537,13 @@ function shorten_text($data)
 	return $out;
 }
 
+function replace_post_type($data)
+{
+	global $wpdb;
+
+	$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->posts." SET post_type = %s WHERE post_type = %s", $data['new'], $data['old']));
+}
+
 function replace_option($data)
 {
 	$option_old = get_option($data['old']);
@@ -716,16 +723,6 @@ function mf_uninstall_plugin($data)
 
 	mf_uninstall_meta($data);
 	mf_uninstall_uploads($data, true);
-}
-
-function get_setting_key($function_name, $args = array())
-{
-	if(isset($args['post_type']) && $args['post_type'] != '')
-	{
-		$function_name."_".$args['post_type'];
-	}
-
-	return str_replace("_callback", "", $function_name);
 }
 
 function is_domain_valid($email, $record = 'MX')
@@ -1118,18 +1115,18 @@ function get_file_icon($file)
 
 	switch($suffix)
 	{
-		default:														$class = "far fa-file";					break;
+		default:														$class = "fa fa-file";					break;
 
-		case 'pdf':														$class = "far fa-file-pdf";				break;
-		case 'mp3': case 'ogg':											$class = "far fa-file-audio";			break;
-		case 'xls': case 'xlsx':										$class = "far fa-file-excel";			break;
-		case 'css':														$class = "far fa-file-code";			break;
-		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "far fa-file-image";			break;
-		case 'ppt': case 'pptx':										$class = "far fa-file-powerpoint";		break;
-		case 'wmv': case 'avi':	case 'mpg':								$class = "far fa-file-video";			break;
-		case 'doc': case 'docx':										$class = "far fa-file-word";			break;
-		case 'zip': case 'tar':											$class = "far fa-file-archive";			break;
-		case 'txt':														$class = "far fa-file-alt";				break;
+		case 'pdf':														$class = "fa fa-file-pdf";				break;
+		case 'mp3': case 'ogg':											$class = "fa fa-file-audio";			break;
+		case 'xls': case 'xlsx':										$class = "fa fa-file-excel";			break;
+		case 'css':														$class = "fa fa-file-code";				break;
+		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa fa-file-image";			break;
+		case 'ppt': case 'pptx':										$class = "fa fa-file-powerpoint";		break;
+		case 'wmv': case 'avi':	case 'mpg':								$class = "fa fa-file-video";			break;
+		case 'doc': case 'docx':										$class = "fa fa-file-word";				break;
+		case 'zip': case 'tar':											$class = "fa fa-file-archive";			break;
+		case 'txt':														$class = "fa fa-file-alt";				break;
 	}
 
 	return "<i class='".$class." fa-lg'></i>";
@@ -1189,8 +1186,8 @@ function get_media_library($data)
 
 				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
 					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
-					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='far fa-file fa-5x' title='".$data['value']."'></i></span>
-					<a href='#' rel='confirm'><i class='fas fa-trash-alt fa-lg'></i></a>
+					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>
+					<a href='#' rel='confirm'><i class='fa fa-trash-alt fa-lg'></i></a>
 				</div>";
 			}
 
@@ -1457,18 +1454,43 @@ function show_settings_fields($data)
 
 	foreach($data['settings'] as $handle => $text)
 	{
-		if($data['object'] != '')
+		if(preg_match("/\|/", $handle))
 		{
-			add_settings_field($handle, $text, array($data['object'], $handle."_callback"), BASE_OPTIONS_PAGE, $data['area'], $data['args']);
+			list($handle_parent, $handle_child) = explode("|", $handle);
+
+			$handle = $handle_parent.($handle_child != '' ? "_".$handle_child : '');
+			$handle_callback = $handle_parent."_callback";
+
+			$data['args'] = array('child' => $handle_child);
 		}
 
 		else
 		{
-			add_settings_field($handle, $text, $handle."_callback", BASE_OPTIONS_PAGE, $data['area'], $data['args']);
+			$handle_callback = $handle."_callback";
+		}
+
+		if($data['object'] != '')
+		{
+			add_settings_field($handle, $text, array($data['object'], $handle_callback), BASE_OPTIONS_PAGE, $data['area'], $data['args']);
+		}
+
+		else
+		{
+			add_settings_field($handle, $text, $handle_callback, BASE_OPTIONS_PAGE, $data['area'], $data['args']);
 		}
 
 		register_setting(BASE_OPTIONS_PAGE, $handle, $data['callback']);
 	}
+}
+
+function get_setting_key($function_name, $args = array())
+{
+	if(isset($args['child']) && $args['child'] != '')
+	{
+		$function_name .= "_".$args['child'];
+	}
+
+	return str_replace("_callback", "", $function_name);
 }
 
 function settings_save_site_wide($setting_key)
@@ -3187,12 +3209,12 @@ function show_checkbox($data)
 
 	if(!isset($data['switch_icon_on']) || $data['switch_icon_on'] == '')
 	{
-		$data['switch_icon_on'] = "far fa-check-square fa-lg green";
+		$data['switch_icon_on'] = "fa fa-check-square fa-lg green";
 	}
 
 	if(!isset($data['switch_icon_off']) || $data['switch_icon_off'] == '')
 	{
-		$data['switch_icon_off'] = "far fa-square fa-lg";
+		$data['switch_icon_off'] = "fa fa-square fa-lg";
 	}
 
 	$data['xtra'] .= ($data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "");

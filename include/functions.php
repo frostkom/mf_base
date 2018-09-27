@@ -1255,6 +1255,8 @@ function get_media_button($data = array())
 
 function get_attachment_to_send($string)
 {
+	global $wpdb;
+
 	$arr_ids = $arr_files = array();
 
 	if($string != '')
@@ -1268,6 +1270,21 @@ function get_attachment_to_send($string)
 			if($file_id > 0)
 			{
 				$arr_ids[] = $file_id;
+			}
+
+			else if($file_name != '')
+			{
+				$id_temp = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s", 'attachment', $file_name));
+
+				if($id_temp > 0)
+				{
+					$arr_ids[] = $id_temp;
+				}
+
+				else
+				{
+					do_log(__("I could not get the ID from the filename", 'lang_base')." (".$wpdb->last_query.")");
+				}
 			}
 
 			if($file_url != '')

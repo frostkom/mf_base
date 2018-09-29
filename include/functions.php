@@ -1255,7 +1255,7 @@ function get_media_button($data = array())
 
 function get_attachment_to_send($string)
 {
-	global $wpdb;
+	global $wpdb, $error_text;
 
 	$arr_ids = $arr_files = array();
 
@@ -1274,17 +1274,17 @@ function get_attachment_to_send($string)
 
 			else if($file_name != '')
 			{
-				$id_temp = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s", 'attachment', $file_name));
+				$id_temp = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND (post_title = %s OR post_name = %s)", 'attachment', $file_name, $file_name));
 
 				if($id_temp > 0)
 				{
 					$arr_ids[] = $id_temp;
 				}
 
-				else
+				/*else
 				{
 					do_log(__("I could not get the ID from the filename", 'lang_base')." (".$wpdb->last_query.")");
-				}
+				}*/
 			}
 
 			if($file_url != '')
@@ -1300,7 +1300,7 @@ function get_attachment_to_send($string)
 
 		if(count($arr_ids) == 0 && count($arr_files) == 0)
 		{
-			do_log(sprintf(__("The file %s could not be found in the DB", 'lang_base'), $string));
+			$error_text = sprintf(__("The file '%s' could not be found in the DB", 'lang_base'), $string);
 		}
 	}
 

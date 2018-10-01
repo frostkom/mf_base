@@ -1762,12 +1762,21 @@ class mf_font_icons
 
 	function get_font_awesome_icon_list()
 	{
-		$arr_icons = array('eye', 'exclamation-triangle', 'link', 'lock', 'paper-plane', 'unlink');
+		$arr_icons = array(
+			'fas fa-briefcase-medical',
+			'eye',
+			'exclamation-triangle',
+			'fas fa-hospital-alt',
+			'link',
+			'lock',
+			'paper-plane',
+			'unlink',
+		);
 
 		return $arr_icons;
 	}
 
-	function get_symbol_tag($symbol, $title = "")
+	function get_symbol_tag($symbol, $title = "", $nbsp = true)
 	{
 		$out = "";
 
@@ -1777,12 +1786,17 @@ class mf_font_icons
 			{
 				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php", get_plugin_version(__FILE__));
 
-				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>&nbsp;";
+				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>".($nbsp ? "&nbsp;" : '');
 			}
 
 			else
 			{
-				$out = "<i class='fa fa-".$symbol."'".($title != '' ? " title='".$title."'" : "")."></i>&nbsp;";
+				if(substr($symbol, 0, 2) != 'fa')
+				{
+					$symbol = "fa fa-".$symbol;
+				}
+
+				$out = "<i class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></i>".($nbsp ? "&nbsp;" : '');
 			}
 		}
 

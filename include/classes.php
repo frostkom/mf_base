@@ -1875,7 +1875,7 @@ class mf_export
 
 				if(count($this->data) > 0)
 				{
-					$file = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("YmdHis").".".$this->action;
+					$file = prepare_file_name($this->name).".".$this->action;
 
 					switch($this->action)
 					{

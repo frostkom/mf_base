@@ -3495,6 +3495,11 @@ function get_match_all($regexp, $in, $all = true)
 
 //
 ##################
+function prepare_file_name($file_name)
+{
+	return sanitize_title_with_dashes(sanitize_title($file_name))."_".date("ymdHi")."_".wp_hash($file_name);
+}
+
 function set_file_content($data)
 {
 	if(!isset($data['log'])){	$data['log'] = true;}

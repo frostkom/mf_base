@@ -1764,13 +1764,18 @@ class mf_font_icons
 	{
 		$arr_icons = array(
 			'fas fa-briefcase-medical',
+			'fas fa-chalkboard-teacher',
+			'fas fa-clock',
 			'eye',
 			'exclamation-triangle',
+			'fas fa-graduation-cap',
 			'fas fa-hospital-alt',
 			'link',
 			'lock',
 			'paper-plane',
+			'fas fa-sun',
 			'unlink',
+			'fas fa-user',
 		);
 
 		return $arr_icons;

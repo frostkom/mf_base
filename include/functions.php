@@ -2126,13 +2126,14 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 		);
 	}
 
-	if(!isset($data['catch_head'])){	$data['catch_head'] = $catch_head;}
-	if(!isset($data['headers'])){		$data['headers'] = array();}
-	if(!isset($data['request'])){		$data['request'] = 'get';}
-	if(!isset($data['content_type'])){	$data['content_type'] = '';}
-	if(!isset($data['password'])){		$data['password'] = $password;}
-	if(!isset($data['post_data'])){		$data['post_data'] = $post_data;}
-	if(!isset($data['cert_path'])){		$data['cert_path'] = '';}
+	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = true;}
+	if(!isset($data['catch_head'])){		$data['catch_head'] = $catch_head;}
+	if(!isset($data['headers'])){			$data['headers'] = array();}
+	if(!isset($data['request'])){			$data['request'] = 'get';}
+	if(!isset($data['content_type'])){		$data['content_type'] = '';}
+	if(!isset($data['password'])){			$data['password'] = $password;}
+	if(!isset($data['post_data'])){			$data['post_data'] = $post_data;}
+	if(!isset($data['cert_path'])){			$data['cert_path'] = '';}
 
 	$data['url'] = validate_url($data['url'], false);
 
@@ -2196,6 +2197,22 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 		$headers = curl_getinfo($ch);
 
 		$return_value = array($content, $headers);
+
+		if($data['follow_redirect'] == true)
+		{
+			switch($headers['http_code'])
+			{
+				case 301:
+					if(isset($headers['redirect_url']) && $headers['redirect_url'] != $data['url'])
+					{
+						$data['url'] = $headers['redirect_url'];
+						$data['follow_redirect'] = false;
+
+						$return_value = get_url_content($data);
+					}
+				break;
+			}
+		}
 	}
 
 	else

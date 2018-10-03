@@ -1781,27 +1781,38 @@ class mf_font_icons
 		return $arr_icons;
 	}
 
-	function get_symbol_tag($symbol, $title = "", $nbsp = true)
+	function get_symbol_tag($data, $title = "", $nbsp = true)
 	{
+		if(!is_array($data))
+		{
+			$data = array(
+				'symbol' => $data,
+			);
+		}
+
+		if(!isset($data['title'])){		$data['title'] = $title;}
+		if(!isset($data['class'])){		$data['class'] = '';}
+		if(!isset($data['nbsp'])){		$data['nbsp'] = $nbsp;}
+
 		$out = "";
 
-		if($symbol != '')
+		if($data['symbol'] != '')
 		{
-			if(substr($symbol, 0, 5) == "icon-")
+			if(substr($data['symbol'], 0, 5) == "icon-")
 			{
 				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php", get_plugin_version(__FILE__));
 
-				$out = "<span class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></span>".($nbsp ? "&nbsp;" : '');
+				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>".($data['nbsp'] ? "&nbsp;" : '');
 			}
 
 			else
 			{
-				if(substr($symbol, 0, 2) != 'fa')
+				if(substr($data['symbol'], 0, 2) != 'fa')
 				{
-					$symbol = "fa fa-".$symbol;
+					$data['symbol'] = "fa fa-".$data['symbol'];
 				}
 
-				$out = "<i class='".$symbol."'".($title != '' ? " title='".$title."'" : "")."></i>".($nbsp ? "&nbsp;" : '');
+				$out = "<i class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></i>".($data['nbsp'] ? "&nbsp;" : '');
 			}
 		}
 

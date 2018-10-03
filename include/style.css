@@ -180,22 +180,22 @@
 		cursor: pointer;
 	}
 
-		.fa.green, .color_green
+		.fa.green, .fab.green, .far.green, .fas.green, .color_green
 		{
 			color: #76e476;
 		}
 
-		.fa.blue, .color_blue
+		.fa.blue, .fab.blue, .far.blue, .fas.blue, .color_blue
 		{
 			color: #4887bf;
 		}
 
-		.fa.yellow, .color_yellow
+		.fa.yellow, .fab.yellow, .far.yellow, .fas.yellow, .color_yellow
 		{
 			color: #e4d176;
 		}
 
-		.fa.red, .color_red
+		.fa.red, .fab.red, .far.red, .fas.red, .color_red
 		{
 			color: #e47676;
 		}

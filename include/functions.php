@@ -2126,7 +2126,7 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 		);
 	}
 
-	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = true;}
+	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){		$data['catch_head'] = $catch_head;}
 	if(!isset($data['headers'])){			$data['headers'] = array();}
 	if(!isset($data['request'])){			$data['request'] = 'get';}

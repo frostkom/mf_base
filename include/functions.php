@@ -3243,12 +3243,12 @@ function show_checkbox($data)
 
 	if(!isset($data['switch_icon_on']) || $data['switch_icon_on'] == '')
 	{
-		$data['switch_icon_on'] = "fa fa-check-square fa-lg green";
+		$data['switch_icon_on'] = "far fa-check-square fa-lg";
 	}
 
 	if(!isset($data['switch_icon_off']) || $data['switch_icon_off'] == '')
 	{
-		$data['switch_icon_off'] = "fa fa-square fa-lg";
+		$data['switch_icon_off'] = "far fa-square fa-lg";
 	}
 
 	$data['xtra'] .= ($data['value'] != '' && $data['value'] == $data['compare'] ? " checked" : "");

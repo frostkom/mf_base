@@ -2568,7 +2568,7 @@ class mf_import
 				}
 			}
 
-			$out .= "<table class='widefat striped import_result'>
+			/*$out .= "<table class='widefat striped import_result'>
 				<thead>";
 
 					if($this->action == "import")
@@ -2661,7 +2661,7 @@ class mf_import
 					}
 
 				$out .= "</thead>
-				<tbody>";
+				<tbody>";*/
 
 					if(count($this->result) > 0)
 					{
@@ -2704,9 +2704,9 @@ class mf_import
 						}*/
 					}
 
-				$out .= "</tbody>
+				/*$out .= "</tbody>
 			</table>
-			<br>";
+			<br>";*/
 		}
 
 		return $out;

@@ -2949,6 +2949,29 @@ function show_wp_editor($data)
 }
 
 ############################
+function get_select_size($data)
+{
+	if(!isset($data['minsize'])){		$data['minsize'] = 2;}
+	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
+
+	if($data['count'] > $data['maxsize'])
+	{
+		$size = $data['maxsize'];
+	}
+
+	else if($data['count'] < $data['minsize'])
+	{
+		$size = $data['minsize'];
+	}
+
+	else
+	{
+		$size = $data['count'];
+	}
+
+	return $size;
+}
+
 function show_select($data)
 {
 	if(!isset($data['data'])){			$data['data'] = array();}
@@ -2957,8 +2980,8 @@ function show_select($data)
 	if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
 	if(!isset($data['value'])){			$data['value'] = $data['compare'];}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['minsize'])){		$data['minsize'] = 2;}
-	if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
+	//if(!isset($data['minsize'])){		$data['minsize'] = 2;}
+	//if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['attributes'])){	$data['attributes'] = array();}
@@ -2978,23 +3001,8 @@ function show_select($data)
 
 		if($obj_base->is_multiple())
 		{
-			if($count_temp > $obj_base->data['maxsize'])
-			{
-				$size = $obj_base->data['maxsize'];
-			}
-
-			else if($count_temp < $obj_base->data['minsize'])
-			{
-				$size = $obj_base->data['minsize'];
-			}
-
-			else
-			{
-				$size = $count_temp;
-			}
-
 			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
-			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".$size."'";
+			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array('count' => $count_temp))."'";
 
 			$container_class .= " form_select_multiple";
 		}

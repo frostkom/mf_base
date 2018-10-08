@@ -1,5 +1,23 @@
 <?php
 
+function get_option_page_suffix($data)
+{
+	if(!isset($data['title'])){		$data['title'] = '';}
+	if(!isset($data['content'])){	$data['content'] = '';}
+
+	if($data['value'] > 0)
+	{
+		$out = "<a href='".admin_url("post.php?post=".$data['value']."&action=edit")."'><i class='fa fa-wrench fa-lg'></i></a>";
+	}
+
+	else
+	{
+		$out = "<a href='".admin_url("post-new.php?post_type=page".($data['title'] != '' ? "&post_title=".$data['title'] : "").($data['content'] != '' ? "&content=".$data['content'] : ""))."'><i class='fa fa-plus-circle fa-lg'></i></a>";
+	}
+
+	return $out;
+}
+
 function override_capability($data)
 {
 	$capability = $data['default'];
@@ -1109,9 +1127,18 @@ function delete_base($data)
 	}
 }
 
-function get_file_icon($file)
+function get_file_icon($data) //$file
 {
-	$suffix = get_file_suffix($file);
+	if(!is_array($data))
+	{
+		$data = array(
+			'file' => $data,
+		);
+	}
+
+	if(!isset($data['size'])){		$data['size'] = "fa-lg";}
+
+	$suffix = get_file_suffix($data['file']);
 
 	switch($suffix)
 	{
@@ -1129,7 +1156,7 @@ function get_file_icon($file)
 		case 'txt':														$class = "fa fa-file-alt";				break;
 	}
 
-	return "<i class='".$class." fa-lg'></i>";
+	return "<i class='".$class." ".$data['size']."'></i>";
 }
 
 function get_file_suffix($file, $force_last = false)

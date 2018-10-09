@@ -762,6 +762,18 @@ function get_post_meta_or_default($post_id, $key = '', $single = false, $default
 	return $post_meta;
 }
 
+function get_site_option_or_default($key, $default = '')
+{
+	$option = get_site_option($key);
+
+	if($option == '' && $default != '')
+	{
+		$option = $default;
+	}
+
+	return $option;
+}
+
 function get_option_or_default($key, $default = '')
 {
 	$option = get_option($key);

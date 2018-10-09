@@ -591,7 +591,7 @@ class mf_base
 		}
 	}
 
-	function file_shortcode($atts)
+	function shortcode_file($atts)
 	{
 		extract(shortcode_atts(array(
 			'id' => 0,

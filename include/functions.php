@@ -2014,7 +2014,7 @@ function get_categories_for_select($data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose Here", 'lang_education')." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	$arr_categories = get_categories(array(

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 8.9.17
+Version: 8.9.18
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -60,7 +60,7 @@ else
 }
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
-add_shortcode('mf_file', array($obj_base, 'file_shortcode'));
+add_shortcode('mf_file', array($obj_base, 'shortcode_file'));
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
 

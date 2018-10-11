@@ -1238,6 +1238,8 @@ class mf_list_table extends WP_List_Table
 		{
 			foreach($_GET[$this->post_type] as $post_id)
 			{
+				$post_id = check_var($post_id, 'int', false);
+
 				wp_trash_post($post_id);
 			}
 		}
@@ -2237,7 +2239,7 @@ class mf_import
 			}
 		}
 
-		$result = $wpdb->get_results("SELECT *, ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->table_id." NOT IN ('".implode("', '", $arr_affected_id)."')");
+		$result = $wpdb->get_results("SELECT *, ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." NOT IN ('".implode("', '", $arr_affected_id)."')");
 
 		foreach($result as $r)
 		{
@@ -2246,7 +2248,7 @@ class mf_import
 				'action' => 'fa fa-check green',
 				'id' => $r->ID,
 				'data' => $r,
-				'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
+				'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
 			);
 
 			$this->rows_untouched++;
@@ -2263,7 +2265,7 @@ class mf_import
 
 		if($count_temp_rows > 0)
 		{
-			$this->query_base_search = $this->query_base_xtra = "";
+			$this->query_base_where = ""; //$this->query_base_xtra = 
 
 			switch($this->table)
 			{
@@ -2272,8 +2274,8 @@ class mf_import
 					$table_created = "post_date";
 					$table_user = "post_author";
 
-					$this->query_base_search .= ($this->query_base_search != '' ? " AND " : "")."post_type = '".esc_sql($this->post_type)."'";
-					$this->query_base_xtra .= ($this->query_base_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
+					$this->query_base_where .= ($this->query_base_where != '' ? " AND " : "")."post_type = '".esc_sql($this->post_type)."'";
+					//$this->query_base_xtra .= ($this->query_base_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
 				break;
 
 				case 'users':
@@ -2303,11 +2305,16 @@ class mf_import
 
 			for($i = $i_start; $i < $count_temp_rows; $i++)
 			{
-				$this->query_search = $this->query_xtra = "";
+				$this->query_where = $this->query_set = "";
 				$this->query_option = array();
 
 				$arr_values = $this->data[$i];
 				$count_temp_values = count($arr_values);
+
+				if($count_temp_values == 1)
+				{
+					do_log("The row only had one column (".var_export($arr_values, true).")");
+				}
 
 				for($j = 0; $j < $count_temp_values; $j++)
 				{
@@ -2332,17 +2339,17 @@ class mf_import
 						{
 							if(in_array($strRowField, $this->unique_columns))
 							{
-								$this->query_search .= ($this->query_search != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+								$this->query_where .= ($this->query_where != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 							}
 
-							$this->query_xtra .= ($this->query_xtra != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+							$this->query_set .= ($this->query_set != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 						}
 					}
 				}
 
-				if($this->query_xtra != '' && $this->query_search != '')
+				if($this->query_set != '' && $this->query_where != '')
 				{
-					$query_select = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->query_search." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+					$query_select = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where." ORDER BY ".$table_created." ASC LIMIT 0, 5";
 
 					$result = $wpdb->get_results($query_select);
 					$rows = $wpdb->num_rows;
@@ -2376,7 +2383,7 @@ class mf_import
 										break;
 									}
 
-									$query_update .= $this->query_xtra." WHERE ".$this->table_id." = '".$id."'";
+									$query_update .= $this->query_set." WHERE ".$this->table_id." = '".$id."'";
 
 									$wpdb->query($query_update);
 
@@ -2434,7 +2441,7 @@ class mf_import
 
 						else
 						{
-							$query_insert = "INSERT INTO ".$this->prefix.$this->table." SET ".$this->query_xtra.", ".$table_created." = NOW()";
+							$query_insert = "INSERT INTO ".$this->prefix.$this->table." SET ".$this->query_set.", ".$table_created." = NOW()";
 
 							if($table_user != '')
 							{
@@ -2483,7 +2490,7 @@ class mf_import
 							switch($this->table)
 							{
 								case 'posts':
-									$id = $wpdb->get_var("SELECT ".$this->table_id." FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->query_search);
+									$id = $wpdb->get_var("SELECT ".$this->table_id." FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where);
 
 									wp_trash_post($id);
 								break;
@@ -2493,7 +2500,7 @@ class mf_import
 								break;
 
 								default:
-									$query_delete = $wpdb->prepare("UPDATE ".$this->prefix.$this->table." SET ".$table_field_prefix."Deleted = '1', ".$table_field_prefix."DeletedDate = NOW(), ".$table_field_prefix."DeletedID = '%d' WHERE ".$this->query_base_search.($this->query_base_search != '' ? " AND " : "").$this->query_search, get_current_user_id());
+									$query_delete = $wpdb->prepare("UPDATE ".$this->prefix.$this->table." SET ".$table_field_prefix."Deleted = '1', ".$table_field_prefix."DeletedDate = NOW(), ".$table_field_prefix."DeletedID = '%d' WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where, get_current_user_id());
 
 									$wpdb->query($query_delete);
 								break;
@@ -2568,145 +2575,46 @@ class mf_import
 				}
 			}
 
-			/*$out .= "<table class='widefat striped import_result'>
-				<thead>";
+			if(count($this->result) > 0)
+			{
+				$arr_export_data = array();
 
-					if($this->action == "import")
+				foreach($this->result as $row)
+				{
+					$data_temp = array(
+						$row['type'],
+						$row['id'],
+					);
+
+					foreach($row['data'] as $value)
 					{
-						$this->get_untouched();
-
-						if($this->rows_updated > 0)
-						{
-							$out .= "<tr rel='updated'>
-								<td><i class='fa fa-check fa-lg green'></i></td>
-								<td>".$this->rows_updated."</td>
-								<td>".__("Updated because something had changed", 'lang_base')."</td>
-							</tr>";
-						}
-
-						if($this->rows_up_to_date > 0)
-						{
-							$out .= "<tr rel='up_to_date'>
-								<td><i class='fa fa-cloud fa-lg blue'></i></td>
-								<td>".$this->rows_up_to_date."</td>
-								<td>".__("Already up to date", 'lang_base')."</td>
-							</tr>";
-						}
-
-						if($this->rows_inserted > 0)
-						{
-							$out .= "<tr rel='inserted'>
-								<td><i class='fa fa-plus-circle fa-lg green'></i></td>
-								<td>".$this->rows_inserted."</td>
-								<td>".__("Inserted", 'lang_base')."</td>
-							</tr>";
-						}
-
-						if($this->rows_not_inserted > 0)
-						{
-							$out .= "<tr rel='not_inserted'>
-								<td><i class='fa fa-unlink fa-lg red'></i></td>
-								<td>".$this->rows_not_inserted."</td>
-								<td>".__("Not inserted because something went wrong", 'lang_base')."</td>
-							</tr>";
-						}
-
-						if($this->rows_deleted > 0)
-						{
-							$out .= "<tr rel='deleted'>
-								<td><i class='fa fa-times fa-lg red'></i></td>
-								<td>".$this->rows_deleted."</td>
-								<td>".__("Deleted because there were duplicates", 'lang_base')."</td>
-							</tr>";
-						}
-
-						if($this->rows_untouched > 0)
-						{
-							$out .= "<tr rel='untouched'>
-								<td><i class='fa fa-check fa-lg green'></i></td>
-								<td>".$this->rows_untouched."</td>
-								<td>".__("Untouched because they were not in the import file", 'lang_base')."</td>
-							</tr>";
-						}
+						$data_temp[] = $value;
 					}
 
-					else if($this->action == "delete")
-					{
-						if($this->rows_deleted > 0)
-						{
-							$out .= "<tr rel='deleted'>
-								<td><i class='fa fa-times fa-lg red'></i></td>
-								<td>".$this->rows_deleted."</td>
-								<td>".__("Deleted", 'lang_base')."</td>
-							</tr>";
-						}
+					$data_temp[] = (isset($row['value']) ? $row['value'] : '');
 
-						if($this->rows_not_deleted > 0)
-						{
-							$out .= "<tr rel='not_deleted'>
-								<td><i class='fa fa-unlink fa-lg red'></i></td>
-								<td>".$this->rows_not_deleted."</td>
-								<td>".__("Not Deleted", 'lang_base')."</td>
-							</tr>";
-						}
+					$arr_export_data[] = $data_temp;
+				}
 
-						if($this->rows_not_exists > 0)
-						{
-							$out .= "<tr rel='not_exists'>
-								<td><i class='fa fa-question fa-lg'></i></td>
-								<td>".$this->rows_not_exists."</td>
-								<td>".__("Did not exist", 'lang_base')."</td>
-							</tr>";
-						}
-					}
+				$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => "import_result", 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
-				$out .= "</thead>
-				<tbody>";*/
+				//$out .= "<tr><td colspan='3'>".get_notification()."</td></tr>";
+				$out .= get_notification();
 
-					if(count($this->result) > 0)
-					{
-						$arr_export_data = array();
+				/*foreach($this->result as $row)
+				{
+					$out .= "<tr class='".$row['type']."'>
+						<td><i class='".$row['action']." fa-lg'></i></td>
+						<td>".$row['id']."</td>
+						<td colspan='2'>"
+							//."<div class='row-actions'>"
+								.(isset($row['value']) ? $row['value'] : '')
 
-						foreach($this->result as $row)
-						{
-							$data_temp = array(
-								$row['type'],
-								$row['id'],
-							);
-
-							foreach($row['data'] as $value)
-							{
-								$data_temp[] = $value;
-							}
-
-							$data_temp[] = (isset($row['value']) ? $row['value'] : '');
-
-							$arr_export_data[] = $data_temp;
-						}
-
-						$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => "import_result", 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
-
-						//$out .= "<tr><td colspan='3'>".get_notification()."</td></tr>";
-						$out .= get_notification();
-
-						/*foreach($this->result as $row)
-						{
-							$out .= "<tr class='".$row['type']."'>
-								<td><i class='".$row['action']." fa-lg'></i></td>
-								<td>".$row['id']."</td>
-								<td colspan='2'>"
-									//."<div class='row-actions'>"
-										.(isset($row['value']) ? $row['value'] : '')
-
-									//."</div>"
-								."</td>
-							</tr>";
-						}*/
-					}
-
-				/*$out .= "</tbody>
-			</table>
-			<br>";*/
+							//."</div>"
+						."</td>
+					</tr>";
+				}*/
+			}
 		}
 
 		return $out;

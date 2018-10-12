@@ -320,6 +320,7 @@ class mf_base
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 			//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
+			array("Thumb Fixer for Facebook", 'facebook-thumb-fixer/_facebook-thumb-fixer.php', __("to be able to control how thumbnails are viewed when shared", 'lang_base')),
 			//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
@@ -1600,6 +1601,31 @@ if(class_exists('RWMB_Field'))
 			);
 		}
 	}
+
+	class RWMB_Select3_Field extends RWMB_Select_Field
+	{
+		public static function html($meta, $field)
+		{
+			$options                     = self::transform_options( $field['options'] );
+			$attributes                  = self::call( 'get_attributes', $field, $meta );
+			$attributes['data-selected'] = $meta;
+			$walker                      = new RWMB_Walker_Select( $field, $meta );
+
+			$attributes['class'] .= " multiselect";
+
+			$output                      = sprintf(
+				'<select %s>',
+				self::render_attributes( $attributes )
+			);
+			if ( ! $field['multiple'] && $field['placeholder'] ) {
+				$output .= '<option value="">' . esc_html( $field['placeholder'] ) . '</option>';
+			}
+			$output .= $walker->walk( $options, $field['flatten'] ? -1 : 0 );
+			$output .= '</select>';
+			$output .= self::get_select_all_html( $field );
+			return $output;
+		}
+	}
 }
 
 class settings_page
@@ -2047,6 +2073,7 @@ class mf_import
 ";
 		$this->is_run = false;
 		$this->unique_check = "OR";
+		$this->unique_check_2nd = "AND";
 
 		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = $this->rows_untouched = 0;
 
@@ -2339,7 +2366,7 @@ class mf_import
 						{
 							if(in_array($strRowField, $this->unique_columns))
 							{
-								$this->query_where .= ($this->query_where != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+								$this->query_where .= ($this->query_where != '' ? " [unique_check] " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 							}
 
 							$this->query_set .= ($this->query_set != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
@@ -2349,212 +2376,222 @@ class mf_import
 
 				if($this->query_set != '' && $this->query_where != '')
 				{
-					$query_select = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+					$query_select_orig = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+
+					$query_select = str_replace("[unique_check]", $this->unique_check, $query_select_orig);
 
 					$result = $wpdb->get_results($query_select);
 					$rows = $wpdb->num_rows;
 
-					if($this->action == "import")
+					if($rows > 1)
 					{
-						if($rows > 0)
-						{
-							$k = 0;
+						$query_select = str_replace("[unique_check]", $this->unique_check_2nd, $query_select_orig);
 
-							foreach($result as $r)
+						$result = $wpdb->get_results($query_select);
+						$rows = $wpdb->num_rows;
+					}
+
+					switch($this->action)
+					{
+						case 'import':
+							if($rows > 0)
 							{
-								if($k == 0)
+								$k = 0;
+
+								foreach($result as $r)
 								{
-									$id = $r->ID;
-
-									$query_update = "UPDATE ".$this->prefix.$this->table." SET ";
-
-									switch($this->table)
+									if($k == 0)
 									{
-										case 'posts':
-											$query_update .= "post_status = 'publish', ";
-										break;
+										$id = $r->ID;
 
-										case 'users':
-											//$query_update .= ;
-										break;
+										$query_update = "UPDATE ".$this->prefix.$this->table." SET ";
 
-										default:
-											$query_update .= $table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', ";
-										break;
-									}
+										switch($this->table)
+										{
+											case 'posts':
+												$query_update .= "post_status = 'publish', ";
+											break;
 
-									$query_update .= $this->query_set." WHERE ".$this->table_id." = '".$id."'";
+											case 'users':
+												//$query_update .= ;
+											break;
 
-									$wpdb->query($query_update);
+											default:
+												$query_update .= $table_field_prefix."Deleted = '0', ".$table_field_prefix."DeletedDate = '', ".$table_field_prefix."DeletedID = '', ";
+											break;
+										}
 
-									$rows_affected = $wpdb->rows_affected;
+										$query_update .= $this->query_set." WHERE ".$this->table_id." = '".$id."'";
 
-									$this->update_options($id);
+										$wpdb->query($query_update);
 
-									$rows_affected += $wpdb->rows_affected;
+										$rows_affected = $wpdb->rows_affected;
 
-									if($rows_affected > 0)
-									{
-										$this->updated_new($id);
+										$this->update_options($id);
 
-										$this->rows_updated++;
+										$rows_affected += $wpdb->rows_affected;
 
-										$this->result[] = array(
-											'type' => 'updated',
-											'action' => 'fa fa-check green',
-											'id' => $id,
-											'data' => $arr_values,
-											'value' => $query_update,
-										);
+										if($rows_affected > 0)
+										{
+											$this->updated_new($id);
+
+											$this->rows_updated++;
+
+											$this->result[] = array(
+												'type' => 'updated',
+												'action' => 'fa fa-check green',
+												'id' => $id,
+												'data' => $arr_values,
+												'value' => $query_update,
+											);
+										}
+
+										else
+										{
+											$this->rows_up_to_date++;
+
+											$this->result[] = array(
+												'type' => 'up_to_date',
+												'action' => 'fa fa-cloud blue',
+												'id' => $id,
+												'data' => $arr_values,
+												'value' => $query_update,
+											);
+										}
 									}
 
 									else
 									{
-										$this->rows_up_to_date++;
+										$this->if_more_than_one($r->ID);
 
 										$this->result[] = array(
-											'type' => 'up_to_date',
-											'action' => 'fa fa-cloud blue',
-											'id' => $id,
+											'type' => 'duplicate',
+											'action' => 'fa fa-copy',
+											'id' => $r->ID,
 											'data' => $arr_values,
-											'value' => $query_update,
+											'value' => $query_select,
 										);
 									}
+
+									$k++;
+								}
+							}
+
+							else
+							{
+								$query_insert = "INSERT INTO ".$this->prefix.$this->table." SET ".$this->query_set.", ".$table_created." = NOW()";
+
+								if($table_user != '')
+								{
+									$query_insert .= ", ".$table_user." = '".get_current_user_id()."'";
+								}
+
+								$wpdb->query($query_insert);
+
+								if($wpdb->rows_affected > 0)
+								{
+									$id = $wpdb->insert_id;
+
+									$this->inserted_new($id);
+									$this->update_options($id);
+
+									$this->rows_inserted++;
+
+									$this->result[] = array(
+										'type' => 'inserted',
+										'action' => 'fa fa-plus-circle',
+										'id' => $id,
+										'data' => $arr_values,
+										'value' => $query_insert,
+									);
 								}
 
 								else
 								{
-									$this->if_more_than_one($r->ID);
+									$this->rows_not_inserted++;
 
 									$this->result[] = array(
-										'type' => 'duplicate',
-										'action' => 'fa fa-copy',
-										'id' => $r->ID,
+										'type' => 'not_inserted',
+										'action' => 'fa fa-unlink',
+										'id' => '',
 										'data' => $arr_values,
-										'value' => $query_select,
+										'value' => $query_insert,
+									);
+								}
+							}
+						break;
+
+						case 'delete':
+							if($rows > 0)
+							{
+								switch($this->table)
+								{
+									case 'posts':
+										$id = $wpdb->get_var("SELECT ".$this->table_id." FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where);
+
+										wp_trash_post($id);
+									break;
+
+									case 'users':
+										//Do nothing
+									break;
+
+									default:
+										$query_delete = $wpdb->prepare("UPDATE ".$this->prefix.$this->table." SET ".$table_field_prefix."Deleted = '1', ".$table_field_prefix."DeletedDate = NOW(), ".$table_field_prefix."DeletedID = '%d' WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where, get_current_user_id());
+
+										$wpdb->query($query_delete);
+									break;
+								}
+
+								if($wpdb->rows_affected > 0)
+								{
+									$this->rows_deleted++;
+
+									$this->result[] = array(
+										'type' => 'deleted',
+										'action' => 'fa fa-times',
+										'id' => '',
+										'data' => $arr_values,
+										'value' => $query_delete,
 									);
 								}
 
-								$k++;
-							}
-						}
+								else
+								{
+									$this->rows_not_deleted++;
 
-						else
-						{
-							$query_insert = "INSERT INTO ".$this->prefix.$this->table." SET ".$this->query_set.", ".$table_created." = NOW()";
-
-							if($table_user != '')
-							{
-								$query_insert .= ", ".$table_user." = '".get_current_user_id()."'";
-							}
-
-							$wpdb->query($query_insert);
-
-							if($wpdb->rows_affected > 0)
-							{
-								$id = $wpdb->insert_id;
-
-								$this->inserted_new($id);
-								$this->update_options($id);
-
-								$this->rows_inserted++;
-
-								$this->result[] = array(
-									'type' => 'inserted',
-									'action' => 'fa fa-plus-circle',
-									'id' => $id,
-									'data' => $arr_values,
-									'value' => $query_insert,
-								);
+									$this->result[] = array(
+										'type' => 'not_deleted',
+										'action' => 'fa fa-unlink',
+										'id' => '',
+										'data' => $arr_values,
+										'value' => $query_delete,
+									);
+								}
 							}
 
 							else
 							{
-								$this->rows_not_inserted++;
+								$this->rows_not_exists++;
 
 								$this->result[] = array(
-									'type' => 'not_inserted',
-									'action' => 'fa fa-unlink',
+									'type' => 'not_exists',
+									'action' => 'fa fa-question',
 									'id' => '',
 									'data' => $arr_values,
-									'value' => $query_insert,
+									'value' => $query_select,
 								);
 							}
-						}
-					}
+						break;
 
-					else if($this->action == "delete")
-					{
-						if($rows > 0)
-						{
-							switch($this->table)
-							{
-								case 'posts':
-									$id = $wpdb->get_var("SELECT ".$this->table_id." FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where);
-
-									wp_trash_post($id);
-								break;
-
-								case 'users':
-									//Do nothing
-								break;
-
-								default:
-									$query_delete = $wpdb->prepare("UPDATE ".$this->prefix.$this->table." SET ".$table_field_prefix."Deleted = '1', ".$table_field_prefix."DeletedDate = NOW(), ".$table_field_prefix."DeletedID = '%d' WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where, get_current_user_id());
-
-									$wpdb->query($query_delete);
-								break;
-							}
-
-							if($wpdb->rows_affected > 0)
-							{
-								$this->rows_deleted++;
-
-								$this->result[] = array(
-									'type' => 'deleted',
-									'action' => 'fa fa-times',
-									'id' => '',
-									'data' => $arr_values,
-									'value' => $query_delete,
-								);
-							}
-
-							else
-							{
-								$this->rows_not_deleted++;
-
-								$this->result[] = array(
-									'type' => 'not_deleted',
-									'action' => 'fa fa-unlink',
-									'id' => '',
-									'data' => $arr_values,
-									'value' => $query_delete,
-								);
-							}
-						}
-
-						else
-						{
-							$this->rows_not_exists++;
-
+						default:
 							$this->result[] = array(
-								'type' => 'not_exists',
-								'action' => 'fa fa-question',
+								'type' => '',
 								'id' => '',
 								'data' => $arr_values,
-								'value' => $query_select,
+								'action' => 'fa fa-question',
 							);
-						}
-					}
-
-					else
-					{
-						$this->result[] = array(
-							'type' => '',
-							'id' => '',
-							'data' => $arr_values,
-							'action' => 'fa fa-question',
-						);
+						break;
 					}
 				}
 

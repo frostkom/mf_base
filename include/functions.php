@@ -3014,6 +3014,12 @@ function show_select($data)
 		if($obj_base->is_multiple())
 		{
 			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
+
+			if($obj_base->data['xtra'] == '')
+			{
+				$obj_base->data['xtra'] = "class='multiselect'";
+			}
+
 			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array('count' => $count_temp))."'";
 
 			$container_class .= " form_select_multiple";

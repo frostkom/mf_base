@@ -3015,10 +3015,11 @@ function show_select($data)
 		{
 			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
 
-			if($obj_base->data['xtra'] == '')
+			/* Do NOT make this default becuase it might have unknown consequences on some selects */
+			/*if($obj_base->data['xtra'] == '')
 			{
 				$obj_base->data['xtra'] = "class='multiselect'";
-			}
+			}*/
 
 			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array('count' => $count_temp))."'";
 

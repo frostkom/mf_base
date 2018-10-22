@@ -1244,20 +1244,17 @@ class mf_list_table extends WP_List_Table
 				wp_trash_post($post_id);
 			}
 		}
-
-		/*else
-		{
-			do_log("Bulk delete: ".var_export($_GET, true));
-		}*/
 	}
 
 	function process_bulk_action()
 	{
 		if(isset($_GET['_wpnonce']) && !empty($_GET['_wpnonce']))
 		{
-			if('delete' === $this->current_action())
+			switch($this->current_action())
 			{
-				$this->bulk_delete();
+				case 'delete':
+					$this->bulk_delete();
+				break;
 			}
 		}
 	}

@@ -1549,7 +1549,7 @@ class mf_list_table extends WP_List_Table
 	function show_before_display()
 	{
 		echo "<form method='get'>
-			<input type='hidden' name='page' value='".$_REQUEST['page']."'>";
+			<input type='hidden' name='page' value='".check_var('page')."'>"; //$_REQUEST['page']
 	}
 
 	function show_after_display()

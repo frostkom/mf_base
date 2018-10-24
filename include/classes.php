@@ -2070,7 +2070,6 @@ class mf_import
 ";
 		$this->is_run = false;
 		$this->unique_check = "OR";
-		$this->unique_check_2nd = "AND";
 
 		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = $this->rows_untouched = 0;
 
@@ -2329,7 +2328,7 @@ class mf_import
 
 			for($i = $i_start; $i < $count_temp_rows; $i++)
 			{
-				$this->query_where = $this->query_set = "";
+				$this->query_where = $this->query_where_first = $this->query_set = "";
 				$this->query_option = array();
 
 				$arr_values = $this->data[$i];
@@ -2363,7 +2362,12 @@ class mf_import
 						{
 							if(in_array($strRowField, $this->unique_columns))
 							{
-								$this->query_where .= ($this->query_where != '' ? " [unique_check] " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+								$this->query_where .= ($this->query_where != '' ? " ".$this->unique_check." " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+
+								if($this->query_where_first == '')
+								{
+									$this->query_where_first .= esc_sql($strRowField)." = '".esc_sql($value)."'";
+								}
 							}
 
 							$this->query_set .= ($this->query_set != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
@@ -2373,18 +2377,12 @@ class mf_import
 
 				if($this->query_set != '' && $this->query_where != '')
 				{
-					$query_select_orig = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where." ORDER BY ".$table_created." ASC LIMIT 0, 5";
-
-					$query_select = str_replace("[unique_check]", $this->unique_check, $query_select_orig);
-
-					$result = $wpdb->get_results($query_select);
+					$result = $wpdb->get_results("SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "")."(".$this->query_where.") ORDER BY ".$table_created." ASC LIMIT 0, 2");
 					$rows = $wpdb->num_rows;
 
 					if($rows > 1)
 					{
-						$query_select = str_replace("[unique_check]", $this->unique_check_2nd, $query_select_orig);
-
-						$result = $wpdb->get_results($query_select);
+						$result = $wpdb->get_results("SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where_first." ORDER BY ".$table_created." ASC LIMIT 0, 5");
 						$rows = $wpdb->num_rows;
 					}
 

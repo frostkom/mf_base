@@ -95,6 +95,11 @@
 			padding-bottom: .5em;
 		}
 
+	.tablenav .actions select
+	{
+		max-width: 140px;
+	}
+
 	.tablenav .alignleft > div
 	{
 		display: inline-block;

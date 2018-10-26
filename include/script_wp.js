@@ -2,7 +2,7 @@ jQuery(function($)
 {
 	/* Search */
 	var dom_form = $("form .search-box input[name='s']"),
-		plugin_name = dom_form.parents('form').attr('rel');
+		plugin_name = dom_form.parents("form").attr('rel');
 
 	if(plugin_name && plugin_name != '')
 	{
@@ -39,15 +39,23 @@ jQuery(function($)
 	}
 
 	/* Tables */
-	$('.wp-list-table').removeClass('fixed');
+	$(".tablenav .actions").each(function()
+	{
+		if($(this).children().length == 0)
+		{
+			$(this).addClass('hide');
+		}
+	});
 
-	$('.wp-list-table tr').each(function()
+	$(".wp-list-table").removeClass('fixed');
+
+	$(".wp-list-table tr").each(function()
 	{
 		var self = $(this);
 
-		if(self.find('.set_tr_color').length > 0)
+		if(self.find(".set_tr_color").length > 0)
 		{
-			self.find('.set_tr_color').each(function()
+			self.find(".set_tr_color").each(function()
 			{
 				var add_class = $(this).attr('rel');
 

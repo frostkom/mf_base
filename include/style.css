@@ -200,6 +200,11 @@
 			color: #e47676;
 		}
 
+		.fa.white, .fab.white, .far.white, .fas.white, .color_white
+		{
+			color: #fff;
+		}
+
 	.grey, .color_grey, .grey > a
 	{
 		color: #999;

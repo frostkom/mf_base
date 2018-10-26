@@ -1226,7 +1226,7 @@ function get_media_library($data)
 				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
 					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
 					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>
-					<a href='#' rel='confirm'><i class='fa fa-trash-alt fa-lg'></i></a>
+					<a href='#' rel='confirm'><i class='fa fa-trash fa-lg red'></i></a>
 				</div>";
 			}
 

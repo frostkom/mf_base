@@ -1603,23 +1603,24 @@ if(class_exists('RWMB_Field'))
 	{
 		public static function html($meta, $field)
 		{
-			$options                     = self::transform_options( $field['options'] );
-			$attributes                  = self::call( 'get_attributes', $field, $meta );
+			$options = self::transform_options($field['options']);
+			$attributes = self::call('get_attributes', $field, $meta);
 			$attributes['data-selected'] = $meta;
-			$walker                      = new RWMB_Walker_Select( $field, $meta );
+			$walker = new RWMB_Walker_Select($field, $meta);
 
 			$attributes['class'] .= " multiselect";
 
-			$output                      = sprintf(
-				'<select %s>',
-				self::render_attributes( $attributes )
-			);
-			if ( ! $field['multiple'] && $field['placeholder'] ) {
-				$output .= '<option value="">' . esc_html( $field['placeholder'] ) . '</option>';
-			}
-			$output .= $walker->walk( $options, $field['flatten'] ? -1 : 0 );
-			$output .= '</select>';
-			$output .= self::get_select_all_html( $field );
+			$output = sprintf("<select %s>", self::render_attributes($attributes));
+
+				if(!$field['multiple'] && $field['placeholder'])
+				{
+					$output .= "<option value=''>".esc_html($field['placeholder'])."</option>";
+				}
+
+				$output .= $walker->walk($options, $field['flatten'] ? -1 : 0)
+			."</select>"
+			.self::get_select_all_html($field);
+
 			return $output;
 		}
 	}

@@ -16,6 +16,27 @@
 		min-height: 80vh;
 	}
 
+		.settings-wrap.loading .settings-nav
+		{
+			display: none;
+		}
+
+		.settings-wrap.loading .settings-tabs:before
+		{
+			content: '...';
+			font-size: 5em;
+			left: 50%;
+			opacity: .2;
+			position: absolute;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+			.settings-wrap.loading .settings-tabs > div, .settings-wrap.loading .settings-tabs > table, .settings-wrap.loading .settings-tabs > p
+			{
+				display: none !important;
+			}
+
 		.settings-tabs
 		{
 			background: #fff;
@@ -26,6 +47,7 @@
 			flex: 1 1 0;
 			overflow: hidden;
 			padding: .5em 2em;
+			position: relative;
 		}
 
 		.settings-wrap .display_warning:first-child

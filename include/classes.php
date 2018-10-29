@@ -1646,18 +1646,54 @@ class settings_page
 		);
 	}
 
+	function do_settings_sections($page)
+	{
+		global $wp_settings_sections, $wp_settings_fields;
+
+		if(!isset($wp_settings_sections[$page]))
+		{
+			return;
+		}
+
+		foreach((array)$wp_settings_sections[$page] as $section)
+		{
+			if($section['title'])
+			{
+				echo "<h2>".$section['title']."</h2>";
+			}
+
+			if($section['callback'])
+			{
+				call_user_func($section['callback'], $section);
+			}
+
+			if(!isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+			{
+				continue;
+			}
+
+			echo "<table class='form-table hide'>";
+
+				do_settings_fields($page, $section['id']);
+
+			echo "</table>";
+		}
+	}
+
 	public function create_admin_page()
 	{
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
-			<div class='settings-wrap'>
+			<div class='settings-wrap loading'>
 				<div class='settings-nav contextual-help-tabs'>
 					<ul></ul>
 				</div>
 				<form method='post' action='options.php' class='settings-tabs mf_form'>";
 
+					//echo "<i class='fa fa-spinner fa-spin hide'></i>";
+
 					settings_fields($this->options_page);
-					do_settings_sections($this->options_page);
+					$this->do_settings_sections($this->options_page);
 					submit_button();
 
 				echo "</div>

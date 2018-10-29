@@ -1568,7 +1568,7 @@ function settings_save_site_wide($setting_key)
 
 function settings_header($id, $title)
 {
-	return "<div id='".$id."'><a href='#".$id."'><h3>".$title."</h3></a></div>";
+	return "<div id='".$id."' class='hide'><a href='#".$id."'><h3>".$title."</h3></a></div>";
 }
 
 function remove_protocol($data)

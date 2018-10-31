@@ -438,7 +438,7 @@ function set_html_content_type()
 
 function send_email($data)
 {
-	global $error_text;
+	global $error_text, $phpmailer;
 
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
@@ -471,8 +471,6 @@ function send_email($data)
 
 		if($data['save_log'] == true || !$sent)
 		{
-			global $phpmailer;
-
 			$data_temp = $data;
 			unset($data_temp['content']);
 
@@ -519,6 +517,8 @@ function send_email($data)
 			{
 				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
 			}
+
+			do_action('sent_email', $phpmailer->From);
 		}
 
 		else
@@ -1171,6 +1171,7 @@ function get_file_icon($data) //$file
 	return "<i class='".$class." ".$data['size']."'></i>";
 }
 
+// Use wp_check_filetype('image.jpg') instead?
 function get_file_suffix($file, $force_last = false)
 {
 	if($force_last == false && preg_match("/\?/", $file))

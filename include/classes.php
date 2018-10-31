@@ -118,23 +118,33 @@ class mf_base
 
 	function return_bytes($val)
 	{
-		$val = trim($val);
+		$val_orig = $val;
+
+		$val = intval(trim($val));
 		$last = strtolower($val[strlen($val) - 1]);
 
-		switch($last)
+		if($val > 0)
 		{
-			// The 'G' modifier is available since PHP 5.1.0
-			case 'g':
-				$val *= pow(1024, 3);
-			break;
+			switch($last)
+			{
+				// The 'G' modifier is available since PHP 5.1.0
+				case 'g':
+					$val *= pow(1024, 3);
+				break;
 
-			case 'm':
-				$val *= pow(1024, 2);
-			break;
+				case 'm':
+					$val *= pow(1024, 2);
+				break;
 
-			case 'k':
-				$val *= 1024;
-			break;
+				case 'k':
+					$val *= 1024;
+				break;
+			}
+		}
+
+		else
+		{
+			do_log("return_bytes(): ".$val_orig." was not an integer");
 		}
 
 		return $val;

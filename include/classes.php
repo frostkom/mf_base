@@ -116,38 +116,39 @@ class mf_base
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
 
-	function return_bytes($val)
+	function return_bytes($value)
 	{
-		$val_orig = $val;
+		$number = substr($value, 0, -1);
+		$suffix = strtoupper(substr($value, -1));
 
-		$val = intval(trim($val));
-		$last = strtolower($val[strlen($val) - 1]);
-
-		if($val > 0)
+		if($number > 0)
 		{
-			switch($last)
+			switch($suffix)
 			{
-				// The 'G' modifier is available since PHP 5.1.0
-				case 'g':
-					$val *= pow(1024, 3);
+				case 'G':
+					$number *= pow(1024, 3);
 				break;
 
-				case 'm':
-					$val *= pow(1024, 2);
+				case 'M':
+					$number *= pow(1024, 2);
 				break;
 
-				case 'k':
-					$val *= 1024;
+				case 'K':
+					$number *= 1024;
+				break;
+
+				default:
+					do_log("There was no suffix in return_bytes() (".$value.")");
 				break;
 			}
 		}
 
 		else
 		{
-			do_log("return_bytes(): ".$val_orig." was not an integer");
+			do_log("The value was nothing in return_bytes() (".$value.")");
 		}
 
-		return $val;
+		return $number;
 	}
 
 	function setting_base_info_callback()
@@ -178,11 +179,17 @@ class mf_base
 		//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
 		$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
-		$intDBDate = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
-		$intFileDate = strtotime(date("Y-m-d H:i:s"));
-		$intDateDifference = abs($intDBDate - $intFileDate);
+		$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
+		$ftp_date = strtotime(date("Y-m-d H:i:s"));
+		$date_diff = abs($db_date - $ftp_date);
 
 		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
+
+		$total_space = disk_total_space('/');
+		$free_space = disk_free_space('/');
+
+		$free_percent = ($free_space / $total_space) * 100;
+
 		$load = sys_getloadavg();
 
 		/*$memory_used = memory_get_usage();
@@ -200,19 +207,26 @@ class mf_base
 					echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
 				}
 
-				if($intDateDifference > 60)
+				if($date_diff > 60)
 				{
-					echo "<p><i class='".($intDateDifference < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $intFileDate))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $intDBDate))." (".__("MySQL", 'lang_base').")</p>";
+					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $db_date))." (".__("MySQL", 'lang_base').")</p>";
 				}
 
 				else
 				{
-					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $intFileDate))."</p>";
+					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
 				}
 
-				echo "<p><i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> ".__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)."</p>
+				echo "<p>
+					<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+					.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+				."</p>
 			</div>
 			<div>
+				<p>
+					<i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+					.__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)
+				."</p>
 				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
 				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
 				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
@@ -495,8 +509,6 @@ class mf_base
 
 	function meta_page_content()
 	{
-		global $wpdb;
-
 		$out = "";
 
 		$post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT);
@@ -681,8 +693,6 @@ class mf_base
 	############################
 	function get_site_redirect($site_id = 0)
 	{
-		global $wpdb;
-
 		if($site_id > 0)
 		{
 			$site_url = get_site_url($site_id);
@@ -2718,8 +2728,6 @@ class mf_import
 
 	function get_form()
 	{
-		global $wpdb;
-
 		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import' rel='import/check/".get_class($this)."'>"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
@@ -2772,8 +2780,6 @@ class mf_import
 
 	function get_result()
 	{
-		global $wpdb;
-
 		$out = "";
 
 		$count_temp_rows = count($this->data);

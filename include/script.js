@@ -75,16 +75,28 @@ jQuery(function($)
 		$(this).blur();
 	});*/
 
-	$(document).on('click', '.toggler', function(e)
+	function do_toggle(dom_obj, e)
 	{
-		var toggler_rel = $(this).attr('rel'),
-			toggle_obj = $(".toggler[rel=" + toggler_rel + "]"),
-			toggle_container = $(".toggle_container[rel=" + toggler_rel + "]"),
+		
+	}
+
+	$(document).on('click', ".toggler", function(e)
+	{
+		var dom_obj = $(this),
+			dom_rel = dom_obj.attr('rel'),
+			/*toggle_obj = $(".toggler[rel=" + dom_rel + "]"),*/
+			toggle_container = $(".toggle_container[rel=" + dom_rel + "]"),
 			is_toggle_container = $(e.target).parents(".toggle_container").length > 0;
 
 		if(toggle_container.length > 0 && is_toggle_container == false)
 		{
-			toggle_obj.toggleClass('open');
+			if(dom_obj.hasClass('close_siblings') && dom_obj.hasClass('open') == false)
+			{
+				$(".toggler.close_siblings").removeClass('open').siblings(".toggle_container").addClass('hide');
+			}
+
+			/*toggle_obj.toggleClass('open');*/
+			dom_obj.toggleClass('open');
 			toggle_container.toggleClass('hide');
 		}
 

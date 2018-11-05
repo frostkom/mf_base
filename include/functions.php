@@ -2806,6 +2806,11 @@ function show_password_field($data)
 		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
 	}
 
+	if($data['suffix'] != '')
+	{
+		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
+	}
+
 	$out .= "<div class='form_password".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
 
 		if($data['text'] != '')

@@ -33,21 +33,18 @@ jQuery.fn.shorten = function(options)
 
 jQuery(function($)
 {
-	if(script_base.required_field_text != '')
+	$(".mf_form :required, .mf_form .required").each(function()
 	{
-		$(".mf_form :required, .mf_form .required").each(function()
+		if($(this).siblings("label").length > 0)
 		{
-			if($(this).siblings("label").length > 0)
-			{
-				$(this).siblings("label").append(" <span class='asterisk'>" + script_base.required_field_text + "</span>");
-			}
+			$(this).siblings("label").append(" <span class='asterisk'>*</span>");
+		}
 
-			else if($(this).parent("label").length > 0)
-			{
-				$(this).parent("label").append(" <span class='asterisk'>" + script_base.required_field_text + "</span>");
-			}
-		});
-	}
+		else if($(this).parent("label").length > 0)
+		{
+			$(this).parent("label").append(" <span class='asterisk'>*</span>");
+		}
+	});
 
 	$(".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]").each(function()
 	{
@@ -74,11 +71,6 @@ jQuery(function($)
 	{
 		$(this).blur();
 	});*/
-
-	function do_toggle(dom_obj, e)
-	{
-		
-	}
 
 	$(document).on('click', ".toggler", function(e)
 	{

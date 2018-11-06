@@ -96,9 +96,6 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			//'setting_base_exclude_sources' => __("Exclude Sources", 'lang_base'),
-			//'setting_base_required_field_text' => __("Required field text", 'lang_base'),
-			//'setting_all_options' => __("All options", 'lang_base'),
 		);
 
 		if(IS_SUPER_ADMIN)
@@ -174,9 +171,7 @@ class mf_base
 		$php_required = "5.2.4";
 		$mysql_required = "5.0";
 
-		//$has_required_php_version = point2int($php_version) > point2int($php_required);
 		$has_required_php_version = version_compare($php_version, $php_required, ">");
-		//$has_required_mysql_version = point2int($mysql_version) > point2int($mysql_required);
 		$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
 		$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
@@ -253,25 +248,17 @@ class mf_base
 				$arr_data[$key] = $value['display'];
 			}
 
-			/*if($option == "every_ten_seconds")
+			$next_cron = get_next_cron();
+
+			if($next_cron != '')
 			{
-				$select_suffix = sprintf(__("Make sure that %s is added to %s", 'lang_base'), "define('DISABLE_WP_CRON', true);", "wp-config.php");
+				$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
 			}
 
 			else
-			{*/
-				$next_cron = get_next_cron();
-
-				if($next_cron != '')
-				{
-					$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
-				}
-
-				else
-				{
-					$select_suffix = "";
-				}
-			//}
+			{
+				$select_suffix = "";
+			}
 
 			echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
 		}
@@ -300,28 +287,6 @@ class mf_base
 		{
 			echo "<em>".__("Has never been run", 'lang_base')."</em>";
 		}
-	}
-
-	/*function setting_base_exclude_sources_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key);
-
-		$arr_data = array(
-			'font_awesome' => __("Font Awesome", 'lang_base'),
-			'style' => __("Style", 'lang_base'),
-			'script' => __("Script", 'lang_base'),
-		);
-
-		echo show_select(array('data' => $arr_data, 'name' => $setting_key."[]", 'value' => $option));
-	}*/
-
-	function setting_base_required_field_text_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key);
-
-		echo show_textfield(array('name' => $setting_key, 'value' => $option, 'placeholder' => "*"));
 	}
 
 	function setting_base_recommend_callback()
@@ -357,9 +322,6 @@ class mf_base
 			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
 		}
 
-		//wordpress.org/plugins/wp-hotel-booking/
-		//wordpress.org/plugins/easyreservations/
-
 		foreach($arr_recommendations as $value)
 		{
 			$name = $value[0];
@@ -369,11 +331,6 @@ class mf_base
 			new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 		}
 	}
-
-	/*function setting_all_options_callback()
-	{
-		echo "<a href='".admin_url("options.php")."'>".__("Edit", 'lang_base')."</a>";
-	}*/
 
 	function admin_init()
 	{
@@ -456,57 +413,6 @@ class mf_base
 		}
 	}
 
-	function tiny_mce_before_init($init)
-	{
-		$init['setup'] = "function(ed)
-		{
-			ed.onBeforeSetContent.add(function(ed, event)
-			{
-				if(event.content.indexOf('[mf_custom_list id=') !== -1)
-				{
-					event.content = event.content.replace(/\[mf_custom_list id\=(.*?)\]/g, function(match, shortcode_id)
-					{
-						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_custom_list\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-envelope fa-lg\"></i> ".__("Custom List", 'lang_base')."</div>';
-					});
-				}
-
-				if(event.content.indexOf('[mf_form id=') !== -1)
-				{
-					event.content = event.content.replace(/\[mf_form id\=(.*?)\]/g, function(match, shortcode_id)
-					{
-						return '<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"mf_form\" data-mce-id=\"' + shortcode_id + '\" data-mce-url=\"".admin_url("post.php?action=edit&post=")."' + shortcode_id + '\" data-mce-resize=\"false\" data-mce-placeholder=\"1\"><i class=\"fa fa-envelope fa-lg\"></i> ".__("Form", 'lang_base')."</div>';
-					});
-				}
-			});
-
-			jQuery(document).on('click', '.mf_shortcode_placeholder', function()
-			{
-				console.log('Clicked');
-			});
-
-			ed.onPostProcess.add(function(ed, event)
-			{
-				if(event.get)
-				{
-					event.content = event.content.replace(/<div class=\"mf_shortcode_placeholder\" data-mce-shortcode=\"(.*?)\" data-mce-id=\"(.*?)\".*?>.*?<\/div>/g, function(tag, shortcode, shortcode_id)
-					{
-						var match,
-							string;
-
-						if(tag.indexOf('data-mce-id=') !== -1)
-						{
-							string = '[' + shortcode + ' id=' + shortcode_id + ']';
-						}
-
-						return string || tag;
-					});
-				}
-			});
-		}";
-
-		return $init;
-	}
-
 	function meta_page_content()
 	{
 		$out = "";
@@ -567,15 +473,6 @@ class mf_base
 		die();
 	}
 
-	/*function edit_form_after_title()
-	{
-		global $post, $wp_meta_boxes;
-
-		do_meta_boxes(get_current_screen(), 'after_title', $post);
-
-		unset($wp_meta_boxes[get_post_type($post)]['after_title']);
-	}*/
-
 	function login_init()
 	{
 		$this->wp_head();
@@ -586,24 +483,9 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		//$setting_base_exclude_sources = get_option('setting_base_exclude_sources');
-		//$setting_base_required_field_text = get_option_or_default('setting_base_required_field_text', '*');
-		$setting_base_required_field_text = '*';
-
-		/*if(!is_array($setting_base_exclude_sources) || !in_array('font_awesome', $setting_base_exclude_sources))
-		{*/
-			mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.3.1.php", $plugin_version);
-		//}
-
-		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-		{*/
-			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-		//}
-
-		/*if(!is_array($setting_base_exclude_sources) || !in_array('style', $setting_base_exclude_sources))
-		{*/
-			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'required_field_text' => $setting_base_required_field_text, 'read_more' => __("Read More", 'lang_base')), $plugin_version);
-		//}
+		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.3.1.php", $plugin_version);
+		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
 	}
 
 	function phpmailer_init($phpmailer)
@@ -802,7 +684,7 @@ class mf_base
 			$old_md5 = get_match("/BEGIN MF Base \((.*?)\)/is", $content, false);
 			$new_md5 = md5($recommend_htaccess);
 
-			if($new_md5 != $old_md5) //!preg_match("/BEGIN MF Base/", $content) || ($this->all_is_https == true && !preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->all_is_https == false && preg_match("/\{ENV\:HTTPS\} \!\=on/", $content)) || ($this->last_redirect != '' && strpos($content, $this->last_redirect) === false)
+			if($new_md5 != $old_md5)
 			{
 				echo "<div class='mf_form'>"
 					."<h3 class='display_warning'><i class='fa fa-exclamation-triangle yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
@@ -1017,10 +899,6 @@ class mf_list_table extends WP_List_Table
 			$this->_args['singular'] = $this->post_type;
 		}
 
-		/**
-		 * Optional. You can handle your bulk actions however you see fit. In this
-		 * case, we'll handle them within our package just to keep things clean.
-		 */
 		$this->process_bulk_action();
 
 		$this->orderby = check_var('orderby', 'char', true, $this->orderby_default);
@@ -1710,8 +1588,6 @@ class settings_page
 				</div>
 				<form method='post' action='options.php' class='settings-tabs mf_form'>";
 
-					//echo "<i class='fa fa-spinner fa-spin hide'></i>";
-
 					settings_fields($this->options_page);
 					$this->do_settings_sections($this->options_page);
 					submit_button();
@@ -2345,7 +2221,7 @@ class mf_import
 
 		if($count_temp_rows > 0)
 		{
-			$this->query_base_where = ""; //$this->query_base_xtra = 
+			$this->query_base_where = "";
 
 			switch($this->table)
 			{
@@ -2355,7 +2231,6 @@ class mf_import
 					$table_user = "post_author";
 
 					$this->query_base_where .= ($this->query_base_where != '' ? " AND " : "")."post_type = '".esc_sql($this->post_type)."'";
-					//$this->query_base_xtra .= ($this->query_base_xtra != '' ? ", " : "")."post_type = '".esc_sql($this->post_type)."'";
 				break;
 
 				case 'users':
@@ -2585,7 +2460,7 @@ class mf_import
 									break;
 
 									case 'users':
-										//Do nothing
+										// Do nothing
 									break;
 
 									default:
@@ -2687,22 +2562,7 @@ class mf_import
 
 				$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => "import_result", 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
-				//$out .= "<tr><td colspan='3'>".get_notification()."</td></tr>";
 				$out .= get_notification();
-
-				/*foreach($this->result as $row)
-				{
-					$out .= "<tr class='".$row['type']."'>
-						<td><i class='".$row['action']." fa-lg'></i></td>
-						<td>".$row['id']."</td>
-						<td colspan='2'>"
-							//."<div class='row-actions'>"
-								.(isset($row['value']) ? $row['value'] : '')
-
-							//."</div>"
-						."</td>
-					</tr>";
-				}*/
 			}
 		}
 

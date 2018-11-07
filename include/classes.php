@@ -1750,7 +1750,7 @@ class mf_font_icons
 
 		if(!isset($data['title'])){		$data['title'] = $title;}
 		if(!isset($data['class'])){		$data['class'] = '';}
-		if(!isset($data['nbsp'])){		$data['nbsp'] = $nbsp;}
+		//if(!isset($data['nbsp'])){		$data['nbsp'] = $nbsp;}
 
 		$out = "";
 
@@ -1760,7 +1760,7 @@ class mf_font_icons
 			{
 				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php", get_plugin_version(__FILE__));
 
-				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>".($data['nbsp'] ? "&nbsp;" : '');
+				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>"; //.($data['nbsp'] ? "&nbsp;" : '')
 			}
 
 			else
@@ -1770,7 +1770,7 @@ class mf_font_icons
 					$data['symbol'] = "fa fa-".$data['symbol'];
 				}
 
-				$out = "<i class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></i>".($data['nbsp'] ? "&nbsp;" : '');
+				$out = "<i class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></i>"; //.($data['nbsp'] ? "&nbsp;" : '')
 			}
 		}
 

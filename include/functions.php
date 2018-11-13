@@ -1677,9 +1677,10 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(function_exists('is_plugin_active') && is_plugin_active('mf_users/index.php') && function_exists('hide_roles'))
+		if(function_exists('is_plugin_active') && is_plugin_active('mf_users/index.php'))
 		{
-			hide_roles();
+			$obj_users = new mf_users();
+			$obj_users->hide_roles();
 		}
 
 		$roles = $wp_roles->get_names();

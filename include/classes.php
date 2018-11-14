@@ -180,10 +180,13 @@ class mf_base
 
 		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
 
-		$total_space = disk_total_space('/');
-		$free_space = disk_free_space('/');
+		$total_space = @disk_total_space('/');
+		$free_space = @disk_free_space('/');
 
-		$free_percent = ($free_space / $total_space) * 100;
+		if($total_space > 0)
+		{
+			$free_percent = ($free_space / $total_space) * 100;
+		}
 
 		$load = sys_getloadavg();
 
@@ -212,11 +215,15 @@ class mf_base
 					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
 				}
 
-				echo "<p>
-					<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-					.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
-				."</p>
-			</div>
+				if(isset($free_percent))
+				{
+					echo "<p>
+						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+					."</p>";
+				}
+
+			echo "</div>
 			<div>
 				<p>
 					<i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "

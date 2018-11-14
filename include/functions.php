@@ -3800,7 +3800,7 @@ function get_post_children($data, &$arr_data = array())
 		foreach($result as $r)
 		{
 			$post_id = $r->ID;
-			$post_title = $r->post_title;
+			$post_title = ($r->post_title != '' ? $r->post_title : "(".__("no title", 'lang_base').")");
 
 			if($data['output_array'] == true)
 			{

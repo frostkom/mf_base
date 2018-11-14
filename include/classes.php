@@ -2106,11 +2106,12 @@ class mf_import
 
 		else if($this->has_excel_support)
 		{
-			$this->file_location = isset($_FILES['strImportFile']) ? $_FILES['strImportFile']['tmp_name'] : "";
+			$this->file_name = isset($_FILES['strImportFile']) ? $_FILES['strImportFile']['name'] : '';
+			$this->file_location = isset($_FILES['strImportFile']) ? $_FILES['strImportFile']['tmp_name'] : '';
 
-			if($this->file_location != '')
+			if($this->file_name != '' && $this->file_location != '')
 			{
-				$file_suffix = get_file_suffix($this->file_location);
+				$file_suffix = get_file_suffix($this->file_name);
 
 				switch($file_suffix)
 				{
@@ -2125,7 +2126,7 @@ class mf_import
 				}
 
 				$objReader = PHPExcel_IOFactory::createReader($file_reader);
-				$objReader->setReadDataOnly(TRUE);
+				$objReader->setReadDataOnly(true);
 				$objPHPExcel = $objReader->load($this->file_location);
 
 				$objWorksheet = $objPHPExcel->getActiveSheet();
@@ -2135,7 +2136,7 @@ class mf_import
 				foreach($objWorksheet->getRowIterator() as $row)
 				{
 					$cellIterator = $row->getCellIterator();
-					$cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells, even if a cell value is not set. By default, only cells that have a value set will be iterated.
+					$cellIterator->setIterateOnlyExistingCells(false); // This loops through all cells, even if a cell value is not set. By default, only cells that have a value set will be iterated.
 
 					$j = 0;
 

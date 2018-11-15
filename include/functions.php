@@ -1382,10 +1382,20 @@ function mf_get_post_content($id, $field = 'post_content')
 
 function get_install_link_tags($require_url, $required_name)
 {
-	$a_start = "<a href='".($require_url != '' ? $require_url : get_site_url()."/wp-admin".(is_multisite() ? "/network" : "")."/plugin-install.php?tab=search&s=".$required_name)."'>";
-	$a_end = "</a>";
+	if($require_url == '')
+	{
+		if(is_multisite())
+		{
+			$require_url = network_admin_url("plugin-install.php?tab=search&type=term&s=".$required_name);
+		}
 
-	return array($a_start, $a_end);
+		else
+		{
+			$require_url = admin_url("plugin-install.php?tab=search&s=".$required_name);
+		}
+	}
+
+	return array("<a href='".$require_url."'>", "</a>");
 }
 
 function mf_trigger_error($message, $errno)

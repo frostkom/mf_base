@@ -518,7 +518,10 @@ function send_email($data)
 				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
 			}
 
-			do_action('sent_email', $phpmailer->From);
+			if(isset($phpmailer->From))
+			{
+				do_action('sent_email', $phpmailer->From);
+			}
 		}
 
 		else

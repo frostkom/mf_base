@@ -3012,8 +3012,6 @@ function show_select($data)
 	if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
 	if(!isset($data['value'])){			$data['value'] = $data['compare'];}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	//if(!isset($data['minsize'])){		$data['minsize'] = 2;}
-	//if(!isset($data['maxsize'])){		$data['maxsize'] = 10;}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['attributes'])){	$data['attributes'] = array();}
@@ -3041,7 +3039,7 @@ function show_select($data)
 				$obj_base->data['xtra'] = "class='multiselect'";
 			}*/
 
-			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array('count' => $count_temp))."'";
+			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array_merge($data, array('count' => $count_temp)))."'";
 
 			$container_class .= " form_select_multiple";
 		}

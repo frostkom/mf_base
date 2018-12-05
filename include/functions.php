@@ -119,9 +119,7 @@ function show_flot_graph($data)
 	global $flot_count;
 
 	if(!isset($data['type'])){				$data['type'] = 'lines';}
-	//if(!isset($data['type_settings'])){	$data['type_settings'] = '';}
 	if(!isset($data['settings'])){			$data['settings'] = '';}
-	//if(!isset($data['width'])){			$data['width'] = '';}
 	if(!isset($data['height'])){			$data['height'] = '';}
 	if(!isset($data['title'])){				$data['title'] = '';}
 
@@ -132,8 +130,6 @@ function show_flot_graph($data)
 		yaxis: {
 			tickFormatter: function suffixFormatter(val, axis)
 			{
-				/*console.log(val);*/
-
 				return parseInt(val).toLocaleString();
 			}
 		}";
@@ -162,12 +158,7 @@ function show_flot_graph($data)
 		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js", $plugin_version); //Should be moved to admin_init
 		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js", $plugin_version);
 
-		$style_cont = "";
-
-		/*if($data['width'] > 0)
-		{*/
-			$style_cont .= "width: 95%;";
-		//}
+		$style_cont = "width: 95%;";
 
 		if($data['height'] > 0)
 		{
@@ -211,7 +202,7 @@ function show_flot_graph($data)
 					}
 
 				$out .= "],
-				{series: {".$data['type'].": {show: true}}," //".$data['type_settings']."
+				{series: {".$data['type'].": {show: true}},"
 				."grid: {hoverable: true}"
 				.($data['settings'] != '' ? ",".$data['settings'] : "")."});
 			}
@@ -246,20 +237,6 @@ function get_pages_from_shortcode($shortcode)
 
 	return $arr_ids;
 }
-
-/*function explode_and_trim($delimiter, $string)
-{
-	do_log("explode_and_trim() is still in use");
-
-	$array = explode($delimiter, $string);
-
-	foreach($array as $key => $value)
-	{
-		$array[$key] = trim($value);
-	}
-
-	return $array;
-}*/
 
 function get_site_url_clean($data = array())
 {
@@ -868,8 +845,8 @@ function get_post_meta_file_src($data)
 
 function time_between_dates($data)
 {
-	if(!isset($data['type'])){		$data['type'] = "round";}
-	if(!isset($data['return'])){	$data['return'] = "days";}
+	if(!isset($data['type'])){		$data['type'] = 'round';}
+	if(!isset($data['return'])){	$data['return'] = 'days';}
 
 	$arr_return_types = array(
 		'days' => 60 * 60 * 24,
@@ -1069,11 +1046,6 @@ function do_log($data, $action = 'publish')
 	{
 		error_log($data);
 	}
-
-	/*else if(IS_ADMIN)
-	{
-		echo $data."<br>";
-	}*/
 }
 
 function set_cron($hook, $option_key, $option_default = 'hourly')
@@ -1436,7 +1408,7 @@ function get_current_user_role($id = 0)
 	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("Unknown", 'lang_base').")";
 }
 
-//main_version*10000 + minor_version *100 + sub_version. For example, 4.1.0 is returned as 40100
+//main_version * 10000 + minor_version * 100 + sub_version. For example, 4.1.0 is returned as 40100
 function int2point($in)
 {
 	$out = "";
@@ -1823,6 +1795,7 @@ function get_roles_for_select($data = array())
 function get_users_for_select($data = array())
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['callback'])){			$data['callback'] = '';}
 
 	$users = get_users(array(
@@ -1835,7 +1808,7 @@ function get_users_for_select($data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
+		$arr_data[''] = "-- ".$data['choose_here_text']." --";
 	}
 
 	foreach($users as $user)
@@ -2573,7 +2546,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 	{
 		if(is_array($temp))
 		{
-			$out = $temp; //Får aldrig köras addslashes() på detta
+			$out = $temp; // Never do addslashes() here
 		}
 
 		else if($temp == '')
@@ -3033,7 +3006,7 @@ function show_select($data)
 		{
 			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
 
-			/* Do NOT make this default becuase it might have unknown consequences on some selects */
+			/* Do NOT make this default because it might have unknown consequences on some selects */
 			/*if($obj_base->data['xtra'] == '')
 			{
 				$obj_base->data['xtra'] = "class='multiselect'";
@@ -3852,7 +3825,6 @@ function get_post_children($data, &$arr_data = array())
 
 function format_phone_no($string)
 {
-	//return "tel:".str_replace(array(" ", "-", "/"), "", $string);
 	return "tel:".preg_replace("/[^\d]/", "", $string);
 }
 

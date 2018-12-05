@@ -775,7 +775,7 @@ class mf_cron
 		if(!isset($data['end'])){			$data['end'] = date("Y-m-d H:i:s");}
 		if(!isset($data['margin'])){		$data['margin'] = 1;}
 
-		$time_difference = time_between_dates(array('start' => $data['start'], 'end' => $data['end'], 'type' => "ceil", 'return' => "seconds"));
+		$time_difference = time_between_dates(array('start' => $data['start'], 'end' => $data['end'], 'type' => 'ceil', 'return' => 'seconds'));
 
 		return $time_difference >= ($this->get_interval() * $data['margin']);
 	}

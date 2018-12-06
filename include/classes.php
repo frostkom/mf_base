@@ -316,7 +316,7 @@ class mf_base
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 			//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
-			array("Thumb Fixer for Facebook", 'facebook-thumb-fixer/_facebook-thumb-fixer.php', __("to be able to control how thumbnails are viewed when shared", 'lang_base')),
+			//array("Thumb Fixer for Facebook", 'facebook-thumb-fixer/_facebook-thumb-fixer.php', __("to be able to control how thumbnails are viewed when shared", 'lang_base')), //This is already taken care of in Share/Theme Core
 			//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),

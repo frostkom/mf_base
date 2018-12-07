@@ -1476,7 +1476,7 @@ function get_next_cron($raw = false)
 
 		else if($mins == 0)
 		{
-			return __("now", 'lang_base');
+			return __("at any moment", 'lang_base');
 		}
 
 		else
@@ -3106,7 +3106,8 @@ function show_select($data)
 
 							else
 							{
-								$out .= "<option value='".$data_value."'";
+								//$out .= "<option value='".$data_value."'";
+								$out .= "<option value='".($data_value === 0 ? '' : $data_value)."'";
 
 									if($is_disabled)
 									{

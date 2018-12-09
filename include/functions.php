@@ -2379,26 +2379,24 @@ function mf_redirect($location, $arr_vars = array(), $method = 'post')
 {
 	$count_temp = count($arr_vars);
 
-	if(headers_sent() || $count_temp > 0)
-	{
-		echo "<form name='reload' action='".$location."' method='".$method."'>";
-
-			if($count_temp > 0)
-			{
-				foreach($arr_vars as $key => $value)
-				{
-					echo input_hidden(array('name' => $key, 'value' => $value));
-				}
-			}
-
-		echo "</form>
-		<script>document.reload.submit();</script>";
-	}
-
-	else
+	if(!headers_sent() && $count_temp == 0)
 	{
 		header("Location: ".$location);
 	}
+
+	// Run this if header() does not work or headers_sent()
+	echo "<form name='reload' action='".$location."' method='".$method."'>";
+
+		if($count_temp > 0)
+		{
+			foreach($arr_vars as $key => $value)
+			{
+				echo input_hidden(array('name' => $key, 'value' => $value));
+			}
+		}
+
+	echo "</form>
+	<script>document.reload.submit();</script>";
 
 	exit;
 }

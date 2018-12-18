@@ -30,6 +30,8 @@ class mf_base
 		if(current_user_can('update_core'))
 		{
 			$is_super_admin = $is_admin = $is_editor = $is_author = true;
+
+			define('ALLOW_UNFILTERED_UPLOADS', true);
 		}
 
 		else if(current_user_can('manage_options'))

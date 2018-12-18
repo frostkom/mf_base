@@ -33,59 +33,64 @@ jQuery(function($)
 
 	if(script_base_settings.settings_page)
 	{
-		var arr_tabs = [];
+		var dom_nav = $(".settings-nav ul");
 
-		$(".wrap form > div > a").each(function()
+		if(dom_nav.children("li").length == 0)
 		{
-			var dom_obj = $(this),
-				dom_id = dom_obj.attr('href').replace('#', ''),
-				dom_name = dom_obj.children("h3").text();
+			var arr_tabs = [];
 
-			arr_tabs.push({id: dom_id, name: dom_name});
-		});
-
-		if(arr_tabs.length > 0)
-		{
-			arr_tabs.sort(function(a, b)
+			$(".wrap form > div > a").each(function()
 			{
-				return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+				var dom_obj = $(this),
+					dom_id = dom_obj.attr('href').replace('#', ''),
+					dom_name = dom_obj.children("h3").text();
+
+				arr_tabs.push({id: dom_id, name: dom_name});
 			});
 
-			$.each(arr_tabs, function(index, value)
+			if(arr_tabs.length > 0)
 			{
-				if(value.name.indexOf(' - ') > -1)
+				arr_tabs.sort(function(a, b)
 				{
-					var arr_name = value.name.split(' - ');
+					return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+				});
 
-					value.name = ' - ' + arr_name[1];
-				}
-
-				var tab_label = "<li><a href='#" + value.id + "' id='tab_" + value.id + "'>" + value.name + "</a></li>";
-
-				if(value.id == "settings_base")
+				$.each(arr_tabs, function(index, value)
 				{
-					$(".settings-nav ul").prepend(tab_label);
-				}
+					if(value.name.indexOf(' - ') > -1)
+					{
+						var arr_name = value.name.split(' - ');
 
-				else
+						value.name = ' - ' + arr_name[1];
+					}
+
+					var tab_label = "<li><a href='#" + value.id + "' id='tab_" + value.id + "'>" + value.name + "</a></li>";
+
+					if(value.id == "settings_base")
+					{
+						dom_nav.prepend(tab_label);
+					}
+
+					else
+					{
+						dom_nav.append(tab_label);
+					}
+
+					$("#" + value.id).hide();
+				});
+			}
+
+			$(".settings-wrap .display_warning").each(function()
+			{
+				var self = $(this),
+					tab_id = self.parents(".form-table").prev("div").attr('id');
+
+				if($("#tab_" + tab_id + " .fa-exclamation-triangle").length == 0)
 				{
-					$(".settings-nav ul").append(tab_label);
+					$("#tab_" + tab_id).append(" <i class='fa fa-exclamation-triangle yellow'></i>");
 				}
-
-				$("#" + value.id).hide();
 			});
 		}
-
-		$(".settings-wrap .display_warning").each(function()
-		{
-			var self = $(this),
-				tab_id = self.parents(".form-table").prev("div").attr('id');
-
-			if($("#tab_" + tab_id + " .fa-exclamation-triangle").length == 0)
-			{
-				$("#tab_" + tab_id).append(" <i class='fa fa-exclamation-triangle yellow'></i>");
-			}
-		});
 	}
 
 	else

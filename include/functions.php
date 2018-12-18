@@ -154,8 +154,9 @@ function show_flot_graph($data)
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
+		//Should be moved to admin_init
 		mf_enqueue_style('style_flot', $plugin_include_url."style_flot.css", $plugin_version);
-		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js", $plugin_version); //Should be moved to admin_init
+		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js", $plugin_version);
 		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js", $plugin_version);
 
 		$style_cont = "width: 95%;";
@@ -2144,14 +2145,14 @@ function validate_url($value, $link = true, $http = true)
 
 function get_url_content($data = array(), $catch_head = false, $password = '', $post = '', $post_data = '')
 {
-	if(!is_array($data))
+	/*if(!is_array($data))
 	{
 		do_log("get_url_content(): ".$data);
 
 		$data = array(
 			'url' => $data,
 		);
-	}
+	}*/
 
 	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){		$data['catch_head'] = $catch_head;}
@@ -2160,7 +2161,10 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 	if(!isset($data['content_type'])){		$data['content_type'] = '';}
 	if(!isset($data['password'])){			$data['password'] = $password;}
 	if(!isset($data['post_data'])){			$data['post_data'] = $post_data;}
-	if(!isset($data['cert_path'])){			$data['cert_path'] = '';}
+	if(!isset($data['cert_path'])){			$data['cert_path'] = '';} // Deprecated
+	if(!isset($data['ca_path'])){			$data['ca_path'] = $data['cert_path'];}
+	if(!isset($data['ssl_cert_path'])){		$data['ssl_cert_path'] = '';}
+	if(!isset($data['ssl_key_path'])){		$data['ssl_key_path'] = '';}
 
 	$data['url'] = validate_url($data['url'], false);
 
@@ -2178,12 +2182,26 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 	}
 
-	if($data['cert_path'] != '')
+	if($data['ca_path'] != '')
 	{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_CAINFO, $data['cert_path']);
-		curl_setopt($ch, CURLOPT_CAPATH, $data['cert_path']);
+		curl_setopt($ch, CURLOPT_CAINFO, $data['ca_path']); // The name of a file holding one or more certificates to verify the peer with.
+		curl_setopt($ch, CURLOPT_CAPATH, $data['ca_path']); // A directory that holds multiple CA certificates
+	}
+
+	if($data['ssl_cert_path'] != '')
+	{
+		curl_setopt($ch, CURLOPT_SSLCERT, $data['ssl_cert_path']);
+		//curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'PEM'); // "PEM" (default), "DER", "ENG"
+		//curl_setopt($ch, CURLOPT_SSLCERTPASSWD, $certPass);
+	}
+
+	if($data['ssl_key_path'] != '')
+	{
+		curl_setopt($ch, CURLOPT_SSLKEY, $data['ssl_key_path']);
+		//curl_setopt($ch, CURLOPT_SSLKEYTYPE, 'PEM'); // "PEM" (default), "DER", "ENG"
+		//curl_setopt($ch, CURLOPT_SSLKEYPASSWD, $keyPass);
 	}
 
 	if($data['password'] != '')
@@ -2216,14 +2234,14 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	/*if(curl_errno($handle))
 	{
-		do_log(__("CURL Error", 'lang_base').": ".curl_error($ch));
+		do_log(__("cURL Error", 'lang_base').": ".curl_error($ch));
 	}*/
 
 	if($data['catch_head'] == true)
 	{
 		$headers = curl_getinfo($ch);
 
-		$return_value = array($content, $headers);
+		$out = array($content, $headers);
 
 		if($data['follow_redirect'] == true)
 		{
@@ -2235,7 +2253,7 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 						$data['url'] = $headers['redirect_url'];
 						$data['follow_redirect'] = false;
 
-						$return_value = get_url_content($data);
+						$out = get_url_content($data);
 					}
 				break;
 			}
@@ -2244,12 +2262,17 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	else
 	{
-		$return_value = $content;
+		$out = $content;
 	}
 
 	curl_close($ch);
 
-	return $return_value;
+	if(get_option('setting_log_curl_debug') == 'yes')
+	{
+		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true), 'auto-draft');
+	}
+
+	return $out;
 }
 
 function get_notification()

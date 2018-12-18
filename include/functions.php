@@ -2576,7 +2576,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
-	else if($type == 'char' || $type2 == 'str')
+	else if($type == 'char' || $type2 == 'str' || in_array($type, array('address', 'city', 'country', 'name', 'zip')))
 	{
 		$out = trim(addslashes($temp));
 

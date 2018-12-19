@@ -26,7 +26,7 @@ jQuery(function($)
 
 			else
 			{
-				dom_section.show().siblings(".nav-target").addClass('hide');
+				dom_section.removeClass('hide').siblings(".nav-target").addClass('hide'); /*.show()*/
 			}
 		}
 	}
@@ -93,10 +93,10 @@ jQuery(function($)
 		}
 	}
 
-	else
+	/*else
 	{
 		$(".nav-target").hide();
-	}
+	}*/
 
 	hash_action();
 

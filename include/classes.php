@@ -2276,10 +2276,10 @@ class mf_import
 				$arr_values = $this->data[$i];
 				$count_temp_values = count($arr_values);
 
-				if($count_temp_values == 1)
+				/*if($count_temp_values == 1)
 				{
 					do_log("The row only had one column (".var_export($arr_values, true).")");
-				}
+				}*/
 
 				for($j = 0; $j < $count_temp_values; $j++)
 				{
@@ -2350,7 +2350,7 @@ class mf_import
 											break;
 
 											case 'users':
-												//$query_update .= ;
+												// Add nothing
 											break;
 
 											default:

@@ -2,6 +2,7 @@
 
 function get_option_page_suffix($data)
 {
+	if(!isset($data['post_type'])){	$data['post_type'] = 'page';}
 	if(!isset($data['title'])){		$data['title'] = '';}
 	if(!isset($data['content'])){	$data['content'] = '';}
 
@@ -12,7 +13,7 @@ function get_option_page_suffix($data)
 
 	else
 	{
-		$out = "<a href='".admin_url("post-new.php?post_type=page".($data['title'] != '' ? "&post_title=".$data['title'] : "").($data['content'] != '' ? "&content=".$data['content'] : ""))."'><i class='fa fa-plus-circle fa-lg'></i></a>";
+		$out = "<a href='".admin_url("post-new.php?post_type=".$data['post_type'].($data['title'] != '' ? "&post_title=".$data['title'] : "").($data['content'] != '' ? "&content=".$data['content'] : ""))."'><i class='fa fa-plus-circle fa-lg'></i></a>";
 	}
 
 	return $out;

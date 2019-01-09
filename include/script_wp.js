@@ -133,11 +133,6 @@ jQuery(function($)
 						send_notification(value);
 					});
 				}
-
-				/*else
-				{
-					console.log("Error: " , data);
-				}*/
 			}
 		});
 	}

@@ -216,7 +216,6 @@ jQuery(function($)
 
 			else
 			{
-				/*console.log("Error" , html);*/
 				/*self.after("<div class='error'><p>" + script_media_button.no_attachment_link + "</p></div>");*/
 			}
 

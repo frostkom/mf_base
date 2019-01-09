@@ -494,7 +494,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'auto-draft');
+				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -2270,7 +2270,7 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	if(get_option('setting_log_curl_debug') == 'yes')
 	{
-		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true), 'auto-draft');
+		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true), 'notification');
 	}
 
 	return $out;

@@ -3851,29 +3851,62 @@ function format_phone_no($string)
 	return "tel:".preg_replace("/[^\d]/", "", $string);
 }
 
-function month_name($month_no, $ucfirst = 1)
+function month_name($data, $ucfirst = 1) //month_no
 {
-	if($month_no < 1)
+	if(!is_array($data))
 	{
-		$month_no = 1;
+		$data = array(
+			'number' => $data,
+		);
 	}
 
-	$month_names = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
+	if(!isset($data['ucfirst'])){	$data['ucfirst'] = $ucfirst;}
 
-	$out = $month_names[$month_no - 1];
+	if($data['number'] < 1)
+	{
+		$data['number'] = 1;
+	}
 
-	if($ucfirst == 0){$out = strtolower($out);}
+	$array = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
+
+	$out = $array[$data['number'] - 1];
+
+	if($data['ucfirst'] == 0)
+	{
+		$out = strtolower($out);
+	}
 
 	return $out;
 }
 
-function day_name($day_no, $ucfirst = 1)
+function day_name($data, $ucfirst = 1) //day_no
 {
-	$day_names = array(__("Sunday", 'lang_base'), __("Monday", 'lang_base'), __("Tuesday", 'lang_base'), __("Wednesday", 'lang_base'), __("Thursday", 'lang_base'), __("Friday", 'lang_base'), __("Saturday", 'lang_base'));
+	if(!is_array($data))
+	{
+		$data = array(
+			'number' => $data,
+		);
+	}
 
-	$out = $day_names[$day_no];
+	if(!isset($data['ucfirst'])){	$data['ucfirst'] = $ucfirst;}
+	if(!isset($data['short'])){		$data['short'] = false;}
 
-	if($ucfirst == 0){$out = strtolower($out);}
+	if($data['short'])
+	{
+		$array = array(__("Sun", 'lang_base'), __("Mon", 'lang_base'), __("Tue", 'lang_base'), __("Wed", 'lang_base'), __("Thu", 'lang_base'), __("Fri", 'lang_base'), __("Sat", 'lang_base'));
+	}
+
+	else
+	{
+		$array = array(__("Sunday", 'lang_base'), __("Monday", 'lang_base'), __("Tuesday", 'lang_base'), __("Wednesday", 'lang_base'), __("Thursday", 'lang_base'), __("Friday", 'lang_base'), __("Saturday", 'lang_base'));
+	}
+
+	$out = $array[$data['number']];
+
+	if($data['ucfirst'] == 0)
+	{
+		$out = strtolower($out);
+	}
 
 	return $out;
 }

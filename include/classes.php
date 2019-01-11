@@ -1007,6 +1007,11 @@ class mf_list_table extends WP_List_Table
 					}
 				}
 
+				if($this->search != '')
+				{
+					$url_xtra .= "&s=".$this->search;
+				}
+
 				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key.$url_xtra."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
 			}
 		}
@@ -1271,40 +1276,30 @@ class mf_list_table extends WP_List_Table
 
 	function search_box($text, $input_id)
 	{
-		if($this->search == '' && !$this->has_items())
+		if($this->search != '' || $this->has_items() || isset($this->arr_settings['force_search']) && $this->arr_settings['force_search'])
 		{
-			return;
+			$input_id = esc_attr($input_id."-search-input");
+
+			echo "<p class='search-box'>";
+
+				//echo "<label class='screen-reader-text' for='".$input_id."'>".$text.":</label>";
+				
+				echo "<input type='search' id='".$input_id."' name='s' value='".$this->search."'>";
+
+				submit_button($text, '', '', false, array('id' => 'search-submit'));
+
+				$arr_var_keys = array('orderby', 'order', 'post_status'); //post_mime_type, detached
+
+				foreach($arr_var_keys as $var_key)
+				{
+					if(!empty($_REQUEST[$var_key]))
+					{
+						echo input_hidden(array('name' => $var_key, 'value' => check_var($var_key)));
+					}
+				}
+
+			echo "</p>";
 		}
-
-		$input_id = $input_id.'-search-input';
-
-		if(!empty($_REQUEST['orderby']))
-		{
-			echo '<input type="hidden" name="orderby" value="'.esc_attr($_REQUEST['orderby']).'">';
-		}
-
-		if(!empty($_REQUEST['order']))
-		{
-			echo '<input type="hidden" name="order" value="'.esc_attr($_REQUEST['order']).'">';
-		}
-
-		/*if(!empty($_REQUEST['post_mime_type']))
-		{
-			echo '<input type="hidden" name="post_mime_type" value="' . esc_attr( $_REQUEST['post_mime_type'] ) . '" />';
-		}
-
-		if(!empty($_REQUEST['detached']))
-		{
-			echo '<input type="hidden" name="detached" value="' . esc_attr( $_REQUEST['detached'] ) . '" />';
-		}*/
-
-		echo "<p class='search-box'>
-			<label class='screen-reader-text' for='".esc_attr($input_id)."'>".$text.":</label>
-			<input type='search' id='".esc_attr($input_id)."' name='s' value='".$this->search."'>";
-
-			submit_button($text, '', '', false, array('id' => 'search-submit'));
-
-		echo "</p>";
 	}
 
 	function show_search_form()

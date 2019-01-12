@@ -638,7 +638,7 @@ class mf_base
 
 			if(is_multisite())
 			{
-				$result = get_sites();
+				$result = get_sites(array('deleted' => 0));
 
 				foreach($result as $r)
 				{
@@ -1283,7 +1283,7 @@ class mf_list_table extends WP_List_Table
 			echo "<p class='search-box'>";
 
 				//echo "<label class='screen-reader-text' for='".$input_id."'>".$text.":</label>";
-				
+
 				echo "<input type='search' id='".$input_id."' name='s' value='".$this->search."'>";
 
 				submit_button($text, '', '', false, array('id' => 'search-submit'));

@@ -110,7 +110,6 @@
 
 	#wrapper .widefat
 	{
-		/*background: #fff;*/
 		border: 1px solid #e5e5e5;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
 		border-spacing: 0;
@@ -315,7 +314,6 @@
 			color: inherit;
 			cursor: pointer;
             display: block;
-			/*min-height: 1.8em;*/
 			line-height: 1.8;
         }
 

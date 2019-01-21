@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-10 11:47+0100\n"
+"POT-Creation-Date: 2019-01-21 14:38+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -226,47 +226,47 @@ msgstr "Vi rekommenderar att du installerar %s också"
 msgid "Use delete_base() on %s"
 msgstr "Använd delete_base() på %s"
 
-#: ../include/classes.php:1130
-#: ../include/classes.php:2610
+#: ../include/classes.php:1135
+#: ../include/classes.php:2605
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:1203
+#: ../include/classes.php:1208
 msgid "Filter"
 msgstr "Filtrera"
 
-#: ../include/classes.php:1209
+#: ../include/classes.php:1214
 msgid "Empty Trash"
 msgstr "Töm papperskorg"
 
-#: ../include/classes.php:1314
+#: ../include/classes.php:1309
 #: ../include/functions.php:1936
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:1395
-#: ../include/classes.php:1419
-#: ../include/classes.php:2671
+#: ../include/classes.php:1390
+#: ../include/classes.php:1414
+#: ../include/classes.php:2666
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:1411
+#: ../include/classes.php:1406
 msgid "Sorting"
 msgstr "Sortering"
 
-#: ../include/classes.php:1500
+#: ../include/classes.php:1495
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
-#: ../include/classes.php:1548
-#: ../include/classes.php:1549
-#: ../include/classes.php:1593
+#: ../include/classes.php:1543
+#: ../include/classes.php:1544
+#: ../include/classes.php:1588
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:1810
-#: ../include/classes.php:2609
-#: ../include/classes.php:2660
+#: ../include/classes.php:1805
+#: ../include/classes.php:2604
+#: ../include/classes.php:2655
 #: ../include/functions.php:1737
 #: ../include/functions.php:1771
 #: ../include/functions.php:1800
@@ -277,73 +277,73 @@ msgstr "Mina inställningar"
 msgid "Choose Here"
 msgstr "Välj här"
 
-#: ../include/classes.php:1889
-#: ../include/classes.php:1903
-#: ../include/classes.php:1944
+#: ../include/classes.php:1884
+#: ../include/classes.php:1898
+#: ../include/classes.php:1939
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:1894
-#: ../include/classes.php:1908
+#: ../include/classes.php:1889
+#: ../include/classes.php:1903
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:1951
+#: ../include/classes.php:1946
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:1959
+#: ../include/classes.php:1954
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:1971
+#: ../include/classes.php:1966
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:1981
+#: ../include/classes.php:1976
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/classes.php:1985
-#: ../include/classes.php:2669
-#: ../include/classes.php:2705
+#: ../include/classes.php:1980
+#: ../include/classes.php:2664
+#: ../include/classes.php:2700
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:2603
-#: ../include/classes.php:2633
+#: ../include/classes.php:2598
+#: ../include/classes.php:2628
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:2611
+#: ../include/classes.php:2606
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:2614
+#: ../include/classes.php:2609
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:2624
+#: ../include/classes.php:2619
 msgid "Text"
 msgstr "Text"
 
-#: ../include/classes.php:2624
+#: ../include/classes.php:2619
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:2629
+#: ../include/classes.php:2624
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:2632
+#: ../include/classes.php:2627
 msgid "Skip first row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:2701
+#: ../include/classes.php:2696
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:2711
+#: ../include/classes.php:2706
 msgid "Example"
 msgstr "Exempel"
 
@@ -497,107 +497,152 @@ msgstr "Jag är ledsen men jag är inte tillåten att komma åt %s"
 msgid "no title"
 msgstr "ingen titel"
 
-#: ../include/functions.php:3870
-msgid "January"
-msgstr "Januari"
+#: ../include/functions.php:3873
+msgid "Jan"
+msgstr "Jan"
 
-#: ../include/functions.php:3870
-msgid "February"
-msgstr "Februari"
+#: ../include/functions.php:3873
+msgid "Feb"
+msgstr "Feb"
 
-#: ../include/functions.php:3870
-msgid "March"
-msgstr "Mars"
+#: ../include/functions.php:3873
+msgid "Mar"
+msgstr "Mar"
 
-#: ../include/functions.php:3870
-msgid "April"
-msgstr "April"
+#: ../include/functions.php:3873
+msgid "Apr"
+msgstr "Apr"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3873
+#: ../include/functions.php:3878
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3873
+msgid "Jun"
+msgstr "Jun"
+
+#: ../include/functions.php:3873
+msgid "Jul"
+msgstr "Jul"
+
+#: ../include/functions.php:3873
+msgid "Aug"
+msgstr "Aug"
+
+#: ../include/functions.php:3873
+msgid "Sep"
+msgstr "Sep"
+
+#: ../include/functions.php:3873
+msgid "Oct"
+msgstr "Okt"
+
+#: ../include/functions.php:3873
+msgid "Nov"
+msgstr "Nov"
+
+#: ../include/functions.php:3873
+msgid "Dec"
+msgstr "Dec"
+
+#: ../include/functions.php:3878
+msgid "January"
+msgstr "Januari"
+
+#: ../include/functions.php:3878
+msgid "February"
+msgstr "Februari"
+
+#: ../include/functions.php:3878
+msgid "March"
+msgstr "Mars"
+
+#: ../include/functions.php:3878
+msgid "April"
+msgstr "April"
+
+#: ../include/functions.php:3878
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "September"
 msgstr "September"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "November"
 msgstr "November"
 
-#: ../include/functions.php:3870
+#: ../include/functions.php:3878
 msgid "December"
 msgstr "December"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Sun"
 msgstr "Sön"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Mon"
 msgstr "Mån"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Tue"
 msgstr "Tis"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Wed"
 msgstr "Ons"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Thu"
 msgstr "Tors"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Fri"
 msgstr "Fre"
 
-#: ../include/functions.php:3896
+#: ../include/functions.php:3905
 msgid "Sat"
 msgstr "Lör"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:3901
+#: ../include/functions.php:3910
 msgid "Saturday"
 msgstr "Lördag"
 

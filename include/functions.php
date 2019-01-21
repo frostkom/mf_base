@@ -3861,13 +3861,22 @@ function month_name($data, $ucfirst = 1) //month_no
 	}
 
 	if(!isset($data['ucfirst'])){	$data['ucfirst'] = $ucfirst;}
+	if(!isset($data['short'])){		$data['short'] = false;}
 
 	if($data['number'] < 1)
 	{
 		$data['number'] = 1;
 	}
 
-	$array = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
+	if($data['short'])
+	{
+		$array = array(__("Jan", 'lang_base'), __("Feb", 'lang_base'), __("Mar", 'lang_base'), __("Apr", 'lang_base'), __("May", 'lang_base'), __("Jun", 'lang_base'), __("Jul", 'lang_base'), __("Aug", 'lang_base'), __("Sep", 'lang_base'), __("Oct", 'lang_base'), __("Nov", 'lang_base'), __("Dec", 'lang_base'));
+	}
+
+	else
+	{
+		$array = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
+	}
 
 	$out = $array[$data['number'] - 1];
 

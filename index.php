@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 8.10.12
+Version: 8.11.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -49,12 +49,20 @@ if(is_admin())
 
 else
 {
+	add_filter('init_base_admin', array($obj_base, 'init_base_admin'));
+
 	add_action('login_init', array($obj_base, 'login_init'), 0);
 	add_action('wp_head', array($obj_base, 'wp_head'), 0);
 }
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 add_shortcode('mf_file', array($obj_base, 'shortcode_file'));
+
+add_filter('get_page_templates', array($obj_base, 'get_page_templates'));
+//add_filter('page_attributes_dropdown_pages_args', array($obj_base, 'wp_insert_post_data')); // if(version_compare(floatval(get_bloginfo('version')), '4.7', '<'))
+add_filter('theme_page_templates', array($obj_base, 'theme_page_templates'));
+add_filter('wp_insert_post_data', array($obj_base, 'wp_insert_post_data'));
+add_filter('template_include', array($obj_base, 'template_include'));
 
 load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__)).'/lang/');
 

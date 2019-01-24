@@ -482,6 +482,13 @@ class mf_base
 		die();
 	}
 
+	function init_base_admin($arr_views)
+	{
+		// Load general style/script to switch between views, if needed?
+
+		return $arr_views;
+	}
+
 	function login_init()
 	{
 		$this->wp_head();
@@ -534,6 +541,99 @@ class mf_base
 		return $out;
 	}
 
+	function get_page_templates($templates)
+	{
+		$templates_path = str_replace(WP_CONTENT_DIR, "", plugin_dir_path(__FILE__))."templates/";
+
+		$templates[$templates_path.'template_admin.php'] = __("Front-End Admin", 'lang_base');
+
+		return $templates;
+	}
+
+	function theme_page_templates($posts_templates)
+	{
+		if(!isset($this->templates))
+		{
+			$this->templates = apply_filters('get_page_templates', array());
+		}
+
+		$posts_templates = array_merge($posts_templates, $this->templates);
+
+		return $posts_templates;
+	}
+
+	function wp_insert_post_data($atts)
+	{
+		if(!isset($this->templates))
+		{
+			$this->templates = apply_filters('get_page_templates', array());
+		}
+
+		// Create the key used for the themes cache
+		$cache_key = "page_templates-".md5(get_theme_root()."/".get_stylesheet());
+
+		// Retrieve the cache list. If it doesn't exist, or it's empty prepare an array
+		$templates = wp_get_theme()->get_page_templates();
+
+		if(empty($templates))
+		{
+			$templates = array();
+		}
+
+		// New cache, therefore remove the old one
+		wp_cache_delete($cache_key , 'themes');
+
+		// Now add our template to the list of templates by merging our templates with the existing templates array from the cache.
+		$templates = array_merge($templates, $this->templates);
+
+		// Add the modified cache to allow WordPress to pick it up for listing available templates
+		wp_cache_add($cache_key, $templates, 'themes', 1800);
+
+		return $atts;
+	}
+
+	// Checks if the template is assigned to the page
+	function template_include($template)
+	{
+		global $post;
+
+		// Return template if post is empty
+		if(!$post)
+		{
+			return $template;
+		}
+
+		if(!isset($this->templates))
+		{
+			$this->templates = apply_filters('get_page_templates', array());
+		}
+
+		$template_temp = get_post_meta($post->ID, '_wp_page_template', true);
+
+		// Return default template if we don't have a custom one defined
+		if(!isset($this->templates[$template_temp]))
+		{
+			return $template;
+		}
+
+		$file = WP_CONTENT_DIR.$template_temp; //plugin_dir_path(__FILE__)."templates/".
+
+		// Just to be safe, we check if the file exist first
+		if(file_exists($file))
+		{
+			return $file;
+		}
+
+		else
+		{
+			do_log("The template ".$file." does not exist for the post to use (".var_export($post, true).")");
+
+			echo $file;
+		}
+
+		return $template;
+	}
+
 	/* Form */
 	############################
 	function init_form($data)
@@ -582,59 +682,14 @@ class mf_base
 
 	/* .htaccess */
 	############################
-	function get_site_redirect($site_id = 0)
-	{
-		if($site_id > 0)
-		{
-			$site_url = get_site_url($site_id);
-		}
-
-		else
-		{
-			$site_url = get_site_url();
-		}
-
-		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-		//@list($site_host, $rest) = explode("/", $site_url_clean);
-
-		$has_www = "www." == substr($site_url_clean, 0, 4);
-		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
-		$is_subfolder = substr_count($site_url_clean, '/') > 0;
-
-		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
-		{
-			$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
-			//$site_url_clean_opposite_regexp = str_replace(array(".", "/"), array("\.", "\/"), $site_url_clean_opposite);
-
-			$this->recommend_htaccess .= "\n
-			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
-			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
-
-			if(substr($site_url, 0, 5) == 'https')
-			{
-				$this->recommend_htaccess_https .= "\n
-				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
-				RewriteCond	%{HTTPS}		off
-				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
-			}
-
-			else
-			{
-				$this->all_is_https = false;
-			}
-
-			//$this->last_redirect = "^".$site_url_clean_opposite."$";
-		}
-	}
-
 	function check_htaccess($data)
 	{
 		if(basename($data['file']) == ".htaccess")
 		{
 			$content = get_file_content(array('file' => $data['file']));
 
-			$this->all_is_https = true;
-			$this->recommend_htaccess = $this->recommend_htaccess_https = ""; //$this->last_redirect =
+			/*$this->all_is_https = true;
+			$this->recommend_htaccess = $this->recommend_htaccess_https = "";
 
 			if(is_multisite())
 			{
@@ -649,7 +704,7 @@ class mf_base
 			else
 			{
 				$this->get_site_redirect();
-			}
+			}*/
 
 			$recommend_htaccess = "ServerSignature Off
 
@@ -667,7 +722,7 @@ class mf_base
 				Deny from all
 			</FILES>*/
 
-			if($this->recommend_htaccess != '')
+			/*if($this->recommend_htaccess != '')
 			{
 				$recommend_htaccess .= "\n
 				RewriteEngine On".$this->recommend_htaccess;
@@ -682,10 +737,9 @@ class mf_base
 
 				else if($this->recommend_htaccess_https != '')
 				{
-					$recommend_htaccess .= "\n
-					".$this->recommend_htaccess_https;
+					$recommend_htaccess .= $this->recommend_htaccess_https;
 				}
-			}
+			}*/
 
 			$recommend_htaccess .= "\n
 			RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
@@ -700,6 +754,39 @@ class mf_base
 					."<p class='input'>".nl2br("# BEGIN MF Base (".$new_md5.")\n".htmlspecialchars($recommend_htaccess)."\n# END MF Base")."</p>"
 				."</div>";
 			}
+		}
+	}
+
+	function get_site_redirect($site_id = 0)
+	{
+		$site_url = ($site_id > 0 ? get_home_url($site_id) : get_home_url());
+		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
+
+		$is_https = (substr($site_url, 0, 5) == 'https');
+		$has_www = "www." == substr($site_url_clean, 0, 4);
+		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
+		$is_subfolder = substr_count($site_url_clean, '/') > 0;
+
+		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
+		{
+			$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
+
+			$this->recommend_htaccess .= "\n
+			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
+			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
+
+			if($is_https)
+			{
+				$this->recommend_htaccess_https .= "\n
+				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
+				RewriteCond	%{HTTPS}		off
+				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
+			}
+		}
+
+		if(!$is_https)
+		{
+			$this->all_is_https = false;
 		}
 	}
 	############################
@@ -741,7 +828,7 @@ class mf_cron
 
 		$this->set_is_running();
 
-		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'content' => date('Y-m-d H:i:s')));
+		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'content' => date("Y-m-d H:i:s")));
 
 		if(!$success)
 		{
@@ -2565,7 +2652,7 @@ class mf_import
 					$arr_export_data[] = $data_temp;
 				}
 
-				$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => "import_result", 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
+				$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
 				$out .= get_notification();
 			}
@@ -2611,7 +2698,7 @@ class mf_import
 
 					else
 					{
-						$out .= input_hidden(array('name' => "strTableAction", 'value' => $this->actions[0]));
+						$out .= input_hidden(array('name' => 'strTableAction', 'value' => $this->actions[0]));
 					}
 
 					if($this->file_location == '')
@@ -2625,7 +2712,7 @@ class mf_import
 					}
 
 					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
-					.show_button(array('name' => "btnImportCheck", 'text' => __("Check", 'lang_base')))
+					.show_button(array('name' => 'btnImportCheck', 'text' => __("Check", 'lang_base')))
 				."</div>
 			</div>";
 

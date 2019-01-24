@@ -3028,12 +3028,6 @@ function show_select($data)
 		{
 			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
 
-			/* Do NOT make this default because it might have unknown consequences on some selects */
-			/*if($obj_base->data['xtra'] == '')
-			{
-				$obj_base->data['xtra'] = "class='multiselect'";
-			}*/
-
 			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array_merge($data, array('count' => $count_temp)))."'";
 
 			$container_class .= " form_select_multiple";
@@ -3048,7 +3042,6 @@ function show_select($data)
 		{
 			if($obj_base->data['required'])
 			{
-				//$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."required";
 				$data['attributes']['required'] = '';
 			}
 
@@ -3128,7 +3121,6 @@ function show_select($data)
 
 							else
 							{
-								//$out .= "<option value='".$data_value."'";
 								$out .= "<option value='".($data_value === 0 ? '' : $data_value)."'";
 
 									if($is_disabled)

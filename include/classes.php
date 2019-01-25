@@ -484,7 +484,28 @@ class mf_base
 
 	function init_base_admin($arr_views)
 	{
-		// Load general style/script to switch between views, if needed?
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_style('style_base_admin', $plugin_include_url."style_admin.css", $plugin_version);
+
+		mf_enqueue_script('underscore');
+		mf_enqueue_script('backbone');
+		mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
+
+		/*mf_enqueue_script('script_base_admin_router', $plugin_include_url."backbone/bb.admin.router.js", $plugin_version);
+		mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array(), $plugin_version);
+		mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);*/
+
+		return $arr_views;
+	}
+
+	function init_base_admin_2($arr_views)
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_script('script_base_init', $plugin_include_url."backbone/bb.init.js", $plugin_version);
 
 		return $arr_views;
 	}

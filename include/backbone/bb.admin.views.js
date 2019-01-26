@@ -2,10 +2,7 @@ var AdminView = Backbone.View.extend(
 {
 	el: jQuery('body'),
 
-	initialize: function()
-	{
-		
-	},
+	initialize: function(){},
 
 	events:
 	{

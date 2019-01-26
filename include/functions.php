@@ -2678,9 +2678,21 @@ function show_textfield($data)
 		break;
 
 		case 'email':
+			$data['autocapitalize'] = $data['autocorrect'] = false;
+
+			if($data['placeholder'] == '')
+			{
+				$data['placeholder'] = __("your-name", 'lang_base')."@".get_site_url_clean(array('trim' => "/"));
+			}
+		break;
+
 		case 'url':
-			$data['autocorrect'] = false;
-			$data['autocapitalize'] = false;
+			$data['autocapitalize'] = $data['autocorrect'] = false;
+
+			if($data['placeholder'] == '')
+			{
+				$data['placeholder'] = get_site_url();
+			}
 		break;
 
 		case 'number':
@@ -3026,7 +3038,7 @@ function show_select($data)
 
 		if($obj_base->is_multiple())
 		{
-			$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
+			//$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
 
 			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array_merge($data, array('count' => $count_temp)))."'";
 

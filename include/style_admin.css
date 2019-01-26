@@ -53,4 +53,49 @@
 		{
 			display: none;
 		}*/
+
+		.page-template-template_admin .admin_container .meta_box
+		{
+			border: 1px solid #ccc;
+			border-radius: .3em;
+			margin-bottom: .8em;
+			overflow: hidden;
+		}
+
+			.page-template-template_admin .admin_container .context_normal
+			{
+				clear: left;
+				float: left;
+				width: 60%;
+			}
+
+			.page-template-template_admin .admin_container .context_side
+			{
+				clear: right;
+				float: right;
+				width: calc(40% - .8em);
+			}
+
+			.is_mobile.page-template-template_admin .admin_container .meta_box
+			{
+				width: 100%;
+			}
+
+				.page-template-template_admin .admin_container .meta_box h2
+				{
+					border-bottom: 1px solid #ccc;
+					font-size: 1.2em;
+					margin-bottom: 0 !important;
+					padding: .5em;
+				}
+
+				.page-template-template_admin .admin_container .meta_box > div
+				{
+					padding: .5em;
+				}
+
+					.page-template-template_admin .admin_container .meta_box div:last-child > input, .page-template-template_admin .admin_container .meta_box div:last-child > select
+					{
+						margin-bottom: 0;
+					}
 }

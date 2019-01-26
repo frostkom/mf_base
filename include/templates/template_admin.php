@@ -3,6 +3,12 @@
 Template Name: Front-End Admin
 */
 
+//Only effective if cache is off, so we need an extra check in the API + possibly to invalidate cache on this page
+if(!is_user_logged_in())
+{
+	mf_redirect(get_site_url()."/wp-login.php?redirect_to=".$_SERVER['REQUEST_URI']);
+}
+
 $arr_views = apply_filters('init_base_admin', array());
 
 get_header();
@@ -59,6 +65,9 @@ get_header();
 
 					if(count($arr_views) > 0)
 					{
+						echo "<div class='error hide'><p></p></div>
+						<div class='updated hide'><p></p></div>";
+
 						//loading
 						echo "<div class='admin_container'>
 							<div class='default'>".$post_content."</div>

@@ -37,7 +37,7 @@ get_header();
 
 								foreach($view['items'] as $item)
 								{
-									echo "<li><a href='#admin/".$key."/".$item['id']."'>".$item['name']."</a></li>";
+									echo "<li><a href='#admin/".str_replace("_", "/", $key)."/".$item['id']."'>".$item['name']."</a></li>";
 								}
 							}
 
@@ -85,6 +85,11 @@ get_header();
 							}
 
 						echo "</div>";
+					}
+
+					else
+					{
+						echo $post_content;
 					}
 
 				echo "</section>";

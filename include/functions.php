@@ -640,6 +640,7 @@ function mf_uninstall_options($data)
 	{
 		foreach($data['options'] as $option)
 		{
+			delete_site_option($option);
 			delete_option($option);
 		}
 	}

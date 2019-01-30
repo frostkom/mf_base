@@ -267,6 +267,11 @@
 			margin-right: 1em;
 		}
 
+			.flex_flow > h3
+			{
+				line-height: 2.1;
+			}
+
 			.flex_flow > *:last-child
 			{
 				margin-right: 0;
@@ -286,6 +291,7 @@
 			-webkit-flex: initial;
 			-ms-flex: initial;
 			flex: initial;
+			margin-right: .5em;
 		}
 
 	.is_mobile .flex_flow

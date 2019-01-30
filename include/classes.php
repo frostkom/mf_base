@@ -197,7 +197,7 @@ class mf_base
 		$memory_peak_used = memory_get_peak_usage();
 		$memory_peak_allocated = memory_get_peak_usage(false);*/
 
-		echo "<div class='flex_flow tight'>
+		echo "<div class='flex_flow'>
 			<div>
 				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
 				<p><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";

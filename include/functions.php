@@ -2170,9 +2170,9 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	$data['url'] = validate_url($data['url'], false);
 
-	$ch = curl_init();
+	$ch = curl_init($data['url']);
 
-	curl_setopt($ch, CURLOPT_URL, $data['url']);
+	//curl_setopt($ch, CURLOPT_URL, $data['url']);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 

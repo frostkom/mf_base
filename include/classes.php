@@ -66,7 +66,7 @@ class mf_base
 
 	function cron_schedules($schedules)
 	{
-		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => __("Manually", 'lang_base'));
+		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => "Manually");
 		$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
 		$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
 
@@ -234,7 +234,7 @@ class mf_base
 				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
 				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
 				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
-				//."<p><i class='".($memory_used < ($memory_total * .8) ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Memory", 'lang_base').": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
+				//."<p><i class='".($memory_used < ($memory_total * .8) ? "fa fa-check green" : "fa fa-times red")."'></i> "."Memory".": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
 			."</div>
 		</div>";
 	}
@@ -303,23 +303,16 @@ class mf_base
 		get_file_info(array('path' => get_home_path(), 'callback' => array($this, 'check_htaccess'), 'allow_depth' => false));
 
 		$arr_recommendations = array(
-			//array("Admin Branding", 'admin-branding/admin-branding.php', __("to brand the login and admin area", 'lang_base')),
 			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 			array("ARI Adminer", 'ari-adminer/ari-adminer.php', __("to get a graphical interface to the database", 'lang_base')),
 			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-			//array("Easy Appointments", 'easy-appointments/easy-appointments.php', __("to let the visitors book appointments with you", 'lang_base')),
 			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
 			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-			//array("P3 (Plugin Performance Profiler)", 'p3-profiler/p3-profiler.php', __("to scan for potential time thiefs on your site", 'lang_base')),
 			array("Plugin Dependencies", 'plugin-dependencies/plugin-dependencies.php', __("to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on", 'lang_base')),
 			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
-			//array("Query Monitor", 'query-monitor/query-monitor.php', __("to monitor database queries, hooks, conditionals and more", 'lang_base')),
 			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
-			//array("Snitch", 'snitch/snitch.php', __("to monitor network traffic", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
-			//array("Thumb Fixer for Facebook", 'facebook-thumb-fixer/_facebook-thumb-fixer.php', __("to be able to control how thumbnails are viewed when shared", 'lang_base')), //This is already taken care of in Share/Theme Core
-			//array("User Role Editor", 'user-role-editor/user-role-editor.php', __("to be able to edit roles", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
 		);
@@ -1051,7 +1044,7 @@ class mf_list_table extends WP_List_Table
 
 			if($wpdb->num_rows > 0)
 			{
-				$error_text = sprintf(__("Use delete_base() on %s"), $db_field);
+				$error_text = sprintf(__("Use %s on %s"), "delete_base()", $db_field);
 
 				do_log($error_text);
 			}
@@ -1944,7 +1937,7 @@ class mf_export
 
 	function save_data()
 	{
-		global $wpdb, $error_text, $done_text;
+		global $error_text, $done_text;
 
 		$out = "";
 
@@ -2066,7 +2059,7 @@ class mf_export
 
 	function get_form()
 	{
-		global $wpdb, $error_text;
+		global $error_text;
 
 		$out = get_notification()
 		."<form action='#' method='post' class='mf_form mf_settings'>"

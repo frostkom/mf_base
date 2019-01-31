@@ -690,8 +690,6 @@ function mf_uninstall_tables($data)
 
 function mf_uninstall_plugin($data)
 {
-	global $wpdb;
-
 	if(!isset($data['uploads'])){			$data['uploads'] = "";}
 	if(!isset($data['options'])){			$data['options'] = array();}
 	if(!isset($data['meta'])){				$data['meta'] = array();}
@@ -996,7 +994,7 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 function insert_attachment($data)
 {
-	global $wpdb, $done_text, $error_text;
+	global $done_text, $error_text;
 
 	$intFileID = false;
 
@@ -1298,11 +1296,6 @@ function get_attachment_to_send($string)
 				{
 					$arr_ids[] = $id_temp;
 				}
-
-				/*else
-				{
-					do_log(__("I could not get the ID from the filename", 'lang_base')." (".$wpdb->last_query.")");
-				}*/
 			}
 
 			if($file_url != '')
@@ -1904,7 +1897,7 @@ function get_post_types_for_select($data = array())
 	if(in_array('special', $data['include']))
 	{
 		$arr_data['is_404()'] = __("404", 'lang_base');
-		//$arr_data['is_archive()'] = __("Archive", 'lang_base');
+		//$arr_data['is_archive()'] = "Archive";
 
 		$arr_categories = get_categories(array('hierarchical' => 1, 'hide_empty' => 1));
 
@@ -1931,12 +1924,12 @@ function get_post_types_for_select($data = array())
 			}
 		}
 
-		//$arr_data['is_front_page()'] = __("Front Page", 'lang_base');
+		//$arr_data['is_front_page()'] = "Front Page";
 		$arr_data['is_home()'] = __("Home", 'lang_base');
-		//$arr_data['is_page()'] = __("Page", 'lang_base');
+		//$arr_data['is_page()'] = "Page";
 		$arr_data['is_search()'] = __("Search", 'lang_base');
-		//$arr_data['is_single()'] = __("Single", 'lang_base');
-		//$arr_data['is_sticky()'] = __("Sticky", 'lang_base');
+		//$arr_data['is_single()'] = "Single";
+		//$arr_data['is_sticky()'] = "Sticky";
 	}
 
 	return $arr_data;

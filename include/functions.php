@@ -1181,9 +1181,8 @@ function get_media_library($data)
 	$plugin_include_url = plugin_dir_url(__FILE__);
 	$plugin_version = get_plugin_version(__FILE__);
 
-	mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
-
 	wp_enqueue_media();
+	mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
 	mf_enqueue_script('script_media_library', $plugin_include_url."script_media_library.js", array(
 		'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text, 'insert_text' => $insert_text,
 	), $plugin_version);
@@ -1207,7 +1206,7 @@ function get_media_library($data)
 				</div>";
 			}
 
-			$out .= show_button(array('type' => 'button', 'text' => ($data['value'] != '' ? $change_file_text : $add_file_text), 'class' => "button"));
+			$out .= "<div class='form_button'>".show_button(array('type' => 'button', 'text' => ($data['value'] != '' ? $change_file_text : $add_file_text), 'class' => "button"))."</div>";
 
 			if($data['name'] != '')
 			{
@@ -1231,6 +1230,7 @@ function get_media_button($data = array())
 	$out = "";
 
 	if(!isset($data['name'])){				$data['name'] = "mf_media_urls";}
+	if(!isset($data['label'])){				$data['label'] = "";}
 	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", 'lang_base');}
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
@@ -1241,29 +1241,37 @@ function get_media_button($data = array())
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
+		wp_enqueue_media();
 		mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 		mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 			'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
+			'confirm_question' => __("Are you sure?", 'lang_base'),
 		), $plugin_version);
 
 		$out .= "<div class='mf_media_button'>";
 
+			if($data['label'] != '')
+			{
+				$out .= "<label>".$data['label']."</label>";
+			}
+
 			if(IS_AUTHOR && $data['show_add_button'] == true)
 			{
-				$out .= "<div class='wp-media-buttons'>
-					<a href='#' class='button insert-media add_media'>
+				$out .= "<div class='wp-media-buttons form_button'>
+					<div class='button insert-media add_media'>
 						<span class='wp-media-buttons-icon'></span> <span>".$data['text']."</span>
-					</a>
+					</div>
 				</div>";
 			}
 
 			$out .= "<div class='mf_media_raw'></div>
 			<table class='mf_media_list widefat striped'></table>"
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
-			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"))
-		."</div>";
+			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"));
+
+		$out .= "</div>";
 	}
 
 	return $out;
@@ -1283,19 +1291,39 @@ function get_attachment_to_send($string)
 		{
 			@list($file_name, $file_url, $file_id) = explode("|", $attachment);
 
+			if(!($file_id > 0) && $file_url != '')
+			{
+				$file_id_temp = get_attachment_id_by_url($file_url);
+
+				if($file_id_temp > 0)
+				{
+					$file_id = $file_id_temp;
+				}
+
+				/*else
+				{
+					do_log("I could not find the file from the URL ".$wpdb->last_query);
+				}*/
+			}
+
+			if(!($file_id > 0) && $file_name != '')
+			{
+				$file_id_temp = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND (post_title = %s OR post_name = %s)", 'attachment', $file_name, $file_name));
+
+				if($file_id_temp > 0)
+				{
+					$file_id = $file_id_temp;
+				}
+
+				/*else
+				{
+					do_log("I could not find the file from the name ".$wpdb->last_query);
+				}*/
+			}
+			
 			if($file_id > 0)
 			{
 				$arr_ids[] = $file_id;
-			}
-
-			else if($file_name != '')
-			{
-				$id_temp = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND (post_title = %s OR post_name = %s)", 'attachment', $file_name, $file_name));
-
-				if($id_temp > 0)
-				{
-					$arr_ids[] = $id_temp;
-				}
 			}
 
 			if($file_url != '')
@@ -1329,6 +1357,27 @@ function get_attachment_data_by_id($id)
 		$r = $result[0];
 
 		return array($r->post_title, $r->guid);
+	}
+}
+
+if(!function_exists('get_attachment_id_by_url'))
+{
+	function get_attachment_id_by_url($url)
+	{
+		global $wpdb;
+
+		$out = "";
+
+		list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
+
+		$parsed_url = preg_replace("/\-\d+x\d+\./", ".", $parsed_url);
+
+		if($parsed_url != '')
+		{
+			$out = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid RLIKE %s", $parsed_url));
+		}
+
+		return $out;
 	}
 }
 

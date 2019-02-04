@@ -349,7 +349,7 @@
 			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
 			{
 				width: auto;
-				max-width: 50%;
+				max-width: 80%;
 			}
 
 				.mf_form .has_suffix span.description, .rwmb-field .has_suffix span.description
@@ -357,10 +357,10 @@
 					margin-left: 1em;
 				}
 
-			.mf_form .form_textfield input, .wrap .mf_form select, .mf_form .form_password input
+			/*.mf_form .form_textfield input, .wrap .mf_form select, .mf_form .form_password input
 			{
 				min-height: 2.7em;
-			}
+			}*/
 
 			.mf_form .form_select select
 			{

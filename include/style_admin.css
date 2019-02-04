@@ -94,7 +94,7 @@
 					padding: .5em;
 				}
 
-					.page-template-template_admin .admin_container .meta_box div:last-child > input, .page-template-template_admin .admin_container .meta_box div:last-child > select, .page-template-template_admin .admin_container .meta_box div:last-child .multiSelect
+					.page-template-template_admin .admin_container .meta_box div:last-child > input, .page-template-template_admin .admin_container .meta_box div:last-child > select, .page-template-template_admin .admin_container .meta_box div:last-child > .multiSelect
 					{
 						margin-bottom: 0;
 					}

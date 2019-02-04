@@ -9,6 +9,17 @@ function preload(url)
 	img.src = url;
 }
 
+function select_option()
+{
+	jQuery(".mf_form .form_select select[data-value!='']").each(function()
+	{
+		var dom_obj = jQuery(this),
+			dom_value = dom_obj.attr('data-value');
+
+		dom_obj.children("option[value='" + dom_value + "']").prop('selected', true);
+	});
+}
+
 jQuery.fn.shorten = function(options)
 {
 	var settings = jQuery.extend(

@@ -35,6 +35,11 @@
 		margin: 1em 0 .5em;
 	}
 
+	.wrap .mf_form .form_textfield input, .wrap .mf_form select, .wrap .mf_form .form_password input
+	{
+		min-height: 2.7em;
+	}
+
 	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
 	{
 		background: #fff;

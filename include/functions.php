@@ -1320,7 +1320,7 @@ function get_attachment_to_send($string)
 					do_log("I could not find the file from the name ".$wpdb->last_query);
 				}*/
 			}
-			
+
 			if($file_id > 0)
 			{
 				$arr_ids[] = $file_id;
@@ -3071,6 +3071,8 @@ function show_select($data)
 	$obj_base = new mf_base();
 	$obj_base->init_form($data);
 
+	if(!isset($data['multiple'])){		$data['multiple'] = $obj_base->is_multiple();}
+
 	$out = "";
 
 	$count_temp = count($obj_base->data['data']);
@@ -3079,7 +3081,7 @@ function show_select($data)
 	{
 		$container_class = "form_select";
 
-		if($obj_base->is_multiple())
+		if($data['multiple'])
 		{
 			//$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
 
@@ -3172,7 +3174,7 @@ function show_select($data)
 
 						else
 						{
-							if($obj_base->is_multiple() && $data_value == ''){}
+							if($data['multiple'] && $data_value == ''){}
 
 							else
 							{
@@ -3220,13 +3222,15 @@ function show_form_alternatives($data)
 	$obj_base = new mf_base();
 	$obj_base->init_form($data);
 
+	if(!isset($data['multiple'])){		$data['multiple'] = $obj_base->is_multiple();}
+
 	$out = "";
 
 	$count_temp = count($obj_base->data['data']);
 
 	if($count_temp > 0)
 	{
-		if($obj_base->is_multiple())
+		if($data['multiple'])
 		{
 			$container_class = "form_checkbox_multiple";
 		}
@@ -3300,7 +3304,7 @@ function show_form_alternatives($data)
 
 						else
 						{
-							if($data_value == '') //$obj_base->is_multiple() &&
+							if($data_value == '') //$data['multiple'] &&
 							{
 								//Do nothing
 							}
@@ -3317,7 +3321,7 @@ function show_form_alternatives($data)
 									$compare = (is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : -$data_value;
 								}
 
-								if($obj_base->is_multiple())
+								if($data['multiple'])
 								{
 									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => ($is_disabled ? " disabled" : ""), 'description' => $data_desc));
 								}
@@ -3788,7 +3792,8 @@ function get_post_children($data, &$arr_data = array())
 {
 	global $wpdb;
 
-	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = isset($data['choose_here_text']);}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['output_array'])){		$data['output_array'] = true;}
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 	if(!isset($data['depth'])){				$data['depth'] = 0;}
@@ -3811,7 +3816,7 @@ function get_post_children($data, &$arr_data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
+		$arr_data[''] = "-- ".$data['choose_here_text']." --";
 	}
 
 	$out = "";

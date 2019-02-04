@@ -1,10 +1,5 @@
 @media all
 {
-	/*div, p, ol, ul, li, form, label, input, select, textarea
-	{
-		box-sizing: border-box;
-	}*/
-
 	.wrap .update-plugins
 	{
 		background: #d54e21;
@@ -22,6 +17,17 @@
 			display: block;
 			padding: 0 6px;
 		}
+
+	/*.wrap h2 span
+	{
+		font-size: .7em;
+		margin-left: .7em;
+	}
+
+		.wrap h2 span a
+		{
+			margin-left: .7em;
+		}*/
 
 	#poststuff .add-new-h2
 	{

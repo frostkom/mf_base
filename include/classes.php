@@ -2415,12 +2415,16 @@ class mf_import
 
 				if($this->query_set != '' && $this->query_where != '')
 				{
-					$result = $wpdb->get_results("SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "")."(".$this->query_where.") ORDER BY ".$table_created." ASC LIMIT 0, 2");
+					$query_select = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "")."(".$this->query_where.") ORDER BY ".$table_created." ASC LIMIT 0, 2";
+
+					$result = $wpdb->get_results($query_select);
 					$rows = $wpdb->num_rows;
 
 					if($rows > 1)
 					{
-						$result = $wpdb->get_results("SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where_first." ORDER BY ".$table_created." ASC LIMIT 0, 5");
+						$query_select = "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->query_where_first." ORDER BY ".$table_created." ASC LIMIT 0, 5";
+
+						$result = $wpdb->get_results($query_select);
 						$rows = $wpdb->num_rows;
 					}
 

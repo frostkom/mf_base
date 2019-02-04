@@ -76,12 +76,12 @@ function get_or_set_table_filter($data)
 		{
 			if($meta_value != '')
 			{
-				update_user_meta(get_current_user_id(), $meta_key, $meta_value);
+				update_user_meta($user_id, $meta_key, $meta_value);
 			}
 
 			else
 			{
-				delete_user_meta(get_current_user_id(), $meta_key, $meta_value);
+				delete_user_meta($user_id, $meta_key, $meta_value);
 			}
 		}
 	}
@@ -97,6 +97,16 @@ function get_or_set_table_filter($data)
 	}
 
 	return $meta_value;
+}
+
+function remove_table_filter($data)
+{
+	if(!isset($data['prefix'])){	$data['prefix'] = '';}
+
+	$user_id = get_current_user_id();
+	$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
+
+	delete_user_meta($user_id, $meta_key);
 }
 
 function show_final_size($in)
@@ -1776,7 +1786,7 @@ function get_role_first_capability($role)
 
 function get_yes_no_for_select($data = array())
 {
-	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 

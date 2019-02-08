@@ -310,26 +310,26 @@
 			margin-bottom: 1em;
 		}
 
-    .mf_form
-    {
-        overflow: hidden;
-    }
+	.mf_form
+	{
+		overflow: hidden;
+	}
 
-        .mf_form > div
-        {
-            clear: both;
-        }
+		.mf_form > div
+		{
+			clear: both;
+		}
 
-        .mf_form label
-        {
+		.mf_form label
+		{
 			color: inherit;
 			cursor: pointer;
-            display: block;
+			display: block;
 			line-height: 1.8;
-        }
+		}
 
-        .mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input, #comments #comment
-        {
+		.mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input, #comments #comment
+		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
 			border: 1px solid #e1e1e1;
@@ -339,7 +339,7 @@
 			margin: 0 0 .8em;
 			padding: .4em;
 			width: 100%;
-        }
+}
 
 			.mf_form input[readonly], .mf_form textarea[readonly]
 			{
@@ -453,14 +453,14 @@
 				display: inline;
 			}
 
-            .mf_form .form_checkbox input, .mf_form .form_radio input
-            {
+			.mf_form .form_checkbox input, .mf_form .form_radio input
+			{
 				display: inline-block;
-                margin-right: 2%;
+				margin-right: 2%;
 				margin-bottom: -.4em;
-            }
+			}
 
-                .mf_form .input-buttons.input-button-size-2
+				.mf_form .input-buttons.input-button-size-2
 				{
 					margin-left: -43px;
 				}

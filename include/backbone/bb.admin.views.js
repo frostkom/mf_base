@@ -1,19 +1,20 @@
 var AdminView = Backbone.View.extend(
 {
-	el: jQuery('body'),
+	el: jQuery("body"),
 
 	initialize: function(){},
 
 	events:
 	{
-		/*"click nav a": "change_view"*/
+		"click nav a": "change_view"
 	},
 
 	change_view: function(e)
 	{
-		console.log("Clicked: " , e);
+		var dom_obj = jQuery(e.currentTarget);
 
-		return false;
+		dom_obj.addClass('active').siblings("a").removeClass('active');
+		dom_obj.parents("li").addClass('active').siblings("li").removeClass('active').children("a").removeClass('active');
 	}
 });
 

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 8.11.19
+Version: 8.11.22
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -49,15 +49,15 @@ if(is_admin())
 
 else
 {
-	add_filter('init_base_admin', array($obj_base, 'init_base_admin'));
-	add_filter('init_base_admin', array($obj_base, 'init_base_admin_2'), 11);
-
 	add_action('login_init', array($obj_base, 'login_init'), 0);
 	add_action('wp_head', array($obj_base, 'wp_head'), 0);
 }
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 add_shortcode('mf_file', array($obj_base, 'shortcode_file'));
+
+add_filter('init_base_admin', array($obj_base, 'init_base_admin'));
+add_filter('init_base_admin', array($obj_base, 'init_base_admin_2'), 11);
 
 add_filter('get_page_templates', array($obj_base, 'get_page_templates'));
 //add_filter('page_attributes_dropdown_pages_args', array($obj_base, 'wp_insert_post_data')); // if(version_compare(floatval(get_bloginfo('version')), '4.7', '<'))
@@ -92,6 +92,6 @@ function uninstall_base()
 {
 	mf_uninstall_plugin(array(
 		'uploads' => 'mf_base',
-		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email', 'setting_base_info', 'setting_base_cron', 'option_cron_started', 'option_cron_run', 'setting_base_recommend'),
+		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email', 'setting_base_info', 'setting_base_cron', 'setting_base_front_end_admin', 'option_cron_started', 'option_cron_run', 'setting_base_recommend'),
 	));
 }

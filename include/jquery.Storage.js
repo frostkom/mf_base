@@ -9,7 +9,7 @@
  * Usage:
  * This plugin extends jQuery by adding itself as a static method.
  * $.Storage - is the class name, which represents the user's data store, whether it's cookies or local storage.
- *             <code>if ($.Storage)</code> will tell you if the plugin is loaded.
+ *		<code>if ($.Storage)</code> will tell you if the plugin is loaded.
  * $.Storage.set("name", "value") - Stores a named value in the data store.
  * $.Storage.set({"name1":"value1", "name2":"value2", etc}) - Stores multiple name/value pairs in the data store.
  * $.Storage.get("name") - Retrieves the value of the given name from the data store.

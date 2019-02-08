@@ -1,10 +1,6 @@
 var AdminModel = Backbone.Model.extend(
 {
-	defaults: {
-		/*'': 0*/
-	}/*,
-
-	getPage: function(dom_href)
+	/*getPage: function(dom_href)
 	{
 		var self = this,
 			url = (dom_href ? '?' + dom_href.replace('#', '') : "");

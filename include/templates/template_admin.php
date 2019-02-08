@@ -33,12 +33,52 @@ get_header();
 
 							foreach($arr_views as $key => $view)
 							{
-								echo "<li><span>".$view['name']."</span></li>";
+								echo "<li>";
 
-								foreach($view['items'] as $item)
-								{
-									echo "<li><a href='#admin/".str_replace("_", "/", $key)."/".$item['id']."'>".$item['name']."</a></li>";
-								}
+									$i = 0;
+
+									$count_temp = count($view['items']);
+
+									foreach($view['items'] as $item)
+									{
+										$item_url = "#admin/".str_replace("_", "/", $key)."/".$item['id'];
+
+										if($i == 0)
+										{
+											echo "<a href='".$item_url."'>";
+
+												if(isset($view['icon']) && $view['icon'] != '')
+												{
+													echo "<i class='".$view['icon']."'></i>";
+												}
+
+												echo "<span>".$view['name']."</span>
+											</a>";
+										}
+
+										else
+										{
+											if($i == 1)
+											{
+												echo "<ul>";
+											}
+
+												echo "<li>
+													<a href='".$item_url."'>
+														<span>".$item['name']."</span>
+													</a>
+												</li>";
+
+											if($i == ($count_temp - 1))
+											{
+												echo "</ul>";
+											}
+										}
+
+										$i++;
+									}
+
+								echo "</li>";
 							}
 
 						echo "</ul>
@@ -99,9 +139,19 @@ get_header();
 
 		if(count($arr_views) > 0)
 		{
+			$arr_templates_id = array();
+
 			foreach($arr_views as $key => $view)
 			{
-				echo $view['templates'];
+				if(!isset($view['templates_id']) || !in_array($view['templates_id'], $arr_templates_id))
+				{
+					echo $view['templates'];
+				}
+
+				if(isset($view['templates_id']))
+				{
+					$arr_templates_id[] = $view['templates_id'];
+				}
 			}
 		}
 	}

@@ -87,6 +87,17 @@ class mf_base
 		delete_option('option_cron_started');
 	}
 
+	function has_page_template($data = array())
+	{
+		global $wpdb;
+
+		if(!isset($data['template'])){		$data['template'] = "/plugins/mf_base/include/templates/template_admin.php";}
+
+		$post_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE post_type = %s AND meta_key = %s AND meta_value = %s LIMIT 0, 1", 'page', '_wp_page_template', $data['template']));
+
+		return $post_id;
+	}
+
 	function settings_base()
 	{
 		define('BASE_OPTIONS_PAGE', "settings_mf_base");
@@ -99,6 +110,11 @@ class mf_base
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		);
+
+		if($this->has_page_template() > 0)
+		{
+			$arr_settings['setting_base_front_end_admin'] = __("Front-end Admin", 'lang_base');
+		}
 
 		if(IS_SUPER_ADMIN)
 		{
@@ -298,6 +314,28 @@ class mf_base
 		}
 	}
 
+	function get_front_end_views_for_select()
+	{
+		$arr_data = array();
+
+		$arr_views = apply_filters('init_base_admin', array());
+
+		foreach($arr_views as $key => $view)
+		{
+			$arr_data[$key] = $view['name'];
+		}
+
+		return $arr_data;
+	}
+
+	function setting_base_front_end_admin_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		echo show_select(array('data' => $this->get_front_end_views_for_select(), 'name' => $setting_key."[]", 'value' => $option));
+	}
+
 	function setting_base_recommend_callback()
 	{
 		get_file_info(array('path' => get_home_path(), 'callback' => array($this, 'check_htaccess'), 'allow_depth' => false));
@@ -477,28 +515,47 @@ class mf_base
 
 	function init_base_admin($arr_views)
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
+		if(!is_admin())
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base_admin', $plugin_include_url."style_admin.css", $plugin_version);
+			mf_enqueue_style('style_base_admin', $plugin_include_url."style_admin.css", $plugin_version);
 
-		mf_enqueue_script('underscore');
-		mf_enqueue_script('backbone');
-		mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
+			mf_enqueue_script('underscore');
+			mf_enqueue_script('backbone');
+			mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
 
-		/*mf_enqueue_script('script_base_admin_router', $plugin_include_url."backbone/bb.admin.router.js", $plugin_version);
-		mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array(), $plugin_version);
-		mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);*/
+			mf_enqueue_script('script_base_admin_router', $plugin_include_url."backbone/bb.admin.router.js", $plugin_version);
+			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array(), $plugin_version);
+			mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);
+		}
 
 		return $arr_views;
 	}
 
 	function init_base_admin_2($arr_views)
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
+		if(!is_admin())
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_script('script_base_init', $plugin_include_url."backbone/bb.init.js", $plugin_version);
+			mf_enqueue_script('script_base_init', $plugin_include_url."backbone/bb.init.js", $plugin_version);
+
+			$setting_base_front_end_admin = get_option('setting_base_front_end_admin');
+
+			if(is_array($setting_base_front_end_admin) && count($setting_base_front_end_admin) > 0)
+			{
+				foreach($arr_views as $key => $view)
+				{
+					if(!in_array($key, $setting_base_front_end_admin))
+					{
+						unset($arr_views[$key]);
+					}
+				}
+			}
+		}
 
 		return $arr_views;
 	}
@@ -1149,11 +1206,11 @@ class mf_list_table extends WP_List_Table
 	}
 
 	/** ************************************************************************
-	 * Recommended. This method is called when the parent class can't find a method specifically build for a given column. Generally, it's recommended to include one method for each column you want to render, keeping your package class neat and organized. For example, if the class needs to process a column named 'title', it would first see if a method named $this->column_title() exists - if it does, that method will be used. If it doesn't, this one will be used. Generally, you should try to use custom column methods as much as  possible.
+	 * Recommended. This method is called when the parent class can't find a method specifically build for a given column. Generally, it's recommended to include one method for each column you want to render, keeping your package class neat and organized. For example, if the class needs to process a column named 'title', it would first see if a method named $this->column_title() exists - if it does, that method will be used. If it doesn't, this one will be used. Generally, you should try to use custom column methods as much as possible.
 	 *
 	 * Since we have defined a column_title() method later on, this method doesn't need to concern itself with any column with a name of 'title'. Instead, it needs to handle everything else.
 	 *
-	 * For more detailed insight into how columns are handled, take a look at  WP_List_Table::single_row_columns()
+	 * For more detailed insight into how columns are handled, take a look at WP_List_Table::single_row_columns()
 	 *
 	 * @param array $item A singular item (one full row's worth of data)
 	 * @param array $column_name The name/slug of the column to be processed
@@ -1293,10 +1350,10 @@ class mf_list_table extends WP_List_Table
 				 * @since 4.4.0 The `$post_type` parameter was added.
 				 * @since 4.6.0 The `$which` parameter was added.
 				 *
-				 * @param string $post_type The post type slug.
-				 * @param string $which     The location of the extra table nav markup:
-				 *                          'top' or 'bottom' for WP_Posts_List_Table,
-				 *                          'bar' for WP_Media_List_Table.
+				 * @param string $post_type	The post type slug.
+				 * @param string $which		The location of the extra table nav markup:
+				 *							'top' or 'bottom' for WP_Posts_List_Table,
+				 *							'bar' for WP_Media_List_Table.
 				 */
 				do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which); //$this->screen->post_type
 
@@ -1833,6 +1890,7 @@ class mf_font_icons
 			'exclamation-triangle',
 			'fas fa-graduation-cap',
 			'fas fa-hospital-alt',
+			'fas fa-key',
 			'link',
 			'lock',
 			'paper-plane',

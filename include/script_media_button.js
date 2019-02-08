@@ -217,7 +217,7 @@ jQuery(function($)
 		tbframe_interval = setInterval(function()
 		{
 			$("#TB_iframeContent").contents().find(".savesend input[type='submit']").val(script_media_button.insert_file_text);
-	    }, 2000);
+		}, 2000);
 
 		tb_show('', script_media_button.adminurl + 'media-upload.php?type=image&amp&TB_iframe=1');
 

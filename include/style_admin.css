@@ -5,32 +5,104 @@
 		margin-bottom: 1em;
 	}
 
-		.page-template-template_admin article nav ul
+		.page-template-template_admin article nav > ul
 		{
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
 			font-size: 1.2em;
 			list-style: none;
 		}
 
-			.page-template-template_admin article nav li
+			.page-template-template_admin article nav > ul > li
 			{
-				display: inline-block;
+				background: #eee;
+				border: .1em solid #ddd;
+				border-radius: .5em;
+				display: block;
+				-webkit-box-flex: 0 0 12em;
+				-webkit-flex: 0 0 12em;
+				-ms-flex: 0 0 12em;
+				flex: 0 0 12em;
+				margin: 0;
+				position: relative;
+				text-align: center;
 			}
 
-				.page-template-template_admin article nav li + li
+				.page-template-template_admin article nav > ul > li.active/*, .page-template-template_admin article nav li:hover*/
+				{
+					background: #e6e6e6;
+					border-color: #d6d6d6;
+				}
+
+				.page-template-template_admin article nav > ul > li + li
 				{
 					margin-left: .5em;
 				}
 
-					.page-template-template_admin article nav li > *
+					.page-template-template_admin article nav li a
 					{
-						display: inline-block;
-						padding: .5em 1em;
+						border-bottom: 0;
+						display: block;
+						padding: 1em 0;
 					}
 
-						.page-template-template_admin article nav li span
+						.page-template-template_admin article nav li a.active, .page-template-template_admin article nav li a:hover
 						{
-							background: #eee;
-							border-radius: .5em;
+							text-shadow: 0 0 1em rgba(0, 0, 0, .3);
+						}
+
+							.page-template-template_admin article nav li i
+							{
+								display: block;
+								font-size: 3em;
+							}
+
+								.page-template-template_admin article nav li i + span
+								{
+									color: rgba(0, 0, 0, .3);
+									display: inline-block;
+									margin-top: .5em;
+								}
+
+				.page-template-template_admin article nav ul ul
+				{
+					background: #fff;
+					border-radius: .5em;
+					box-shadow: 0 0 1em rgba(0, 0, 0, .3);
+					display: none;
+					list-style: none;
+					position: absolute;
+					width: 100%;
+					z-index: 1;
+				}
+
+					.page-template-template_admin article nav li:hover ul
+					{
+						display: block;
+					}
+
+					.page-template-template_admin article nav ul ul:before
+					{
+						border: .7em solid transparent;
+						border-bottom-color: transparent;
+						border-bottom-color: #fff;
+						content: '';
+						left: 50%;
+						position: absolute;
+						top: -1.3em;
+						transform: translateX(-50%);
+					}
+
+					.page-template-template_admin article nav ul ul li
+					{
+						margin-top: 0;
+					}
+					
+						.page-template-template_admin article nav ul ul li + li a
+						{
+							padding-top: .5em;
 						}
 
 	.page-template-template_admin .admin_container

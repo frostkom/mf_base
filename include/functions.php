@@ -462,8 +462,10 @@ function send_email($data)
 		{
 			$data_temp = $data;
 			unset($data_temp['content']);
+			unset($data_temp['attachment']);
+			unset($data_temp['save_log']);
 
-			$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput');
+			$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'Host', 'Port', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'Hostname');
 
 			$phpmailer_temp = array();
 
@@ -497,6 +499,8 @@ function send_email($data)
 						$phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
 					}*/
 				}
+
+				$phpmailer_temp['to'] = $phpmailer->getToAddresses()[0][0];
 			}
 		}
 
@@ -504,7 +508,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(sprintf(__("Message sent: %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)), 'notification');
+				do_log(sprintf(__("Message sent: %s", 'lang_base'), htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -2197,7 +2201,7 @@ function validate_url($value, $link = true, $http = true)
 }
 #################
 
-function get_url_content($data = array(), $catch_head = false, $password = '', $post = '', $post_data = '')
+function get_url_content($data = array()) //, $catch_head = false, $password = '', $post = '', $post_data = ''
 {
 	/*if(!is_array($data))
 	{
@@ -2209,12 +2213,13 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 	}*/
 
 	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = false;}
-	if(!isset($data['catch_head'])){		$data['catch_head'] = $catch_head;}
+	if(!isset($data['catch_head'])){		$data['catch_head'] = false;}
+	if(!isset($data['debug'])){				$data['debug'] = false;}
 	if(!isset($data['headers'])){			$data['headers'] = array();}
 	if(!isset($data['request'])){			$data['request'] = 'get';}
 	if(!isset($data['content_type'])){		$data['content_type'] = '';}
-	if(!isset($data['password'])){			$data['password'] = $password;}
-	if(!isset($data['post_data'])){			$data['post_data'] = $post_data;}
+	if(!isset($data['password'])){			$data['password'] = '';}
+	if(!isset($data['post_data'])){			$data['post_data'] = '';}
 	if(!isset($data['cert_path'])){			$data['cert_path'] = '';} // Deprecated
 	if(!isset($data['ca_path'])){			$data['ca_path'] = $data['cert_path'];}
 	if(!isset($data['ssl_cert_path'])){		$data['ssl_cert_path'] = '';}
@@ -2230,6 +2235,15 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; sv-SE; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.10");
+	
+	if($data['debug'] == true)
+	{
+		ob_start();
+		$verbose_output = fopen('php://output', 'w');
+
+		curl_setopt($curl, CURLOPT_VERBOSE, true);
+		curl_setopt($curl, CURLOPT_STDERR, $verbose_output); //fopen('php://stderr', 'w') //fopen(dirname(__FILE__).'/errorlog.txt', 'w')
+	}
 
 	if(ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off')
 	{
@@ -2285,33 +2299,43 @@ function get_url_content($data = array(), $catch_head = false, $password = '', $
 	}
 
 	$content = curl_exec($ch);
+	
+	if($data['debug'] == true)
+	{
+		fclose($verbose_output);
+	}
 
 	/*if(curl_errno($handle))
 	{
 		do_log(__("cURL Error", 'lang_base').": ".curl_error($ch));
 	}*/
+	
+	$headers = curl_getinfo($ch);
+
+	if($data['follow_redirect'] == true)
+	{
+		switch($headers['http_code'])
+		{
+			case 301:
+				if(isset($headers['redirect_url']) && $headers['redirect_url'] != $data['url'])
+				{
+					$data['url'] = $headers['redirect_url'];
+					$data['follow_redirect'] = false;
+
+					$out = get_url_content($data);
+				}
+			break;
+		}
+	}
 
 	if($data['catch_head'] == true)
 	{
-		$headers = curl_getinfo($ch);
+		if($data['debug'] == true)
+		{
+			$headers['debug'] = ob_get_clean();
+		}
 
 		$out = array($content, $headers);
-
-		if($data['follow_redirect'] == true)
-		{
-			switch($headers['http_code'])
-			{
-				case 301:
-					if(isset($headers['redirect_url']) && $headers['redirect_url'] != $data['url'])
-					{
-						$data['url'] = $headers['redirect_url'];
-						$data['follow_redirect'] = false;
-
-						$out = get_url_content($data);
-					}
-				break;
-			}
-		}
 	}
 
 	else

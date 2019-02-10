@@ -2212,30 +2212,35 @@ function get_url_content($data = array()) //, $catch_head = false, $password = '
 		);
 	}*/
 
-	if(!isset($data['follow_redirect'])){	$data['follow_redirect'] = false;}
-	if(!isset($data['catch_head'])){		$data['catch_head'] = false;}
-	if(!isset($data['debug'])){				$data['debug'] = false;}
-	if(!isset($data['headers'])){			$data['headers'] = array();}
-	if(!isset($data['request'])){			$data['request'] = 'get';}
-	if(!isset($data['content_type'])){		$data['content_type'] = '';}
-	if(!isset($data['password'])){			$data['password'] = '';}
-	if(!isset($data['post_data'])){			$data['post_data'] = '';}
-	if(!isset($data['cert_path'])){			$data['cert_path'] = '';} // Deprecated
-	if(!isset($data['ca_path'])){			$data['ca_path'] = $data['cert_path'];}
-	if(!isset($data['ssl_cert_path'])){		$data['ssl_cert_path'] = '';}
-	if(!isset($data['ssl_key_path'])){		$data['ssl_key_path'] = '';}
+	if(!isset($data['follow_redirect'])){			$data['follow_redirect'] = false;}
+	if(!isset($data['catch_head'])){				$data['catch_head'] = false;}
+	if(!isset($data['include_head_in_output'])){	$data['include_head_in_output'] = false;}
+	if(!isset($data['debug'])){						$data['debug'] = false;}
+	if(!isset($data['headers'])){					$data['headers'] = array();}
+	if(!isset($data['request'])){					$data['request'] = 'get';}
+	if(!isset($data['content_type'])){				$data['content_type'] = '';}
+	if(!isset($data['password'])){					$data['password'] = '';}
+	if(!isset($data['post_data'])){					$data['post_data'] = '';}
+	if(!isset($data['cert_path'])){					$data['cert_path'] = '';} // Deprecated
+	if(!isset($data['ca_path'])){					$data['ca_path'] = $data['cert_path'];}
+	if(!isset($data['ssl_cert_path'])){				$data['ssl_cert_path'] = '';}
+	if(!isset($data['ssl_key_path'])){				$data['ssl_key_path'] = '';}
 
 	$data['url'] = validate_url($data['url'], false);
 
 	$ch = curl_init($data['url']);
 
-	//curl_setopt($ch, CURLOPT_URL, $data['url']);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
+	if($data['include_head_in_output'])
+	{
+		curl_setopt($ch, CURLOPT_HEADER, $data['include_head_in_output']);
+	}
+
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; sv-SE; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.10");
-	
+
 	if($data['debug'] == true)
 	{
 		ob_start();
@@ -2283,11 +2288,6 @@ function get_url_content($data = array()) //, $catch_head = false, $password = '
 		$data['headers'][] = 'Content-Type: '.$data['content_type'];
 	}
 
-	if(count($data['headers']) > 0)
-	{
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
-	}
-
 	if($data['request'] == 'post' || $data['post_data'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POST, true);
@@ -2296,10 +2296,17 @@ function get_url_content($data = array()) //, $catch_head = false, $password = '
 	if($data['post_data'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
+
+		$data['headers'][] = 'Content-Length: '.strlen($data['post_data']);
+	}
+
+	if(count($data['headers']) > 0)
+	{
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
 	}
 
 	$content = curl_exec($ch);
-	
+
 	if($data['debug'] == true)
 	{
 		fclose($verbose_output);
@@ -2309,7 +2316,7 @@ function get_url_content($data = array()) //, $catch_head = false, $password = '
 	{
 		do_log(__("cURL Error", 'lang_base').": ".curl_error($ch));
 	}*/
-	
+
 	$headers = curl_getinfo($ch);
 
 	if($data['follow_redirect'] == true)

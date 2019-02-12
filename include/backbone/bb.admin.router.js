@@ -2,12 +2,13 @@ var AdminApp = Backbone.Router.extend(
 {
 	routes:
 	{
-		"admin/base/:actions": "handle"
+		"admin/base/:actions": "handle",
+		"admin/profile/:actions": "handle"
 	},
 
 	handle: function(action_type)
 	{
-		/*myAdminView.loadPage(action_type);*/
+		myAdminView.loadPage(action_type);
 	}
 });
 

@@ -98,6 +98,45 @@ class mf_base
 		return $post_id;
 	}
 
+	function wp_before_admin_bar_render()
+	{
+		global $wp_admin_bar;
+
+		if(IS_ADMIN)
+		{
+			$post_id = $this->has_page_template();
+
+			if($post_id)
+			{
+				$post_status = get_post_status($post_id);
+
+				$color = $title = "";
+
+				switch($post_status)
+				{
+					case 'publish':
+						$color = "color_green";						
+					break;
+
+					case 'draft':
+						$color = "color_yellow";
+						$title = __("Not Published", 'lang_base');
+					break;
+				}
+
+				if($color != '')
+				{
+					$post_url = get_permalink($post_id);
+
+					$wp_admin_bar->add_node(array(
+						'id' => 'front-end',
+						'title' => "<a href='".$post_url."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".__("Front-End Admin", 'lang_base')."</a>",
+					));
+				}
+			}
+		}
+	}
+
 	function settings_base()
 	{
 		define('BASE_OPTIONS_PAGE', "settings_mf_base");
@@ -113,7 +152,7 @@ class mf_base
 
 		if($this->has_page_template() > 0)
 		{
-			$arr_settings['setting_base_front_end_admin'] = __("Front-end Admin", 'lang_base');
+			$arr_settings['setting_base_front_end_admin'] = __("Front-End Admin", 'lang_base');
 		}
 
 		if(IS_SUPER_ADMIN)
@@ -515,6 +554,8 @@ class mf_base
 
 	function init_base_admin($arr_views)
 	{
+		$templates = "";
+
 		if(!is_admin())
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
@@ -527,9 +568,25 @@ class mf_base
 			mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
 
 			mf_enqueue_script('script_base_admin_router', $plugin_include_url."backbone/bb.admin.router.js", $plugin_version);
-			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array(), $plugin_version);
+			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
 			mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);
+
+			$templates .= "<script type='text/template' id='template_admin_profile'>
+				Display Profile Form Here...
+			</script>";
 		}
+
+		$arr_views['profile'] = array(
+			'name' => __("Profile", 'lang_base'),
+			'icon' => "far fa-user-circle",
+			'items' => array(
+				array(
+					'id' => 'profile',
+					'name' => __("Edit", 'lang_base'),
+				),
+			),
+			'templates' => $templates,
+		);
 
 		return $arr_views;
 	}
@@ -997,6 +1054,13 @@ class recommend_plugin
 
 if(!class_exists('WP_List_Table'))
 {
+	// Needed when displaying tables in Front-End Admin
+	if(!class_exists('WP_Screen'))
+	{
+		require_once(ABSPATH.'wp-admin/includes/screen.php');
+		require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
+	}
+
 	require_once(ABSPATH.'wp-admin/includes/template.php');
 	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');
 }

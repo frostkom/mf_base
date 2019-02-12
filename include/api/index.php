@@ -20,6 +20,13 @@ $type_class = isset($arr_input[2]) ? $arr_input[2] : '';
 
 switch($type_action)
 {
+	case 'admin_base_profile':
+		$json_output['admin_base_response'] = array(
+			'template' => "admin_profile",
+			'type' => "admin_profile_profile",
+		);
+	break;
+
 	case 'my_ip':
 		$json_output['ip'] = $_SERVER['REMOTE_ADDR'];
 

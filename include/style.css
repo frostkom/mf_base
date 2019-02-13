@@ -167,6 +167,11 @@
 						line-height: 1.5em;
 					}
 
+			#wrapper .widefat tfoot th
+			{
+				border-top: 1px solid #e1e1e1;
+			}
+
 	.row-actions
 	{
 		color: #999;

@@ -115,7 +115,7 @@ class mf_base
 				switch($post_status)
 				{
 					case 'publish':
-						$color = "color_green";						
+						$color = "color_green";
 					break;
 
 					case 'draft':
@@ -555,12 +555,11 @@ class mf_base
 	function init_base_admin($arr_views)
 	{
 		$templates = "";
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
 
 		if(!is_admin())
 		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
-
 			mf_enqueue_style('style_base_admin', $plugin_include_url."style_admin.css", $plugin_version);
 
 			mf_enqueue_script('underscore');
@@ -571,8 +570,37 @@ class mf_base
 			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
 			mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);
 
-			$templates .= "<script type='text/template' id='template_admin_profile'>
-				Display Profile Form Here...
+			$templates .= "<script type='text/template' id='template_admin_profile_profile'>
+				<form method='post' action='' class='mf_form'>
+					<% _.each(fields, function(field)
+					{
+						switch(field.type)
+						{
+							case 'email': %>"
+								.show_textfield(array('type' => 'email', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
+
+							case 'text':%>"
+								.show_textfield(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
+
+							case 'flex_start':%>
+								<div class='flex_flow'>
+							<% break;
+
+							case 'flex_end':%>
+								</div>
+							<% break;
+
+							default: %>
+								<strong><%= meta_field.type %></strong>: <%= meta_field.name %><br>
+							<% break;
+						}
+					}); %>
+					<div class='form_button'>"
+						.show_button(array('text' => __("Update", 'lang_base')))
+					."</div>
+				</form>
 			</script>";
 		}
 
@@ -586,6 +614,7 @@ class mf_base
 				),
 			),
 			'templates' => $templates,
+			'api_url' => $plugin_include_url,
 		);
 
 		return $arr_views;

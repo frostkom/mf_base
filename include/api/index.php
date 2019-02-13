@@ -20,11 +20,35 @@ $type_class = isset($arr_input[2]) ? $arr_input[2] : '';
 
 switch($type_action)
 {
-	case 'admin_base_profile':
-		$json_output['admin_base_response'] = array(
-			'template' => "admin_profile",
-			'type' => "admin_profile_profile",
-		);
+	case 'admin':
+		switch($type_action_type)
+		{
+			case 'profile':
+				$user_id = get_current_user_id();
+
+				$arr_fields = array();
+
+				$arr_fields[] = array('type' => 'flex_start');
+					$arr_fields[] = array('type' => 'text', 'name' => 'first_name', 'text' => __("First Name", 'lang_base'));
+					$arr_fields[] = array('type' => 'text', 'name' => 'last_name', 'text' => __("Last Name", 'lang_base'));
+				$arr_fields[] = array('type' => 'flex_end');
+				$arr_fields[] = array('type' => 'email', 'name' => 'email', 'text' => __("E-mail", 'lang_base'));
+
+				foreach($arr_fields as $key => $value)
+				{
+					if(isset($value['name']))
+					{
+						$arr_fields[$key]['value'] = get_the_author_meta($value['name'], $user_id);
+					}
+				}
+
+				$json_output['admin_response'] = array(
+					'template' => str_replace("/", "_", $type),
+					'container' => str_replace("/", "_", $type),
+					'fields' => $arr_fields,
+				);
+			break;
+		}
 	break;
 
 	case 'my_ip':

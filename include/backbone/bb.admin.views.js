@@ -7,7 +7,7 @@ var AdminView = Backbone.View.extend(
 		this.model.on("change:redirect", this.do_redirect, this);
 		this.model.on('change:message', this.display_message, this);
 		this.model.on("change:next_request", this.next_request, this);
-		this.model.on("change:admin_base_response", this.view_response, this);
+		this.model.on("change:admin_response", this.admin_response, this);
 	},
 
 	events:
@@ -17,10 +17,20 @@ var AdminView = Backbone.View.extend(
 
 	change_view: function(e)
 	{
-		var dom_obj = jQuery(e.currentTarget);
+		var dom_obj = jQuery(e.currentTarget),
+			dom_api_url = dom_obj.attr('data-api-url') || '';
 
 		dom_obj.addClass('active').siblings("a").removeClass('active');
 		dom_obj.parents("li").addClass('active').siblings("li").removeClass('active').children("a").removeClass('active');
+
+		if(dom_api_url != '')
+		{
+			var action = dom_obj.attr('href').replace('#', '');
+
+			this.loadPage(dom_api_url, action);
+
+			/*return false;*/
+		}
 	},
 
 	do_redirect: function()
@@ -29,7 +39,7 @@ var AdminView = Backbone.View.extend(
 
 		if(response != '')
 		{
-			location.href = response + (response.match(/\?/) ? "&" : "?") + "redirect_to=" + location.href;
+			location.href = response; /* + (response.match(/\?/) ? "&" : "?") + "redirect_to=" + location.href*/
 
 			this.model.set({'redirect': ''});
 		}
@@ -78,13 +88,28 @@ var AdminView = Backbone.View.extend(
 		}
 	},
 
-	loadPage: function(tab_active)
+	display_container: function(dom_container)
+	{
+		dom_container.removeClass('hide').siblings("div").addClass('hide');
+	},
+
+	loadPage: function(api_url, action)
 	{
 		this.hide_message();
 
-		jQuery(".admin_container .loading").removeClass('hide').siblings("div").addClass('hide');
+		var dom_container = jQuery("#" + action.replace(/\//g, '_'));
 
-		this.model.getPage(tab_active);
+		if(dom_container.length > 0)
+		{
+			this.display_container(dom_container);
+		}
+
+		else
+		{
+			jQuery(".admin_container .loading").removeClass('hide').siblings("div").addClass('hide');
+		}
+
+		this.model.getPage(api_url, action);
 	},
 
 	submit_form: function(e)
@@ -99,26 +124,19 @@ var AdminView = Backbone.View.extend(
 		return false;
 	},
 
-	view_response: function()
+	admin_response: function()
 	{
-		var response = this.model.get('admin_base_response'),
+		var response = this.model.get('admin_response'),
 			template = response.template,
-			type = response.type,
-			html = '';
+			container = response.container,
+			dom_template = jQuery("#template_" + template),
+			dom_container = jQuery("#" + container);
 
-		var amount = 1;
+		var html = _.template(dom_template.html())(response);
 
-		if(amount > 0)
-		{
-			html = _.template(jQuery("#template_" + template).html())(response);
-		}
+		dom_container.children("div").html(html);
 
-		else
-		{
-			html = _.template(jQuery("#template_" + template + "_message").html())('');
-		}
-
-		jQuery("#" + type).html(html).removeClass('hide').siblings("div").addClass('hide');
+		this.display_container(dom_container);
 	}
 });
 

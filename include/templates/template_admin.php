@@ -42,10 +42,18 @@ get_header();
 									foreach($view['items'] as $item)
 									{
 										$item_url = "#admin/".str_replace("_", "/", $key)."/".$item['id'];
+										$api_url = (isset($view['api_url']) ? $view['api_url'] : '');
 
 										if($i == 0)
 										{
-											echo "<a href='".$item_url."'>";
+											echo "<a href='".$item_url."'";
+
+												if($api_url != '')
+												{
+													echo " data-api-url='".$api_url."'";
+												}
+
+											echo ">";
 
 												if(isset($view['icon']) && $view['icon'] != '')
 												{
@@ -64,7 +72,14 @@ get_header();
 											}
 
 												echo "<li>
-													<a href='".$item_url."'>
+													<a href='".$item_url."'";
+
+														if($api_url != '')
+														{
+															echo " data-api-url='".$api_url."'";
+														}
+
+													echo ">
 														<span>".$item['name']."</span>
 													</a>
 												</li>";
@@ -108,7 +123,6 @@ get_header();
 						echo "<div class='error hide'><p></p></div>
 						<div class='updated hide'><p></p></div>";
 
-						//loading
 						echo "<div class='admin_container'>
 							<div class='default'>".$post_content."</div>
 							<div class='loading hide'><i class='fa fa-spinner fa-spin fa-3x'></i></div>";
@@ -118,8 +132,8 @@ get_header();
 								foreach($view['items'] as $item)
 								{
 									echo "<div id='admin_".$key."_".$item['id']."' class='hide'>
-										<h2>".$view['name']." - ".$item['name']."</h2>
-										<div>...</div>
+										<h2>".$item['name']."</h2>
+										<div><i class='fa fa-spinner fa-spin fa-3x'></i></div>
 									</div>";
 								}
 							}

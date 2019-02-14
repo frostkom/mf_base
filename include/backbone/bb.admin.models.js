@@ -1,13 +1,13 @@
 var AdminModel = Backbone.Model.extend(
 {
-	getPage: function(api_url, dom_action)
+	getPage: function(api_url, action)
 	{
 		var self = this,
 			url = '';
 
-		if(dom_action)
+		if(action)
 		{
-			url += '?type=' + dom_action;
+			url += '?type=' + action;
 		}
 
 		jQuery().callAPI(
@@ -20,21 +20,21 @@ var AdminModel = Backbone.Model.extend(
 				self.set(data);
 			}
 		});
-	}/*,
+	},
 
-	submitForm: function(dom_action, form_data)
+	submitForm: function(api_url, action, form_data)
 	{
 		var self = this,
 			url = '';
 
-		if(dom_action)
+		if(action)
 		{
-			url += '?type=' + dom_action;
+			url += '?type=' + action;
 		}
 
 		jQuery().callAPI(
 		{
-			base_url: script_base_admin_models.plugin_url + 'api/',
+			base_url: api_url + 'api/',
 			url: url,
 			data: form_data,
 			onSuccess: function(data)
@@ -42,5 +42,5 @@ var AdminModel = Backbone.Model.extend(
 				self.set(data);
 			}
 		});
-	}*/
+	}
 });

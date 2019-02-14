@@ -12,22 +12,23 @@ var AdminView = Backbone.View.extend(
 
 	events:
 	{
-		"click nav a": "change_view"
+		"click nav a": "change_view",
+		"submit form": "submit_form",
 	},
 
 	change_view: function(e)
 	{
 		var dom_obj = jQuery(e.currentTarget),
-			dom_api_url = dom_obj.attr('data-api-url') || '';
+			api_url = dom_obj.attr('data-api-url') || '';
 
 		dom_obj.addClass('active').siblings("a").removeClass('active');
 		dom_obj.parents("li").addClass('active').siblings("li").removeClass('active').children("a").removeClass('active');
 
-		if(dom_api_url != '')
+		if(api_url != '')
 		{
 			var action = dom_obj.attr('href').replace('#', '');
 
-			this.loadPage(dom_api_url, action);
+			this.loadPage(api_url, action);
 
 			/*return false;*/
 		}
@@ -82,9 +83,14 @@ var AdminView = Backbone.View.extend(
 
 		if(response != '')
 		{
-			this.model.getPage(response);
+			var api_url = this.model.get("api_url") || '';
 
-			this.model.set({"next_request" : ""});
+			if(api_url != '')
+			{
+				this.loadPage(api_url, response);
+
+				this.model.set({"next_request" : ""});
+			}
 		}
 	},
 
@@ -114,14 +120,18 @@ var AdminView = Backbone.View.extend(
 
 	submit_form: function(e)
 	{
-		/*var dom_obj = jQuery(e.currentTarget),
-			dom_action = dom_obj.attr('data-action');
+		var dom_obj = jQuery(e.currentTarget),
+			action = dom_obj.attr('data-action'),
+			api_url = dom_obj.attr('data-api-url') || '';
 
-		this.model.submitForm(dom_action, dom_obj.serialize());
+		if(api_url != '')
+		{
+			this.model.submitForm(api_url, action, dom_obj.serialize());
 
-		dom_obj.find("button[type='submit']").addClass('disabled').attr('disabled', true);*/
+			/*dom_obj.find("button[type='submit']").addClass('disabled').attr('disabled', true);*/
 
-		return false;
+			return false;
+		}
 	},
 
 	admin_response: function()

@@ -570,8 +570,8 @@ class mf_base
 			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
 			mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);
 
-			$templates .= "<script type='text/template' id='template_admin_profile_profile'>
-				<form method='post' action='' class='mf_form'>
+			$templates .= "<script type='text/template' id='template_admin_profile_edit'>
+				<form method='post' action='' class='mf_form' data-api-url='".$plugin_include_url."' data-action='admin/profile/save'>
 					<% _.each(fields, function(field)
 					{
 						switch(field.type)
@@ -609,7 +609,7 @@ class mf_base
 			'icon' => "far fa-user-circle",
 			'items' => array(
 				array(
-					'id' => 'profile',
+					'id' => 'edit',
 					'name' => __("Edit", 'lang_base'),
 				),
 			),

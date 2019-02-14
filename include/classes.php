@@ -1083,15 +1083,17 @@ class recommend_plugin
 
 if(!class_exists('WP_List_Table'))
 {
+	require_once(ABSPATH.'wp-admin/includes/admin.php');
+
 	// Needed when displaying tables in Front-End Admin
-	if(!class_exists('WP_Screen'))
+	/*if(!class_exists('WP_Screen'))
 	{
 		require_once(ABSPATH.'wp-admin/includes/screen.php');
 		require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
 	}
 
 	require_once(ABSPATH.'wp-admin/includes/template.php');
-	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');
+	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');*/
 }
 
 class mf_list_table extends WP_List_Table

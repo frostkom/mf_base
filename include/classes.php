@@ -126,11 +126,9 @@ class mf_base
 
 				if($color != '')
 				{
-					$post_url = get_permalink($post_id);
-
 					$wp_admin_bar->add_node(array(
 						'id' => 'front-end',
-						'title' => "<a href='".$post_url."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".__("Front-End Admin", 'lang_base')."</a>",
+						'title' => "<a href='".get_permalink($post_id)."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".get_post_title($post_id)."</a>",
 					));
 				}
 			}
@@ -576,21 +574,61 @@ class mf_base
 					{
 						switch(field.type)
 						{
+							case 'date': %>"
+								.show_textfield(array('type' => 'date', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
+
 							case 'email': %>"
 								.show_textfield(array('type' => 'email', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
 							."<% break;
 
-							case 'text':%>"
-								.show_textfield(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
-							."<% break;
-
-							case 'flex_start':%>
+							case 'flex_start': %>
 								<div class='flex_flow'>
 							<% break;
 
-							case 'flex_end':%>
+							case 'flex_end': %>
 								</div>
 							<% break;
+
+							case 'media_image': %>
+								<div>
+									<label for='<%= field.name %>'><%= field.text %></label>"
+									.get_media_library(array('name' => "<%= field.name %>", 'value' => "<%= field.value %>", 'type' => 'image'))
+								."</div>
+							<% break;
+
+							case 'number': %>"
+								.show_textfield(array('type' => 'number', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
+
+							case 'select': %>
+								<div class='form_select type_<%= field.type %><%= field.class %>'>
+									<label for='<%= field.name %>'><%= field.text %></label>
+									<select id='<%= field.name %>' name='<%= field.name %><% if(field.multiple == true){ %>[]<% } %>'<% if(field.multiple == true){ %> multiple<% } %><%= field.attributes %>>
+										<% _.each(field.options, function(option)
+										{%>
+											<% if(option.key.toString().substr(0, 9) == 'opt_start')
+											{ %>
+												<optgroup label='<%= option.value %>' rel='<%= option.key %>'>
+											<% }
+
+											else if(option.key.toString().substr(0, 7) == 'opt_end')
+											{ %>
+												</optgroup>
+											<% }
+
+											else
+											{ %>
+												<option value='<%= option.key %>'<% if(option.key == field.value || field.multiple == true && field.value.indexOf(option.key.toString()) !== -1){%> selected<%} %>><%= option.value %></option>
+											<% } %>
+										<% }); %>
+									</select>
+								</div>
+							<% break;
+
+							case 'text': %>"
+								.show_textfield(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
 
 							default: %>
 								<strong><%= meta_field.type %></strong>: <%= meta_field.name %><br>

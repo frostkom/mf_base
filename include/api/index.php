@@ -35,6 +35,9 @@ switch($type_action)
 					$arr_fields[] = array('type' => 'text', 'name' => 'last_name', 'text' => __("Last Name", 'lang_base'), 'required' => true);
 				$arr_fields[] = array('type' => 'flex_end');
 				$arr_fields[] = array('type' => 'email', 'name' => 'email', 'text' => __("E-mail", 'lang_base'), 'required' => true);
+				//$arr_fields[] = array('type' => 'password', 'name' => 'password', 'text' => __("Password", 'lang_base'));
+
+				$arr_fields = apply_filters('filter_profile_fields', $arr_fields);
 
 				switch($type_class)
 				{
@@ -43,7 +46,42 @@ switch($type_action)
 						{
 							if(isset($value['name']))
 							{
+								if(!isset($arr_fields[$key]['class'])){			$arr_fields[$key]['class'] = "";}
+								if(!isset($arr_fields[$key]['attributes'])){	$arr_fields[$key]['attributes'] = "";}
+								if(!isset($arr_fields[$key]['required'])){		$arr_fields[$key]['required'] = false;}
+
 								$arr_fields[$key]['value'] = get_the_author_meta($value['name'], $user_id);
+
+								switch($arr_fields[$key]['type'])
+								{
+									case 'select':
+										// Otherwise options might end up in the "wrong" order on the site
+										#######################
+										$arr_data_temp = array();
+
+										foreach($arr_fields[$key]['options'] as $option_key => $option_value)
+										{
+											$arr_data_temp[] = array(
+												'key' => $option_key,
+												'value' => $option_value,
+											);
+										}
+
+										$arr_fields[$key]['options'] = $arr_data_temp;
+										#######################
+
+										if(!isset($arr_fields[$key]['multiple']))
+										{
+											$arr_fields[$key]['multiple'] = false;
+										}
+										
+										if($arr_fields[$key]['multiple'] == true)
+										{
+											$arr_fields[$key]['class'] .= " form_select_multiple";
+											$arr_fields[$key]['attributes'] .= " size='".get_select_size(array('count' => count($arr_fields[$key]['options'])))."'";
+										}
+									break;
+								}
 							}
 						}
 

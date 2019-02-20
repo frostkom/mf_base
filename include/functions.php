@@ -840,17 +840,20 @@ function get_post_meta_file_src($data)
 	{
 		$file_url = array();
 
-		foreach($file_ids as $file_id)
+		if(is_array($file_ids))
 		{
-			if($data['is_image'] == true)
+			foreach($file_ids as $file_id)
 			{
-				$file_url_temp = wp_get_attachment_image_src($file_id, $data['image_size']);
-				$file_url[] = $file_url_temp[0];
-			}
+				if($data['is_image'] == true)
+				{
+					$file_url_temp = wp_get_attachment_image_src($file_id, $data['image_size']);
+					$file_url[] = $file_url_temp[0];
+				}
 
-			else
-			{
-				$file_url[] = wp_get_attachment_url($file_id);
+				else
+				{
+					$file_url[] = wp_get_attachment_url($file_id);
+				}
 			}
 		}
 	}

@@ -131,7 +131,9 @@ get_header();
 							{
 								foreach($view['items'] as $item)
 								{
-									echo "<div id='admin_".$key."_".$item['id']."' class='hide'>
+									@list($id, $rest) = explode("/", $item['id']);
+
+									echo "<div id='admin_".$key."_".$id."' class='hide'>
 										<h2>".$item['name']."</h2>
 										<div><i class='fa fa-spinner fa-spin fa-3x'></i></div>
 									</div>";

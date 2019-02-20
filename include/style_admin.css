@@ -1,9 +1,9 @@
 @media all
 {
-	.page-template-template_admin article nav
+	/*.page-template-template_admin article nav
 	{
 		margin-bottom: 1em;
-	}
+	}*/
 
 		.page-template-template_admin article nav > ul
 		{
@@ -11,9 +11,17 @@
 			display: -ms-flexbox;
 			display: -webkit-flex;
 			display: flex;
-			font-size: 1.2em;
+			-webkit-box-flex-wrap: wrap;
+			-webkit-flex-wrap: wrap;
+			-ms-flex-wrap: wrap;
+			flex-wrap: wrap;
 			list-style: none;
 		}
+
+			.is_tablet.page-template-template_admin article nav > ul, .is_desktop.page-template-template_admin article nav > ul
+			{
+				font-size: 1.2em;
+			}
 
 			.page-template-template_admin article nav > ul > li
 			{
@@ -21,14 +29,28 @@
 				border: .1em solid #ddd;
 				border-radius: .5em;
 				display: block;
-				-webkit-box-flex: 0 0 12em;
-				-webkit-flex: 0 0 12em;
-				-ms-flex: 0 0 12em;
-				flex: 0 0 12em;
-				margin: 0;
+				-webkit-box-flex: 0 0 10em;
+				-webkit-flex: 0 0 10em;
+				-ms-flex: 0 0 10em;
+				flex: 0 0 10em;
+				margin: 0 1em 1em 0;
 				position: relative;
 				text-align: center;
 			}
+
+				.is_mobile.page-template-template_admin article nav > ul > li
+				{
+					-webkit-box-flex: 0 0 23%;
+					-webkit-flex: 0 0 23%;
+					-ms-flex: 0 0 23%;
+					flex: 0 0 23%;
+					margin: 0 2% 2% 0;
+				}
+
+				.page-template-template_admin article nav > ul > li:last-of-type
+				{
+					margin-right: 0;
+				}
 
 				.page-template-template_admin article nav > ul > li.active/*, .page-template-template_admin article nav li:hover*/
 				{
@@ -36,10 +58,10 @@
 					border-color: #d6d6d6;
 				}
 
-				.page-template-template_admin article nav > ul > li + li
+				/*.page-template-template_admin article nav > ul > li + li
 				{
 					margin-left: .5em;
-				}
+				}*/
 
 					.page-template-template_admin article nav li a
 					{

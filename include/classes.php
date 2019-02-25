@@ -648,7 +648,7 @@ class mf_base
 			'items' => array(
 				array(
 					'id' => 'edit',
-					'name' => __("Edit", 'lang_base'),
+					'name' => __("Edit Profile", 'lang_base'),
 				),
 			),
 			'templates' => $templates,
@@ -1121,6 +1121,17 @@ class recommend_plugin
 
 if(!class_exists('WP_List_Table'))
 {
+	//$GLOBALS['hook_suffix'] = '';
+
+	/*$hook_suffix = '';
+	if ( isset( $page_hook ) ) {
+		$hook_suffix = $page_hook;
+	} elseif ( isset( $plugin_page ) ) {
+		$hook_suffix = $plugin_page;
+	} elseif ( isset( $pagenow ) ) {
+		$hook_suffix = $pagenow;
+	}*/
+
 	require_once(ABSPATH.'wp-admin/includes/admin.php');
 
 	// Needed when displaying tables in Front-End Admin
@@ -2021,6 +2032,7 @@ class mf_font_icons
 			'fas fa-clock',
 			'eye',
 			'exclamation-triangle',
+			'fas fa-file-alt',
 			'fas fa-graduation-cap',
 			'fas fa-hospital-alt',
 			'fas fa-key',

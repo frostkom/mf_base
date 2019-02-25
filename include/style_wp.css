@@ -141,13 +141,13 @@
 
 	.postbox.active, .postbox.active h3
 	{
-		background: #fff6bf;
+		background: #fff8df;
 		border-color: #ffd324;
 	}
 
 		tr.active
 		{
-			background: #fff6bf !important;
+			background: #fff8df !important;
 		}
 
 		tr.inactive

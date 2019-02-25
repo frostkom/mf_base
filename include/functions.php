@@ -1252,6 +1252,7 @@ function get_media_button($data = array())
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
 	if(!isset($data['multiple'])){			$data['multiple'] = true;}
+	//if(!isset($data['max_file_uploads'])){	$data['max_file_uploads'] = 0;}
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
@@ -1265,6 +1266,7 @@ function get_media_button($data = array())
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
 			'confirm_question' => __("Are you sure?", 'lang_base'),
+			//'max_file_uploads' => $data['max_file_uploads'],
 		), $plugin_version);
 
 		$out .= "<div class='mf_media_button'>";
@@ -3588,10 +3590,10 @@ function input_hidden($data)
 
 	if($data['value'] != '' || $data['value'] == 0 || $data['allow_empty'] == true)
 	{
-		if(is_array($data['value']))
+		/*if(is_array($data['value']))
 		{
 			do_log("Error - input_hidden: ".var_export($data, true));
-		}
+		}*/
 
 		return "<input type='hidden'".($data['name'] != '' ? " name='".$data['name']."'" : "")." value='".$data['value']."'".($data['xtra'] != '' ? " ".$data['xtra'] : "").">";
 	}

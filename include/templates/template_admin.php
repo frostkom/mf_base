@@ -41,27 +41,50 @@ get_header();
 
 									foreach($view['items'] as $item)
 									{
-										$item_url = "#admin/".str_replace("_", "/", $key)."/".$item['id'];
+										$item_url = "";
+
+										if(!isset($item['clickable']) || $item['clickable'] == true || $count_temp == 1)
+										{
+											$item_url = "#admin/".str_replace("_", "/", $key)."/".$item['id'];
+										}
+
 										$api_url = (isset($view['api_url']) ? $view['api_url'] : '');
 
 										if($i == 0)
 										{
-											echo "<a href='".$item_url."'";
+											if($item_url != '')
+											{
+												echo "<a href='".$item_url."'";
 
-												if($api_url != '')
-												{
-													echo " data-api-url='".$api_url."'";
-												}
+													if($api_url != '')
+													{
+														echo " data-api-url='".$api_url."'";
+													}
 
-											echo ">";
+												echo ">";
+											}
+
+											else
+											{
+												echo "<span>";
+											}
 
 												if(isset($view['icon']) && $view['icon'] != '')
 												{
 													echo "<i class='".$view['icon']."'></i>";
 												}
 
-												echo "<span>".$view['name']."</span>
-											</a>";
+												echo "<span>".$view['name']."</span>";
+
+											if($item_url != '')
+											{
+												echo "</a>";
+											}
+
+											else
+											{
+												echo "</span>";
+											}
 										}
 
 										else
@@ -151,25 +174,25 @@ get_header();
 				echo "</section>";
 			}
 
-		echo "</article>";
-
-		if(count($arr_views) > 0)
-		{
-			$arr_templates_id = array();
-
-			foreach($arr_views as $key => $view)
+			if(count($arr_views) > 0)
 			{
-				if(!isset($view['templates_id']) || !in_array($view['templates_id'], $arr_templates_id))
-				{
-					echo $view['templates'];
-				}
+				$arr_templates_id = array();
 
-				if(isset($view['templates_id']))
+				foreach($arr_views as $key => $view)
 				{
-					$arr_templates_id[] = $view['templates_id'];
+					if(!isset($view['templates_id']) || !in_array($view['templates_id'], $arr_templates_id))
+					{
+						echo $view['templates'];
+					}
+
+					if(isset($view['templates_id']))
+					{
+						$arr_templates_id[] = $view['templates_id'];
+					}
 				}
 			}
-		}
+
+		echo "</article>";
 	}
 
 get_footer();

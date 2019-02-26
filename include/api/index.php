@@ -74,7 +74,7 @@ switch($type_action)
 										{
 											$arr_fields[$key]['multiple'] = false;
 										}
-										
+
 										if($arr_fields[$key]['multiple'] == true)
 										{
 											$arr_fields[$key]['class'] .= " form_select_multiple";

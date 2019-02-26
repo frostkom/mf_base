@@ -1121,8 +1121,6 @@ class recommend_plugin
 
 if(!class_exists('WP_List_Table'))
 {
-	//$GLOBALS['hook_suffix'] = '';
-
 	/*$hook_suffix = '';
 	if ( isset( $page_hook ) ) {
 		$hook_suffix = $page_hook;
@@ -1131,6 +1129,8 @@ if(!class_exists('WP_List_Table'))
 	} elseif ( isset( $pagenow ) ) {
 		$hook_suffix = $pagenow;
 	}*/
+
+	$GLOBALS['hook_suffix'] = '';
 
 	require_once(ABSPATH.'wp-admin/includes/admin.php');
 

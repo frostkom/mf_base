@@ -1252,24 +1252,29 @@ function get_media_button($data = array())
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
 	if(!isset($data['multiple'])){			$data['multiple'] = true;}
-	//if(!isset($data['max_file_uploads'])){	$data['max_file_uploads'] = 0;}
+	if(!isset($data['max_file_uploads'])){	$data['max_file_uploads'] = 0;}
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
+		if($data['multiple'] == false)
+		{
+			$data['max_file_uploads'] = 1;
+		}
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
 		wp_enqueue_media();
 		mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 		mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
-			'multiple' => $data['multiple'],
+			//'multiple' => $data['multiple'],
 			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
 			'confirm_question' => __("Are you sure?", 'lang_base'),
 			//'max_file_uploads' => $data['max_file_uploads'],
 		), $plugin_version);
 
-		$out .= "<div class='mf_media_button'>";
+		$out .= "<div class='mf_media_button' data-max_file_uploads='".$data['max_file_uploads']."'>";
 
 			if($data['label'] != '')
 			{
@@ -1279,9 +1284,10 @@ function get_media_button($data = array())
 			if(IS_AUTHOR && $data['show_add_button'] == true)
 			{
 				$out .= "<div class='wp-media-buttons form_button'>
-					<div class='button insert-media add_media'>
-						<span class='wp-media-buttons-icon'></span> <span>".$data['text']."</span>
-					</div>
+					<div class='button insert-media'>
+						<span>".$data['text']."</span>"
+					."</div>
+					<span></span>
 				</div>";
 			}
 

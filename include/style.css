@@ -481,7 +481,14 @@
 			white-space: nowrap;
 		}
 
-			.form_button button.disabled
+			.form_button button.disabled, .form_button .button.disabled
+			{
+				cursor: default;
+				opacity: .5;
+				pointer-events: none;
+			}
+
+			.form_button button.loading, .form_button .button.loading
 			{
 				cursor: wait;
 				opacity: .5;

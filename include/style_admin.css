@@ -65,14 +65,14 @@
 
 						.page-template-template_admin article nav li i
 						{
-							color: rgba(0, 0, 0, .3);
+							color: rgba(0, 0, 0, .6);
 							display: block;
 							font-size: 3em;
 						}
 
 							.page-template-template_admin article nav li i + span
 							{
-								color: rgba(0, 0, 0, .3);
+								color: rgba(0, 0, 0, .6);
 								display: inline-block;
 								margin-top: .5em;
 							}

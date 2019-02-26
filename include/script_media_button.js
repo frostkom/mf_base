@@ -1,11 +1,14 @@
 var dom_urls,
 	dom_list,
+	dom_max_file_uploads = 0,
+	dom_buttons,
 	arr_attachments = [];
 
 function render_attachment_list()
 {
 	var output_list = '',
-		output_urls = '';
+		output_urls = '',
+		amount_file_uploads = 0;
 
 	jQuery.each(arr_attachments, function(index, value)
 	{
@@ -14,14 +17,8 @@ function render_attachment_list()
 		var file_name = (arr_value[0] ? arr_value[0] : script_media_button.unknown_title),
 			file_url = arr_value[1];
 
-		if(file_url != '')
+		if(file_url != '' && (dom_max_file_uploads == 0 || amount_file_uploads < dom_max_file_uploads))
 		{
-			if(script_media_button.multiple == false)
-			{
-				output_list = "";
-				output_urls = "";
-			}
-
 			var is_image = file_url.match(/\.(png|gif|jpg|jpeg)/);
 
 			output_list += "<tr>"
@@ -50,11 +47,29 @@ function render_attachment_list()
 			+ "</tr>";
 
 			output_urls += (output_urls != '' ? "," : "") + value;
+
+			amount_file_uploads++;
 		}
 	});
 
 	dom_list.html(output_list);
 	dom_urls.val(output_urls);
+	dom_buttons.children("span").html(amount_file_uploads);
+
+	if(dom_max_file_uploads > 0)
+	{
+		dom_buttons.children("span").append(" / " + dom_max_file_uploads);
+
+		if(amount_file_uploads >= dom_max_file_uploads)
+		{
+			dom_buttons.children(".button").addClass('disabled');
+		}
+
+		else
+		{
+			dom_buttons.children(".button").removeClass('disabled');
+		}
+	}
 }
 
 function init_media_button()
@@ -67,6 +82,8 @@ function init_media_button()
 
 		dom_list = self.children(".mf_media_list");
 		dom_urls = self.children(".mf_media_urls");
+		dom_max_file_uploads = self.attr('data-max_file_uploads');
+		dom_buttons = self.children(".wp-media-buttons");
 
 		if(dom_urls.val() != '')
 		{
@@ -103,10 +120,10 @@ jQuery(function($)
 		}
 	});
 
-	$(document).on('click', ".mf_media_button", function() /*, ".add_media"*/
+	$(document).on('click', ".mf_media_button", function()
 	{
-		var restore_send_to_editor = window.send_to_editor,
-			self = $(this);
+		var self = $(this),
+			restore_send_to_editor = window.send_to_editor;
 
 		window.send_to_editor = function(html)
 		{
@@ -114,6 +131,8 @@ jQuery(function($)
 
 			dom_list = self.children(".mf_media_list");
 			dom_urls = self.children(".mf_media_urls");
+			dom_max_file_uploads = self.attr('data-max_file_uploads');
+			dom_buttons = self.children(".wp-media-buttons");
 
 			if(dom_urls.val() != '')
 			{

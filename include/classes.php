@@ -418,7 +418,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		//add_editor_style($plugin_include_url."font-awesome-5.3.1.php");
+		//add_editor_style($plugin_include_url."font-awesome-5.7.2.php");
 		//add_editor_style($plugin_include_url."style_editor.css");
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
@@ -694,7 +694,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.3.1.php", $plugin_version);
+		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
 		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
 	}
@@ -2039,9 +2039,13 @@ class mf_font_icons
 			'link',
 			'lock',
 			'paper-plane',
+			'fas fa-parking',
+			'fas fa-scroll',
 			'fas fa-sun',
 			'unlink',
 			'fas fa-user',
+			'fas fa-utensils',
+			'fas fa-wheelchair',
 		);
 
 		return $arr_icons;

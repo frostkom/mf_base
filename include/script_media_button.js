@@ -54,11 +54,10 @@ function render_attachment_list()
 
 	dom_list.html(output_list);
 	dom_urls.val(output_urls);
-	dom_buttons.children("span").html(amount_file_uploads);
 
 	if(dom_max_file_uploads > 0)
 	{
-		dom_buttons.children("span").append(" / " + dom_max_file_uploads);
+		dom_buttons.children("span").html(amount_file_uploads + " / " + dom_max_file_uploads);
 
 		if(amount_file_uploads >= dom_max_file_uploads)
 		{

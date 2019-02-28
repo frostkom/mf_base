@@ -520,6 +520,8 @@ function send_email($data)
 		else
 		{
 			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
+
+			do_action('sent_email_error', $phpmailer->From);
 		}
 
 		return $sent;
@@ -1253,6 +1255,7 @@ function get_media_button($data = array())
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
 	if(!isset($data['multiple'])){			$data['multiple'] = true;}
 	if(!isset($data['max_file_uploads'])){	$data['max_file_uploads'] = 0;}
+	if(!isset($data['description'])){		$data['description'] = '';}
 
 	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
 	{
@@ -1295,6 +1298,11 @@ function get_media_button($data = array())
 			<table class='mf_media_list widefat striped'></table>"
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
 			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"));
+
+			if($data['description'] != '')
+			{
+				$out .= "<p class='description'>".$data['description']."</p>";
+			}
 
 		$out .= "</div>";
 	}
@@ -3135,8 +3143,6 @@ function show_select($data)
 
 		if($data['multiple'])
 		{
-			//$obj_base->data['class'] .= ($obj_base->data['class'] != '' ? " " : "")."top";
-
 			$obj_base->data['xtra'] .= ($obj_base->data['xtra'] != '' ? " " : "")."multiple size='".get_select_size(array_merge($data, array('count' => $count_temp)))."'";
 
 			$container_class .= " form_select_multiple";
@@ -3241,6 +3247,19 @@ function show_select($data)
 									{
 										$out .= " selected";
 									}
+
+									/*else
+									{
+										$value1 = implode("", $obj_base->data['value']);
+										$value2 = implode("", $data_value);
+
+										if(preg_match("/is_singular/", $value1) && preg_match("/is_singular/", $value2))
+										{
+											do_log("Select or not to select: ".$value1." --- ".$value2);
+
+											//do_log("Select or not to select: ".htmlspecialchars(var_export($obj_base->data['value'], true))." --- ".htmlspecialchars(var_export($data_value, true)));
+										}
+									}*/
 
 								$out .= ">".$data_text."</option>";
 							}

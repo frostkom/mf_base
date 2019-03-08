@@ -18,6 +18,8 @@ var AdminView = Backbone.View.extend(
 
 	change_view: function(e)
 	{
+		this.hide_message();
+
 		var dom_obj = jQuery(e.currentTarget),
 			api_url = dom_obj.attr('data-api-url') || '';
 
@@ -48,7 +50,7 @@ var AdminView = Backbone.View.extend(
 
 	hide_message: function()
 	{
-		jQuery(".error:not(.hide), .updated:not(.hide)").addClass('hide');
+		jQuery(".error:not(.hide), .updated:not(.hide), .aside.left, .aside.right").addClass('hide');
 	},
 
 	display_message: function()
@@ -57,7 +59,7 @@ var AdminView = Backbone.View.extend(
 
 		if(response != '')
 		{
-			this.hide_message();
+			myAdminView.hide_message();
 
 			if(this.model.get('success') == true)
 			{

@@ -375,7 +375,7 @@ function get_user_info($data = array())
 			{
 				return '';
 
-				do_log(sprintf(__("There was no display name for %s (%d)", 'lang_base'), var_export($user_data, true), $data['id']));
+				do_log(sprintf("There was no display name for %s (%d)", var_export($user_data, true), $data['id']));
 			}
 		break;
 
@@ -508,7 +508,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(sprintf(__("Message sent: %s", 'lang_base'), htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
+				do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -519,7 +519,7 @@ function send_email($data)
 
 		else
 		{
-			do_log(sprintf(__("I could not send the email to %s", 'lang_base'), var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
+			do_log(sprintf("I could not send the email to %s", var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
 
 			do_action('sent_email_error', $phpmailer->From);
 		}
@@ -691,12 +691,12 @@ function mf_uninstall_tables($data)
 
 					if($wpdb->num_rows > 0)
 					{
-						do_log(sprintf(__("I was not allowed to drop %s and it still has data"), $wpdb->prefix.$table));
+						do_log(sprintf("I was not allowed to drop %s and it still has data", $wpdb->prefix.$table));
 					}
 
 					/*else
 					{
-						do_log(sprintf(__("I was not allowed to drop %s but at least it is empty now"), $wpdb->prefix.$table));
+						do_log(sprintf("I was not allowed to drop %s but at least it is empty now", $wpdb->prefix.$table));
 					}*/
 				}
 			}
@@ -1751,7 +1751,7 @@ function get_all_roles($data = array())
 
 	if(count($roles) == 0)
 	{
-		do_log(__("I could not find any roles for this site...?", 'lang_base'));
+		do_log("I could not find any roles for this site...?");
 	}
 
 	if(isset($data['allowed']))
@@ -2333,7 +2333,7 @@ function get_url_content($data = array()) //, $catch_head = false, $password = '
 
 	/*if(curl_errno($handle))
 	{
-		do_log(__("cURL Error", 'lang_base').": ".curl_error($ch));
+		do_log("cURL Error: ".curl_error($ch));
 	}*/
 
 	$headers = curl_getinfo($ch);
@@ -2752,6 +2752,8 @@ function show_textfield($data)
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
 
+	$data['value'] = str_replace("\\", "", $data['value']);
+
 	/* Used by Form -> wp_form_check */
 	if(isset($data['type']) && in_array($data['type'], array('int', 'float')))
 	{
@@ -2875,7 +2877,7 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".$data['value']."\"".($data['xtra'] != '' ? " ".trim($data['xtra']) : '').">";
+		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".stripslashes($data['value'])."\"".($data['xtra'] != '' ? " ".trim($data['xtra']) : '').">";
 
 		if($data['suffix'] != '')
 		{
@@ -2973,6 +2975,8 @@ function show_textarea($data)
 	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
+	$data['value'] = str_replace("\\", "", $data['value']);
+
 	if($data['required'])
 	{
 		$data['xtra'] .= " required";
@@ -3068,7 +3072,7 @@ function show_wp_editor($data)
 
 			ob_start();
 
-				wp_editor($data['value'], $data['name'], $data);
+				wp_editor(stripslashes($data['value']), $data['name'], $data);
 
 			$out .= ob_get_clean();
 
@@ -3119,8 +3123,8 @@ function show_select($data)
 	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
-	if(!isset($data['value'])){			$data['value'] = $data['compare'];}
+	//if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
+	if(!isset($data['value'])){			$data['value'] = "";} //$data['compare']
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
@@ -3639,7 +3643,7 @@ function get_file_content($data)
 
 		else
 		{
-			do_log(__("The file could not be opened", 'lang_base')." (".$data['file'].")");
+			do_log("The file could not be opened (".$data['file'].")");
 		}
 	}
 
@@ -3760,7 +3764,7 @@ function set_file_content($data)
 
 		else if($data['log'] == true)
 		{
-			do_log(sprintf(__("I am sorry but I did not have permission to access %s", 'lang_base'), $data['file']));
+			do_log(sprintf("I am sorry but I did not have permission to access %s", $data['file']));
 		}
 	}
 

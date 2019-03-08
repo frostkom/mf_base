@@ -6,7 +6,8 @@ Template Name: Front-End Admin
 //Only effective if cache is off, so we need an extra check in the API + possibly to invalidate cache on this page
 if(!is_user_logged_in())
 {
-	mf_redirect(get_site_url()."/wp-login.php?redirect_to=".$_SERVER['REQUEST_URI']);
+	mf_redirect(wp_login_url()."?redirect_to=".$_SERVER['REQUEST_URI']);
+	//mf_redirect(get_site_url()."/wp-login.php?redirect_to=".$_SERVER['REQUEST_URI']);
 }
 
 $arr_views = apply_filters('init_base_admin', array());

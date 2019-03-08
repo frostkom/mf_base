@@ -1027,7 +1027,7 @@ class mf_cron
 
 		if(!$success)
 		{
-			do_log(sprintf(__("I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended", 'lang_base'), $this->file));
+			do_log(sprintf("I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended", $this->file));
 		}
 	}
 
@@ -1048,7 +1048,7 @@ class mf_cron
 
 			if($file_time > DEFAULT_DATE && $this->has_expired(array('start' => $file_time, 'margin' => 1.2)))
 			{
-				do_log(sprintf(__("%s has been running since %s", 'lang_base'), $this->file, $file_time));
+				do_log(sprintf("%s has been running since %s", $this->file, $file_time));
 			}
 		}
 	}

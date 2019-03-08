@@ -69,6 +69,8 @@ function render_attachment_list()
 			dom_buttons.children(".button").removeClass('disabled');
 		}
 	}
+
+	arr_attachments = [];
 }
 
 function init_media_button()

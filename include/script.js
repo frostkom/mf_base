@@ -20,6 +20,22 @@ function select_option()
 	});
 }
 
+function render_required()
+{
+	jQuery(".mf_form :required, .mf_form .required").each(function()
+	{
+		if(jQuery(this).siblings("label").length > 0)
+		{
+			jQuery(this).siblings("label").append(" <span class='asterisk'>*</span>");
+		}
+
+		else if(jQuery(this).parent("label").length > 0)
+		{
+			jQuery(this).parent("label").append(" <span class='asterisk'>*</span>");
+		}
+	});
+}
+
 jQuery.fn.shorten = function(options)
 {
 	var settings = jQuery.extend(
@@ -44,18 +60,7 @@ jQuery.fn.shorten = function(options)
 
 jQuery(function($)
 {
-	$(".mf_form :required, .mf_form .required").each(function()
-	{
-		if($(this).siblings("label").length > 0)
-		{
-			$(this).siblings("label").append(" <span class='asterisk'>*</span>");
-		}
-
-		else if($(this).parent("label").length > 0)
-		{
-			$(this).parent("label").append(" <span class='asterisk'>*</span>");
-		}
-	});
+	render_required();
 
 	$(".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]").each(function()
 	{

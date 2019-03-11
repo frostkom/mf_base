@@ -1,5 +1,10 @@
 @media all
 {
+	.page-template-template_admin article section.logged_in
+	{
+		margin-bottom: 1em;
+	}
+
 	.page-template-template_admin article nav > ul
 	{
 		display: -webkit-box;

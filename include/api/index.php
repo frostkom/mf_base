@@ -34,8 +34,10 @@ switch($type_action)
 					$arr_fields[] = array('type' => 'text', 'name' => 'first_name', 'text' => __("First Name", 'lang_base'), 'required' => true);
 					$arr_fields[] = array('type' => 'text', 'name' => 'last_name', 'text' => __("Last Name", 'lang_base'), 'required' => true);
 				$arr_fields[] = array('type' => 'flex_end');
-				$arr_fields[] = array('type' => 'email', 'name' => 'email', 'text' => __("E-mail", 'lang_base'), 'required' => true);
-				//$arr_fields[] = array('type' => 'password', 'name' => 'password', 'text' => __("Password", 'lang_base'));
+				$arr_fields[] = array('type' => 'flex_start');
+					$arr_fields[] = array('type' => 'email', 'name' => 'email', 'text' => __("E-mail", 'lang_base'), 'required' => true);
+					$arr_fields[] = array('type' => 'password', 'name' => 'password', 'text' => __("Password", 'lang_base'));
+				$arr_fields[] = array('type' => 'flex_end');
 
 				$arr_fields = apply_filters('filter_profile_fields', $arr_fields);
 

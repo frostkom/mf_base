@@ -102,35 +102,35 @@ class mf_base
 	{
 		global $wp_admin_bar;
 
-		if(IS_ADMIN)
+		$post_id = $this->has_page_template();
+
+		if($post_id)
 		{
-			$post_id = $this->has_page_template();
+			$post_status = get_post_status($post_id);
 
-			if($post_id)
+			$color = $title = "";
+
+			switch($post_status)
 			{
-				$post_status = get_post_status($post_id);
+				case 'publish':
+					$color = "color_green";
+				break;
 
-				$color = $title = "";
-
-				switch($post_status)
-				{
-					case 'publish':
-						$color = "color_green";
-					break;
-
-					case 'draft':
+				case 'draft':
+					if(IS_ADMIN)
+					{
 						$color = "color_yellow";
 						$title = __("Not Published", 'lang_base');
-					break;
-				}
+					}
+				break;
+			}
 
-				if($color != '')
-				{
-					$wp_admin_bar->add_node(array(
-						'id' => 'front-end',
-						'title' => "<a href='".get_permalink($post_id)."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".get_post_title($post_id)."</a>",
-					));
-				}
+			if($color != '')
+			{
+				$wp_admin_bar->add_node(array(
+					'id' => 'front-end',
+					'title' => "<a href='".get_permalink($post_id)."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".get_post_title($post_id)."</a>",
+				));
 			}
 		}
 	}
@@ -599,6 +599,14 @@ class mf_base
 
 							case 'number': %>"
 								.show_textfield(array('type' => 'number', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
+							."<% break;
+
+							case 'password': %>
+								<div class='form_button'>
+									<label><%= field.text %></label>
+									<a href='".admin_url("profile.php")."' class='button'>".__("Change Password", 'lang_base')."</a></div>
+								</div>"
+								//.show_password_field(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>"))
 							."<% break;
 
 							case 'select': %>

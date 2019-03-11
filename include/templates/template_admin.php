@@ -29,6 +29,14 @@ get_header();
 
 				if(count($arr_views) > 0)
 				{
+					if(is_user_logged_in())
+					{
+						$user_data = get_userdata(get_current_user_id());
+						$display_name = apply_filters('filter_admin_display_name', $user_data->display_name);
+
+						echo "<section class='logged_in'><p><i class='fa fa-user'></i> ".$display_name." - <a href='".wp_logout_url()."'>".__("Log Out", 'lang_base')."</a></p></section>";
+					}
+
 					echo "<nav>
 						<ul>";
 

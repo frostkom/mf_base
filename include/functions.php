@@ -1874,13 +1874,21 @@ function get_users_for_select($data = array())
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
+	if(!isset($data['include'])){			$data['include'] = array();}
 	if(!isset($data['callback'])){			$data['callback'] = '';}
 
-	$users = get_users(array(
+	$data_temp = array(
 		'orderby' => 'display_name',
 		'order' => 'ASC',
 		'fields' => array('ID', 'display_name', 'user_email'),
-	));
+	);
+
+	if(is_array($data['include']) && count($data['include']) > 0)
+	{
+		$data_temp['role__in'] = $data['include'];
+	}
+
+	$users = get_users($data_temp);
 
 	$arr_data = array();
 

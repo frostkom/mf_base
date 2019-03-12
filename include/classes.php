@@ -7,6 +7,90 @@ class mf_base
 		$this->meta_prefix = "mf_base_";
 	}
 
+	function HTMLToRGB($hex)
+	{
+		if($hex[0] == '#')
+		{
+			$hex = substr($hex, 1);
+		}
+
+		if(strlen($hex) == 3)
+		{
+			$hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
+		}
+
+		$r = hexdec($hex[0].$hex[1]);
+		$g = hexdec($hex[2].$hex[3]);
+		$b = hexdec($hex[4].$hex[5]);
+
+		return $b + ($g << 0x8) + ($r << 0x10);
+	}
+
+	function RGBToHSL($RGB)
+	{
+		$r = 0xFF & ($RGB >> 0x10);
+		$g = 0xFF & ($RGB >> 0x8);
+		$b = 0xFF & $RGB;
+
+		$r = ((float)$r) / 255.0;
+		$g = ((float)$g) / 255.0;
+		$b = ((float)$b) / 255.0;
+
+		$maxC = max($r, $g, $b);
+		$minC = min($r, $g, $b);
+
+		$l = ($maxC + $minC) / 2.0;
+
+		if($maxC == $minC)
+		{
+			$s = $h = 0;
+		}
+
+		else
+		{
+			if($l < .5)
+			{
+				$s = ($maxC - $minC) / ($maxC + $minC);
+			}
+
+			else
+			{
+				$s = ($maxC - $minC) / (2.0 - $maxC - $minC);
+			}
+
+			if($r == $maxC)
+			{
+				$h = ($g - $b) / ($maxC - $minC);
+			}
+
+			if($g == $maxC)
+			{
+				$h = 2.0 + ($b - $r) / ($maxC - $minC);
+			}
+
+			if($b == $maxC)
+			{
+				$h = 4.0 + ($r - $g) / ($maxC - $minC);
+			}
+
+			$h = $h / 6.0; 
+		}
+
+		$h = (int)round(255.0 * $h);
+		$s = (int)round(255.0 * $s);
+		$l = (int)round(255.0 * $l);
+
+		return (object) array('hue' => $h, 'saturation' => $s, 'lightness' => $l);
+	}
+
+	function get_text_color_from_background($color)
+	{
+		$rgb = $this->HTMLToRGB($color);
+		$hsl = $this->RGBToHSL($rgb);
+
+		return ($hsl->lightness > 200 ? "#333" : "#fff");
+	}
+
 	function reschedule_base($option = '')
 	{
 		if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}

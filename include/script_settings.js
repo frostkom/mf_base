@@ -21,12 +21,12 @@ jQuery(function($)
 
 				dom_section.removeClass('hide').show().next("table").removeClass('hide');
 
-				$(".wrap form input[name=_wp_http_referer]").val(location.href);
+				$(".wrap form input[name='_wp_http_referer']").val(location.href);
 			}
 
 			else
 			{
-				dom_section.removeClass('hide').siblings(".nav-target").addClass('hide'); /*.show()*/
+				dom_section.removeClass('hide').siblings(".nav-target").addClass('hide');
 			}
 		}
 	}
@@ -93,11 +93,6 @@ jQuery(function($)
 		}
 	}
 
-	/*else
-	{
-		$(".nav-target").hide();
-	}*/
-
 	hash_action();
 
 	$(window).on('hashchange', function()
@@ -115,7 +110,5 @@ jQuery(function($)
 		location.hash = dom_href;
 
 		$("html, body").scrollTop(0);
-
-		/*return false;*/
 	});
 });

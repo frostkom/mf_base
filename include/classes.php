@@ -2133,6 +2133,7 @@ class mf_font_icons
 			'paper-plane',
 			'fas fa-parking',
 			'fas fa-scroll',
+			'fas fa-shopping-cart',
 			'fas fa-sun',
 			'unlink',
 			'fas fa-user',

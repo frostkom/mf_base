@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-28 18:50+0100\n"
+"POT-Creation-Date: 2019-03-18 20:33+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -14,6 +14,15 @@ msgstr ""
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
+
+msgid "First Name"
+msgstr "Fornavn"
+
+msgid "Last Name"
+msgstr "Etternavn"
+
+msgid "E-mail"
+msgstr "E-post"
 
 msgid "Every 2 Minutes"
 msgstr "Hver 2 Minutter"
@@ -27,6 +36,9 @@ msgstr "Planlagt å kjøre"
 msgid "Requirements"
 msgstr "Krav"
 
+msgid "Change Password"
+msgstr "Endre Passord"
+
 msgid "Update"
 msgstr "Oppdatere"
 
@@ -35,6 +47,9 @@ msgstr "Profil"
 
 msgid "Edit Profile"
 msgstr "Redigere profil"
+
+msgid "Are you sure?"
+msgstr "Er du sikker?"
 
 msgid "Read More"
 msgstr "Les mer"
@@ -71,9 +86,6 @@ msgstr "Fil"
 
 msgid "Example"
 msgstr "Eksempel"
-
-msgid "I could not send the email to %s"
-msgstr "Jeg kunne ikke sende e-post til %s"
 
 msgid "Add File"
 msgstr "Legg Til Fil"
@@ -134,13 +146,4 @@ msgstr "Fredag"
 
 msgid "Saturday"
 msgstr "Lørdag"
-
-msgid "First Name"
-msgstr "Fornavn"
-
-msgid "Last Name"
-msgstr "Etternavn"
-
-msgid "E-mail"
-msgstr "E-post"
 

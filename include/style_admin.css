@@ -192,31 +192,4 @@
 					font-size: .8em;
 					font-style: italic;
 				}
-
-				.page-template-template_admin .admin_container .meta_box .form_children > ul
-				{
-					list-style: none;
-					margin-bottom: .8em;
-				}
-
-					.page-template-template_admin .admin_container .meta_box .form_children > ul > li
-					{
-						margin: 0 -.5em;
-						padding: .8em .5em;
-					}
-
-						.page-template-template_admin .admin_container .meta_box .form_children > ul > li:nth-child(2n + 1)
-						{
-							background: #f3f3f3;
-						}
-
-						.page-template-template_admin .admin_container .meta_box .form_children > ul > li:last-of-type
-						{
-							background: #fff8df;
-						}
-
-						.page-template-template_admin .admin_container .meta_box .form_children > ul > li > div:last-of-type textarea
-						{
-							margin-bottom: 0;
-						}
 }

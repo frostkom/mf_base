@@ -22,7 +22,7 @@ $type_class = isset($arr_input[2]) ? $arr_input[2] : '';
 
 switch($type_action)
 {
-	case 'admin':
+	/*case 'admin':
 		switch($type_action_type)
 		{
 			case 'profile':
@@ -129,7 +129,7 @@ switch($type_action)
 				}
 			break;
 		}
-	break;
+	break;*/
 
 	case 'my_ip':
 		$json_output['ip'] = $_SERVER['REMOTE_ADDR'];

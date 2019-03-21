@@ -175,47 +175,9 @@ class mf_base
 	{
 		global $wpdb;
 
-		if(!isset($data['template'])){		$data['template'] = "/plugins/mf_base/include/templates/template_admin.php";}
-
-		$post_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE post_type = %s AND meta_key = %s AND meta_value = %s LIMIT 0, 1", 'page', '_wp_page_template', $data['template']));
-
-		return $post_id;
-	}
-
-	function wp_before_admin_bar_render()
-	{
-		global $wp_admin_bar;
-
-		$post_id = $this->has_page_template();
-
-		if($post_id)
+		if(isset($data['template']))
 		{
-			$post_status = get_post_status($post_id);
-
-			$color = $title = "";
-
-			switch($post_status)
-			{
-				case 'publish':
-					$color = "color_green";
-				break;
-
-				case 'draft':
-					if(IS_ADMIN)
-					{
-						$color = "color_yellow";
-						$title = __("Not Published", 'lang_base');
-					}
-				break;
-			}
-
-			if($color != '')
-			{
-				$wp_admin_bar->add_node(array(
-					'id' => 'front-end',
-					'title' => "<a href='".get_permalink($post_id)."' class='".$color."'".($title != '' ? " title='".$title."'" : '').">".get_post_title($post_id)."</a>",
-				));
-			}
+			return $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE post_type = %s AND meta_key = %s AND meta_value = %s LIMIT 0, 1", 'page', '_wp_page_template', $data['template']));
 		}
 	}
 
@@ -231,11 +193,6 @@ class mf_base
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		);
-
-		if($this->has_page_template() > 0)
-		{
-			$arr_settings['setting_base_front_end_admin'] = __("Front-End Admin", 'lang_base');
-		}
 
 		if(IS_SUPER_ADMIN)
 		{
@@ -435,28 +392,6 @@ class mf_base
 		}
 	}
 
-	function get_front_end_views_for_select()
-	{
-		$arr_data = array();
-
-		$arr_views = apply_filters('init_base_admin', array());
-
-		foreach($arr_views as $key => $view)
-		{
-			$arr_data[$key] = $view['name'];
-		}
-
-		return $arr_data;
-	}
-
-	function setting_base_front_end_admin_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key);
-
-		echo show_select(array('data' => $this->get_front_end_views_for_select(), 'name' => $setting_key."[]", 'value' => $option));
-	}
-
 	function setting_base_recommend_callback()
 	{
 		get_file_info(array('path' => get_home_path(), 'callback' => array($this, 'check_htaccess'), 'allow_depth' => false));
@@ -634,7 +569,7 @@ class mf_base
 		die();
 	}
 
-	function init_base_admin($arr_views)
+	/*function init_base_admin($arr_views)
 	{
 		$templates = "";
 		$plugin_include_url = plugin_dir_url(__FILE__);
@@ -774,7 +709,7 @@ class mf_base
 		}
 
 		return $arr_views;
-	}
+	}*/
 
 	function login_init()
 	{
@@ -826,15 +761,6 @@ class mf_base
 		}
 
 		return $out;
-	}
-
-	function get_page_templates($templates)
-	{
-		$templates_path = str_replace(WP_CONTENT_DIR, "", plugin_dir_path(__FILE__))."templates/";
-
-		$templates[$templates_path.'template_admin.php'] = __("Front-End Admin", 'lang_base');
-
-		return $templates;
 	}
 
 	function theme_page_templates($posts_templates)

@@ -293,8 +293,8 @@ class mf_base
 
 		echo "<div class='flex_flow'>
 			<div>
-				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> ".__("PHP", 'lang_base').": ".$php_version."</p>
-				<p><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> ".__("MySQL", 'lang_base').": ".$mysql_version."</p>";
+				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
+				<p><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
 				if(!($has_required_php_version && $has_required_mysql_version))
 				{
@@ -303,7 +303,7 @@ class mf_base
 
 				if($date_diff > 60)
 				{
-					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $db_date))." (".__("MySQL", 'lang_base').")</p>";
+					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
 				}
 
 				else
@@ -568,148 +568,6 @@ class mf_base
 		echo json_encode($result);
 		die();
 	}
-
-	/*function init_base_admin($arr_views)
-	{
-		$templates = "";
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		if(!is_admin())
-		{
-			mf_enqueue_style('style_base_admin', $plugin_include_url."style_admin.css", $plugin_version);
-
-			mf_enqueue_script('underscore');
-			mf_enqueue_script('backbone');
-			mf_enqueue_script('script_base_plugins', $plugin_include_url."backbone/bb.plugins.js", $plugin_version);
-
-			mf_enqueue_script('script_base_admin_router', $plugin_include_url."backbone/bb.admin.router.js", $plugin_version);
-			mf_enqueue_script('script_base_admin_models', $plugin_include_url."backbone/bb.admin.models.js", array('plugin_url' => $plugin_include_url), $plugin_version);
-			mf_enqueue_script('script_base_admin_views', $plugin_include_url."backbone/bb.admin.views.js", array(), $plugin_version);
-
-			$templates .= "<script type='text/template' id='template_admin_profile_edit'>
-				<form method='post' action='' class='mf_form' data-api-url='".$plugin_include_url."' data-action='admin/profile/save'>
-					<% _.each(fields, function(field)
-					{
-						switch(field.type)
-						{
-							case 'date': %>"
-								.show_textfield(array('type' => 'date', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
-							."<% break;
-
-							case 'email': %>"
-								.show_textfield(array('type' => 'email', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
-							."<% break;
-
-							case 'flex_start': %>
-								<div class='flex_flow'>
-							<% break;
-
-							case 'flex_end': %>
-								</div>
-							<% break;
-
-							case 'media_image': %>
-								<div>
-									<label for='<%= field.name %>'><%= field.text %></label>"
-									.get_media_library(array('name' => "<%= field.name %>", 'value' => "<%= field.value %>", 'type' => 'image'))
-								."</div>
-							<% break;
-
-							case 'number': %>"
-								.show_textfield(array('type' => 'number', 'name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
-							."<% break;
-
-							case 'password': %>
-								<div class='form_button'>
-									<label><%= field.text %></label>
-									<a href='".admin_url("profile.php")."' class='button'>".__("Change Password", 'lang_base')."</a></div>
-								</div>"
-								//.show_password_field(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>"))
-							."<% break;
-
-							case 'select': %>
-								<div class='form_select type_<%= field.type %><%= field.class %>'>
-									<label for='<%= field.name %>'><%= field.text %></label>
-									<select id='<%= field.name %>' name='<%= field.name %><% if(field.multiple == true){ %>[]<% } %>'<% if(field.multiple == true){ %> multiple<% } %><%= field.attributes %>>
-										<% _.each(field.options, function(option)
-										{%>
-											<% if(option.key.toString().substr(0, 9) == 'opt_start')
-											{ %>
-												<optgroup label='<%= option.value %>' rel='<%= option.key %>'>
-											<% }
-
-											else if(option.key.toString().substr(0, 7) == 'opt_end')
-											{ %>
-												</optgroup>
-											<% }
-
-											else
-											{ %>
-												<option value='<%= option.key %>'<% if(option.key == field.value || field.multiple == true && field.value.indexOf(option.key.toString()) !== -1){%> selected<%} %>><%= option.value %></option>
-											<% } %>
-										<% }); %>
-									</select>
-								</div>
-							<% break;
-
-							case 'text': %>"
-								.show_textfield(array('name' => "<%= field.name %>", 'text' => "<%= field.text %>", 'value' => "<%= field.value %>"))
-							."<% break;
-
-							default: %>
-								<strong><%= meta_field.type %></strong>: <%= meta_field.name %><br>
-							<% break;
-						}
-					}); %>
-					<div class='form_button'>"
-						.show_button(array('text' => __("Update", 'lang_base')))
-					."</div>
-				</form>
-			</script>";
-		}
-
-		$arr_views['profile'] = array(
-			'name' => __("Profile", 'lang_base'),
-			'icon' => "far fa-user-circle",
-			'items' => array(
-				array(
-					'id' => 'edit',
-					'name' => __("Edit Profile", 'lang_base'),
-				),
-			),
-			'templates' => $templates,
-			'api_url' => $plugin_include_url,
-		);
-
-		return $arr_views;
-	}
-
-	function init_base_admin_2($arr_views)
-	{
-		if(!is_admin())
-		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
-
-			mf_enqueue_script('script_base_init', $plugin_include_url."backbone/bb.init.js", $plugin_version);
-
-			$setting_base_front_end_admin = get_option('setting_base_front_end_admin');
-
-			if(is_array($setting_base_front_end_admin) && count($setting_base_front_end_admin) > 0)
-			{
-				foreach($arr_views as $key => $view)
-				{
-					if(!in_array($key, $setting_base_front_end_admin))
-					{
-						unset($arr_views[$key]);
-					}
-				}
-			}
-		}
-
-		return $arr_views;
-	}*/
 
 	function login_init()
 	{

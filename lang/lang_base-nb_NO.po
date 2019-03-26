@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-18 20:33+0100\n"
+"POT-Creation-Date: 2019-03-22 09:52+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -30,11 +30,20 @@ msgstr "Hver 2 Minutter"
 msgid "Every 10 Minutes"
 msgstr "Hver 10 Minutter"
 
+msgid "Weekly"
+msgstr "Ukentlig"
+
+msgid "Monthly"
+msgstr "Månedlig"
+
 msgid "Scheduled to run"
 msgstr "Planlagt å kjøre"
 
 msgid "Requirements"
 msgstr "Krav"
+
+msgid "Cancel"
+msgstr "Avbryt"
 
 msgid "Change Password"
 msgstr "Endre Passord"
@@ -104,6 +113,12 @@ msgstr "Nei"
 
 msgid "Pages"
 msgstr "Sider"
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "Categories"
+msgstr "Kategorier"
 
 msgid "Home"
 msgstr "Hjem"

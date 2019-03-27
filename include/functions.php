@@ -2656,7 +2656,16 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 
 	else if($type == 'date' || $type2 == 'dte')
 	{
-		if($temp == '' || (preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp) && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
+		$is_date_format = preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp);
+
+		if($temp != '' && !$is_date_format)
+		{
+			$temp = date("Y-m-d", strtotime($temp));
+
+			$is_date_format = preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp);
+		}
+
+		if($temp == '' || ($is_date_format && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))
 		{
 			$out = $temp;
 		}
@@ -2670,7 +2679,51 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 
 			else
 			{
-				if($return_empty == false){$out = trim($temp);}
+				if($return_empty == false)
+				{
+					$out = trim($temp);
+				}
+			}
+		}
+	}
+
+	else if($type == 'time')
+	{
+		$is_time_format = preg_match('/^\d{2}:\d{2}$/', $temp);
+
+		if($temp != '' && !$is_time_format)
+		{
+			if(strlen($temp) < 3)
+			{
+				$temp = zeroise($temp, 2).":00";
+			}
+
+			else
+			{
+				$temp = date("H:i", strtotime(date("Y-m-d")." ".$temp));
+			}
+
+			$is_time_format = preg_match('/^\d{2}:\d{2}$/', $temp);
+		}
+
+		if($temp == '' || $is_time_format)
+		{
+			$out = $temp;
+		}
+
+		else
+		{
+			if($temp == "00:00")
+			{
+				$out = "";
+			}
+
+			else
+			{
+				if($return_empty == false)
+				{
+					$out = trim($temp);
+				}
 			}
 		}
 	}

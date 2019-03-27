@@ -62,7 +62,7 @@ jQuery(function($)
 {
 	render_required();
 
-	$(".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]").each(function()
+	$(".mf_form select[rel='submit_change'], .mf_form input[rel='submit_change']").each(function()
 	{
 		$(this).removeAttr('disabled');
 	});
@@ -77,7 +77,7 @@ jQuery(function($)
 		}
 	});
 
-	$(document).on('change', ".mf_form select[rel=submit_change], .mf_form input[rel=submit_change]", function()
+	$(document).on('change', ".mf_form select[rel='submit_change'], .mf_form input[rel='submit_change']", function()
 	{
 		this.form.submit();
 	});
@@ -92,8 +92,7 @@ jQuery(function($)
 	{
 		var dom_obj = $(this),
 			dom_rel = dom_obj.attr('rel'),
-			/*toggle_obj = $(".toggler[rel=" + dom_rel + "]"),*/
-			toggle_container = $(".toggle_container[rel=" + dom_rel + "]"),
+			toggle_container = $(".toggle_container[rel='" + dom_rel + "']"),
 			is_toggle_container = $(e.target).parents(".toggle_container").length > 0;
 
 		if(toggle_container.length > 0 && is_toggle_container == false)
@@ -103,7 +102,6 @@ jQuery(function($)
 				$(".toggler.close_siblings").removeClass('open').siblings(".toggle_container").addClass('hide');
 			}
 
-			/*toggle_obj.toggleClass('open');*/
 			dom_obj.toggleClass('open');
 			toggle_container.toggleClass('hide');
 		}
@@ -111,7 +109,7 @@ jQuery(function($)
 		return false;
 	});
 
-	$(document).on('keyup', "input[type=url]", function()
+	$(document).on('keyup', "input[type='url']", function()
 	{
 		var dom_obj = $(this),
 			dom_val = dom_obj.val();

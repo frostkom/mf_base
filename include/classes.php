@@ -1908,6 +1908,7 @@ class mf_font_icons
 			'fas fa-clock',
 			'eye',
 			'exclamation-triangle',
+			'fab fa-facebook',
 			'fas fa-file-alt',
 			'fas fa-graduation-cap',
 			'fas fa-hospital-alt',

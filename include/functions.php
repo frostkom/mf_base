@@ -1841,6 +1841,7 @@ function get_roles_for_select($data = array())
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
 	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
 	if(!isset($data['use_capability'])){	$data['use_capability'] = true;}
+	if(!isset($data['exclude'])){			$data['exclude'] = array();}
 
 	if($data['add_choose_here'] == true)
 	{
@@ -1861,7 +1862,7 @@ function get_roles_for_select($data = array())
 			$key = get_role_first_capability($key);
 		}
 
-		if(!isset($data['array'][$key]) && $key != '')
+		if(!isset($data['array'][$key]) && $key != '' && !in_array($key, $data['exclude']))
 		{
 			$data['array'][$key] = $value;
 		}

@@ -21,7 +21,7 @@ jQuery(function($)
 
 				dom_section.removeClass('hide').show().next("table").removeClass('hide');
 
-				$(".wrap form input[name='_wp_http_referer']").val(location.href);
+				$(".settings-tabs input[name='_wp_http_referer']").val(location.href);
 			}
 
 			else
@@ -39,7 +39,7 @@ jQuery(function($)
 		{
 			var arr_tabs = [];
 
-			$(".wrap form > div > a").each(function()
+			$(".settings-tabs > div > a").each(function()
 			{
 				var dom_obj = $(this),
 					dom_id = dom_obj.attr('href').replace('#', ''),
@@ -110,5 +110,7 @@ jQuery(function($)
 		location.hash = dom_href;
 
 		$("html, body").scrollTop(0);
+
+		return false;
 	});
 });

@@ -579,6 +579,12 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
+		$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
+
+		echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
+		<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
+		<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";
+
 		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
 		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
@@ -1913,7 +1919,7 @@ class mf_font_icons
 			'fas fa-graduation-cap',
 			'fas fa-hospital-alt',
 			'fas fa-key',
-			'link',
+			'fas fa-link',
 			'lock',
 			'paper-plane',
 			'fas fa-parking',
@@ -1923,6 +1929,7 @@ class mf_font_icons
 			'unlink',
 			'fas fa-user',
 			'fas fa-utensils',
+			'fas fa-video',
 			'fas fa-wheelchair',
 		);
 

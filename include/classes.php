@@ -4,7 +4,7 @@ class mf_base
 {
 	function __construct()
 	{
-		$this->meta_prefix = "mf_base_";
+		$this->meta_prefix = 'mf_base_';
 	}
 
 	function HTMLToRGB($hex)
@@ -407,6 +407,7 @@ class mf_base
 			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
+			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to be able to upload larger files than normally allowed", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
 		);
@@ -672,12 +673,10 @@ class mf_base
 		return $atts;
 	}
 
-	// Checks if the template is assigned to the page
 	function template_include($template)
 	{
 		global $post;
 
-		// Return template if post is empty
 		if(!$post)
 		{
 			return $template;
@@ -698,7 +697,6 @@ class mf_base
 
 		$file = WP_CONTENT_DIR.$template_temp; //plugin_dir_path(__FILE__)."templates/".
 
-		// Just to be safe, we check if the file exist first
 		if(file_exists($file))
 		{
 			return $file;
@@ -1056,9 +1054,9 @@ class mf_list_table extends WP_List_Table
 		global $wpdb;
 
 		parent::__construct(array(
-			'singular' => '', //singular name of the listed records
-			'plural' => '', //plural name of the listed records
-			'ajax' => false //does this table support ajax?
+			'singular' => '',
+			'plural' => '',
+			'ajax' => false,
 		));
 
 		if(!isset($data['per_page'])){			$data['per_page'] = $this->get_items_per_page('edit_page_per_page', 20);}

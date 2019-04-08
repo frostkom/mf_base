@@ -115,6 +115,7 @@
 		border-spacing: 0;
 		clear: both;
 		margin: 0;
+		table-layout: fixed;
 		width: 100%;
 	}
 
@@ -144,7 +145,9 @@
 				color: #32373c;
 				cursor: pointer;
 				font-size: .9em;
+				overflow: hidden;
 				text-align: left;
+				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
 
@@ -159,13 +162,39 @@
 					font-size: inherit;
 					font-weight: inherit;
 					line-height: inherit;
+					overflow: hidden;
+					text-overflow: ellipsis;
 				}
 
 					#wrapper .widefat td, #wrapper .widefat td ol, #wrapper .widefat td p, #wrapper .widefat td ul
 					{
-						font-size: .9em;
-						line-height: 1.5em;
+						font-size: .8em;
+						/*line-height: 1.5em;*/
 					}
+
+					#wrapper .widefat tr .row-actions
+					{
+						color: #999;
+						left: -9999em;
+						padding: 2px 0 0;
+						position: relative;
+						white-space: nowrap;
+					}
+
+						#wrapper .widefat tr:hover .row-actions
+						{
+							position: static;
+						}
+
+						#wrapper .widefat tr .row-actions > * + *:before
+						{
+							content: ' | ';
+						}
+
+						#wrapper .widefat tr .row-actions a
+						{
+							text-decoration: none;
+						}
 
 			#wrapper .widefat tfoot th
 			{

@@ -71,7 +71,7 @@ jQuery(function($)
 
 	if(dom_obj_toggle.length > 0)
 	{
-		function toggle_table(dom_obj)
+		function toggle_data(dom_obj)
 		{
 			dom_obj.toggleClass('fa-eye-slash fa-eye').parents("tr").next("tr").toggleClass('hide');
 		}
@@ -80,13 +80,15 @@ jQuery(function($)
 
 		$(".toggle_all_data").on('click', function()
 		{
-			toggle_table(dom_obj_toggle);
+			toggle_data(dom_obj_toggle);
 		});
 
 		dom_obj_toggle.on('click', function()
 		{
-			toggle_table($(this).parents("tr").siblings("tr").find(".view_data .fa-eye-slash"));
-			toggle_table($(this));
+			var dom_obj = $(this);
+
+			toggle_data(dom_obj.parents("tr").siblings("tr").find(".view_data .fa-eye-slash"));
+			toggle_data(dom_obj);
 		});
 	}
 

@@ -68,7 +68,7 @@ function get_or_set_table_filter($data)
 	$user_id = get_current_user_id();
 	$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
 
-	if(isset($_GET['filter_action']) || isset($_GET[$data['key']]))
+	if(isset($_GET['filter_action']) || isset($_REQUEST[$data['key']]))
 	{
 		$meta_value = check_var($data['key']);
 
@@ -3193,6 +3193,11 @@ function show_select($data)
 	if(!isset($data['attributes'])){	$data['attributes'] = array();}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
+
+	if(substr($data['value'], 0, 2) == "<%")
+	{
+		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."data-value='".$data['value']."'";
+	}
 
 	$obj_base = new mf_base();
 	$obj_base->init_form($data);

@@ -303,7 +303,7 @@ class mf_base
 
 				if($date_diff > 60)
 				{
-					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (".__("PHP", 'lang_base')."), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
+					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
 				}
 
 				else

@@ -1987,7 +1987,7 @@ function get_post_types_for_select($data = array())
 
 	if(in_array('special', $data['include']))
 	{
-		$arr_data['is_404()'] = __("404", 'lang_base');
+		$arr_data['is_404()'] = "404";
 		//$arr_data['is_archive()'] = "Archive";
 
 		$arr_categories = get_categories(array('hierarchical' => 1, 'hide_empty' => 1));

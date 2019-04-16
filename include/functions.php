@@ -3185,8 +3185,7 @@ function show_select($data)
 	if(!isset($data['data'])){			$data['data'] = array();}
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
-	//if(!isset($data['compare'])){		$data['compare'] = "";} //To be deprecated in the future
-	if(!isset($data['value'])){			$data['value'] = "";} //$data['compare']
+	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['class'])){			$data['class'] = "";}
@@ -3194,7 +3193,7 @@ function show_select($data)
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
-	if(substr($data['value'], 0, 2) == "<%")
+	if(!is_array($data['value']) && substr($data['value'], 0, 2) == "<%")
 	{
 		$data['xtra'] .= ($data['xtra'] != '' ? " " : "")."data-value='".$data['value']."'";
 	}

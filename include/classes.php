@@ -464,7 +464,7 @@ class mf_base
 
 	function plugin_action_links($actions, $plugin_file)
 	{
-		if(array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
+		if(is_array($actions) && array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
 		{
 			unset($actions['deactivate']);
 		}

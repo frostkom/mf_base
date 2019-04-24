@@ -435,14 +435,14 @@ function send_email($data)
 
 	if($data['to'] == '')
 	{
-		$error_text = sprintf(__("The message had no recipient so '%s' could not be sent", 'lang_base'), $data['subject']);
+		$error_text = sprintf(__("The message had no recipient so %s could not be sent", 'lang_base'), $data['subject']);
 
 		return false;
 	}
 
 	else if($data['content'] == '')
 	{
-		$error_text = sprintf(__("The message was empty so I could not send '%s' to '%s'", 'lang_base'), $data['subject'], $data['to']);
+		$error_text = sprintf(__("The message was empty so I could not send %s to %s", 'lang_base'), $data['subject'], $data['to']);
 
 		return false;
 	}
@@ -501,6 +501,11 @@ function send_email($data)
 				}
 
 				$phpmailer_temp['to'] = $phpmailer->getToAddresses()[0][0];
+
+				if(!isset($phpmailer->getToAddresses()[0][0]))
+				{
+					do_log("I could not get recipient address: ".var_export($phpmailer->getToAddresses(), true));
+				}
 			}
 		}
 

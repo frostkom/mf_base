@@ -2234,17 +2234,8 @@ function validate_url($value, $link = true, $http = true)
 }
 #################
 
-function get_url_content($data = array()) //, $catch_head = false, $password = '', $post = '', $post_data = ''
+function get_url_content($data = array())
 {
-	/*if(!is_array($data))
-	{
-		do_log("get_url_content(): ".$data);
-
-		$data = array(
-			'url' => $data,
-		);
-	}*/
-
 	if(!isset($data['follow_redirect'])){			$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){				$data['catch_head'] = false;}
 	if(!isset($data['include_head_in_output'])){	$data['include_head_in_output'] = false;}

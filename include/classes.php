@@ -596,6 +596,12 @@ class mf_base
 
 	function phpmailer_init($phpmailer)
 	{
+		if($phpmailer->FromName == "WordPress")
+		{
+			$phpmailer->From = get_bloginfo('admin_email');
+			$phpmailer->FromName = get_bloginfo('name');
+		}
+
 		if($phpmailer->ContentType == 'text/html')
 		{
 			$phpmailer->AltBody = strip_tags($phpmailer->Body);

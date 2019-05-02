@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-04-16 07:02+0100\n"
+"POT-Creation-Date: 2019-04-29 14:40+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -14,6 +14,168 @@ msgstr ""
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
+
+msgid "The message had no recipient so %s could not be sent"
+msgstr "Meddelandet hade ingen mottagare så %s kunde inte skickas"
+
+msgid "The message was empty so I could not send %s to %s"
+msgstr "Meddelandet var tomt så jag kunde inte skickas %s till %s"
+
+msgid "Yesterday"
+msgstr "Igår"
+
+msgid "Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder"
+msgstr "Det gick inte att skapa mappen %s i uploads. Lägg till rätt behörigheter för att kunna skapa en undermapp"
+
+msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
+msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
+
+msgid "Add File"
+msgstr "Lägg till fil"
+
+msgid "Change File"
+msgstr "Byt fil"
+
+msgid "Insert File"
+msgstr "Lägg in fil"
+
+msgid "Insert"
+msgstr "Lägg till"
+
+msgid "Add Attachment"
+msgstr "Bifoga fil"
+
+msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
+msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
+
+msgid "Unknown title"
+msgstr "Okänt namn"
+
+msgid "Are you sure?"
+msgstr "Är du säker?"
+
+msgid "The file '%s' could not be found in the DB"
+msgstr "Filen '%s' kunde inte hittas i databasen"
+
+msgid "You need to install the plugin %s%s%s first"
+msgstr "Du måste installera pluginet %s%s%s först"
+
+msgid "Unknown"
+msgstr "Okänt"
+
+msgid "in %d minute"
+msgstr "om %d minut"
+
+msgid "in %d minutes"
+msgstr "om %d minuter"
+
+msgid "at any moment"
+msgstr "alldeles strax"
+
+msgid "Choose Here"
+msgstr "Välj här"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "No"
+msgstr "Nej"
+
+msgid "Super Admin"
+msgstr "Superadmin"
+
+msgid "Pages"
+msgstr "Sidor"
+
+msgid "Post Types"
+msgstr "Sidtyper"
+
+msgid "Category"
+msgstr "Kategori"
+
+msgid "Categories"
+msgstr "Kategorier"
+
+msgid "Home"
+msgstr "Hem"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "your-name"
+msgstr "ditt-namn"
+
+msgid "no title"
+msgstr "ingen titel"
+
+msgid "May"
+msgstr "Maj"
+
+msgid "Oct"
+msgstr "Okt"
+
+msgid "January"
+msgstr "Januari"
+
+msgid "February"
+msgstr "Februari"
+
+msgid "March"
+msgstr "Mars"
+
+msgid "June"
+msgstr "Juni"
+
+msgid "July"
+msgstr "Juli"
+
+msgid "August"
+msgstr "Augusti"
+
+msgid "October"
+msgstr "Oktober"
+
+msgid "Sun"
+msgstr "Sön"
+
+msgid "Mon"
+msgstr "Mån"
+
+msgid "Tue"
+msgstr "Tis"
+
+msgid "Wed"
+msgstr "Ons"
+
+msgid "Thu"
+msgstr "Tors"
+
+msgid "Fri"
+msgstr "Fre"
+
+msgid "Sat"
+msgstr "Lör"
+
+msgid "Sunday"
+msgstr "Söndag"
+
+msgid "Monday"
+msgstr "Måndag"
+
+msgid "Tuesday"
+msgstr "Tisdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "Saturday"
+msgstr "Lördag"
 
 msgid "First Name"
 msgstr "Förnamn"
@@ -135,17 +297,11 @@ msgstr "Visa/dölj all data"
 msgid "Add Content"
 msgstr "Lägg till innehåll"
 
-msgid "Insert"
-msgstr "Lägg till"
-
 msgid "Cancel"
 msgstr "Avbryt"
 
 msgid "Added Content"
 msgstr "Tilllagt innehåll"
-
-msgid "Are you sure?"
-msgstr "Är du säker?"
 
 msgid "Read More"
 msgstr "Läs mer"
@@ -165,9 +321,6 @@ msgstr "Radera"
 msgid "Filter"
 msgstr "Filtrera"
 
-msgid "Search"
-msgstr "Sök"
-
 msgid "Rows"
 msgstr "Rader"
 
@@ -179,9 +332,6 @@ msgstr "0701-23 45 67"
 
 msgid "My Settings"
 msgstr "Mina inställningar"
-
-msgid "Choose Here"
-msgstr "Välj här"
 
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
@@ -227,154 +377,4 @@ msgstr "Kolumn"
 
 msgid "Example"
 msgstr "Exempel"
-
-msgid "The message had no recipient so '%s' could not be sent"
-msgstr "Meddelandet hade ingen mottagare så '%s' kunde inte skickas"
-
-msgid "The message was empty so I could not send '%s' to '%s'"
-msgstr "Meddelandet var tomt så jag kunde inte skicka '%s' till '%s'"
-
-msgid "Yesterday"
-msgstr "Igår"
-
-msgid "Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder"
-msgstr "Det gick inte att skapa mappen %s i uploads. Lägg till rätt behörigheter för att kunna skapa en undermapp"
-
-msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
-msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
-
-msgid "Add File"
-msgstr "Lägg till fil"
-
-msgid "Change File"
-msgstr "Byt fil"
-
-msgid "Insert File"
-msgstr "Lägg in fil"
-
-msgid "Add Attachment"
-msgstr "Bifoga fil"
-
-msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
-msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
-
-msgid "Unknown title"
-msgstr "Okänt namn"
-
-msgid "The file '%s' could not be found in the DB"
-msgstr "Filen '%s' kunde inte hittas i databasen"
-
-msgid "You need to install the plugin %s%s%s first"
-msgstr "Du måste installera pluginet %s%s%s först"
-
-msgid "Unknown"
-msgstr "Okänt"
-
-msgid "in %d minute"
-msgstr "om %d minut"
-
-msgid "in %d minutes"
-msgstr "om %d minuter"
-
-msgid "at any moment"
-msgstr "alldeles strax"
-
-msgid "Yes"
-msgstr "Ja"
-
-msgid "No"
-msgstr "Nej"
-
-msgid "Super Admin"
-msgstr "Superadmin"
-
-msgid "Pages"
-msgstr "Sidor"
-
-msgid "Post Types"
-msgstr "Sidtyper"
-
-msgid "Category"
-msgstr "Kategori"
-
-msgid "Categories"
-msgstr "Kategorier"
-
-msgid "Home"
-msgstr "Hem"
-
-msgid "your-name"
-msgstr "ditt-namn"
-
-msgid "no title"
-msgstr "ingen titel"
-
-msgid "May"
-msgstr "Maj"
-
-msgid "Oct"
-msgstr "Okt"
-
-msgid "January"
-msgstr "Januari"
-
-msgid "February"
-msgstr "Februari"
-
-msgid "March"
-msgstr "Mars"
-
-msgid "June"
-msgstr "Juni"
-
-msgid "July"
-msgstr "Juli"
-
-msgid "August"
-msgstr "Augusti"
-
-msgid "October"
-msgstr "Oktober"
-
-msgid "Sun"
-msgstr "Sön"
-
-msgid "Mon"
-msgstr "Mån"
-
-msgid "Tue"
-msgstr "Tis"
-
-msgid "Wed"
-msgstr "Ons"
-
-msgid "Thu"
-msgstr "Tors"
-
-msgid "Fri"
-msgstr "Fre"
-
-msgid "Sat"
-msgstr "Lör"
-
-msgid "Sunday"
-msgstr "Söndag"
-
-msgid "Monday"
-msgstr "Måndag"
-
-msgid "Tuesday"
-msgstr "Tisdag"
-
-msgid "Wednesday"
-msgstr "Onsdag"
-
-msgid "Thursday"
-msgstr "Torsdag"
-
-msgid "Friday"
-msgstr "Fredag"
-
-msgid "Saturday"
-msgstr "Lördag"
 

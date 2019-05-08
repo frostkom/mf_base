@@ -1975,6 +1975,16 @@ function get_post_types_for_select($data = array())
 					if($data['add_is'] == true)
 					{
 						$arr_data['is_singular("'.$post_type->name.'")'] = $post_type->label;
+
+						$arr_tax = get_object_taxonomies($post_type->name, 'objects');
+
+						foreach($arr_tax as $taxonomy)
+						{
+							if($taxonomy->public == 1)
+							{
+								$arr_data['is_tax("'.$taxonomy->name.'")'] = " - ".$taxonomy->label;
+							}
+						}
 					}
 
 					else
@@ -3309,21 +3319,25 @@ function show_select($data)
 										$out .= " disabled";
 									}
 
-									else if(is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value)
+									else if(
+										is_array($obj_base->data['value'])
+										&& (
+											in_array($data_value, $obj_base->data['value'])
+											|| in_array(str_replace('"', "&quot;", $data_value), $obj_base->data['value']) // Needed when widget_logic_data gets arr_values
+										)
+										|| $obj_base->data['value'] == $data_value
+									)
 									{
 										$out .= " selected";
 									}
 
 									/*else
 									{
-										$value1 = implode("", $obj_base->data['value']);
-										$value2 = implode("", $data_value);
+										$value1 = implode(", ", $obj_base->data['value']);
 
-										if(preg_match("/is_singular/", $value1) && preg_match("/is_singular/", $value2))
+										if(preg_match("/is_singular/", $value1) && preg_match("/is_singular/", $data_value))
 										{
-											do_log("Select or not to select: ".$value1." --- ".$value2);
-
-											//do_log("Select or not to select: ".htmlspecialchars(var_export($obj_base->data['value'], true))." --- ".htmlspecialchars(var_export($data_value, true)));
+											do_log("Select or not to select: ".var_export($obj_base->data['value'], true)." --- ".$data_value);
 										}
 									}*/
 

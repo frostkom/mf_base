@@ -2197,23 +2197,33 @@ class mf_import
 		$plugin_version = get_plugin_version(__FILE__);
 
 		mf_enqueue_style('style_import_wp', $plugin_include_url."style_import_wp.css", $plugin_version);
-		mf_enqueue_script('script_import_wp', $plugin_include_url."script_import_wp.js", $plugin_version);
+		mf_enqueue_script('script_import_wp', $plugin_include_url."script_import_wp.js", array(
+			'plugin_url' => $plugin_include_url,	
+		), $plugin_version);
 
 		$this->prefix = $wpdb->prefix;
 		$this->table = $this->post_type = $this->actions = "";
-		$this->columns = $this->unique_columns = $this->validate_columns = $this->result = array();
+		$this->columns = $this->unique_columns = $this->validate_columns = array();
 
 		$this->row_separator = "
 ";
 		$this->is_run = false;
 		$this->unique_check = "OR";
 
-		$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = $this->rows_untouched = 0;
-
 		$this->has_excel_support = is_plugin_active('mf_phpexcel/index.php');
 
 		$this->get_defaults();
 		$this->fetch_request();
+
+		if($this->save_result)
+		{
+			$this->result = array();
+		}
+
+		else
+		{
+			$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = 0;
+		}
 	}
 
 	function get_defaults(){}
@@ -2258,6 +2268,7 @@ class mf_import
 
 		$this->action = check_var('strTableAction');
 		$this->skip_header = check_var('intImportSkipHeader', '', true, '0');
+		$this->save_result = check_var('intImportSaveResult', '', true, '0');
 		$this->text = isset($_POST['strImportText']) ? trim($_POST['strImportText']) : "";
 
 		if($this->text != '')
@@ -2386,7 +2397,7 @@ class mf_import
 		}
 	}
 
-	function get_untouched()
+	/*function get_untouched()
 	{
 		global $wpdb;
 
@@ -2404,21 +2415,24 @@ class mf_import
 
 		foreach($result as $r)
 		{
-			$this->result[] = array(
-				'type' => 'untouched',
-				'action' => 'fa fa-check green',
-				'id' => $r->ID,
-				'data' => $r,
-				'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
-			);
+			if($this->save_result)
+			{
+				$this->result[] = array(
+					'type' => 'untouched',
+					'action' => 'fa fa-check green',
+					'id' => $r->ID,
+					'data' => $r,
+					'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
+				);
+			}
 
-			$this->rows_untouched++;
+			//$this->rows_untouched++;
 		}
-	}
+	}*/
 
 	function do_import()
 	{
-		global $wpdb;
+		global $wpdb, $done_text;
 
 		$out = "";
 
@@ -2571,28 +2585,40 @@ class mf_import
 										{
 											$this->updated_new($id);
 
-											$this->rows_updated++;
+											if($this->save_result)
+											{
+												$this->result[] = array(
+													'type' => 'updated',
+													'action' => 'fa fa-check green',
+													'id' => $id,
+													'data' => $arr_values,
+													'value' => $query_update,
+												);
+											}
 
-											$this->result[] = array(
-												'type' => 'updated',
-												'action' => 'fa fa-check green',
-												'id' => $id,
-												'data' => $arr_values,
-												'value' => $query_update,
-											);
+											else
+											{
+												$this->rows_updated++;
+											}
 										}
 
 										else
 										{
-											$this->rows_up_to_date++;
+											if($this->save_result)
+											{
+												$this->result[] = array(
+													'type' => 'up_to_date',
+													'action' => 'fa fa-cloud blue',
+													'id' => $id,
+													'data' => $arr_values,
+													'value' => $query_update,
+												);
+											}
 
-											$this->result[] = array(
-												'type' => 'up_to_date',
-												'action' => 'fa fa-cloud blue',
-												'id' => $id,
-												'data' => $arr_values,
-												'value' => $query_update,
-											);
+											else
+											{
+												$this->rows_up_to_date++;
+											}
 										}
 									}
 
@@ -2600,13 +2626,16 @@ class mf_import
 									{
 										$this->if_more_than_one($r->ID);
 
-										$this->result[] = array(
-											'type' => 'duplicate',
-											'action' => 'fa fa-copy',
-											'id' => $r->ID,
-											'data' => $arr_values,
-											'value' => $query_select,
-										);
+										if($this->save_result)
+										{
+											$this->result[] = array(
+												'type' => 'duplicate',
+												'action' => 'fa fa-copy',
+												'id' => $r->ID,
+												'data' => $arr_values,
+												'value' => $query_select,
+											);
+										}
 									}
 
 									$k++;
@@ -2631,28 +2660,40 @@ class mf_import
 									$this->inserted_new($id);
 									$this->update_options($id);
 
-									$this->rows_inserted++;
+									if($this->save_result)
+									{
+										$this->result[] = array(
+											'type' => 'inserted',
+											'action' => 'fa fa-plus-circle',
+											'id' => $id,
+											'data' => $arr_values,
+											'value' => $query_insert,
+										);
+									}
 
-									$this->result[] = array(
-										'type' => 'inserted',
-										'action' => 'fa fa-plus-circle',
-										'id' => $id,
-										'data' => $arr_values,
-										'value' => $query_insert,
-									);
+									else
+									{
+										$this->rows_inserted++;
+									}
 								}
 
 								else
 								{
-									$this->rows_not_inserted++;
+									if($this->save_result)
+									{
+										$this->result[] = array(
+											'type' => 'not_inserted',
+											'action' => 'fa fa-unlink',
+											'id' => '',
+											'data' => $arr_values,
+											'value' => $query_insert,
+										);
+									}
 
-									$this->result[] = array(
-										'type' => 'not_inserted',
-										'action' => 'fa fa-unlink',
-										'id' => '',
-										'data' => $arr_values,
-										'value' => $query_insert,
-									);
+									else
+									{
+										$this->rows_not_inserted++;
+									}
 								}
 							}
 						break;
@@ -2681,57 +2722,78 @@ class mf_import
 
 								if($wpdb->rows_affected > 0)
 								{
-									$this->rows_deleted++;
+									if($this->save_result)
+									{
+										$this->result[] = array(
+											'type' => 'deleted',
+											'action' => 'fa fa-times',
+											'id' => '',
+											'data' => $arr_values,
+											'value' => $query_delete,
+										);
+									}
 
-									$this->result[] = array(
-										'type' => 'deleted',
-										'action' => 'fa fa-times',
-										'id' => '',
-										'data' => $arr_values,
-										'value' => $query_delete,
-									);
+									else
+									{
+										$this->rows_deleted++;
+									}
 								}
 
 								else
 								{
-									$this->rows_not_deleted++;
+									if($this->save_result)
+									{
+										$this->result[] = array(
+											'type' => 'not_deleted',
+											'action' => 'fa fa-unlink',
+											'id' => '',
+											'data' => $arr_values,
+											'value' => $query_delete,
+										);
+									}
 
-									$this->result[] = array(
-										'type' => 'not_deleted',
-										'action' => 'fa fa-unlink',
-										'id' => '',
-										'data' => $arr_values,
-										'value' => $query_delete,
-									);
+									else
+									{
+										$this->rows_not_deleted++;
+									}
 								}
 							}
 
 							else
 							{
-								$this->rows_not_exists++;
+								if($this->save_result)
+								{
+									$this->result[] = array(
+										'type' => 'not_exists',
+										'action' => 'fa fa-question',
+										'id' => '',
+										'data' => $arr_values,
+										'value' => $query_select,
+									);
+								}
 
-								$this->result[] = array(
-									'type' => 'not_exists',
-									'action' => 'fa fa-question',
-									'id' => '',
-									'data' => $arr_values,
-									'value' => $query_select,
-								);
+								else
+								{
+									$this->rows_not_exists++;
+								}
 							}
 						break;
 
 						default:
-							$this->result[] = array(
-								'type' => '',
-								'id' => '',
-								'data' => $arr_values,
-								'action' => 'fa fa-question',
-							);
+							if($this->save_result)
+							{
+								$this->result[] = array(
+									'type' => '',
+									'id' => '',
+									'data' => $arr_values,
+									'action' => 'fa fa-question',
+								);
+							}
 						break;
 					}
 				}
 
-				else
+				else if($this->save_result)
 				{
 					$this->result[] = array(
 						'type' => '',
@@ -2748,28 +2810,75 @@ class mf_import
 				}
 			}
 
-			if(count($this->result) > 0)
+			if($this->save_result)
 			{
-				$arr_export_data = array();
-
-				foreach($this->result as $row)
+				if(count($this->result) > 0)
 				{
-					$data_temp = array(
-						$row['type'],
-						$row['id'],
-					);
+					$arr_export_data = array();
 
-					foreach($row['data'] as $value)
+					foreach($this->result as $key => $row)
 					{
-						$data_temp[] = $value;
+						unset($this->result[$key]);
+
+						$data_temp = array(
+							$row['type'],
+							$row['id'],
+						);
+
+						foreach($row['data'] as $value)
+						{
+							$data_temp[] = $value;
+						}
+
+						$data_temp[] = (isset($row['value']) ? $row['value'] : '');
+
+						$arr_export_data[] = $data_temp;
 					}
 
-					$data_temp[] = (isset($row['value']) ? $row['value'] : '');
+					$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
-					$arr_export_data[] = $data_temp;
+					$out .= get_notification();
+				}
+			}
+
+			else
+			{
+				$done_text = "";
+
+				if($this->rows_updated > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d updated", 'lang_base'), $this->rows_updated);
 				}
 
-				$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
+				if($this->rows_up_to_date > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d up to date", 'lang_base'), $this->rows_up_to_date);
+				}
+
+				if($this->rows_inserted > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d inserted", 'lang_base'), $this->rows_inserted);
+				}
+
+				if($this->rows_not_inserted > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not inserted", 'lang_base'), $this->rows_not_inserted);
+				}
+
+				if($this->rows_deleted > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d deleted", 'lang_base'), $this->rows_deleted);
+				}
+
+				if($this->rows_not_deleted > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not deleted", 'lang_base'), $this->rows_not_deleted);
+				}
+
+				if($this->rows_not_exists > 0)
+				{
+					$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do not exist", 'lang_base'), $this->rows_not_exists);
+				}
 
 				$out .= get_notification();
 			}
@@ -2797,7 +2906,7 @@ class mf_import
 
 	function get_form()
 	{
-		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import' rel='import/check/".get_class($this)."'>"
+		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import'>" // rel='import/check/".get_class($this)."'
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";
@@ -2828,19 +2937,20 @@ class mf_import
 						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", 'lang_base'), 'required' => ($this->file_location != '' ? true : false)));
 					}
 
-					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip first row", 'lang_base')))
+					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip First Row", 'lang_base')))
+					.show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSaveResult', 'value' => $this->save_result, 'text' => __("Save Result", 'lang_base')))
 					.show_button(array('name' => 'btnImportCheck', 'text' => __("Check", 'lang_base')))
 				."</div>
 			</div>";
 
 			$out_temp = $this->get_result();
 
-			if($out_temp != '')
-			{
+			/*if($out_temp != '')
+			{*/
 				$out .= "<div id='import_result'>"
 					.$out_temp
 				."</div>";
-			}
+			//}
 
 		$out .= "</form>";
 
@@ -2904,9 +3014,8 @@ class mf_import
 					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('import_run', '_wpnonce_import_run', true, false)
 				."</div>
-			</div>";
-
-			$out .= "<div id='poststuff' class='postbox'>
+			</div>
+			<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Example", 'lang_base')."</h3>
 				<div class='inside'>
 					<table class='widefat striped'>";

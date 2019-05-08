@@ -137,7 +137,7 @@ switch($type_action)
 		$json_output['success'] = true;
 	break;
 
-	case 'import':
+	/*case 'import':
 		if(get_current_user_id() > 0 && $type_action_type == "check")
 		{
 			$plugin_name = substr($type_class, 0, -7);
@@ -148,7 +148,7 @@ switch($type_action)
 			$json_output['success'] = true;
 			$json_output['result'] = call_user_func(array($type_class, 'get_result'));
 		}
-	break;
+	break;*/
 }
 
 echo json_encode($json_output);

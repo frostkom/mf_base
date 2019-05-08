@@ -35,10 +35,24 @@ jQuery(function($)
 		check_select_value($(this));
 	});
 
-	/*$("table.import_result").on('click', "thead tr[rel!='']", function()
+	/*$(document).on('click', "table.import_result thead tr[rel!='']", function()
 	{
 		var dom_rel = $(this).attr('rel');
 
 		$(this).parent("thead").siblings("tbody").children("tr." + dom_rel).removeClass('hide').siblings("tr").addClass('hide');
+	});*/
+
+	/*$(document).on('click', "#mf_import button[name='btnImportCheck']", function()
+	{
+		$.ajax(
+		{
+			url: script_import_wp.plugin_url + 'api/?type=import/check',
+			dataType: 'json',
+			data: $(this).parents("form").serialize(),
+			success: function(data)
+			{
+				$("#import_result").html(data.result);
+			}
+		});
 	});*/
 });

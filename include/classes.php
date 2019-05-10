@@ -1994,14 +1994,14 @@ class mf_export
 
 		$this->do_export = isset($data['do_export']) ? $data['do_export'] : false;
 		$this->type = isset($data['type']) ? $data['type'] : '';
-		$this->action = isset($data['action']) ? $data['action'] : '';
+		$this->format = isset($data['format']) ? $data['format'] : '';
 
 		$this->data = isset($data['data']) ? $data['data'] : array();
 
 		$this->upload_path = $this->upload_url = $this->type_name = '';
 		$this->types = array();
 
-		$this->actions = array(
+		$this->formats = array(
 			'' => "-- ".__("Choose Here", 'lang_base')." --",
 			'csv' => "CSV",
 			'json' => "JSON",
@@ -2009,7 +2009,7 @@ class mf_export
 
 		if($this->has_excel_support)
 		{
-			$this->actions['xls'] = "XLS";
+			$this->formats['xls'] = "XLS";
 		}
 
 		$this->get_defaults();
@@ -2029,7 +2029,7 @@ class mf_export
 	function fetch_request()
 	{
 		$this->type = check_var('intExportType', 'char', true, $this->type);
-		$this->action = check_var('strExportFormat', 'char', true, $this->action);
+		$this->format = check_var('strExportFormat', 'char', true, $this->format);
 
 		$this->fetch_request_xtra();
 	}
@@ -2047,15 +2047,15 @@ class mf_export
 
 		if($this->do_export == true)
 		{
-			if($this->action != '')
+			if($this->format != '')
 			{
 				$this->get_export_data();
 
 				if(count($this->data) > 0)
 				{
-					$file = prepare_file_name($this->name).".".$this->action;
+					$file = prepare_file_name($this->name).".".$this->format;
 
-					switch($this->action)
+					switch($this->format)
 					{
 						case 'csv':
 							$field_separator = ",";
@@ -2171,9 +2171,9 @@ class mf_export
 						$out .= show_select(array('data' => $this->types, 'name' => 'intExportType', 'text' => $this->type_name, 'value' => $this->type));
 					}
 
-					if(count($this->actions) > 0)
+					if(count($this->formats) > 0)
 					{
-						$out .= show_select(array('data' => $this->actions, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->action));
+						$out .= show_select(array('data' => $this->formats, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->format));
 					}
 
 					$out .= $this->get_form_xtra()
@@ -2202,8 +2202,8 @@ class mf_import
 		), $plugin_version);
 
 		$this->prefix = $wpdb->prefix;
-		$this->table = $this->post_type = $this->actions = "";
-		$this->columns = $this->unique_columns = $this->validate_columns = array();
+		$this->table = $this->post_type = "";
+		$this->actions = $this->columns = $this->unique_columns = $this->validate_columns = array();
 
 		$this->row_separator = "
 ";
@@ -2222,7 +2222,7 @@ class mf_import
 
 		else
 		{
-			$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_not_exists = 0;
+			$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_exists = $this->rows_not_exists = 0;
 		}
 	}
 
@@ -2440,7 +2440,9 @@ class mf_import
 
 		if($count_temp_rows > 0)
 		{
-			if(wp_verify_nonce($_POST['_wpnonce_import_data'], 'import_data_'.md5(json_encode($this->data))))
+			$this->has_unchanged_data = wp_verify_nonce($_POST['_wpnonce_import_data'], 'import_data_'.md5(json_encode($this->data)));
+
+			if($this->has_unchanged_data)
 			{
 				$this->query_base_where = "";
 
@@ -2781,6 +2783,49 @@ class mf_import
 								}
 							break;
 
+							case 'search':
+								if($rows > 0)
+								{
+									foreach($result as $r)
+									{
+										$id = $r->ID;
+
+										if($this->save_result)
+										{
+											$this->result[] = array(
+												'type' => 'exists',
+												'action' => 'fa fa-check green',
+												'id' => $id,
+												'data' => $arr_values,
+											);
+										}
+
+										else
+										{
+											$this->rows_exists++;
+										}
+									}
+								}
+
+								else
+								{
+									if($this->save_result)
+									{
+										$this->result[] = array(
+											'type' => 'not_exists',
+											'action' => 'fa fa-times red',
+											'id' => $id,
+											'data' => $arr_values,
+										);
+									}
+
+									else
+									{
+										$this->rows_not_exists++;
+									}
+								}
+							break;
+
 							default:
 								if($this->save_result)
 								{
@@ -2816,7 +2861,7 @@ class mf_import
 				{
 					if(count($this->result) > 0)
 					{
-						$arr_export_data = array();
+						$arr_export_data = $arr_ids_temp = array();
 
 						foreach($this->result as $key => $row)
 						{
@@ -2835,9 +2880,56 @@ class mf_import
 							$data_temp[] = (isset($row['value']) ? $row['value'] : '');
 
 							$arr_export_data[] = $data_temp;
+							$arr_ids_temp[] = $row['id'];
 						}
 
-						$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'action' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
+						switch($this->action)
+						{
+							case 'search':
+								if(count($arr_ids_temp) > 0)
+								{
+									$query_select = "";
+
+									foreach($this->columns as $key => $value)
+									{
+										$query_select .= ($query_select != '' ? ", " : "").$key;
+									}
+
+									$result = $wpdb->get_results("SELECT ".$query_select." FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." NOT IN('".implode("','", $arr_ids_temp)."')", ARRAY_A);
+
+									foreach($result as $r)
+									{
+										/*$arr_values = array();
+
+										/*foreach($this->columns as $key => $value)
+										{
+											$arr_values[] = $r[$key];
+										}
+
+										$this->result[] = array(
+											'type' => 'missing',
+											'action' => 'fa fa-question blue',
+											'id' => $r[$this->table_id],
+											'data' => $arr_values,
+										);*/
+
+										$data_temp = array(
+											'missing',
+											$r[$this->table_id],
+										);
+
+										foreach($this->columns as $key => $value)
+										{
+											$data_temp[] = $r[$key];
+										}
+
+										$arr_export_data[] = $data_temp;
+									}
+								}
+							break;
+						}
+
+						$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'format' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
 						$out .= get_notification();
 					}
@@ -2877,6 +2969,11 @@ class mf_import
 						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not deleted", 'lang_base'), $this->rows_not_deleted);
 					}
 
+					if($this->rows_exists > 0)
+					{
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do exist", 'lang_base'), $this->rows_exists);
+					}
+
 					if($this->rows_not_exists > 0)
 					{
 						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do not exist", 'lang_base'), $this->rows_not_exists);
@@ -2906,10 +3003,7 @@ class mf_import
 			$out .= $this->do_import();
 		}
 
-		if(!$this->is_run || IS_ADMIN)
-		{
-			$out .= $this->get_form();
-		}
+		$out .= $this->get_form();
 
 		return $out;
 	}
@@ -2921,21 +3015,34 @@ class mf_import
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";
 
-					if(count($this->actions) > 1)
-					{
+					/*if(count($this->actions) > 1)
+					{*/
 						$arr_data = array(
 							'' => "-- ".__("Choose Here", 'lang_base')." --",
-							'delete' => __("Delete", 'lang_base'),
-							'import' => __("Import", 'lang_base'),
 						);
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action));
-					}
+						if(count($this->actions) == 0 || in_array('delete', $this->actions))
+						{
+							$arr_data['delete'] = __("Delete", 'lang_base');
+						}
+
+						if(count($this->actions) == 0 || in_array('import', $this->actions))
+						{
+							$arr_data['import'] = __("Import", 'lang_base');
+						}
+
+						if(count($this->actions) == 0 || in_array('search', $this->actions))
+						{
+							$arr_data['search'] = __("Search", 'lang_base');
+						}
+
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action, 'required' => true));
+					/*}
 
 					else
 					{
 						$out .= input_hidden(array('name' => 'strTableAction', 'value' => $this->actions[0]));
-					}
+					}*/
 
 					if($this->file_location == '')
 					{
@@ -2953,14 +3060,12 @@ class mf_import
 				."</div>
 			</div>";
 
-			$out_temp = $this->get_result();
-
-			/*if($out_temp != '')
-			{*/
+			if(!$this->is_run || isset($this->has_unchanged_data) && $this->has_unchanged_data)
+			{
 				$out .= "<div id='import_result'>"
-					.$out_temp
+					.$this->get_result()
 				."</div>";
-			//}
+			}
 
 		$out .= "</form>";
 

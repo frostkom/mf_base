@@ -13,7 +13,7 @@ jQuery(function($)
 				$.ajax(
 				{
 					url: script_base_wp.plugins_url + '/' + plugin_name + '/include/api/?type=table_search',
-					dataType: "json",
+					dataType: 'json',
 					data: {
 						s: request.term
 					},
@@ -122,10 +122,12 @@ jQuery(function($)
 	{
 		$.ajax(
 		{
-			type: "post",
-			dataType: "json",
 			url: script_base_wp.ajax_url,
-			data: {action: "check_notifications"},
+			type: 'post',
+			dataType: 'json',
+			data: {
+				action: "check_notifications"
+			},
 			success: function(data)
 			{
 				if(data.success)

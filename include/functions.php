@@ -2932,6 +2932,11 @@ function show_textfield($data)
 	{
 		$data['xtra'] .= " list='".$data['name']."_list'";
 	}
+	
+	if($data['description'] != '')
+	{
+		$data['xtra'] .= " aria-describedby='".$data['name']."-description'";
+	}
 
 	if($data['suffix'] != '')
 	{
@@ -2954,7 +2959,7 @@ function show_textfield($data)
 
 		if($data['description'] != '')
 		{
-			$out .= "<p class='description'>".$data['description']."</p>";
+			$out .= "<p class='description' id='".$data['name']."-description'>".$data['description']."</p>";
 		}
 
 		if($count_temp > 0)

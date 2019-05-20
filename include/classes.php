@@ -1919,6 +1919,7 @@ class mf_font_icons
 			'fas fa-briefcase-medical',
 			'fas fa-chalkboard-teacher',
 			'fas fa-clock',
+			'fas fa-download',
 			'eye',
 			'exclamation-triangle',
 			'fab fa-facebook',

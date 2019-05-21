@@ -1931,6 +1931,7 @@ class mf_font_icons
 			'lock',
 			'paper-plane',
 			'fas fa-parking',
+			'fas fa-play-circle',
 			'fas fa-scroll',
 			'fas fa-shopping-cart',
 			'fas fa-sun',

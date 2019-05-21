@@ -1844,13 +1844,14 @@ function get_roles_for_select($data = array())
 {
 	if(!isset($data['array'])){				$data['array'] = array();}
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
 	if(!isset($data['use_capability'])){	$data['use_capability'] = true;}
 	if(!isset($data['exclude'])){			$data['exclude'] = array();}
 
 	if($data['add_choose_here'] == true)
 	{
-		$data['array'][''] = "-- ".__("Choose Here", 'lang_base')." --";
+		$data['array'][''] = "-- ".$data['choose_here_text']." --";
 	}
 
 	if(is_multisite() && $data['use_capability'] == true)
@@ -2932,7 +2933,7 @@ function show_textfield($data)
 	{
 		$data['xtra'] .= " list='".$data['name']."_list'";
 	}
-	
+
 	if($data['description'] != '')
 	{
 		$data['xtra'] .= " aria-describedby='".$data['name']."-description'";

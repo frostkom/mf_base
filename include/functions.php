@@ -1906,14 +1906,21 @@ function get_users_for_select($data = array())
 
 	foreach($users as $user)
 	{
-		if($data['callback'] != '' && is_callable($data['callback']))
-		{
-			$arr_data = call_user_func($data['callback'], $data, $user, $arr_data);
-		}
+		$user_data = get_userdata($user->ID);
 
-		else
+		if(isset($user_data->roles[0]) && $user_data->roles[0] != '')
 		{
-			$arr_data[$user->ID] = $user->display_name;
+			//$user->display_name .= " (".$user_data->roles[0].")";
+
+			if($data['callback'] != '' && is_callable($data['callback']))
+			{
+				$arr_data = call_user_func($data['callback'], $data, $user, $arr_data);
+			}
+
+			else
+			{
+				$arr_data[$user->ID] = $user->display_name;
+			}
 		}
 	}
 

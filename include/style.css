@@ -151,6 +151,11 @@
 				white-space: nowrap;
 			}
 
+				.is_mobile #wrapper .widefat th:not(:first-child)
+				{
+					display: none;
+				}
+
 			#wrapper .alternate, #wrapper .striped > tbody > *:nth-child(2n+1), #wrapper ul.striped > li:nth-child(2n+1)
 			{
 				background-color: #f9f9f9;
@@ -165,6 +170,21 @@
 					overflow: hidden;
 					text-overflow: ellipsis;
 				}
+
+					.is_mobile #wrapper .widefat td
+					{
+						display: block;
+					}
+
+						.is_mobile #wrapper .widefat td:not(:first-child)
+						{
+							padding-left: 2em;
+						}
+
+						.is_mobile #wrapper .widefat td:last-child
+						{
+							border-bottom: 1px solid #e1e1e1;
+						}
 
 					#wrapper .widefat td, #wrapper .widefat td ol, #wrapper .widefat td p, #wrapper .widefat td ul
 					{

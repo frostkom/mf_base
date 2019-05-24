@@ -1050,6 +1050,7 @@ class mf_list_table extends WP_List_Table
 	var $query_join = "";
 	var $query_where = "";
 	var $search = "";
+	var $search_key = 's';
 	var $orderby = "";
 	var $order = "";
 	var $page = "";
@@ -1077,13 +1078,17 @@ class mf_list_table extends WP_List_Table
 		$this->arr_settings = $data;
 
 		$this->page = check_var('page', 'char');
-		$this->search = check_var('s', 'char', true, (isset($data['search']) ? $data['search'] : ''));
 
 		$this->set_default();
 
 		if($data['remember_search'] == true)
 		{
-			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => 's', 'save' => true));
+			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => $this->search_key, 'save' => true, 'default' => (isset($data['search']) ? $data['search'] : '')));
+		}
+
+		else
+		{
+			$this->search = check_var($this->search_key, 'char', true, (isset($data['search']) ? $data['search'] : ''));
 		}
 
 		// Has to be here too
@@ -1475,7 +1480,7 @@ class mf_list_table extends WP_List_Table
 
 				//echo "<label class='screen-reader-text' for='".$input_id."'>".$text.":</label>";
 
-				echo "<input type='search' id='".$input_id."' name='s' value='".$this->search."'>";
+				echo "<input type='search' id='".$input_id."' name='".$this->search_key."' value='".$this->search."'>";
 
 				submit_button($text, '', '', false, array('id' => 'search-submit'));
 
@@ -1497,7 +1502,7 @@ class mf_list_table extends WP_List_Table
 	{
 		echo "<form method='get'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
-			$this->search_box(__("Search", 'lang_base'), 's');
+			$this->search_box(__("Search", 'lang_base'), $this->search_key);
 
 			echo input_hidden(array('name' => 'page', 'value' => $this->page));
 

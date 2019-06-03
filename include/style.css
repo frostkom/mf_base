@@ -221,6 +221,11 @@
 				border-top: 1px solid #e1e1e1;
 			}
 
+		#wrapper .widefat + h3
+		{
+			margin-top: 1em;
+		}
+
 	.row-actions
 	{
 		color: #999;

@@ -2209,7 +2209,7 @@ class mf_import
 		), $plugin_version);
 
 		$this->prefix = $wpdb->prefix;
-		$this->table = $this->post_type = "";
+		$this->table = $this->post_type = '';
 		$this->actions = $this->columns = $this->unique_columns = $this->validate_columns = array();
 
 		$this->row_separator = "

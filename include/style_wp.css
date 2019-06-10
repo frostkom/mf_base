@@ -150,17 +150,6 @@
 			background: #fff8df !important;
 		}
 
-		tr.inactive
-		{
-			cursor: no-drop;
-			opacity: .3;
-		}
-
-			tr.inactive:hover
-			{
-				opacity: 1;
-			}
-
 	.mf_editor.hide_media_button .wp-media-buttons, .mf_editor.hide_tabs .wp-editor-tabs
 	{
 		display: none;

@@ -535,7 +535,7 @@ function send_email($data)
 
 function shorten_text($data)
 {
-	if(!isset($data['string'])){	$data['string'] = $data['text'];}
+	if(!isset($data['string'])){	$data['string'] = '';}
 	if(!isset($data['count'])){		$data['count'] = false;}
 
 	$out = "";
@@ -2118,6 +2118,7 @@ function get_posts_for_select($data)
 function get_categories_for_select($data = array())
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['hide_empty'])){		$data['hide_empty'] = true;}
 	if(!isset($data['hierarchical'])){		$data['hierarchical'] = true;}
 
 	$arr_data = array();
@@ -2129,7 +2130,7 @@ function get_categories_for_select($data = array())
 
 	$arr_categories = get_categories(array(
 		'hierarchical' => $data['hierarchical'],
-		'hide_empty' => 1,
+		'hide_empty' => $data['hide_empty'],
 	));
 
 	foreach($arr_categories as $category)

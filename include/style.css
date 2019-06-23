@@ -316,6 +316,9 @@
 	tr.inactive
 	{
 		cursor: no-drop;
+		filter: gray;
+		-webkit-filter: grayscale(1);
+		filter: grayscale(1);
 		opacity: .3;
 	}
 
@@ -613,29 +616,6 @@
 			{
 				margin: .6em .6em 0 0;
 			}
-
-	.mf_form_results .form_radio
-	{
-		position: relative;
-	}
-
-		.mf_form_results .form_radio > div
-		{
-			background: rgba(255, 255, 255, .2);
-			position: absolute;
-		}
-
-		.mf_form_results .form_radio p
-		{
-			margin: 0;
-			position: relative;
-		}
-
-		.mf_form_results .form_radio p span
-		{
-			position: absolute;
-			right: 0;
-		}
 
 	.form_switch
 	{

@@ -3512,12 +3512,12 @@ function show_form_alternatives($data)
 
 								if($data['multiple'])
 								{
-									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => ($is_disabled ? " disabled" : ""), 'description' => $data_desc));
+									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " disabled" : ""), 'description' => $data_desc));
 								}
 
 								else
 								{
-									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => ($is_disabled ? " disabled" : ""), 'description' => $data_desc));
+									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " disabled" : ""), 'description' => $data_desc));
 								}
 							}
 						}

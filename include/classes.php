@@ -1922,14 +1922,17 @@ class mf_font_icons
 	{
 		$arr_icons = array(
 			'fas fa-briefcase-medical',
+			'fas fa-calendar-alt',
 			'fas fa-chalkboard-teacher',
 			'fas fa-clock',
 			'fas fa-download',
 			'eye',
+			'fas fa-exclamation-circle',
 			'exclamation-triangle',
 			'fab fa-facebook',
 			'fas fa-file-alt',
 			'fas fa-graduation-cap',
+			'fas fa-handshake',
 			'fas fa-hospital-alt',
 			'fas fa-key',
 			'fas fa-link',
@@ -1951,18 +1954,17 @@ class mf_font_icons
 		return $arr_icons;
 	}
 
-	function get_symbol_tag($data, $title = "", $nbsp = true)
+	function get_symbol_tag($data)
 	{
-		if(!is_array($data))
+		/*if(!is_array($data))
 		{
 			$data = array(
 				'symbol' => $data,
 			);
-		}
+		}*/
 
-		if(!isset($data['title'])){		$data['title'] = $title;}
+		if(!isset($data['title'])){		$data['title'] = '';}
 		if(!isset($data['class'])){		$data['class'] = '';}
-		//if(!isset($data['nbsp'])){		$data['nbsp'] = $nbsp;}
 
 		$out = "";
 
@@ -1972,7 +1974,7 @@ class mf_font_icons
 			{
 				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php", get_plugin_version(__FILE__));
 
-				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>"; //.($data['nbsp'] ? "&nbsp;" : '')
+				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>";
 			}
 
 			else
@@ -1982,7 +1984,7 @@ class mf_font_icons
 					$data['symbol'] = "fa fa-".$data['symbol'];
 				}
 
-				$out = "<i class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></i>"; //.($data['nbsp'] ? "&nbsp;" : '')
+				$out = "<i class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></i>";
 			}
 		}
 

@@ -366,19 +366,34 @@ class mf_base
 			echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
 		}
 
-		if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true || get_next_cron(true) < date("Y-m-d H:i:s", strtotime("-2 minute")))
+		if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 		{
 			$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 
 			echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
 		}
 
+		$obj_cron = new mf_cron();
+		$cron_interval = $obj_cron->get_interval() / 60;
+
+		$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
+
 		$option_cron_started = get_option('option_cron_started');
 		$option_cron_run = get_option('option_cron_run');
 
 		if($option_cron_run != '' && $option_cron_run > $option_cron_started)
 		{
-			echo "<em>".sprintf(__("Last run %s", 'lang_base'), format_date($option_cron_run))."</em>";
+			if(get_next_cron(true) < $last_run_threshold && $option_cron_run < $last_run_threshold)
+			{
+				echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
+
+				do_action('cron_base');
+			}
+
+			else
+			{
+				echo "<em>".sprintf(__("Last run %s", 'lang_base'), format_date($option_cron_run))."</em>";
+			}
 		}
 
 		else if($option_cron_started > $option_cron_run)

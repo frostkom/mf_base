@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-17 15:33+0100\n"
+"POT-Creation-Date: 2019-07-28 06:27+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -14,6 +14,21 @@ msgstr ""
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
+
+msgid "First Name"
+msgstr "Förnamn"
+
+msgid "Last Name"
+msgstr "Efternamn"
+
+msgid "E-mail"
+msgstr "E-post"
+
+msgid "I have saved the information for you"
+msgstr "Jag har sparat informationen åt dig"
+
+msgid "I could not update the information for you"
+msgstr "Jag kunde inte uppdatera informationen åt dig"
 
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
@@ -56,6 +71,9 @@ msgstr "Nästa schemaläggning %s"
 
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
+
+msgid "Running schedule..."
+msgstr "Kör schema..."
 
 msgid "Last run %s"
 msgstr "Kördes senast %s"
@@ -242,21 +260,6 @@ msgstr "Kolumn"
 
 msgid "Example"
 msgstr "Exempel"
-
-msgid "First Name"
-msgstr "Förnamn"
-
-msgid "Last Name"
-msgstr "Efternamn"
-
-msgid "E-mail"
-msgstr "E-post"
-
-msgid "I have saved the information for you"
-msgstr "Jag har sparat informationen åt dig"
-
-msgid "I could not update the information for you"
-msgstr "Jag kunde inte uppdatera informationen åt dig"
 
 msgid "The message had no recipient so %s could not be sent"
 msgstr "Meddelandet hade ingen mottagare så %s kunde inte skickas"

@@ -788,6 +788,18 @@ function get_option_or_default($key, $default = '')
 	return $option;
 }
 
+function get_the_author_meta_or_default($key, $user_id, $default = '')
+{
+	$option = get_the_author_meta($key, $user_id);
+
+	if($option == '' && $default != '')
+	{
+		$option = $default;
+	}
+
+	return $option;
+}
+
 function render_image_tag($data)
 {
 	$out = "";

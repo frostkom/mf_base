@@ -1200,7 +1200,7 @@ function get_file_suffix($file, $force_last = false)
 
 function get_media_library($data)
 {
-	if(!isset($data['type'])){			$data['type'] = false;}
+	if(!isset($data['type'])){			$data['type'] = false;} //(in_array(get_file_suffix($data['value']), array('gif', 'jpg', 'jpeg', 'png')) ? 'image' : 'file')
 	if(!isset($data['multiple'])){		$data['multiple'] = false;}
 	if(!isset($data['label'])){			$data['label'] = '';}
 	if(!isset($data['name'])){			$data['name'] = '';}
@@ -1233,11 +1233,9 @@ function get_media_library($data)
 
 			if($data['name'] != '')
 			{
-				$filetype = in_array(get_file_suffix($data['value']), array('gif', 'jpg', 'jpeg', 'png')) ? 'image' : 'file';
-
 				$out .= "<div".($data['value'] != '' ? "" : " class='hide'").">
-					<img src='".$data['value']."'".($filetype == 'image' ? "" : " class='hide'").">
-					<span".($filetype == 'file' ? "" : " class='hide'")."><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>
+					<img src='".$data['value']."'".($data['type'] == 'image' ? "" : " class='hide'").">
+					<span".($data['type'] == 'file' ? "" : " class='hide'")."><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>
 					<a href='#' rel='confirm'><i class='fa fa-trash fa-lg red'></i></a>
 				</div>";
 			}

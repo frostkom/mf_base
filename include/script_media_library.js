@@ -1,5 +1,48 @@
+function init_media_library()
+{
+	jQuery(".mf_media_library").each(function()
+	{
+		var dom_parent = jQuery(this),
+			dom_media_container = dom_parent.find(".media_container"),
+			dom_value = jQuery(this).find("input[type='hidden']").val();
+
+		if(dom_value != '')
+		{
+			var arr_value = dom_value.split("/"),
+				arr_file = arr_value[arr_value.length - 1].split("."),
+				file_suffix = arr_file[arr_file.length - 1],
+				is_image = (file_suffix == 'gif' || file_suffix == 'jpg' || file_suffix == 'jpeg' || file_suffix == 'png');
+
+			console.log("Suffix: " , file_suffix);
+
+			if(is_image)
+			{
+				dom_media_container.children("img").removeClass('hide');
+				dom_media_container.children("span").addClass('hide');
+			}
+
+			else
+			{
+				dom_media_container.children("img").addClass('hide');
+				dom_media_container.children("span").removeClass('hide');
+			}
+
+			dom_media_container.removeClass('hide');
+			dom_parent.find("button").text(script_media_library.change_file_text);
+		}
+
+		else
+		{
+			dom_media_container.addClass('hide');
+			dom_parent.find("button").text(script_media_library.add_file_text);
+		}
+	});
+}
+
 jQuery(function($)
 {
+	init_media_library();
+
 	$(document).on('click', ".mf_media_library button", function()
 	{
 		var dom_parent = $(this).parents(".mf_media_library"),
@@ -89,7 +132,7 @@ jQuery(function($)
 							dom_parent.find("span").siblings("img").addClass('hide');
 						}
 
-						dom_parent.find("div > div").removeClass('hide');
+						dom_parent.find(".media_container").removeClass('hide');
 						dom_parent.find("button").text(script_media_library.change_file_text);
 
 						/*wp.media.editor.insert('[myshortcode id="' + first.id + '"]');*/
@@ -106,12 +149,12 @@ jQuery(function($)
 	{
 		var dom_parent = $(this).parents(".mf_media_library");
 
-		dom_parent.find("input[type='hidden']").val('');
 		dom_parent.find("img").attr('src', '');
 		dom_parent.find("span").text('');
+		dom_parent.find("input[type='hidden']").val('');
 
+		dom_parent.find(".media_container").addClass('hide');
 		dom_parent.find("button").text(script_media_library.add_file_text);
-		dom_parent.find("div > div").addClass('hide');
 
 		return false;
 	});

@@ -20,7 +20,7 @@
 		white-space: nowrap;
 	}
 
-	.wrap .error, .wrap .updated, #mf-content .error, #mf-content .updated
+	.wrap .error, .wrap .update-nag, .wrap .updated, #mf-content .error, #mf-content .update-nag, #mf-content .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -32,6 +32,11 @@
 		.wrap .error, #mf-content .error
 		{
 			border-color: #dd3d36;
+		}
+
+		.wrap .update-nag, #mf-content .update-nag
+		{
+			border-color: #ffba00;
 		}
 
 		.wrap .updated, #mf-content .updated

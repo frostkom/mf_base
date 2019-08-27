@@ -57,30 +57,72 @@
 				padding: .15em;
 			}
 
-		.toggler.open
+	.overlay_container
+	{
+		background: #000;
+		background: rgba(0, 0, 0, .5);
+		bottom: 0;
+		left: 0;
+		position: fixed;
+		right: 0;
+		top: 0;
+		z-index: 100000;
+	}
+
+		.overlay_container > div
 		{
-			margin-bottom: 0;
+			left: 50%;
+			position: absolute;
+			top: 50vh;
+			-webkit-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+			max-width: 90%;
 		}
 
-		.toggler .fa + span, .toggler span + .fa
+			.overlay_container.modal > div
+			{
+				background: #fff;
+				border-radius: .5em;
+				font-size: 1.5em;
+				padding: 1em;
+			}
+
+				.overlay_container.modal p + p
+				{
+					margin-top: .5em;
+				}
+
+				.overlay_container.modal .fa-times
+				{
+					position: absolute;
+					right: .3em;
+					top: .3em;
+				}
+
+	.toggler.open
+	{
+		margin-bottom: 0;
+	}
+
+	.toggler .fa + span, .toggler span + .fa
+	{
+		margin-left: .4em;
+	}
+
+		.toggler .toggle_icon_open
 		{
-			margin-left: .4em;
+			display: none;
 		}
 
-			.toggler .toggle_icon_open
+			.toggler.open .toggle_icon_closed
 			{
 				display: none;
 			}
 
-				.toggler.open .toggle_icon_closed
-				{
-					display: none;
-				}
-
-				.toggler.open .toggle_icon_open
-				{
-					display: inline;
-				}
+			.toggler.open .toggle_icon_open
+			{
+				display: inline;
+			}
 
 	.toggle_container
 	{
@@ -214,7 +256,6 @@
 					#wrapper .widefat td, #wrapper .widefat td ol, #wrapper .widefat td p, #wrapper .widefat td ul
 					{
 						font-size: .8em;
-						/*line-height: 1.5em;*/
 					}
 
 					#wrapper .widefat tr .row-actions
@@ -458,11 +499,6 @@
 				{
 					margin-left: 1em;
 				}
-
-			/*.mf_form .form_textfield input, .wrap .mf_form select, .mf_form .form_password input
-			{
-				min-height: 2.7em;
-			}*/
 
 			.mf_form .form_select select
 			{

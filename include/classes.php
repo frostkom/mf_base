@@ -896,12 +896,12 @@ class mf_base
 
 		if(in_array('lost_connection', $arr_type))
 		{
-			$out .= "<div id='overlay_lost_connection'><span>".__("Lost Connection", 'lang_base')."</span></div>";
+			$out .= "<div id='overlay_lost_connection' class='overlay_container'><div>".__("Lost Connection", 'lang_base')."</div></div>";
 		}
 
 		if(in_array('loading', $arr_type))
 		{
-			$out .= "<div id='overlay_loading'><span><i class='fa fa-spinner fa-spin fa-2x'></i></span></div>";
+			$out .= "<div id='overlay_loading' class='overlay_container'><div><i class='fa fa-spinner fa-spin fa-2x'></i></div></div>";
 		}
 
 		return $out;

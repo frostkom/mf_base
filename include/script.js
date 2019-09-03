@@ -14,9 +14,25 @@ function select_option()
 	jQuery(".mf_form .form_select select[data-value!='']").each(function()
 	{
 		var dom_obj = jQuery(this),
-			dom_value = dom_obj.attr('data-value');
+			dom_value = dom_obj.attr('data-value') || '';
 
-		dom_obj.children("option[value='" + dom_value + "']").prop('selected', true);
+		if(dom_value != '')
+		{
+			if(dom_value.match(/,/))
+			{
+				var arr_values = dom_value.split(',');
+
+				_.each(arr_values, function(value, key)
+				{
+					dom_obj.children("option[value='" + value + "']").prop('selected', true);
+				});
+			}
+
+			else
+			{
+				dom_obj.children("option[value='" + dom_value + "']").prop('selected', true);
+			}
+		}
 	});
 }
 

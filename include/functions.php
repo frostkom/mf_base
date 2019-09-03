@@ -792,7 +792,7 @@ function get_the_author_meta_or_default($key, $user_id, $default = '')
 {
 	$option = get_the_author_meta($key, $user_id);
 
-	if($option == '' && $default != '')
+	if(($option == '' || $option === 0) && $default != '')
 	{
 		$option = $default;
 	}

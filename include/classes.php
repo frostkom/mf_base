@@ -894,14 +894,18 @@ class mf_base
 	{
 		$out = "";
 
-		if(in_array('lost_connection', $arr_type))
+		if(in_array('lost_connection', $arr_type) && !isset($this->template_lost_connection))
 		{
 			$out .= "<div id='overlay_lost_connection' class='overlay_container'><div>".__("Lost Connection", 'lang_base')."</div></div>";
+
+			$this->template_lost_connection = true;
 		}
 
-		if(in_array('loading', $arr_type))
+		if(in_array('loading', $arr_type) && !isset($this->template_loading))
 		{
 			$out .= "<div id='overlay_loading' class='overlay_container'><div><i class='fa fa-spinner fa-spin fa-2x'></i></div></div>";
+			
+			$this->template_loading = true;
 		}
 
 		return $out;

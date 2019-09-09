@@ -3,7 +3,6 @@
 	#overlay_lost_connection, #overlay_loading
 	{
 		color: #ccc;
-		display: none;
 		font-size: 4em;
 		text-align: center;
 	}

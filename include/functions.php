@@ -1913,10 +1913,10 @@ function get_users_for_select($data = array())
 	{
 		$user_data = get_userdata($user->ID);
 
-		if(isset($user_data->roles[0]) && $user_data->roles[0] != '')
-		{
-			//$user->display_name .= " (".$user_data->roles[0].")";
+		//$user = apply_filters('filter_user_for_select', $user, $user_data);
 
+		if(isset($user_data->roles[0]) && $user_data->roles[0] != '') // && !isset($user->exclude_from_list)
+		{
 			if($data['callback'] != '' && is_callable($data['callback']))
 			{
 				$arr_data = call_user_func($data['callback'], $data, $user, $arr_data);

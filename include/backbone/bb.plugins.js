@@ -8,19 +8,19 @@ jQuery.fn.callAPI = function(o)
 		send_type: 'post',
 		onBeforeSend: function()
 		{
-			jQuery("#overlay_loading").show();
+			jQuery("#overlay_loading").removeClass('hide');
 		},
 		onSuccess: function(data){},
 		onAfterSend: function()
 		{
-			jQuery("#overlay_loading").hide();
+			jQuery("#overlay_loading").addClass('hide');
 		},
 		onError: function(data)
 		{
 			/*setTimeout(function()
 			{
-				jQuery("#overlay_loading").hide();
-				jQuery("#overlay_lost_connection").show();
+				jQuery("#overlay_loading").addClass('hide');
+				jQuery("#overlay_lost_connection").removeClass('hide');
 			}, 2000);*/
 		}
 	}, o);
@@ -43,12 +43,12 @@ jQuery.fn.callAPI = function(o)
 
 			if(data.mysqli_error && data.mysqli_error == true)
 			{
-				jQuery("#overlay_lost_connection").show();
+				jQuery("#overlay_lost_connection").removeClass('hide');
 			}
 
 			else
 			{
-				jQuery("#overlay_lost_connection").hide();
+				jQuery("#overlay_lost_connection").addClass('hide');
 			}
 		},
 		error: function(data)

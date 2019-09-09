@@ -20,6 +20,11 @@
 		white-space: nowrap;
 	}
 
+	.allow_wrap
+	{
+		white-space: normal !important;
+	}
+
 	.wrap .error, .wrap .update-nag, .wrap .updated, #mf-content .error, #mf-content .update-nag, #mf-content .updated
 	{
 		border-left-width: 4px;

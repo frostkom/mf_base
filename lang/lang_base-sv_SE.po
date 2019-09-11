@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-28 06:27+0100\n"
+"POT-Creation-Date: 2019-09-11 09:43+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -14,21 +14,6 @@ msgstr ""
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
-
-msgid "First Name"
-msgstr "Förnamn"
-
-msgid "Last Name"
-msgstr "Efternamn"
-
-msgid "E-mail"
-msgstr "E-post"
-
-msgid "I have saved the information for you"
-msgstr "Jag har sparat informationen åt dig"
-
-msgid "I could not update the information for you"
-msgstr "Jag kunde inte uppdatera informationen åt dig"
 
 msgid "Every 2 Minutes"
 msgstr "Varannan minut"
@@ -98,6 +83,9 @@ msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
 msgid "to add all the favicons needed"
 msgstr "för att kunna lägga till alla sk. favicons som kan behövas"
+
+msgid "to add icons to menus"
+msgstr "för att lägga till ikoner i menyer"
 
 msgid "to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on"
 msgstr "för att visa vilka plugin-beroenden som finns och förhindra oavsiktlig inaktivera av plugin som andra är beroende av"

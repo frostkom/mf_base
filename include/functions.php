@@ -3974,7 +3974,7 @@ function show_table_header($arr_header, $shorten_text = true)
 					$content = $arr_header[$i];
 				}
 
-				$out .= "<th".($title != '' ? " title='".$title."'" : "").">".$content."</th>";
+				$out .= "<th".($title != '' ? " title='".$title."'" : "").($i == 0 ? " class='column-primary'" : "").">".$content."</th>";
 			}
 
 		$out .= "</tr>

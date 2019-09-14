@@ -593,21 +593,28 @@ class mf_base
 
 	function wp_head()
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		/*if(!is_admin())
+		if(is_admin() || apply_filters('is_theme_active', false))
 		{
-			$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
 
-			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
-			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
-			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";
-		}*/
+			/*if(!is_admin())
+			{
+				$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
 
-		mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
-		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
+				echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
+				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
+				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";
+			}*/
+
+			if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
+			{
+				mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
+			}
+
+			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
+		}
 	}
 
 	function phpmailer_init($phpmailer)

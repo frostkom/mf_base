@@ -1281,7 +1281,7 @@ function get_media_button($data = array())
 		mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 		mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 			//'multiple' => $data['multiple'],
-			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'", 'lang_base'),
+			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
 			'unknown_title' => __("Unknown title", 'lang_base'),
 			'confirm_question' => __("Are you sure?", 'lang_base'),
 			//'max_file_uploads' => $data['max_file_uploads'],
@@ -1382,7 +1382,7 @@ function get_attachment_to_send($string)
 
 		if(count($arr_ids) == 0 && count($arr_files) == 0)
 		{
-			$error_text = sprintf(__("The file '%s' could not be found in the DB", 'lang_base'), $string);
+			$error_text = sprintf(__("The file (%s) could not be found in the DB", 'lang_base'), $string);
 		}
 	}
 
@@ -1480,7 +1480,7 @@ function require_plugin($required_path, $required_name, $require_url = "")
 	{
 		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
-		mf_trigger_error(sprintf(__("You need to install the plugin %s%s%s first", 'lang_base'), $a_start, $required_name, $a_end), E_USER_ERROR);
+		mf_trigger_error(sprintf(__("You need to install the plugin %s first", 'lang_base'), $a_start.$required_name.$a_end), E_USER_ERROR);
 	}
 }
 

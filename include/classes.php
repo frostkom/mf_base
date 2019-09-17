@@ -421,7 +421,7 @@ class mf_base
 			//array("Plugin Dependencies", 'plugin-dependencies/plugin-dependencies.php', __("to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on", 'lang_base')),
 			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
-			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag & drop", 'lang_base')),
+			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
 			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to be able to upload larger files than normally allowed", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),

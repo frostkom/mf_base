@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-11 09:43+0100\n"
+"POT-Creation-Date: 2019-09-20 10:40+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -96,8 +96,8 @@ msgstr "för att skicka med meddelande till användare när nya inlägg publicer
 msgid "to redirect pages to internal or external URLs"
 msgstr "för att kunna dirigera om sidor till interna och externa URLer"
 
-msgid "to reorder posts with drag & drop"
-msgstr "för att sortera om sidor med musen"
+msgid "to reorder posts with drag and drop"
+msgstr "för att ändra ordning på inlägg med dra och släpp"
 
 msgid "to be able to add tables to posts"
 msgstr "för att kunna lägga in tabeller i texter"
@@ -276,17 +276,17 @@ msgstr "Lägg in fil"
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-msgid "The Media Library did not return a link to the file you added. Please try again and make sure that 'Link To' is set to 'Media File'"
-msgstr "Mediabiblioteket skickade inte tillbaka en länk till den fil som du la till. Var vänlig försök igen och se till att 'Länk till' är satt till 'Mediafil'"
+msgid "The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File"
+msgstr "Mediabiblioteket skickade inte tillbaka en länk till filen som du la till. Var vänlig försök igen och se till så att Länk till är angett som Mediafil"
 
 msgid "Unknown title"
 msgstr "Okänt namn"
 
-msgid "The file '%s' could not be found in the DB"
-msgstr "Filen '%s' kunde inte hittas i databasen"
+msgid "The file (%s) could not be found in the DB"
+msgstr "Filen (%s) kunde inte hittas i databasen"
 
-msgid "You need to install the plugin %s%s%s first"
-msgstr "Du måste installera pluginet %s%s%s först"
+msgid "You need to install the plugin %s first"
+msgstr "Du måste installera pluginet %s först"
 
 msgid "Unknown"
 msgstr "Okänt"

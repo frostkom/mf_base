@@ -1503,13 +1503,15 @@ class mf_list_table extends WP_List_Table
 		{
 			$input_id = esc_attr($input_id."-search-input");
 
-			echo "<p class='search-box'>";
+			echo "<div class='search-box alignright flex_flow tight".(is_admin() ? "" : " form_button")."'>";
 
 				//echo "<label class='screen-reader-text' for='".$input_id."'>".$text.":</label>";
 
-				echo "<input type='search' id='".$input_id."' name='".$this->search_key."' value='".$this->search."'>";
+				//echo "<input type='search' id='".$input_id."' name='".$this->search_key."' value='".$this->search."'>";
+				echo show_textfield(array('type' => 'search', 'name' => $this->search_key, 'id' => $input_id, 'value' => $this->search));
 
-				submit_button($text, '', '', false, array('id' => 'search-submit'));
+				//submit_button($text, '', '', false, array('id' => 'search-submit'));
+				echo show_button(array('text' => $text, 'class' => "button", 'xtra' => " id='search-submit'"));
 
 				$arr_var_keys = array('orderby', 'order', 'post_status'); //post_mime_type, detached
 
@@ -1521,13 +1523,13 @@ class mf_list_table extends WP_List_Table
 					}
 				}
 
-			echo "</p>";
+			echo "</div>";
 		}
 	}
 
 	function show_search_form()
 	{
-		echo "<form method='get'".($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
+		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
 			$this->search_box(__("Search", 'lang_base'), $this->search_key);
 
@@ -1673,8 +1675,8 @@ class mf_list_table extends WP_List_Table
 
 	function show_before_display()
 	{
-		echo "<form method='get'>
-			<input type='hidden' name='page' value='".check_var('page')."'>"; //$_REQUEST['page']
+		echo "<form method='get'".(is_admin() ? "" : " class='form_button'").">
+			<input type='hidden' name='page' value='".check_var('page')."'>";
 	}
 
 	function show_after_display()

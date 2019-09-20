@@ -180,6 +180,16 @@
 				margin-right: .5em;
 			}
 
+	#wrapper .wp-list-table .toggle-row
+	{
+		display: none;
+	}
+
+	#wrapper .tablenav.bottom
+	{
+		margin-top: 1em;
+	}
+
 	#wrapper .widefat
 	{
 		border: 1px solid #e5e5e5;
@@ -429,7 +439,7 @@
 			{
 				align-self: flex-end;
 				height: auto !important;
-				line-height: 2.3em !important;
+				/*line-height: 2.3em !important;*/ /* When is this needed? */
 				margin-bottom: .9em !important;
 			}
 

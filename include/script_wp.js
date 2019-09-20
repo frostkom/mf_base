@@ -1,7 +1,7 @@
 jQuery(function($)
 {
 	/* Search */
-	var dom_form = $("form .search-box input[name='s']"),
+	var dom_form = $("form .search-box input[type='search']"),
 		plugin_name = dom_form.parents("form").attr('rel');
 
 	if(plugin_name && plugin_name != '')

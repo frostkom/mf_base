@@ -3331,14 +3331,28 @@ function show_select($data)
 
 						if(is_array($option))
 						{
-							$data_text = $option[0];
-							$data_desc = $option[1];
+							if(isset($option[0]) && isset($option[1]))
+							{
+								$data_text = $option[0];
+								$data_desc = $option[1];
+							}
+
+							else
+							{
+								$data_text = $option['name'];
+								$data_desc = '';
+							}
 						}
 
 						else
 						{
 							$data_text = $option;
 							$data_desc = '';
+
+							$option = array(
+								'name' => $option,
+								'attributes' => array(),
+							);
 						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
@@ -3358,6 +3372,14 @@ function show_select($data)
 							else
 							{
 								$out .= "<option value='".($data_value === 0 ? '' : $data_value)."'";
+
+									if(isset($option['attributes']) && count($option['attributes']) > 0)
+									{
+										foreach($option['attributes'] as $attr_key => $attr_value)
+										{
+											$out .= " ".$attr_key."='".$attr_value."'";
+										}
+									}
 
 									if($is_disabled)
 									{

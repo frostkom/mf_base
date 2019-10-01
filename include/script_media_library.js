@@ -13,8 +13,6 @@ function init_media_library()
 				file_suffix = arr_file[arr_file.length - 1],
 				is_image = (file_suffix == 'gif' || file_suffix == 'jpg' || file_suffix == 'jpeg' || file_suffix == 'png');
 
-			console.log("Suffix: " , file_suffix);
-
 			if(is_image)
 			{
 				dom_media_container.children("img").removeClass('hide');

@@ -1151,7 +1151,7 @@ function delete_base($data)
 	}
 }
 
-function get_file_icon($data) //$file
+function get_file_icon($data)
 {
 	if(!is_array($data))
 	{
@@ -1166,21 +1166,21 @@ function get_file_icon($data) //$file
 
 	switch($suffix)
 	{
-		default:														$class = "fa fa-file";					break;
+		default:														$class = "fa-file";					break;
 
-		case 'pdf':														$class = "fa fa-file-pdf";				break;
-		case 'mp3': case 'ogg':											$class = "fa fa-file-audio";			break;
-		case 'xls': case 'xlsx':										$class = "fa fa-file-excel";			break;
-		case 'css':														$class = "fa fa-file-code";				break;
-		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa fa-file-image";			break;
-		case 'ppt': case 'pptx':										$class = "fa fa-file-powerpoint";		break;
-		case 'wmv': case 'avi':	case 'mpg':								$class = "fa fa-file-video";			break;
-		case 'doc': case 'docx':										$class = "fa fa-file-word";				break;
-		case 'zip': case 'tar':											$class = "fa fa-file-archive";			break;
-		case 'txt':														$class = "fa fa-file-alt";				break;
+		case 'pdf':														$class = "fa-file-pdf";				break;
+		case 'mp3': case 'ogg':											$class = "fa-file-audio";			break;
+		case 'xls': case 'xlsx':										$class = "fa-file-excel";			break;
+		case 'css':														$class = "fa-file-code";			break;
+		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa-file-image";			break;
+		case 'ppt': case 'pptx':										$class = "fa-file-powerpoint";		break;
+		case 'wmv': case 'avi':	case 'mpg':								$class = "fa-file-video";			break;
+		case 'doc': case 'docx':										$class = "fa-file-word";			break;
+		case 'zip': case 'tar':											$class = "fa-file-archive";			break;
+		case 'txt':														$class = "fa-file-alt";				break;
 	}
 
-	return "<i class='".$class." ".$data['size']."'></i>";
+	return "<i class='fa ".$class." ".$data['size']."'></i>";
 }
 
 // Use wp_check_filetype('image.jpg') instead?

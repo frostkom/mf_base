@@ -1,5 +1,33 @@
 <?php
 
+function get_or_set_transient($data)
+{
+	if(!isset($data['key'])){			$data['key'] = '';}
+	if(!isset($data['callback'])){		$data['callback'] = '';}
+
+	$out = "";
+
+	if($data['key'] != '')
+	{
+		$out = get_transient($data['key']);
+
+		if($out == "")
+		{
+			if(is_callable($data['callback']))
+			{
+				$out = call_user_func($data['callback']);
+
+				if($out != '')
+				{
+					set_transient($data['key'], $out, DAY_IN_SECONDS); //HOUR_IN_SECONDS, WEEK_IN_SECONDS
+				}
+			}
+		}
+	}
+
+	return $out;
+}
+
 function get_option_page_suffix($data)
 {
 	if(!isset($data['post_type'])){	$data['post_type'] = 'page';}
@@ -332,9 +360,9 @@ function get_toggler_container($data)
 			<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";
 
-			$out = "<label class='toggler".($data['open'] ? " open" : "")."' rel='".$data['rel']."'>";
+			$out = "<label class='toggler".($data['open'] ? " open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
 
-				if($data['icon_first'] == true)
+				if($data['icon_first'])
 				{
 					$out .= $icon.$text;
 				}

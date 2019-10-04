@@ -113,12 +113,18 @@
 	{
 		margin-left: .4em;
 	}
-
-		.toggler.icon_last .fa
+	
+		.toggler.icon_last
 		{
-			position: absolute;
-			right: .4em;
+			padding-right: 1.5em;
+			position: relative;
 		}
+
+			.toggler.icon_last .fa
+			{
+				position: absolute;
+				right: .4em;
+			}
 
 		.toggler .toggle_icon_open
 		{

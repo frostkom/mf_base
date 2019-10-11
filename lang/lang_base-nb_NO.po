@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-22 09:52+0100\n"
+"POT-Creation-Date: 2019-10-10 08:45+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -14,15 +14,6 @@ msgstr ""
 "X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
-
-msgid "First Name"
-msgstr "Fornavn"
-
-msgid "Last Name"
-msgstr "Etternavn"
-
-msgid "E-mail"
-msgstr "E-post"
 
 msgid "Every 2 Minutes"
 msgstr "Hver 2 Minutter"
@@ -45,18 +36,6 @@ msgstr "Krav"
 msgid "Cancel"
 msgstr "Avbryt"
 
-msgid "Change Password"
-msgstr "Endre Passord"
-
-msgid "Update"
-msgstr "Oppdatere"
-
-msgid "Profile"
-msgstr "Profil"
-
-msgid "Edit Profile"
-msgstr "Redigere profil"
-
 msgid "Are you sure?"
 msgstr "Er du sikker?"
 
@@ -65,6 +44,9 @@ msgstr "Les mer"
 
 msgid "Delete"
 msgstr "Slett"
+
+msgid "Filter"
+msgstr "Filtrer"
 
 msgid "Search"
 msgstr "Søk"
@@ -122,6 +104,9 @@ msgstr "Kategorier"
 
 msgid "Home"
 msgstr "Hjem"
+
+msgid "your-name"
+msgstr "dit-navn"
 
 msgid "January"
 msgstr "Januar"

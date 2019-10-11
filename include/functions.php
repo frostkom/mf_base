@@ -2468,7 +2468,7 @@ function get_notification()
 	return $out;
 }
 
-function add_columns($array)
+function add_columns($array, $debug = false)
 {
 	global $wpdb;
 
@@ -2477,13 +2477,24 @@ function add_columns($array)
 		foreach($arr_col as $column => $value)
 		{
 			$wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
+			$rows = $wpdb->num_rows;
 
-			if($wpdb->num_rows == 0)
+			if($debug == true)
+			{
+				do_log("add_columns - check: ".$wpdb->last_query);
+			}
+
+			if($rows == 0)
 			{
 				$value = str_replace("[table]", $table, $value);
 				$value = str_replace("[column]", $column, $value);
 
 				$wpdb->query($value);
+
+				if($debug == true)
+				{
+					do_log("add_columns - add: ".$wpdb->last_query);
+				}
 			}
 		}
 	}
@@ -2497,7 +2508,7 @@ function update_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$result = $wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
+			$wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
 
 			if($wpdb->num_rows > 0)
 			{
@@ -2731,13 +2742,21 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 
 	else if($type == 'date' || $type2 == 'dte')
 	{
-		$is_date_format = preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp);
+		$date_format = '/^\d{4}-\d{2}-\d{2}$/';
+		$is_date_format = preg_match($date_format, $temp);
 
 		if($temp != '' && !$is_date_format)
 		{
+			// Add century in front of date if not formatted properly from the beginning
+			if(preg_match('/^\d{2}-\d{2}-\d{2}$/', $temp) || preg_match('/^\d{6}$/', $temp))
+			{
+				$current_century = substr(date("Y"), 0, 2);
+				$temp = (substr($out, 0, 2) > date("y") ? ($current_century - 1) : $current_century).$temp;
+			}
+
 			$temp = date("Y-m-d", strtotime($temp));
 
-			$is_date_format = preg_match('/^\d{4}-\d{2}-\d{2}$/', $temp);
+			$is_date_format = preg_match($date_format, $temp);
 		}
 
 		if($temp == '' || ($is_date_format && substr($temp, 0, 4) > 1970 && substr($temp, 0, 4) < 2038))

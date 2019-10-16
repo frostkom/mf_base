@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-20 10:40+0100\n"
+"POT-Creation-Date: 2019-10-16 08:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -72,9 +72,6 @@ msgstr "Har inte körts tidigare"
 msgid "to debug Cron"
 msgstr "för att felsöka Cron"
 
-msgid "to get a graphical interface to the database"
-msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
-
 msgid "to backup all files and database to an external source"
 msgstr "för att ta backup av alla filer och databasen, och skicka till en extern plats"
 
@@ -107,6 +104,9 @@ msgstr "för att kunna ladda upp större filer än normalt tillåtet"
 
 msgid "to be able to change usernames"
 msgstr "för att kunna ändra användarnamn"
+
+msgid "to get a graphical interface to the database"
+msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
 
 msgid "to be able to view video clips in modals"
 msgstr "för att kunna se videoklipp i popups"
@@ -296,6 +296,9 @@ msgstr "om %d minut"
 
 msgid "in %d minutes"
 msgstr "om %d minuter"
+
+msgid "Run Now"
+msgstr "Kör nu"
 
 msgid "at any moment"
 msgstr "alldeles strax"

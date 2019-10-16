@@ -1572,34 +1572,50 @@ function point2int($in)
 	return $str_version;
 }
 
-function get_next_cron($raw = false)
+function get_next_cron($data = array()) //$raw = false
 {
+	if(!isset($data['raw'])){		$data['raw'] = false;}
+
+	$out = "";
+
 	$date_next_schedule = date("Y-m-d H:i:s", wp_next_scheduled('cron_base'));
 
 	$mins = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
 
-	if($raw == true)
+	if($data['raw'] == true)
 	{
-		return $date_next_schedule;
+		$out = $date_next_schedule;
 	}
 
 	else
 	{
 		if($mins > 0 && $mins < 60)
 		{
-			return sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
+			$out = sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
+
+			if($mins > 1 && IS_SUPER_ADMIN)
+			{
+				$option_cron_run = get_option('option_cron_run');
+
+				if($option_cron_run < date("Y-m-d H:i:s", strtotime("-1 minute")))
+				{
+					$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>)";
+				}
+			}
 		}
 
 		else if($mins == 0)
 		{
-			return __("at any moment", 'lang_base');
+			$out = __("at any moment", 'lang_base');
 		}
 
 		else
 		{
-			return format_date($date_next_schedule);
+			$out = format_date($date_next_schedule);
 		}
 	}
+
+	return $out;
 }
 
 function show_settings_fields($data)

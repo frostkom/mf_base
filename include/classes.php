@@ -97,10 +97,18 @@ class mf_base
 
 		$schedule = wp_get_schedule('cron_base');
 
-		if($schedule != $option)
+		$is_run_now = (check_var('action') == 'run_cron_now');
+
+		if($schedule != $option || $is_run_now)
 		{
 			deactivate_base();
 			activate_base();
+
+			if($is_run_now)
+			{
+				//mf_redirect(admin_url("options-general.php?page=settings_mf_base#settings_base"));
+				mf_redirect($_SERVER['HTTP_REFERER']);
+			}
 		}
 	}
 
@@ -333,6 +341,20 @@ class mf_base
 		</div>";
 	}
 
+	function get_schedules_for_select()
+	{
+		$arr_schedules = wp_get_schedules();
+
+		$arr_data = array();
+
+		foreach($arr_schedules as $key => $value)
+		{
+			$arr_data[$key] = $value['display'];
+		}
+
+		return $arr_data;
+	}
+
 	function setting_base_cron_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
@@ -342,14 +364,7 @@ class mf_base
 
 		if(!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false)
 		{
-			$arr_schedules = wp_get_schedules();
-
-			$arr_data = array();
-
-			foreach($arr_schedules as $key => $value)
-			{
-				$arr_data[$key] = $value['display'];
-			}
+			$select_suffix = "";
 
 			$next_cron = get_next_cron();
 
@@ -358,12 +373,7 @@ class mf_base
 				$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
 			}
 
-			else
-			{
-				$select_suffix = "";
-			}
-
-			echo show_select(array('data' => $arr_data, 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+			echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
 		}
 
 		if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
@@ -383,7 +393,7 @@ class mf_base
 
 		if($option_cron_run != '' && $option_cron_run > $option_cron_started)
 		{
-			if(get_next_cron(true) < $last_run_threshold && $option_cron_run < $last_run_threshold)
+			if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
 			{
 				echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
 

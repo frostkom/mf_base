@@ -1,6 +1,6 @@
 @media all
 {
-	.hide
+	.hide, [hidden]
 	{
 		display: none !important;
 	}

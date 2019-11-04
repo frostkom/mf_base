@@ -200,6 +200,7 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+			'setting_base_template_site' => __("Template Site", 'lang_base'),
 		);
 
 		if(IS_SUPER_ADMIN)
@@ -294,11 +295,6 @@ class mf_base
 
 		$load = sys_getloadavg();
 
-		/*$memory_used = memory_get_usage();
-		$memory_allocated = memory_get_usage(true);
-		$memory_peak_used = memory_get_peak_usage();
-		$memory_peak_allocated = memory_get_peak_usage(false);*/
-
 		echo "<div class='flex_flow'>
 			<div>
 				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
@@ -335,9 +331,8 @@ class mf_base
 				."</p>
 				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
 				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>"
-				//."<p><i class='".($memory_used < ($memory_total * .8) ? "fa fa-check green" : "fa fa-times red")."'></i> "."Memory".": ".mf_format_number(($memory_used / $memory_total) * 100)."% (".$memory_used." / ".$memory_total.")</p>"
-			."</div>
+				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>
+			</div>
 		</div>";
 	}
 
@@ -353,6 +348,36 @@ class mf_base
 		}
 
 		return $arr_data;
+	}
+
+	function setting_base_template_site_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key);
+
+		$placeholder = get_site_url();
+
+		if($option == '' && is_plugin_active('mf_theme_core/index.php'))
+		{
+			$obj_theme_core = new mf_theme_core();
+			$obj_theme_core->get_params();
+			$option = $obj_theme_core->options['style_source'];
+		}
+
+		if($option != '')
+		{
+			if($option == $placeholder)
+			{
+				$option = "";
+			}
+
+			else
+			{
+				$option = trim($option, "/");
+			}
+		}
+
+		echo show_textfield(array('type' => 'url', 'name' => $setting_key, 'value' => $option, 'placeholder' => $placeholder));
 	}
 
 	function setting_base_cron_callback()

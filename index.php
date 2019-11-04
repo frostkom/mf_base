@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 1.0.4.11
+Version: 1.0.5.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -71,7 +71,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('setting_base_info', 'setting_base_recommend', 'setting_base_external_links', 'setting_base_exclude_sources'),
+		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email'),
 	));
 }
 
@@ -88,6 +88,6 @@ function uninstall_base()
 {
 	mf_uninstall_plugin(array(
 		'uploads' => 'mf_base',
-		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email', 'setting_base_info', 'setting_base_cron', 'option_cron_started', 'option_cron_run', 'setting_base_recommend'),
+		'options' => array('setting_base_info', 'setting_base_cron'. 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_run'),
 	));
 }

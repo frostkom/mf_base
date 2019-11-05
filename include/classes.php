@@ -200,8 +200,12 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			'setting_base_template_site' => __("Template Site", 'lang_base'),
 		);
+
+		if(is_plugin_active('mf_media/index.php') || is_plugin_active('mf_site_manager/index.php') || is_plugin_active('mf_theme_core/index.php'))
+		{
+			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
+		}
 
 		if(IS_SUPER_ADMIN)
 		{

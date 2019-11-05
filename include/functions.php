@@ -4081,7 +4081,7 @@ function get_post_children($data, &$arr_data = array())
 
 	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
-	if(!isset($data['post_status'])){		$data['post_status'] = 'publish';}
+	if(!isset($data['post_status'])){		$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['include'])){			$data['include'] = array();}
 	if(!isset($data['exclude'])){			$data['exclude'] = array();}
 	if(!isset($data['join'])){				$data['join'] = '';}
@@ -4140,7 +4140,27 @@ function get_post_children($data, &$arr_data = array())
 		foreach($result as $r)
 		{
 			$post_id = $r->ID;
-			$post_title = ($r->post_title != '' ? $r->post_title : "(".__("no title", 'lang_base').")");
+			$post_title = "";
+
+			if($data['post_type'] == 'attachment')
+			{
+				$post_title = get_post_meta($post_id, '_wp_attachment_image_alt', true);
+
+				if($post_title == '')
+				{
+					$post_title = get_post_meta($post_id, '_wp_attached_file', true);
+				}
+			}
+
+			if($post_title == '')
+			{
+				$post_title = $r->post_title;
+			}
+
+			if($post_title == '')
+			{
+				$post_title = "(".__("no title", 'lang_base').")";
+			}
 
 			if($data['output_array'] == true)
 			{

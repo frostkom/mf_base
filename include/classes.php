@@ -620,7 +620,7 @@ class mf_base
 			'notifications' => $array,
 		);
 
-		header('Content-Type: application/json');
+		header("Content-Type: application/json");
 		echo json_encode($result);
 		die();
 	}

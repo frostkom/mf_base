@@ -2903,6 +2903,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 ######################
 function show_textfield($data)
 {
+	if(!isset($data['type'])){				$data['type'] = '';}
 	if(!isset($data['custom_tag'])){		$data['custom_tag'] = 'div';}
 	if(!isset($data['name'])){				$data['name'] = "";}
 	if(!isset($data['id'])){				$data['id'] = $data['name'];}
@@ -2925,23 +2926,9 @@ function show_textfield($data)
 
 	$data['value'] = str_replace("\\", "", $data['value']);
 
-	/* Used by Form -> wp_form_check */
-	if(isset($data['type']) && in_array($data['type'], array('int', 'float')))
-	{
-		$data['type'] = 'number';
-	}
-
-	$arr_accepted_types = array('text', 'email', 'url', 'date', 'month', 'time', 'number', 'range', 'color');
-
-	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types))
-	{
-		$data['type'] = 'text';
-	}
-
 	switch($data['type'])
 	{
 		case 'month':
-		//case 'date':
 			$plugin_include_url = plugin_dir_url(__FILE__);
 			$plugin_version = get_plugin_version(__FILE__);
 
@@ -2955,6 +2942,7 @@ function show_textfield($data)
 
 		case 'email':
 			$data['autocapitalize'] = $data['autocorrect'] = false;
+			$data['xtra'] .= " inputmode='".$data['type']."'";
 
 			if($data['placeholder'] == '')
 			{
@@ -2962,8 +2950,26 @@ function show_textfield($data)
 			}
 		break;
 
+		case 'float':
+			$data['type'] = 'number';
+			$data['xtra'] .= " inputmode='decimal'";
+			$data['xtra'] .= " step='any'";
+		break;
+
+		case 'int':
+		case 'number':
+			$data['type'] = 'number';
+			$data['xtra'] .= " inputmode='numeric'";
+			$data['xtra'] .= " step='any'";
+		break;
+
+		case 'search':
+			$data['xtra'] .= " inputmode='".$data['type']."'";
+		break;
+
 		case 'url':
 			$data['autocapitalize'] = $data['autocorrect'] = false;
+			$data['xtra'] .= " inputmode='".$data['type']."'";
 
 			if($data['placeholder'] == '')
 			{
@@ -2971,10 +2977,25 @@ function show_textfield($data)
 			}
 		break;
 
-		case 'number':
-			$data['xtra'] .= " step='any'";
+		case 'color':
+		case 'date':
+		case 'range':
+		case 'time':
+		case 'text':
+			// Do nothing
+		break;
+
+		default:
+			$data['type'] = 'text';
 		break;
 	}
+
+	/*$arr_accepted_types = array('text', 'email', 'url', 'date', 'month', 'time', 'number', 'range', 'color');
+
+	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types))
+	{
+		$data['type'] = 'text';
+	}*/
 
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 

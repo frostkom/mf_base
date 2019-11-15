@@ -98,6 +98,7 @@ class mf_base
 		$schedule = wp_get_schedule('cron_base');
 
 		$is_run_now = (check_var('action') == 'run_cron_now');
+		$is_run_now_v2 = (check_var('action') == 'run_cron_now_v2');
 
 		if($schedule != $option || $is_run_now)
 		{
@@ -106,9 +107,15 @@ class mf_base
 
 			if($is_run_now)
 			{
-				//mf_redirect(admin_url("options-general.php?page=settings_mf_base#settings_base"));
 				mf_redirect($_SERVER['HTTP_REFERER']);
 			}
+		}
+
+		else if($is_run_now_v2)
+		{
+			do_action('cron_base');
+			
+			mf_redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
 
@@ -171,6 +178,43 @@ class mf_base
 	function run_cron_start()
 	{
 		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+	}
+
+	function cron_base()
+	{
+		global $wpdb;
+
+		$obj_cron = new mf_cron();
+		$obj_cron->start(__CLASS__);
+
+		if($obj_cron->is_running == false)
+		{
+			$setting_base_template_site = get_option('setting_base_template_site');
+
+			if($setting_base_template_site != '' && $setting_base_template_site != get_site_url() && filter_var($setting_base_template_site, FILTER_VALIDATE_URL))
+			{
+				list($content, $headers) = get_url_content(array('url' => $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync", 'catch_head' => true));
+
+				switch($headers['http_code'])
+				{
+					case 200:
+						$json = json_decode($content, true);
+
+						if(isset($json['success']) && $json['success'] == true)
+						{
+							do_action('cron_sync', $json);
+						}
+
+					break;
+
+					default:
+						do_log(sprintf("Getting sync from %s returned an error (%s)", $setting_base_template_site, $content));
+					break;
+				}
+			}
+		}
+
+		$obj_cron->end();
 	}
 
 	function run_cron_end()

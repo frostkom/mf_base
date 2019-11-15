@@ -1592,16 +1592,6 @@ function get_next_cron($data = array()) //$raw = false
 		if($mins > 0 && $mins < 60)
 		{
 			$out = sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
-
-			if($mins > 1 && IS_SUPER_ADMIN)
-			{
-				$option_cron_run = get_option('option_cron_run');
-
-				if($option_cron_run < date("Y-m-d H:i:s", strtotime("-1 minute")))
-				{
-					$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>)";
-				}
-			}
 		}
 
 		else if($mins == 0)
@@ -1612,6 +1602,23 @@ function get_next_cron($data = array()) //$raw = false
 		else
 		{
 			$out = format_date($date_next_schedule);
+		}
+
+		if(($mins < -1 || $mins > 1) && IS_SUPER_ADMIN)
+		{
+			$option_cron_run = get_option('option_cron_run');
+
+			if($option_cron_run < date("Y-m-d H:i:s", strtotime("-1 minute")))
+			{
+				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
+
+					if($mins < -1)
+					{
+						$out .= ", <a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now_v2#settings_base")."'>v2</a>";
+					}
+					
+				$out .= ")";
+			}
 		}
 	}
 

@@ -899,7 +899,9 @@ class mf_base
 			$recommend_htaccess = "ServerSignature Off
 
 			DirectoryIndex index.php
-			Options -Indexes";
+			Options -Indexes
+			
+			RewriteEngine On";
 
 			/* Some hosts don't allow this */
 			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
@@ -914,8 +916,7 @@ class mf_base
 
 			/*if($this->recommend_htaccess != '')
 			{
-				$recommend_htaccess .= "\n
-				RewriteEngine On".$this->recommend_htaccess;
+				$recommend_htaccess .= $this->recommend_htaccess;
 
 				if($this->all_is_https == true)
 				{

@@ -4097,6 +4097,23 @@ function show_table_header($arr_header, $shorten_text = true)
 }
 ########################################
 
+function does_post_exists($data)
+{
+	if(!isset($data['post_type'])){		$data['post_type'] = 'page';}
+	if(!isset($data['meta'])){			$data['meta'] = array();}
+
+	$arr_data = array();
+	get_post_children(array(
+		'post_type' => $data['post_type'],
+		'is_trusted' => true,
+		'meta' => $data['meta'],
+		'limit' => 1,
+		//'debug' => true,
+	), $arr_data);
+
+	return (count($arr_data) > 0);
+}
+
 function get_post_children($data, &$arr_data = array())
 {
 	global $wpdb;
@@ -4112,10 +4129,16 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_status'])){		$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['include'])){			$data['include'] = array();}
 	if(!isset($data['exclude'])){			$data['exclude'] = array();}
+
 	if(!isset($data['join'])){				$data['join'] = '';}
 	if(!isset($data['where'])){				$data['where'] = '';}
+
+	if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
+	if(!isset($data['meta'])){				$data['meta'] = array();}
+
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
+
 	if(!isset($data['count'])){				$data['count'] = false;}
 	if(!isset($data['debug'])){				$data['debug'] = false;}
 
@@ -4148,6 +4171,31 @@ function get_post_children($data, &$arr_data = array())
 	if(count($data['exclude']) > 0)
 	{
 		$data['where'] .= ($data['where'] != '' ? " AND " : "")."ID NOT IN('".implode("','", $data['exclude'])."')";
+	}
+
+	if(count($data['meta']) > 0)
+	{
+		$arr_keys_used = array();
+
+		foreach($data['meta'] as $key => $value)
+		{
+			if(!in_array($key, $arr_keys_used))
+			{
+				$data['join'] .= " INNER JOIN ".$wpdb->postmeta." AS table_".$key." ON ".$wpdb->posts.".ID = table_".$key.".post_id";
+
+				$arr_keys_used[] = $key;
+			}
+
+			if($data['is_trusted'])
+			{
+				$data['where'] .= ($data['where'] != '' ? " AND " : "")."table_".$key.".meta_key = '".$key."' AND table_".$key.".meta_value = '".$value."'";
+			}
+
+			else
+			{
+				$data['where'] .= ($data['where'] != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
+			}
+		}
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$data['join']." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));

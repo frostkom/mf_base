@@ -42,7 +42,7 @@ function render_attachment_list()
 						output_list += "<span>" + file_name + "</span><br>";
 					}
 
-					output_list += "<i class='fa fa-trash fa-2x red' data-id='" + index + "'></i>"
+					output_list += "<i class='fa fa-trash red fa-2x' data-id='" + index + "'></i>"
 				+ "</td>"
 			+ "</tr>";
 

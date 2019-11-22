@@ -52,6 +52,24 @@ switch($type_action)
 	case 'sync':
 		$json_output['success'] = true;
 
+		$remote_site_url = check_var('site_url');
+		$remote_site_name = check_var('site_name');
+
+		if($remote_site_url != '' && $remote_site_name != '')
+		{
+			$option_sync_sites = get_option('option_sync_sites', array());
+
+			$option_sync_sites[$remote_site_url] = array(
+				'name' => $remote_site_name,
+				'datetime' => date("Y-m-d H:i:s"),
+				'ip' => $_SERVER['REMOTE_ADDR'],
+			);
+
+			update_option('option_sync_sites', $option_sync_sites, 'no');
+		}
+
+		//do_log("Sync: ".var_export($_REQUEST, true)." -> ".var_export(get_option('option_sync_sites'), true));
+
 		$json_output = apply_filters('api_sync', $json_output);
 	break;
 }

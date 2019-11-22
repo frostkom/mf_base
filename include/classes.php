@@ -114,7 +114,7 @@ class mf_base
 		else if($is_run_now_v2)
 		{
 			do_action('cron_base');
-			
+
 			mf_redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
@@ -190,10 +190,18 @@ class mf_base
 		if($obj_cron->is_running == false)
 		{
 			$setting_base_template_site = get_option('setting_base_template_site');
+			$site_url = get_site_url();
 
-			if($setting_base_template_site != '' && $setting_base_template_site != get_site_url() && filter_var($setting_base_template_site, FILTER_VALIDATE_URL))
+			if($setting_base_template_site != '' && $setting_base_template_site != $site_url && filter_var($setting_base_template_site, FILTER_VALIDATE_URL))
 			{
-				list($content, $headers) = get_url_content(array('url' => $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync", 'catch_head' => true));
+				list($content, $headers) = get_url_content(array(
+					'url' => $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync",
+					'catch_head' => true,
+					'post_data' => array(
+						'site_name' => get_bloginfo('name'),
+						'site_url' => remove_protocol(array('url' => $site_url, 'clean' => true)),
+					),
+				));
 
 				switch($headers['http_code'])
 				{
@@ -900,7 +908,7 @@ class mf_base
 
 			DirectoryIndex index.php
 			Options -Indexes
-			
+
 			RewriteEngine On";
 
 			/* Some hosts don't allow this */
@@ -1166,6 +1174,7 @@ class mf_list_table extends WP_List_Table
 	var $order = "";
 	var $page = "";
 	var $total_pages = "";
+	var $debug = "";
 
 	function __construct($data = array())
 	{
@@ -1634,18 +1643,19 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		if(!isset($data['full_data'])){	$data['full_data'] = false;}
-		if(!isset($data['sort_data'])){	$data['sort_data'] = false;}
-		if(!isset($data['select'])){	$data['select'] = "*";}
-		if(!isset($data['join'])){		$data['join'] = "";}
-		if(!isset($data['where'])){		$data['where'] = "";}
-		if(!isset($data['group_by'])){	$data['group_by'] = $this->arr_settings['query_select_id'];}
-		if(!isset($data['order_by'])){	$data['order_by'] = $this->orderby;}
-		if(!isset($data['order'])){		$data['order'] = $this->order;}
-		if(!isset($data['limit'])){		$data['limit'] = 0;} //check_var('paged', 'int', true, '0') // This will mess up counter for all and pagination
-		//if(!isset($data['amount'])){	$data['amount'] = ($data['sort_data'] == true ? 0 : $this->arr_settings['per_page']);} // This will mess up pagination
-		if(!isset($data['amount'])){	$data['amount'] = 5000;}
-		if(!isset($data['debug'])){		$data['debug'] = false;}
+		if(!isset($data['full_data'])){		$data['full_data'] = false;}
+		if(!isset($data['sort_data'])){		$data['sort_data'] = false;}
+		if(!isset($data['select'])){		$data['select'] = "*";}
+		if(!isset($data['join'])){			$data['join'] = "";}
+		if(!isset($data['where'])){			$data['where'] = "";}
+		if(!isset($data['group_by'])){		$data['group_by'] = $this->arr_settings['query_select_id'];}
+		if(!isset($data['order_by'])){		$data['order_by'] = $this->orderby;}
+		if(!isset($data['order'])){			$data['order'] = $this->order;}
+		if(!isset($data['limit'])){			$data['limit'] = 0;} //check_var('paged', 'int', true, '0') // This will mess up counter for all and pagination
+		//if(!isset($data['amount'])){		$data['amount'] = ($data['sort_data'] == true ? 0 : $this->arr_settings['per_page']);} // This will mess up pagination
+		if(!isset($data['amount'])){		$data['amount'] = 5000;}
+		if(!isset($data['debug'])){			$data['debug'] = false;}
+		if(!isset($data['debug_type'])){	$data['debug_type'] = 'echo';}
 
 		$data = apply_filters('pre_select_data', $data, ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type));
 
@@ -1683,20 +1693,22 @@ class mf_list_table extends WP_List_Table
 			$query_limit .= " LIMIT ".$data['limit'].", ".$data['amount'];
 		}
 
-		$query = "SELECT ".$data['select']." FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit;
-
+		$result = $wpdb->get_results("SELECT ".$data['select']." FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit);
+		$this->num_rows = $wpdb->num_rows;
+		
 		if($data['debug'] == true)
 		{
-			echo "<br>mf_list_table->select_data() query: ".$query."<br>";
-		}
+			switch($data['debug_type'])
+			{
+				case 'echo':
+					echo "<br>mf_list_table->select_data() query: ".$wpdb->last_query."<br>"
+					.__("Rows", 'lang_base').": ".$this->num_rows."<br>";
+				break;
 
-		$result = $wpdb->get_results($query);
-
-		$this->num_rows = count($result);
-
-		if($data['debug'] == true)
-		{
-			echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
+				case 'return':
+					$this->debug .= $wpdb->last_query;
+				break;
+			}
 		}
 
 		$this->data = json_decode(json_encode($result), true);
@@ -1724,12 +1736,6 @@ class mf_list_table extends WP_List_Table
 				}
 			}
 		}
-
-		/*else if($this->num_rows == $data['amount'])
-		{
-			$wpdb->get_results("SELECT 1 FROM ".$query_from.$query_join.$query_where.$query_group);
-			$this->num_rows = $wpdb->num_rows;
-		}*/
 	}
 
 	/*public function single_row($item)

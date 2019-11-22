@@ -1264,7 +1264,7 @@ function get_media_library($data)
 				$out .= "<div class='media_container'>" //".($data['value'] != '' ? "" : " class='hide'")."
 					."<img src='".$data['value']."'>" //".($data['type'] == 'image' ? "" : " class='hide'")." //(in_array(get_file_suffix($data['value']), array('gif', 'jpg', 'jpeg', 'png')) ? 'image' : 'file')
 					."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>" //".($data['type'] == 'file' ? "" : " class='hide'")."
-					."<a href='#'><i class='fa fa-trash fa-lg red'></i></a>" // rel='confirm'
+					."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>" // rel='confirm'
 				."</div>"
 				.input_hidden(array('name' => $data['name'], 'value' => $data['value']));
 			}
@@ -1616,7 +1616,7 @@ function get_next_cron($data = array()) //$raw = false
 					{
 						$out .= ", <a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now_v2#settings_base")."'>v2</a>";
 					}
-					
+
 				$out .= ")";
 			}
 		}
@@ -2394,6 +2394,18 @@ function get_url_content($data = array())
 
 	if($data['post_data'] != '')
 	{
+		if(is_array($data['post_data']))
+		{
+			$post_data_temp = "";
+
+			foreach($data['post_data'] as $key => $value)
+			{
+				$post_data_temp .= ($post_data_temp != '' ? "&" : "").$key."=".$value;
+			}
+
+			$data['post_data'] = $post_data_temp;
+		}
+
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data['post_data']);
 
 		$data['headers'][] = 'Content-Length: '.strlen($data['post_data']);
@@ -4179,11 +4191,11 @@ function get_post_children($data, &$arr_data = array())
 
 		foreach($data['meta'] as $key => $value)
 		{
-			if(!in_array($key, $arr_keys_used))
+			if(!isset($arr_keys_used[$key]))
 			{
 				$data['join'] .= " INNER JOIN ".$wpdb->postmeta." AS table_".$key." ON ".$wpdb->posts.".ID = table_".$key.".post_id";
 
-				$arr_keys_used[] = $key;
+				$arr_keys_used[$key] = $key;
 			}
 
 			if($data['is_trusted'])
@@ -4196,6 +4208,8 @@ function get_post_children($data, &$arr_data = array())
 				$data['where'] .= ($data['where'] != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
 			}
 		}
+
+		unset($arr_keys_used);
 	}
 
 	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$data['join']." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));

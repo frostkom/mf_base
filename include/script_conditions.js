@@ -54,7 +54,7 @@ jQuery(function($)
 	{
 		var dom_parent = dom_obj.parents(parent_selector),
 			condition_type = dom_obj.attr('condition_type'),
-			condition_selector = /*dom_obj.parents(".mf_form") + " " + */"#" + dom_obj.attr('condition_selector'),
+			condition_selector = "#" + dom_obj.attr('condition_selector'),
 			condition_value = dom_obj.attr('condition_value') || '';
 
 		check_selector_condition($(condition_selector), condition_type, condition_value, dom_parent);
@@ -64,11 +64,6 @@ jQuery(function($)
 			check_selector_condition($(this), condition_type, condition_value, dom_parent);
 		});
 	}
-
-	/*$(".mf_form .form_textfield *[condition_selector]").each(function()
-	{
-		init_conditions($(this), ".form_textfield");
-	});*/
 
 	$(".mf_form .form_select *[condition_selector]").each(function()
 	{

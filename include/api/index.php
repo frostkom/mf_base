@@ -70,7 +70,7 @@ switch($type_action)
 
 		//do_log("Sync: ".var_export($_REQUEST, true)." -> ".var_export(get_option('option_sync_sites'), true));
 
-		$json_output = apply_filters('api_sync', $json_output);
+		$json_output = apply_filters('api_sync', $json_output, array('remote_site_url' => $remote_site_url));
 	break;
 }
 

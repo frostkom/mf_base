@@ -434,6 +434,35 @@ class mf_base
 		}
 
 		echo show_textfield(array('type' => 'url', 'name' => $setting_key, 'value' => $option, 'placeholder' => $placeholder));
+
+		$option_sync_sites = get_option('option_sync_sites', array());
+
+		if(count($option_sync_sites) > 0)
+		{
+			$updated = false;
+
+			echo "<h3>".__("Child Sites", 'lang_base')."</h3>
+			<ol>";
+
+				foreach($option_sync_sites as $url => $site)
+				{
+					echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
+
+					if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
+					{
+						unset($option_sync_sites[$url]);
+
+						$updated = true;
+					}
+				}
+
+			echo "</ol>";
+
+			if($updated == true)
+			{
+				update_option('option_sync_sites', $option_sync_sites, 'no');
+			}
+		}
 	}
 
 	function setting_base_cron_callback()
@@ -763,7 +792,7 @@ class mf_base
 		return $posts_templates;
 	}
 
-	function wp_insert_post_data($atts)
+	function wp_insert_post_data($data)
 	{
 		if(!isset($this->templates))
 		{
@@ -790,7 +819,7 @@ class mf_base
 		// Add the modified cache to allow WordPress to pick it up for listing available templates
 		wp_cache_add($cache_key, $templates, 'themes', 1800);
 
-		return $atts;
+		return $data;
 	}
 
 	function template_include($template)

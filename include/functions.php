@@ -4136,7 +4136,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 	if(!isset($data['depth'])){				$data['depth'] = 0;}
 
-	if(!isset($data['post_id'])){			$data['post_id'] = 0;}
+	if(!isset($data['post_id'])){			$data['post_id'] = ($data['post_type'] == 'attachment' ? -1 : 0);}
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
 	if(!isset($data['post_status'])){		$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['include'])){			$data['include'] = array();}
@@ -4165,9 +4165,14 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
+	if($data['post_id'] >= 0)
+	{
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_parent = '".esc_sql($data['post_id'])."'";
+	}
+
 	if($data['post_status'] != '')
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status = '".$data['post_status']."'";
+		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status = '".esc_sql($data['post_status'])."'";
 	}
 
 	else
@@ -4212,7 +4217,7 @@ function get_post_children($data, &$arr_data = array())
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$data['join']." WHERE post_type = %s AND post_parent = '%d'".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type'], $data['post_id']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$data['join']." WHERE post_type = %s".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = $wpdb->num_rows;
 
 	if($data['debug'] == true)

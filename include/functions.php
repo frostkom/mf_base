@@ -4136,8 +4136,8 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 	if(!isset($data['depth'])){				$data['depth'] = 0;}
 
-	if(!isset($data['post_id'])){			$data['post_id'] = ($data['post_type'] == 'attachment' ? -1 : 0);}
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
+	if(!isset($data['post_id'])){			$data['post_id'] = ($data['post_type'] == 'attachment' ? -1 : 0);}
 	if(!isset($data['post_status'])){		$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['include'])){			$data['include'] = array();}
 	if(!isset($data['exclude'])){			$data['exclude'] = array();}
@@ -4165,29 +4165,33 @@ function get_post_children($data, &$arr_data = array())
 
 	$out = "";
 
+	// We do not want these to be added to data[] since that will duplicate itself when requesting a deeper level of get_post_children() below
+	$query_join = $data['join'];
+	$query_where = $data['where'];
+
 	if($data['post_id'] >= 0)
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_parent = '".esc_sql($data['post_id'])."'";
+		$query_where .= ($query_where != '' ? " AND " : "")."post_parent = '".esc_sql($data['post_id'])."'";
 	}
 
 	if($data['post_status'] != '')
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status = '".esc_sql($data['post_status'])."'";
+		$query_where .= ($query_where != '' ? " AND " : "")."post_status = '".esc_sql($data['post_status'])."'";
 	}
 
 	else
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."post_status NOT IN('".implode("','", $exclude_post_status)."')";
+		$query_where .= ($query_where != '' ? " AND " : "")."post_status NOT IN('".implode("','", $exclude_post_status)."')";
 	}
 
 	if(count($data['include']) > 0)
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."ID IN('".implode("','", $data['include'])."')";
+		$query_where .= ($query_where != '' ? " AND " : "")."ID IN('".implode("','", $data['include'])."')";
 	}
 
 	if(count($data['exclude']) > 0)
 	{
-		$data['where'] .= ($data['where'] != '' ? " AND " : "")."ID NOT IN('".implode("','", $data['exclude'])."')";
+		$query_where .= ($query_where != '' ? " AND " : "")."ID NOT IN('".implode("','", $data['exclude'])."')";
 	}
 
 	if(count($data['meta']) > 0)
@@ -4198,26 +4202,26 @@ function get_post_children($data, &$arr_data = array())
 		{
 			if(!isset($arr_keys_used[$key]))
 			{
-				$data['join'] .= " INNER JOIN ".$wpdb->postmeta." AS table_".$key." ON ".$wpdb->posts.".ID = table_".$key.".post_id";
+				$query_join .= " INNER JOIN ".$wpdb->postmeta." AS table_".$key." ON ".$wpdb->posts.".ID = table_".$key.".post_id";
 
 				$arr_keys_used[$key] = $key;
 			}
 
 			if($data['is_trusted'])
 			{
-				$data['where'] .= ($data['where'] != '' ? " AND " : "")."table_".$key.".meta_key = '".$key."' AND table_".$key.".meta_value = '".$value."'";
+				$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".$key."' AND table_".$key.".meta_value = '".$value."'";
 			}
 
 			else
 			{
-				$data['where'] .= ($data['where'] != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
+				$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
 			}
 		}
 
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$data['join']." WHERE post_type = %s".($data['where'] != '' ? " AND ".$data['where'] : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = $wpdb->num_rows;
 
 	if($data['debug'] == true)

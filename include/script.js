@@ -80,7 +80,7 @@ jQuery(function($)
 
 	$(".mf_form select[rel='submit_change'], .mf_form input[rel='submit_change']").each(function()
 	{
-		$(this).removeAttr('disabled');
+		$(this).removeClass('is_disabled').removeAttr('disabled');
 	});
 
 	$(document).on('click', "a[rel='confirm'], button[rel='confirm'], .delete > a", function()

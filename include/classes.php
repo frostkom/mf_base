@@ -413,12 +413,12 @@ class mf_base
 
 		$placeholder = get_site_url();
 
-		if($option == '' && is_plugin_active('mf_theme_core/index.php'))
+		/*if($option == '' && is_plugin_active('mf_theme_core/index.php'))
 		{
 			$obj_theme_core = new mf_theme_core();
 			$obj_theme_core->get_params();
 			$option = $obj_theme_core->options['style_source'];
-		}
+		}*/
 
 		if($option != '')
 		{
@@ -1070,7 +1070,7 @@ class mf_cron
 
 	function get_interval()
 	{
-		$setting_base_cron = get_option('setting_base_cron');
+		$setting_base_cron = get_option_or_default('setting_base_cron', 'hourly');
 
 		return $this->schedules[$setting_base_cron]['interval'];
 	}
@@ -1724,7 +1724,7 @@ class mf_list_table extends WP_List_Table
 
 		$result = $wpdb->get_results("SELECT ".$data['select']." FROM ".$query_from.$query_join.$query_where.$query_group.$query_order.$query_limit);
 		$this->num_rows = $wpdb->num_rows;
-		
+
 		if($data['debug'] == true)
 		{
 			switch($data['debug_type'])

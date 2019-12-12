@@ -549,7 +549,7 @@
 					outline: 0;
 				}
 
-				.mf_form .form_select select option:disabled
+				.mf_form .form_select select option.is_disabled
 				{
 					background: #eee;
 					color: #ccc;
@@ -641,7 +641,7 @@
 			white-space: nowrap;
 		}
 
-			.form_button button.disabled, .form_button .button.disabled
+			.form_button button.is_disabled, .form_button .button.is_disabled
 			{
 				cursor: default;
 				opacity: .5;

@@ -2416,10 +2416,19 @@ function get_url_content($data = array())
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
 	}
 
+	$log_message = "cURL was run but not completed";
+
+	if($data['debug'] == true)
+	{
+		do_log($log_message." (".var_export($data, true).")");
+	}
+
 	$content = curl_exec($ch);
 
 	if($data['debug'] == true)
 	{
+		do_log($log_message, 'trash');
+
 		fclose($verbose_output);
 	}
 
@@ -3487,6 +3496,7 @@ function show_select($data)
 									if($is_disabled)
 									{
 										$out .= " disabled";
+										$out .= " class='is_disabled'";
 									}
 
 									else if(
@@ -3644,12 +3654,12 @@ function show_form_alternatives($data)
 
 								if($data['multiple'])
 								{
-									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " disabled" : ""), 'description' => $data_desc));
+									$out .= show_checkbox(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " class='is_disabled' disabled" : ""), 'description' => $data_desc));
 								}
 
 								else
 								{
-									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " disabled" : ""), 'description' => $data_desc));
+									$out .= show_radio_input(array('name' => $obj_base->data['name'], 'text' => $data_text, 'value' => $data_value, 'compare' => $compare, 'tag' => 'li', 'xtra' => $obj_base->data['xtra'].($is_disabled ? " class='is_disabled' disabled" : ""), 'description' => $data_desc));
 								}
 							}
 						}

@@ -61,12 +61,12 @@ function render_attachment_list()
 
 		if(amount_file_uploads >= dom_max_file_uploads)
 		{
-			dom_buttons.children(".button").addClass('disabled');
+			dom_buttons.children(".button").addClass('is_disabled');
 		}
 
 		else
 		{
-			dom_buttons.children(".button").removeClass('disabled');
+			dom_buttons.children(".button").removeClass('is_disabled');
 		}
 	}
 

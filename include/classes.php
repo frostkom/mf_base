@@ -7,6 +7,11 @@ class mf_base
 		$this->meta_prefix = 'mf_base_';
 	}
 
+	function set_html_content_type()
+	{
+		return 'text/html';
+	}
+
 	function HTMLToRGB($hex)
 	{
 		if($hex[0] == '#')

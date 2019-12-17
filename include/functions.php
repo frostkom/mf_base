@@ -448,14 +448,9 @@ function contains_html($string)
 	}
 }
 
-function set_html_content_type()
-{
-	return 'text/html';
-}
-
 function send_email($data)
 {
-	global $error_text, $phpmailer;
+	global $error_text, $phpmailer, $obj_base;
 
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
@@ -479,7 +474,12 @@ function send_email($data)
 	{
 		if(contains_html($data['content']))
 		{
-			add_filter('wp_mail_content_type', 'set_html_content_type');
+			if(!isset($obj_base))
+			{
+				$obj_base = new mf_base();
+			}
+
+			add_filter('wp_mail_content_type', array($obj_base, 'set_html_content_type'));
 
 			$data['content'] = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>".$data['content']."</body></html>";
 		}

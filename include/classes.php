@@ -7,6 +7,23 @@ class mf_base
 		$this->meta_prefix = 'mf_base_';
 	}
 
+	function get_post_types_for_metabox($data = array())
+	{
+		if(!isset($data['public'])){		$data['public'] = true;}
+
+		$arr_data = array();
+
+		foreach(get_post_types($data, 'objects') as $post_type)
+		{
+			if(!in_array($post_type->name, array('attachment')))
+			{
+				$arr_data[] = $post_type->name;
+			}
+		}
+
+		return $arr_data;
+	}
+
 	function set_html_content_type()
 	{
 		return 'text/html';
@@ -605,7 +622,7 @@ class mf_base
 
 	function plugin_action_links($actions, $plugin_file)
 	{
-		if(is_array($actions) && array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
+		if(!IS_SUPER_ADMIN && is_array($actions) && array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
 		{
 			unset($actions['deactivate']);
 		}
@@ -723,14 +740,12 @@ class mf_base
 			$plugin_include_url = plugin_dir_url(__FILE__);
 			$plugin_version = get_plugin_version(__FILE__);
 
-			/*if(!is_admin())
-			{
-				$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
+			/* We should probably check if it is used somewhere, shouldn't we? */
+			/*$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
 
-				echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
-				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
-				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";
-			}*/
+			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
+			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
+			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";*/
 
 			if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
 			{
@@ -938,12 +953,19 @@ class mf_base
 				$this->get_site_redirect();
 			}*/
 
+			//ServerTokens Prod // Not allowed on all hosts
 			$recommend_htaccess = "ServerSignature Off
 
 			DirectoryIndex index.php
 			Options -Indexes
 
-			RewriteEngine On";
+			Header set X-XSS-Protection \"1; mode=block\"
+			Header set X-Content-Type-Options nosniff
+
+			RewriteEngine On
+			
+			RewriteCond %{REQUEST_METHOD} ^TRACE 
+			RewriteRule .* - [F]";
 
 			/* Some hosts don't allow this */
 			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
@@ -1083,6 +1105,8 @@ class mf_cron
 	function set_is_running()
 	{
 		$this->is_running = file_exists($this->file);
+
+		do_log(trim(sprintf("%s has been running since %s", $this->file, '')), 'trash');
 
 		if($this->is_running)
 		{

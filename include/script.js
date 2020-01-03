@@ -3,12 +3,6 @@ function scroll_to_top()
 	jQuery("html, body").animate({scrollTop: 0}, 800);
 }
 
-function preload(url)
-{
-	var img = new Image();
-	img.src = url;
-}
-
 function select_option()
 {
 	jQuery(".mf_form .form_select select[data-value!='']").each(function()

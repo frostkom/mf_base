@@ -961,13 +961,14 @@ class mf_base
 
 			Header set X-XSS-Protection \"1; mode=block\"
 			Header set X-Content-Type-Options nosniff
+			Header set X-Powered-By \"Me\"
 
 			RewriteEngine On
-			
+
 			RewriteCond %{REQUEST_METHOD} ^TRACE 
 			RewriteRule .* - [F]";
 
-			/* Some hosts don't allow this */
+			/* Not allowed on all hosts */
 			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
 				Order Allow,Deny
 				Deny from all
@@ -987,7 +988,9 @@ class mf_base
 					$recommend_htaccess .= "\n
 					RewriteCond %{HTTPS} !=on
 					RewriteCond %{ENV:HTTPS} !=on
-					RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]";
+					RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+					
+					Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
 				}
 
 				else if($this->recommend_htaccess_https != '')

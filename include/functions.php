@@ -1228,6 +1228,8 @@ function get_file_suffix($file, $force_last = false)
 
 function get_media_library($data)
 {
+	global $is_media_library_init;
+
 	if(!isset($data['type'])){			$data['type'] = 'file';}
 	if(!isset($data['multiple'])){		$data['multiple'] = false;}
 	if(!isset($data['label'])){			$data['label'] = '';}
@@ -1242,14 +1244,22 @@ function get_media_library($data)
 	$insert_file_text = __("Insert File", 'lang_base');
 	$insert_text = __("Insert", 'lang_base');
 
-	$plugin_include_url = plugin_dir_url(__FILE__);
-	$plugin_version = get_plugin_version(__FILE__);
+	if(!isset($is_media_library_init))
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
 
-	wp_enqueue_media();
-	mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
-	mf_enqueue_script('script_media_library', $plugin_include_url."script_media_library.js", array(
-		'add_file_text' => $add_file_text, 'change_file_text' => $change_file_text, 'insert_file_text' => $insert_file_text, 'insert_text' => $insert_text,
-	), $plugin_version);
+		wp_enqueue_media();
+		mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
+		mf_enqueue_script('script_media_library', $plugin_include_url."script_media_library.js", array(
+			'add_file_text' => $add_file_text,
+			'change_file_text' => $change_file_text,
+			'insert_file_text' => $insert_file_text,
+			'insert_text' => $insert_text,
+		), $plugin_version);
+
+		$is_media_library_init = true;
+	}
 
 	$out = "<div class='mf_media_library' data-type='".$data['type']."' data-multiple='".$data['multiple']."' data-return_to='".$data['return_to']."' data-return_type='".$data['return_type']."'>
 		<div>";
@@ -1261,15 +1271,15 @@ function get_media_library($data)
 
 			if($data['name'] != '')
 			{
-				$out .= "<div class='media_container'>" //".($data['value'] != '' ? "" : " class='hide'")."
-					."<img src='".$data['value']."'>" //".($data['type'] == 'image' ? "" : " class='hide'")." //(in_array(get_file_suffix($data['value']), array('gif', 'jpg', 'jpeg', 'png')) ? 'image' : 'file')
-					."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>" //".($data['type'] == 'file' ? "" : " class='hide'")."
-					."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>" // rel='confirm'
+				$out .= "<div class='media_container'>"
+					."<img src='".$data['value']."'>"
+					."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>"
+					."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>"
 				."</div>"
 				.input_hidden(array('name' => $data['name'], 'value' => $data['value']));
 			}
 
-			$out .= "<div class='form_button'>".show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))."</div>" //($data['value'] != '' ? $change_file_text : $add_file_text)
+			$out .= "<div class='form_button'>".show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))."</div>"
 		."</div>";
 
 		if($data['description'] != '')

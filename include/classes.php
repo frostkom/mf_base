@@ -435,13 +435,6 @@ class mf_base
 
 		$placeholder = get_site_url();
 
-		/*if($option == '' && is_plugin_active('mf_theme_core/index.php'))
-		{
-			$obj_theme_core = new mf_theme_core();
-			$obj_theme_core->get_params();
-			$option = $obj_theme_core->options['style_source'];
-		}*/
-
 		if($option != '')
 		{
 			if($option == $placeholder)
@@ -989,7 +982,7 @@ class mf_base
 					RewriteCond %{HTTPS} !=on
 					RewriteCond %{ENV:HTTPS} !=on
 					RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-					
+
 					Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
 				}
 

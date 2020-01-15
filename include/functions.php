@@ -541,7 +541,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
+				//do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -2482,10 +2482,10 @@ function get_url_content($data = array())
 
 	curl_close($ch);
 
-	if(get_option('setting_log_curl_debug') == 'yes')
+	/*if(get_option('setting_log_curl_debug') == 'yes')
 	{
-		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true), 'notification');
-	}
+		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true)); //, 'notification' // If forgotten, this will make wp_posts explode in size
+	}*/
 
 	return $out;
 }

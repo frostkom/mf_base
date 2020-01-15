@@ -211,6 +211,8 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
+			// Sync with template site
+			############################
 			$setting_base_template_site = get_option('setting_base_template_site');
 			$site_url = get_site_url();
 
@@ -242,6 +244,13 @@ class mf_base
 					break;
 				}
 			}
+			############################
+
+			// Save how many large tables there are
+			############################
+			$arr_tables = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
+			update_site_option('option_base_large_table_amount', count($arr_tables));
+			############################
 		}
 
 		$obj_cron->end();
@@ -331,6 +340,34 @@ class mf_base
 		return $number;
 	}
 
+	function get_db_info($data = array())
+	{
+		global $wpdb;
+
+		if(!isset($data['limit'])){		$data['limit'] = pow(1024, 2);}
+
+		$arr_tables = array();
+
+		$result = $wpdb->get_results("SHOW TABLES", ARRAY_N);
+
+		foreach($result as $r)
+		{
+			$table_id = $table_name = $r[0];
+
+			$table_size = $wpdb->get_var($wpdb->prepare("SELECT (DATA_LENGTH + INDEX_LENGTH) FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s", DB_NAME, $table_id));
+
+			if($table_size > $data['limit'])
+			{
+				$arr_tables[] = array(
+					'name' => $table_name,
+					'size' => show_final_size($table_size),
+				);
+			}
+		}
+
+		return $arr_tables;
+	}
+
 	function setting_base_info_callback()
 	{
 		global $wpdb;
@@ -398,6 +435,16 @@ class mf_base
 					echo "<p>
 						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
 						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+					."</p>";
+				}
+
+				$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
+
+				if($option_base_large_table_amount > 0)
+				{
+					echo "<p>
+						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+						.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
 					."</p>";
 				}
 

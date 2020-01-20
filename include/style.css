@@ -177,11 +177,6 @@
 		text-align: right;
 	}
 
-		#wrapper .tablenav-pages .displaying-num
-		{
-			margin-right: .5em;
-		}
-
 		#wrapper .tablenav-pages .button
 		{
 			padding: .3em 1em;
@@ -355,7 +350,7 @@
 			color: #fff;
 		}
 
-	.grey/*, .color_grey*/, .grey > a
+	.grey, .grey > a
 	{
 		color: #999;
 	}
@@ -371,17 +366,17 @@
 		font-weight: bold;
 	}
 
-	.green > th, .green > td
+	.green > th, .green > td, .bg_green
 	{
 		background: rgba(211, 255, 204, .3);
 	}
 
-	.red > th, .red > td
+	.red > th, .red > td, .bg_red
 	{
 		background: rgba(255, 204, 204, .3);
 	}
 
-	.yellow > th, .yellow > td
+	.yellow > th, .yellow > td, .bg_yellow
 	{
 		background: rgba(255, 254, 204, .3);
 	}

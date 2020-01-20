@@ -1294,6 +1294,8 @@ function get_media_library($data)
 
 function get_media_button($data = array())
 {
+	global $is_media_button_init;
+
 	$out = "";
 
 	if(!isset($data['name'])){				$data['name'] = "mf_media_urls";}
@@ -1312,18 +1314,23 @@ function get_media_button($data = array())
 			$data['max_file_uploads'] = 1;
 		}
 
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
+		if(!isset($is_media_button_init))
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
 
-		wp_enqueue_media();
-		mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
-		mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
-			//'multiple' => $data['multiple'],
-			'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
-			'unknown_title' => __("Unknown title", 'lang_base'),
-			'confirm_question' => __("Are you sure?", 'lang_base'),
-			//'max_file_uploads' => $data['max_file_uploads'],
-		), $plugin_version);
+			wp_enqueue_media();
+			mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
+			mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
+				//'multiple' => $data['multiple'],
+				'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
+				'unknown_title' => __("Unknown title", 'lang_base'),
+				'confirm_question' => __("Are you sure?", 'lang_base'),
+				//'max_file_uploads' => $data['max_file_uploads'],
+			), $plugin_version);
+
+			$is_media_button_init = true;
+		}
 
 		$out .= "<div class='mf_media_button' data-max_file_uploads='".$data['max_file_uploads']."'>";
 

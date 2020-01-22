@@ -2667,7 +2667,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 	{
 		$type2 = substr($in, 0, 3);
 
-		if(isset($_SESSION[$in]) && $force_req_type == "" || $force_req_type == "session" || substr($in, 0, 3) == "ses")
+		if(isset($_SESSION[$in]) && $force_req_type == '' || $force_req_type == "session" || substr($in, 0, 3) == "ses")
 		{
 			if(isset($_SESSION[$in]) && $_SESSION[$in] != '')
 			{
@@ -2675,7 +2675,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 			}
 		}
 
-		else if(isset($_POST[$in]) && $force_req_type == "" || $force_req_type == "post")
+		else if(isset($_POST[$in]) && $force_req_type == '' || $force_req_type == "post")
 		{
 			if(isset($_POST[$in]) && $_POST[$in] != '')
 			{
@@ -2683,7 +2683,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 			}
 		}
 
-		else if(isset($_GET[$in]) && $force_req_type == "" || $force_req_type == "get")
+		else if(isset($_GET[$in]) && $force_req_type == '' || $force_req_type == "get")
 		{
 			if(isset($_GET[$in]) && $_GET[$in] != '')
 			{
@@ -2691,17 +2691,17 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 			}
 		}
 
-		/*if(isset($_SESSION[$in]) && ($force_req_type == "" || $force_req_type == "session"))
+		/*if(isset($_SESSION[$in]) && ($force_req_type == '' || $force_req_type == "session"))
 		{
 			$temp = $_SESSION[$in] != '' ? $_SESSION[$in] : "";
 		}
 
-		else if(isset($_POST[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == "" || $force_req_type == "post"))
+		else if(isset($_POST[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == '' || $force_req_type == "post"))
 		{
 			$temp = $_POST[$in] != '' ? $_POST[$in] : "";
 		}
 
-		else if(isset($_GET[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == "" || $force_req_type == "get"))
+		else if(isset($_GET[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == '' || $force_req_type == "get"))
 		{
 			$temp = $_GET[$in] != '' ? $_GET[$in] : "";
 		}*/

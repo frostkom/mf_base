@@ -2141,8 +2141,11 @@ class mf_font_icons
 	function get_font_awesome_icon_list()
 	{
 		$arr_icons = array(
+			'fas fa-briefcase',
 			'fas fa-briefcase-medical',
 			'fas fa-bullseye',
+			'far fa-building',
+			'fas fa-calculator',
 			'fas fa-calendar-alt',
 			'fas fa-chalkboard-teacher',
 			'fas fa-chart-bar',

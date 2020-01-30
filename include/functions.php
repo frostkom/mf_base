@@ -4330,7 +4330,7 @@ function format_phone_no($string)
 	return "tel:".preg_replace("/[^\d]/", "", $string);
 }
 
-function month_name($data, $ucfirst = 1) //month_no
+function month_name($data, $ucfirst = 1)
 {
 	if(!is_array($data))
 	{
@@ -4367,7 +4367,7 @@ function month_name($data, $ucfirst = 1) //month_no
 	return $out;
 }
 
-function day_name($data, $ucfirst = 1) //day_no
+function day_name($data, $ucfirst = 1)
 {
 	if(!is_array($data))
 	{

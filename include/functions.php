@@ -3112,7 +3112,12 @@ function show_textfield($data)
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
 	}
 
-	$out = "<".$data['custom_tag']." class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
+	$out = "";
+
+	if($data['custom_tag'] != '')
+	{
+		$out .= "<".$data['custom_tag']." class='form_textfield".($data['xtra_class'] != '' ? " ".$data['xtra_class'] : "")."'>";
+	}
 
 		if($data['text'] != '')
 		{
@@ -3143,7 +3148,10 @@ function show_textfield($data)
 			$out .= "</datalist>";
 		}
 
-	$out .= "</".$data['custom_tag'].">";
+	if($data['custom_tag'] != '')
+	{
+		$out .= "</".$data['custom_tag'].">";
+	}
 
 	return $out;
 }

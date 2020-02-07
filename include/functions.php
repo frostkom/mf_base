@@ -2537,7 +2537,7 @@ function add_columns($array, $debug = false)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
+			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = %s", $column));
 			$rows = $wpdb->num_rows;
 
 			if($debug == true)
@@ -2569,7 +2569,7 @@ function update_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$wpdb->get_results("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = '".esc_sql($column)."'");
+			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = %s", $column));
 
 			if($wpdb->num_rows > 0)
 			{

@@ -391,37 +391,37 @@ function get_user_info($data = array())
 
 	$user_data = get_userdata($data['id']);
 
-	switch($data['type'])
+	if(isset($user_data->display_name))
 	{
-		case 'name':
-			if(isset($user_data->display_name))
-			{
+		switch($data['type'])
+		{
+			case 'name':
 				return $user_data->display_name;
-			}
+			break;
 
-			else
-			{
-				return '';
+			case 'shortname':
+			case 'short_name':
+				$display_name = $user_data->display_name;
 
-				do_log(sprintf("There was no display name for %s (%d)", var_export($user_data, true), $data['id']));
-			}
-		break;
+				$arr_name = explode(" ", $display_name);
 
-		case 'shortname':
-		case 'short_name':
-			$display_name = $user_data->display_name;
+				$short_name = "";
 
-			$arr_name = explode(" ", $display_name);
+				foreach($arr_name as $name)
+				{
+					$short_name .= substr($name, 0, 1);
+				}
 
-			$short_name = "";
+				return "<span title='".$display_name."'>".$short_name."</span>";
+			break;
+		}
+	}
 
-			foreach($arr_name as $name)
-			{
-				$short_name .= substr($name, 0, 1);
-			}
+	else
+	{
+		return '';
 
-			return "<span title='".$display_name."'>".$short_name."</span>";
-		break;
+		do_log(sprintf("There was no display name for %s (%d)", var_export($user_data, true), $data['id']));
 	}
 }
 

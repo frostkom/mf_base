@@ -116,7 +116,7 @@
 
 		.toggler.icon_last
 		{
-			padding-right: 1.5em;
+			padding-right: 1.5em !important;
 			position: relative;
 		}
 
@@ -369,6 +369,11 @@
 	.green > th, .green > td, .bg_green
 	{
 		background: rgba(211, 255, 204, .3);
+	}
+
+	.blue > th, .blue > td, .bg_blue
+	{
+		background: rgba(72, 135, 191, .3);
 	}
 
 	.red > th, .red > td, .bg_red

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-18 07:32+0100\n"
+"POT-Creation-Date: 2020-02-21 06:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -89,6 +89,9 @@ msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
 msgid "to add all the favicons needed"
 msgstr "för att kunna lägga till alla sk. favicons som kan behövas"
+
+msgid "to update jQuery to the latest stable version"
+msgstr "för att uppdatera jQuery till senaste stabila version"
 
 msgid "to add icons to menus"
 msgstr "för att lägga till ikoner i menyer"

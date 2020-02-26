@@ -541,7 +541,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				//do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
+				do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
 			}
 
 			if(isset($phpmailer->From))

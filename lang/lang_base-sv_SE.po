@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-21 06:30+0100\n"
+"POT-Creation-Date: 2020-02-26 15:14+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -84,7 +84,7 @@ msgstr "för att felsöka Cron"
 msgid "to backup all files and database to an external source"
 msgstr "för att ta backup av alla filer och databasen, och skicka till en extern plats"
 
-msgid "to be able to replace existing files by uploading a replacement"
+msgid "to replace existing files by uploading a replacement"
 msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
 msgid "to add all the favicons needed"
@@ -97,7 +97,7 @@ msgid "to add icons to menus"
 msgstr "för att lägga till ikoner i menyer"
 
 msgid "to display which plugin dependencies there are and prevent accidental deactivation of plugins that others depend on"
-msgstr "för att visa vilka tillägg som är obligatoriska och förhindra oavsiktlig deaktivering av tillägg som andra är beroende av"
+msgstr "för att visa vilka pluginberoenden som finns och motverka oavsiktlig borttagning av plugin som andra plugin är beroende av"
 
 msgid "to send notifications to users when new posts are published"
 msgstr "för att skicka med meddelande till användare när nya inlägg publiceras"
@@ -108,19 +108,25 @@ msgstr "för att kunna dirigera om sidor till interna och externa URLer"
 msgid "to reorder posts with drag and drop"
 msgstr "för att ändra ordning på inlägg med dra och släpp"
 
-msgid "to be able to add tables to posts"
+msgid "to add tables to posts"
 msgstr "för att kunna lägga in tabeller i texter"
 
-msgid "to be able to upload larger files than normally allowed"
+msgid "to upload larger files than normally allowed"
 msgstr "för att kunna ladda upp större filer än normalt tillåtet"
 
-msgid "to be able to change usernames"
+msgid "to change usernames"
 msgstr "för att kunna ändra användarnamn"
+
+msgid "to add custom classes to widgets"
+msgstr "för att lägga till ikoner i menyer"
 
 msgid "to get a graphical interface to the database"
 msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
 
-msgid "to be able to view video clips in modals"
+msgid "to remove revisions, deleted posts etc. to clean up the database"
+msgstr "för att radera versioner, borttagna inlägg etc. för att rensa databasen"
+
+msgid "to view video clips in modals"
 msgstr "för att kunna se videoklipp i popups"
 
 msgid "to losslessly compress all uploaded images (Max 500 for free / month)"

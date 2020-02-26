@@ -1,6 +1,6 @@
 @media all
 {
-	.hide, [hidden]
+	.hide, [hidden], .is_desktop .hide_on_desktop, .is_tablet .hide_on_tablet, .is_mobile .hide_on_mobile
 	{
 		display: none !important;
 	}
@@ -120,7 +120,7 @@
 			position: relative;
 		}
 
-			.toggler.icon_last .fa
+			.toggler.icon_last > .fa
 			{
 				position: absolute;
 				right: .4em;

@@ -596,7 +596,7 @@ class mf_base
 		$arr_recommendations = array(
 			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to be able to replace existing files by uploading a replacement", 'lang_base')),
+			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 			array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
 			array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", 'lang_base')),
@@ -604,11 +604,13 @@ class mf_base
 			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
-			array("TablePress", 'tablepress/tablepress.php', __("to be able to add tables to posts", 'lang_base')),
-			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to be able to upload larger files than normally allowed", 'lang_base')),
-			array("Username Changer", 'username-changer/username-changer.php', __("to be able to change usernames", 'lang_base')),
+			array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
+			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
+			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
+			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
 			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
-			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to be able to view video clips in modals", 'lang_base')),
+			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
+			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
 		);
 
 		if(!(is_plugin_active('tiny-compress-images/tiny-compress-images.php') || is_plugin_active('optimus/optimus.php') || is_plugin_active('wp-smushit/wp-smush.php')))

@@ -4184,6 +4184,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['meta'])){				$data['meta'] = array();}
 
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
+	if(!isset($data['order'])){				$data['order'] = 'ASC';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 
 	if(!isset($data['count'])){				$data['count'] = false;}
@@ -4256,7 +4257,7 @@ function get_post_children($data, &$arr_data = array())
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ASC".($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = $wpdb->num_rows;
 
 	if($data['debug'] == true)

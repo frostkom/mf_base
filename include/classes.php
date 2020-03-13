@@ -252,10 +252,6 @@ class mf_base
 			{
 				$arr_tables = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
 				update_site_option('option_base_large_tables', $arr_tables);
-
-				//update_site_option('option_base_large_table_amount', count($arr_tables));
-
-				delete_site_option('option_base_large_table_amount');
 			}
 			############################
 		}
@@ -365,9 +361,32 @@ class mf_base
 
 			if($table_size > $data['limit'])
 			{
+				$arr_content = array();
+
+				if(preg_match('/_posts$/', $table_name))
+				{
+						$result_post_types = $wpdb->get_results($wpdb->prepare("SELECT post_type, COUNT(post_type) AS post_type_amount FROM ".$table_name." GROUP BY post_type ORDER BY post_type_amount DESC LIMIT 0, 3"));
+
+						foreach($result_post_types as $r)
+						{
+							$arr_content[$r->post_type] = $r->post_type_amount;
+						}
+				}
+
+				else if(preg_match('/_postmeta$/', $table_name))
+				{
+					$result_meta_keys = $wpdb->get_results($wpdb->prepare("SELECT meta_key, COUNT(meta_key) AS meta_key_amount FROM ".$table_name." GROUP BY meta_key ORDER BY meta_key_amount DESC LIMIT 0, 3"));
+
+					foreach($result_meta_keys as $r)
+					{
+						$arr_content[$r->meta_key] = $r->meta_key_amount;
+					}
+				}
+
 				$arr_tables[] = array(
 					'name' => $table_name,
 					'size' => show_final_size($table_size),
+					'content' => $arr_content,
 				);
 			}
 		}
@@ -455,7 +474,10 @@ class mf_base
 
 					foreach($option_base_large_tables as $arr_table)
 					{
-						$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." (".$arr_table['size'].")";
+						$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." ("
+							.$arr_table['size']
+							.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
+						.")";
 					}
 
 					echo "<p>
@@ -464,7 +486,7 @@ class mf_base
 					."</p>";
 				}
 
-				else
+				/*else
 				{
 					$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
 
@@ -475,7 +497,7 @@ class mf_base
 							.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
 						."</p>";
 					}
-				}
+				}*/
 
 			echo "</div>
 			<div>

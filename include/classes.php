@@ -248,8 +248,15 @@ class mf_base
 
 			// Save how many large tables there are
 			############################
-			$arr_tables = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
-			update_site_option('option_base_large_table_amount', count($arr_tables));
+			if(is_main_site())
+			{
+				$arr_tables = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
+				update_site_option('option_base_large_tables', $arr_tables);
+
+				//update_site_option('option_base_large_table_amount', count($arr_tables));
+
+				delete_site_option('option_base_large_table_amount');
+			}
 			############################
 		}
 
@@ -438,14 +445,36 @@ class mf_base
 					."</p>";
 				}
 
-				$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
+				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
+				
+				$option_base_large_table_amount = count($option_base_large_tables);
 
 				if($option_base_large_table_amount > 0)
 				{
+					$table_names = "";
+
+					foreach($option_base_large_tables as $arr_table)
+					{
+						$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." (".$arr_table['size'].")";
+					}
+
 					echo "<p>
 						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-						.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
+						.__("DB", 'lang_base').": <span title='".$table_names."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
 					."</p>";
+				}
+
+				else
+				{
+					$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
+
+					if($option_base_large_table_amount > 0)
+					{
+						echo "<p>
+							<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+							.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
+						."</p>";
+					}
 				}
 
 			echo "</div>

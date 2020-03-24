@@ -465,7 +465,6 @@ class mf_base
 				}
 
 				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
-				
 				$option_base_large_table_amount = count($option_base_large_tables);
 
 				if($option_base_large_table_amount > 0)

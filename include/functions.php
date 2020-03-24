@@ -2433,11 +2433,46 @@ function get_url_content($data = array())
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $data['headers']);
 	}
 
-	$log_message = "cURL was run but not completed";
-
 	if($data['debug'] == true)
 	{
+		$log_message = "cURL was run but not completed";
+
 		do_log($log_message." (".var_export($data, true).")");
+	}
+
+	if($data['catch_head'] == true)
+	{
+		$headers_raw = [];
+
+		curl_setopt($ch, CURLOPT_HEADERFUNCTION,
+			function($curl, $header) use (&$headers_raw)
+			{
+				$len = strlen($header);
+				$header = explode(':', $header, 2);
+
+				if(count($header) < 2) // Ignore invalid headers
+				{
+					return $len;
+				}
+
+				if(isset($headers_raw[trim($header[0])])) // If already set this might be a secondary header with the same key and should therefor be added as an additional index
+				{
+					if(!is_array($headers_raw[trim($header[0])]))
+					{
+						$headers_raw[trim($header[0])] = array($headers_raw[trim($header[0])]);
+					}
+
+					$headers_raw[trim($header[0])][] = trim($header[1]);
+				}
+
+				else
+				{
+					$headers_raw[trim($header[0])] = trim($header[1]);
+				}
+
+				return $len;
+			}
+		);
 	}
 
 	$content = curl_exec($ch);
@@ -2479,7 +2514,7 @@ function get_url_content($data = array())
 			$headers['debug'] = ob_get_clean();
 		}
 
-		$out = array($content, $headers);
+		$out = array($content, array_merge($headers, $headers_raw));
 	}
 
 	else

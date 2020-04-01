@@ -1228,10 +1228,7 @@ class mf_cron
 
 	function end()
 	{
-		if(file_exists($this->file))
-		{
-			unlink($this->file);
-		}
+		@unlink($this->file);
 	}
 }
 

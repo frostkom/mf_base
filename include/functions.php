@@ -409,7 +409,14 @@ function get_user_info($data = array())
 
 				foreach($arr_name as $name)
 				{
-					$short_name .= substr($name, 0, 1);
+					$name_first_letter = substr($name, 0, 1);
+
+					if(htmlspecialchars($name_first_letter) == '')
+					{
+						$name_first_letter = substr($name, 0, 2);
+					}
+
+					$short_name .= $name_first_letter;
 				}
 
 				return "<span title='".$display_name."'>".$short_name."</span>";

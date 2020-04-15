@@ -602,9 +602,10 @@
 				font-weight: bold;
 			}
 
-			.mf_form .form_checkbox_multiple ul, .mf_form .form_radio_multiple ul
+			.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
 			{
 				list-style: none;
+				margin-bottom: .5em;
 			}
 
 				.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio

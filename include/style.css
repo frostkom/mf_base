@@ -660,6 +660,12 @@
 				margin-bottom: .5em !important;
 			}
 
+				.mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
+				{
+					filter: grayscale(100%);
+					opacity: .3;
+				}
+
 				.form_button button .fa, .form_button .button .fa
 				{
 					margin-right: .3em;
@@ -668,7 +674,7 @@
 			.mf_form .button.delete
 			{
 				background: #ba0000;
-				border-color: #aa0000 #900 #900;
+				border-color: #a00 #900 #900;
 				box-shadow: 0 1px 0 #900;
 				color: #fff;
 				text-shadow: 0 -1px 1px #900, 1px 0 1px #900, 0 1px 1px #900, -1px 0 1px #900;

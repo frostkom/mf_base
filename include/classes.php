@@ -1022,12 +1022,66 @@ class mf_base
 
 	/* .htaccess */
 	############################
+	function update_htaccess($data)
+	{
+		global $done_text;
+
+		if(!isset($data['auto_update'])){	$data['auto_update'] = false;}
+
+		$out = "";
+
+		$content = get_file_content(array('file' => $data['file']));
+
+		$old_md5 = get_match("/BEGIN ".$data['plugin_name']." \((.*?)\)/is", $content, false);
+		$new_md5 = md5($data['update_with']);
+
+		if($new_md5 != $old_md5)
+		{
+			$old_content = get_match("/(\# BEGIN ".$data['plugin_name']."(.*)\# END ".$data['plugin_name'].")/is", $content, false);
+			$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\r\n".$data['update_with']."\r\n# END ".$data['plugin_name']; //htmlspecialchars()
+
+			if($old_content != '')
+			{
+				$content = str_replace($old_content, $new_content, $content);
+			}
+
+			else
+			{
+				$content = $new_content."\r\n\r\n".$content;
+			}
+
+			//$out .= "Trying to replace:<br>#####################<br>".nl2br($old_content)."<br>#####################<br><br>...with:<br>#####################<br>".nl2br($new_content)."<br>#####################<br><br>...so that the result is:<br>#####################<br>".nl2br($content)."<br>#####################";
+
+			if($data['auto_update'] == true)
+			{
+				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
+
+				if($success)
+				{
+					$done_text = sprintf(__("I successfully updated %s", 'lang_base'), ".htaccess");
+
+					$out .= get_notification();
+				}
+			}
+
+			if($data['auto_update'] == false || isset($success) && $success == false)
+			{
+				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\n".htmlspecialchars($data['update_with'])."\n# END ".$data['plugin_name'];
+
+				$out .= "<div class='mf_form'>"
+					."<h3 class='display_warning'><i class='fa fa-exclamation-triangle yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
+					."<p class='input'>".nl2br($new_content)."</p>"
+				."</div>";
+			}
+		}
+
+		return $out;
+	}
+
 	function check_htaccess($data)
 	{
 		if(basename($data['file']) == ".htaccess")
 		{
-			$content = get_file_content(array('file' => $data['file']));
-
 			/*$this->all_is_https = true;
 			$this->recommend_htaccess = $this->recommend_htaccess_https = "";
 
@@ -1046,31 +1100,19 @@ class mf_base
 				$this->get_site_redirect();
 			}*/
 
-			//ServerTokens Prod // Not allowed on all hosts
-			$recommend_htaccess = "ServerSignature Off
+			$recommend_htaccess = "ServerSignature Off\r\n\r\n"
 
-			DirectoryIndex index.php
-			Options -Indexes
+			."DirectoryIndex index.php\r\n"
+			."Options -Indexes\r\n\r\n"
 
-			Header set X-XSS-Protection \"1; mode=block\"
-			Header set X-Content-Type-Options nosniff
-			Header set X-Powered-By \"Me\"
+			."Header set X-XSS-Protection \"1; mode=block\"\r\n"
+			."Header set X-Content-Type-Options nosniff\r\n"
+			."Header set X-Powered-By \"Me\"\r\n\r\n"
 
-			RewriteEngine On
+			."RewriteEngine On\r\n\r\n"
 
-			RewriteCond %{REQUEST_METHOD} ^TRACE 
-			RewriteRule .* - [F]";
-
-			/* Not allowed on all hosts */
-			/*<FILES ~ '^.*\.([Hh][Tt][Aa])'>
-				Order Allow,Deny
-				Deny from all
-			</FILES>
-
-			<FILES wp-config.php>
-				Order Allow,Deny
-				Deny from all
-			</FILES>*/
+			."RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+			."RewriteRule .* - [F]";
 
 			/*if($this->recommend_htaccess != '')
 			{
@@ -1078,12 +1120,12 @@ class mf_base
 
 				if($this->all_is_https == true)
 				{
-					$recommend_htaccess .= "\n
-					RewriteCond %{HTTPS} !=on
-					RewriteCond %{ENV:HTTPS} !=on
-					RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+					$recommend_htaccess .= "\r\n"
+					."RewriteCond %{HTTPS} !=on\r\n"
+					."RewriteCond %{ENV:HTTPS} !=on\r\n"
+					."RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n\r\n"
 
-					Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
+					."Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
 				}
 
 				else if($this->recommend_htaccess_https != '')
@@ -1092,19 +1134,15 @@ class mf_base
 				}
 			}*/
 
-			$recommend_htaccess .= "\n
-			RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
+			$recommend_htaccess .= "\r\n\r\n"
+			."RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
 
-			$old_md5 = get_match("/BEGIN MF Base \((.*?)\)/is", $content, false);
-			$new_md5 = md5($recommend_htaccess);
-
-			if($new_md5 != $old_md5)
-			{
-				echo "<div class='mf_form'>"
-					."<h3 class='display_warning'><i class='fa fa-exclamation-triangle yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
-					."<p class='input'>".nl2br("# BEGIN MF Base (".$new_md5.")\n".htmlspecialchars($recommend_htaccess)."\n# END MF Base")."</p>"
-				."</div>";
-			}
+			echo $this->update_htaccess(array(
+				'plugin_name' => "MF Base",
+				'file' => $data['file'],
+				'update_with' => $recommend_htaccess,
+				'auto_update' => true,
+			));
 		}
 	}
 

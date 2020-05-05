@@ -1143,7 +1143,7 @@ class mf_base
 				'plugin_name' => "MF Base",
 				'file' => $data['file'],
 				'update_with' => $recommend_htaccess,
-				'auto_update' => true,
+				//'auto_update' => true, // Some servers might not allow ServerSignature etc.
 			));
 		}
 	}

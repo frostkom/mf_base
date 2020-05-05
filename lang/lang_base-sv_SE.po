@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-26 15:14+0100\n"
+"POT-Creation-Date: 2020-05-05 12:14+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -158,6 +158,9 @@ msgstr "Är du säker?"
 
 msgid "Read More"
 msgstr "Läs mer"
+
+msgid "I successfully updated %s"
+msgstr "Jag uppdaterade %s"
 
 msgid "Add this to the beginning of %s"
 msgstr "Lägg till detta i början av %s"

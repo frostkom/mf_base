@@ -1109,10 +1109,11 @@ class mf_base
 			."Header set X-Content-Type-Options nosniff\r\n"
 			."Header set X-Powered-By \"Me\"\r\n\r\n"
 
-			."RewriteEngine On\r\n\r\n"
+			."<IfModule mod_rewrite.c>\r\n"
+			."	RewriteEngine On\r\n\r\n"
 
-			."RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-			."RewriteRule .* - [F]";
+			."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+			."	RewriteRule .* - [F]";
 
 			/*if($this->recommend_htaccess != '')
 			{
@@ -1121,11 +1122,11 @@ class mf_base
 				if($this->all_is_https == true)
 				{
 					$recommend_htaccess .= "\r\n"
-					."RewriteCond %{HTTPS} !=on\r\n"
-					."RewriteCond %{ENV:HTTPS} !=on\r\n"
-					."RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n\r\n"
+					."	RewriteCond %{HTTPS} !=on\r\n"
+					."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+					."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n\r\n"
 
-					."Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
+					."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
 				}
 
 				else if($this->recommend_htaccess_https != '')
@@ -1135,7 +1136,8 @@ class mf_base
 			}*/
 
 			$recommend_htaccess .= "\r\n\r\n"
-			."RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]";
+			."	RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+			."</IfModule>";
 
 			echo $this->update_htaccess(array(
 				'plugin_name' => "MF Base",

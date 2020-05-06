@@ -643,7 +643,7 @@ class mf_base
 	function setting_base_update_htaccess_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key, 'no');
+		$option = get_option($setting_key, 'yes');
 
 		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 	}
@@ -1061,7 +1061,7 @@ class mf_base
 
 			//$out .= "Trying to replace:<br>#####################<br>".nl2br($old_content)."<br>#####################<br><br>...with:<br>#####################<br>".nl2br($new_content)."<br>#####################<br><br>...so that the result is:<br>#####################<br>".nl2br($content)."<br>#####################";
 
-			if($data['auto_update'] == true && get_option('setting_base_update_htaccess') == 'yes')
+			if($data['auto_update'] == true && get_option('setting_base_update_htaccess', 'yes') == 'yes')
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 

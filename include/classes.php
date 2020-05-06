@@ -286,6 +286,7 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+			'setting_base_update_htaccess' => sprintf(__("Automatically Update %s", 'lang_base'), ".htaccess"),
 		);
 
 		if(is_plugin_active('mf_media/index.php') || is_plugin_active('mf_site_manager/index.php') || is_plugin_active('mf_theme_core/index.php'))
@@ -637,6 +638,14 @@ class mf_base
 		{
 			echo "<em>".__("Has never been run", 'lang_base')."</em>";
 		}
+	}
+	
+	function setting_base_update_htaccess_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		$option = get_option($setting_key, 'no');
+
+		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 	}
 
 	function setting_base_recommend_callback()
@@ -1052,7 +1061,7 @@ class mf_base
 
 			//$out .= "Trying to replace:<br>#####################<br>".nl2br($old_content)."<br>#####################<br><br>...with:<br>#####################<br>".nl2br($new_content)."<br>#####################<br><br>...so that the result is:<br>#####################<br>".nl2br($content)."<br>#####################";
 
-			if($data['auto_update'] == true)
+			if($data['auto_update'] == true && get_option('setting_base_update_htaccess') == 'yes')
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 

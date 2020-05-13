@@ -278,6 +278,37 @@ function get_pages_from_shortcode($shortcode)
 	return $arr_ids;
 }
 
+function get_url_part($data)
+{
+	if(!isset($data['url'])){			$data['url'] = get_site_url();}
+
+	$parsed_url = parse_url($data['url']);
+
+	$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'].'://' : '';
+	$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+	$path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+
+	switch($data['type'])
+	{
+		case 'domain':
+			return $scheme.$host;
+		break;
+
+		case 'path':
+			if(!substr($path, -1) == "/")
+			{
+				$path .= "/";
+			}
+
+			return $path;
+		break;
+
+		default:
+			do_log("Unknown Part Type: ".$data['type']);
+		break;
+	}
+}
+
 function get_site_url_clean($data = array())
 {
 	global $wpdb;

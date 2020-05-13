@@ -639,7 +639,7 @@ class mf_base
 			echo "<em>".__("Has never been run", 'lang_base')."</em>";
 		}
 	}
-	
+
 	function setting_base_update_htaccess_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
@@ -1109,20 +1109,28 @@ class mf_base
 				$this->get_site_redirect();
 			}*/
 
-			$recommend_htaccess = "ServerSignature Off\r\n\r\n"
+			$subfolder = get_url_part(array('type' => 'path'));
 
+			$recommend_htaccess = "ServerSignature Off\r\n"
+			."\r\n"
 			."DirectoryIndex index.php\r\n"
-			."Options -Indexes\r\n\r\n"
-
+			."Options -Indexes\r\n"
+			."\r\n"
 			."Header set X-XSS-Protection \"1; mode=block\"\r\n"
 			."Header set X-Content-Type-Options nosniff\r\n"
-			."Header set X-Powered-By \"Me\"\r\n\r\n"
-
+			."Header set X-Powered-By \"Me\"\r\n"
+			."\r\n"
 			."<IfModule mod_rewrite.c>\r\n"
-			."	RewriteEngine On\r\n\r\n"
+			."	RewriteEngine On\r\n";
 
+			if($subfolder != "")
+			{
+				$recommend_htaccess .= "	RewriteBase ".$subfolder."\r\n";
+			}
+
+			$recommend_htaccess .= "\r\n"
 			."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-			."	RewriteRule .* - [F]";
+			."	RewriteRule .* - [F]\r\n";
 
 			/*if($this->recommend_htaccess != '')
 			{
@@ -1133,9 +1141,9 @@ class mf_base
 					$recommend_htaccess .= "\r\n"
 					."	RewriteCond %{HTTPS} !=on\r\n"
 					."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-					."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n\r\n"
-
-					."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload";
+					."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
+					."\r\n"
+					."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
 				}
 
 				else if($this->recommend_htaccess_https != '')
@@ -1144,8 +1152,8 @@ class mf_base
 				}
 			}*/
 
-			$recommend_htaccess .= "\r\n\r\n"
-			."	RewriteRule ^my_ip$ /wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+			$recommend_htaccess .= "\r\n"
+			."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
 			."</IfModule>";
 
 			echo $this->update_htaccess(array(

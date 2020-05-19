@@ -1123,10 +1123,10 @@ class mf_base
 			."<IfModule mod_rewrite.c>\r\n"
 			."	RewriteEngine On\r\n";
 
-			if($subfolder != "")
+			/*if($subfolder != "")
 			{
 				$recommend_htaccess .= "	RewriteBase ".$subfolder."\r\n";
-			}
+			}*/
 
 			$recommend_htaccess .= "\r\n"
 			."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
@@ -1160,7 +1160,7 @@ class mf_base
 				'plugin_name' => "MF Base",
 				'file' => $data['file'],
 				'update_with' => $recommend_htaccess,
-				//'auto_update' => true, // Some servers might not allow ServerSignature etc.
+				'auto_update' => true,
 			));
 		}
 	}

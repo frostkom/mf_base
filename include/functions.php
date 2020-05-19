@@ -295,7 +295,7 @@ function get_url_part($data)
 		break;
 
 		case 'path':
-			if(!substr($path, -1) == "/")
+			if(substr($path, -1) != "/")
 			{
 				$path .= "/";
 			}
@@ -666,7 +666,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 	{
 		list($upload_path, $upload_url) = get_uploads_folder($data['uploads'], $force_main_uploads);
 
-		if($upload_path != '')
+		if($upload_path != '' && file_exists($upload_path))
 		{
 			do_log("Delete the folder ".$upload_path);
 

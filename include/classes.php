@@ -286,8 +286,9 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			'setting_base_update_htaccess' => sprintf(__("Automatically Update %s", 'lang_base'), ".htaccess"),
 		);
+
+		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), ".htaccess");
 
 		if(is_plugin_active('mf_media/index.php') || is_plugin_active('mf_site_manager/index.php') || is_plugin_active('mf_theme_core/index.php'))
 		{
@@ -646,12 +647,22 @@ class mf_base
 		$option = get_option($setting_key, 'yes');
 
 		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+
+		$file_htaccess = get_home_path().".htaccess";
+
+		if(file_exists($file_htaccess)) // Not yet created or Nginx?
+		{
+			$recommend_htaccess = apply_filters('recommend_htaccess', array('file' => $file_htaccess, 'html' => ''));
+
+			if($recommend_htaccess['html'] != '')
+			{
+				echo $recommend_htaccess['html'];
+			}
+		}
 	}
 
 	function setting_base_recommend_callback()
 	{
-		get_file_info(array('path' => get_home_path(), 'callback' => array($this, 'check_htaccess'), 'allow_depth' => false));
-
 		$arr_recommendations = array(
 			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
 			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
@@ -983,6 +994,83 @@ class mf_base
 		return $template;
 	}
 
+	function recommend_htaccess($data)
+	{
+		/*$this->all_is_https = true;
+		$this->recommend_htaccess = $this->recommend_htaccess_https = "";
+
+		if(is_multisite())
+		{
+			$result = get_sites(array('deleted' => 0));
+
+			foreach($result as $r)
+			{
+				$this->get_site_redirect($r->blog_id);
+			}
+		}
+
+		else
+		{
+			$this->get_site_redirect();
+		}*/
+
+		$subfolder = get_url_part(array('type' => 'path'));
+
+		$update_with = "ServerSignature Off\r\n"
+		."\r\n"
+		."DirectoryIndex index.php\r\n"
+		."Options -Indexes\r\n"
+		."\r\n"
+		."Header set X-XSS-Protection \"1; mode=block\"\r\n"
+		."Header set X-Content-Type-Options nosniff\r\n"
+		."Header set X-Powered-By \"Me\"\r\n"
+		."\r\n"
+		."<IfModule mod_rewrite.c>\r\n"
+		."	RewriteEngine On\r\n";
+
+		/*if($subfolder != "")
+		{
+			$update_with .= "	RewriteBase ".$subfolder."\r\n";
+		}*/
+
+		$update_with .= "\r\n"
+		."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+		."	RewriteRule .* - [F]\r\n";
+
+		/*if($this->recommend_htaccess != '')
+		{
+			$update_with .= $this->recommend_htaccess;
+
+			if($this->all_is_https == true)
+			{
+				$update_with .= "\r\n"
+				."	RewriteCond %{HTTPS} !=on\r\n"
+				."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+				."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
+				."\r\n"
+				."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
+			}
+
+			else if($this->recommend_htaccess_https != '')
+			{
+				$update_with .= $this->recommend_htaccess_https;
+			}
+		}*/
+
+		$update_with .= "\r\n"
+		."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+		."</IfModule>";
+
+		$data['html'] .= $this->update_htaccess(array(
+			'plugin_name' => "MF Base",
+			'file' => $data['file'],
+			'update_with' => $update_with,
+			'auto_update' => true,
+		));
+
+		return $data;
+	}
+
 	/* Form */
 	############################
 	function init_form($data)
@@ -1061,6 +1149,8 @@ class mf_base
 
 			//$out .= "Trying to replace:<br>#####################<br>".nl2br($old_content)."<br>#####################<br><br>...with:<br>#####################<br>".nl2br($new_content)."<br>#####################<br><br>...so that the result is:<br>#####################<br>".nl2br($content)."<br>#####################";
 
+			$success = false;
+
 			if($data['auto_update'] == true && get_option('setting_base_update_htaccess', 'yes') == 'yes')
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
@@ -1073,7 +1163,7 @@ class mf_base
 				}
 			}
 
-			if($data['auto_update'] == false || isset($success) && $success == false)
+			if($success == false)
 			{
 				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\n".htmlspecialchars($data['update_with'])."\n# END ".$data['plugin_name'];
 
@@ -1085,84 +1175,6 @@ class mf_base
 		}
 
 		return $out;
-	}
-
-	function check_htaccess($data)
-	{
-		if(basename($data['file']) == ".htaccess")
-		{
-			/*$this->all_is_https = true;
-			$this->recommend_htaccess = $this->recommend_htaccess_https = "";
-
-			if(is_multisite())
-			{
-				$result = get_sites(array('deleted' => 0));
-
-				foreach($result as $r)
-				{
-					$this->get_site_redirect($r->blog_id);
-				}
-			}
-
-			else
-			{
-				$this->get_site_redirect();
-			}*/
-
-			$subfolder = get_url_part(array('type' => 'path'));
-
-			$recommend_htaccess = "ServerSignature Off\r\n"
-			."\r\n"
-			."DirectoryIndex index.php\r\n"
-			."Options -Indexes\r\n"
-			."\r\n"
-			."Header set X-XSS-Protection \"1; mode=block\"\r\n"
-			."Header set X-Content-Type-Options nosniff\r\n"
-			."Header set X-Powered-By \"Me\"\r\n"
-			."\r\n"
-			."<IfModule mod_rewrite.c>\r\n"
-			."	RewriteEngine On\r\n";
-
-			/*if($subfolder != "")
-			{
-				$recommend_htaccess .= "	RewriteBase ".$subfolder."\r\n";
-			}*/
-
-			$recommend_htaccess .= "\r\n"
-			."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-			."	RewriteRule .* - [F]\r\n";
-
-			/*if($this->recommend_htaccess != '')
-			{
-				$recommend_htaccess .= $this->recommend_htaccess;
-
-				if($this->all_is_https == true)
-				{
-					$recommend_htaccess .= "\r\n"
-					."	RewriteCond %{HTTPS} !=on\r\n"
-					."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-					."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
-					."\r\n"
-					."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
-				}
-
-				else if($this->recommend_htaccess_https != '')
-				{
-					$recommend_htaccess .= $this->recommend_htaccess_https;
-				}
-			}*/
-
-			$recommend_htaccess .= "\r\n"
-			."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
-			."</IfModule>";
-
-			echo $this->update_htaccess(array(
-				'plugin_name' => "MF Base",
-				'file' => $data['file'],
-				'update_with' => $recommend_htaccess,
-				'auto_update' => true,
-			));
-		}
 	}
 
 	function get_site_redirect($site_id = 0)

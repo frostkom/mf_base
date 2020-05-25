@@ -288,7 +288,19 @@ class mf_base
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		);
 
-		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), ".htaccess");
+		switch($this->get_server_type())
+		{
+			default:
+			case 'apache':
+				$config_file = ".htaccess";
+			break;
+
+			case 'nginx':
+				$config_file = "nginx.conf";
+			break;
+		}
+
+		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
 
 		if(is_plugin_active('mf_media/index.php') || is_plugin_active('mf_site_manager/index.php') || is_plugin_active('mf_theme_core/index.php'))
 		{
@@ -579,6 +591,29 @@ class mf_base
 		}
 	}
 
+	function get_server_type()
+	{
+		if(!isset($this->server_type))
+		{
+			if(preg_match("/Apache/i", $_SERVER['SERVER_SOFTWARE']))
+			{
+				$this->server_type = 'apache';
+			}
+
+			else if(preg_match("/Nginx/i", $_SERVER['SERVER_SOFTWARE']))
+			{
+				$this->server_type = 'nginx';
+			}
+
+			else
+			{
+				$this->server_type = '';
+			}
+		}
+
+		return $this->server_type;
+	}
+
 	function setting_base_cron_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
@@ -586,7 +621,7 @@ class mf_base
 
 		$this->reschedule_base($option);
 
-		if(!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false)
+		if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
 		{
 			$select_suffix = "";
 
@@ -643,21 +678,36 @@ class mf_base
 
 	function setting_base_update_htaccess_callback()
 	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key, 'yes');
-
-		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-
-		$file_htaccess = get_home_path().".htaccess";
-
-		if(file_exists($file_htaccess)) // Not yet created or Nginx?
+		switch($this->get_server_type())
 		{
-			$recommend_htaccess = apply_filters('recommend_htaccess', array('file' => $file_htaccess, 'html' => ''));
+			case 'apache':
+				$setting_key = get_setting_key(__FUNCTION__);
+				$option = get_option($setting_key, 'yes');
 
-			if($recommend_htaccess['html'] != '')
-			{
-				echo $recommend_htaccess['html'];
-			}
+				echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+
+				$file_htaccess = get_home_path().".htaccess";
+
+				$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+
+				if($config['html'] != '')
+				{
+					echo $config['html'];
+				}
+			break;
+
+			case 'nginx':
+				$config = apply_filters('recommend_config', array('html' => ''));
+
+				if($config['html'] != '')
+				{
+					echo $config['html'];
+				}
+			break;
+
+			default:
+				do_log("Unknown Server: ".$_SERVER['SERVER_SOFTWARE']);
+			break;
 		}
 	}
 
@@ -994,10 +1044,12 @@ class mf_base
 		return $template;
 	}
 
-	function recommend_htaccess($data)
+	function recommend_config($data)
 	{
+		if(!isset($data['file'])){		$data['file'] = '';}
+
 		/*$this->all_is_https = true;
-		$this->recommend_htaccess = $this->recommend_htaccess_https = "";
+		$this->update_with = $this->update_with_https = "";
 
 		if(is_multisite())
 		{
@@ -1016,52 +1068,67 @@ class mf_base
 
 		$subfolder = get_url_part(array('type' => 'path'));
 
-		$update_with = "ServerSignature Off\r\n"
-		."\r\n"
-		."DirectoryIndex index.php\r\n"
-		."Options -Indexes\r\n"
-		."\r\n"
-		."Header set X-XSS-Protection \"1; mode=block\"\r\n"
-		."Header set X-Content-Type-Options nosniff\r\n"
-		."Header set X-Powered-By \"Me\"\r\n"
-		."\r\n"
-		."<IfModule mod_rewrite.c>\r\n"
-		."	RewriteEngine On\r\n";
-
-		/*if($subfolder != "")
+		switch($this->get_server_type())
 		{
-			$update_with .= "	RewriteBase ".$subfolder."\r\n";
-		}*/
-
-		$update_with .= "\r\n"
-		."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-		."	RewriteRule .* - [F]\r\n";
-
-		/*if($this->recommend_htaccess != '')
-		{
-			$update_with .= $this->recommend_htaccess;
-
-			if($this->all_is_https == true)
-			{
-				$update_with .= "\r\n"
-				."	RewriteCond %{HTTPS} !=on\r\n"
-				."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-				."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
+			default:
+			case 'apache':
+				$update_with = "ServerSignature Off\r\n"
 				."\r\n"
-				."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
-			}
+				."DirectoryIndex index.php\r\n"
+				."Options -Indexes\r\n"
+				."\r\n"
+				."Header set X-XSS-Protection \"1; mode=block\"\r\n"
+				."Header set X-Content-Type-Options nosniff\r\n"
+				."Header set X-Powered-By \"Me\"\r\n"
+				."\r\n"
+				."<IfModule mod_rewrite.c>\r\n"
+				."	RewriteEngine On\r\n";
 
-			else if($this->recommend_htaccess_https != '')
-			{
-				$update_with .= $this->recommend_htaccess_https;
-			}
-		}*/
+				/*if($subfolder != "")
+				{
+					$update_with .= "	RewriteBase ".$subfolder."\r\n";
+				}*/
 
-		$update_with .= "\r\n"
-		."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
-		."</IfModule>";
+				$update_with .= "\r\n"
+				."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+				."	RewriteRule .* - [F]\r\n";
 
-		$data['html'] .= $this->update_htaccess(array(
+				/*if($this->update_with != '')
+				{
+					$update_with .= $this->update_with;
+
+					if($this->all_is_https == true)
+					{
+						$update_with .= "\r\n"
+						."	RewriteCond %{HTTPS} !=on\r\n"
+						."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
+						."\r\n"
+						."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
+					}
+
+					else if($this->update_with_https != '')
+					{
+						$update_with .= $this->update_with_https;
+					}
+				}*/
+
+				$update_with .= "\r\n"
+				."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+				."</IfModule>";
+			break;
+
+			case 'nginx':
+				$update_with = "index index.php;\r\n"
+				."autoindex off;\r\n"
+				."\r\n"
+				."location = /my_ip {\r\n"
+				."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
+				."}";
+			break;
+		}
+
+		$data['html'] .= $this->update_config(array(
 			'plugin_name' => "MF Base",
 			'file' => $data['file'],
 			'update_with' => $update_with,
@@ -1119,15 +1186,19 @@ class mf_base
 
 	/* .htaccess */
 	############################
-	function update_htaccess($data)
+	function update_config($data)
 	{
 		global $done_text;
 
+		if(!isset($data['file'])){			$data['file'] = false;}
 		if(!isset($data['auto_update'])){	$data['auto_update'] = false;}
 
-		$out = "";
+		$out = $content = "";
 
-		$content = get_file_content(array('file' => $data['file']));
+		if($data['file'] != '')
+		{
+			$content = get_file_content(array('file' => $data['file']));
+		}
 
 		$old_md5 = get_match("/BEGIN ".$data['plugin_name']." \((.*?)\)/is", $content, false);
 		$new_md5 = md5($data['update_with']);
@@ -1151,7 +1222,7 @@ class mf_base
 
 			$success = false;
 
-			if($data['auto_update'] == true && get_option('setting_base_update_htaccess', 'yes') == 'yes')
+			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'yes') == 'yes')
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 
@@ -1165,10 +1236,27 @@ class mf_base
 
 			if($success == false)
 			{
-				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\n".htmlspecialchars($data['update_with'])."\n# END ".$data['plugin_name'];
+				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\r\n"
+					.htmlspecialchars($data['update_with'])."\r\n"
+				."# END ".$data['plugin_name'];
+
+				switch($this->get_server_type())
+				{
+					default:
+					case 'apache':
+						$config_file = ".htaccess";
+					break;
+
+					case 'nginx':
+						$config_file = "nginx.conf";
+					break;
+				}
 
 				$out .= "<div class='mf_form'>"
-					."<h3 class='display_warning'><i class='fa fa-exclamation-triangle yellow'></i> ".sprintf(__("Add this to the beginning of %s", 'lang_base'), ".htaccess")."</h3>"
+					."<h3 class='display_warning'>
+						<i class='fa fa-exclamation-triangle yellow'></i> "
+						.sprintf(__("Add this to the beginning of %s", 'lang_base'), $config_file)
+					."</h3>"
 					."<p class='input'>".nl2br($new_content)."</p>"
 				."</div>";
 			}
@@ -1191,13 +1279,13 @@ class mf_base
 		{
 			$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
 
-			$this->recommend_htaccess .= "\n
+			$this->update_with .= "\n
 			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
 			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
 
 			if($is_https)
 			{
-				$this->recommend_htaccess_https .= "\n
+				$this->update_with_https .= "\n
 				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
 				RewriteCond	%{HTTPS}		off
 				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
@@ -2762,39 +2850,6 @@ class mf_import
 			break;
 		}
 	}
-
-	/*function get_untouched()
-	{
-		global $wpdb;
-
-		$arr_affected_id = array();
-
-		foreach($this->result as $row)
-		{
-			if($row['id'] > 0)
-			{
-				$arr_affected_id[] = $row['id'];
-			}
-		}
-
-		$result = $wpdb->get_results("SELECT *, ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." NOT IN ('".implode("', '", $arr_affected_id)."')");
-
-		foreach($result as $r)
-		{
-			if($this->save_result)
-			{
-				$this->result[] = array(
-					'type' => 'untouched',
-					'action' => 'fa fa-check green',
-					'id' => $r->ID,
-					'data' => $r,
-					'value' => "SELECT ".$this->table_id." AS ID FROM ".$this->prefix.$this->table." WHERE ".$this->query_base_where.($this->query_base_where != '' ? " AND " : "").$this->table_id." = '".$r->ID."'",
-				);
-			}
-
-			//$this->rows_untouched++;
-		}
-	}*/
 
 	function do_import()
 	{

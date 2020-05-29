@@ -7,6 +7,63 @@ class mf_base
 		$this->meta_prefix = 'mf_base_';
 	}
 
+	function get_language_code($language)
+	{
+		switch($language)
+		{
+			case 'da-DK':
+			case 'da_DK':
+				return "dk";
+			break;
+
+			case 'nn-NO':
+			case 'nb-NO':
+			case 'nn_NO':
+			case 'nb_NO':
+				return "no";
+			break;
+
+			case 'sv-SE':
+			case 'sv_SE':
+				return "se";
+			break;
+
+			case 'en-UK':
+			case 'en_UK':
+				return "uk";
+			break;
+
+			case 'en-US':
+			case 'en_US':
+			case '':
+				return "us";
+			break;
+
+			default:
+				if($id > 0)
+				{
+					do_log("Someone chose '".$blog_language."' as the language for the site '".$id."'. Please add the flag for this language");
+				}
+
+				else
+				{
+					do_log("Someone chose '".$blog_language."' as the language. Please add the flag for this language");
+				}
+
+				return "";
+			break;
+		}
+	}
+
+	function get_flag_image($language)
+	{
+		$language_code = $this->get_language_code($language);
+
+		$plugin_url = str_replace("/include", "", plugin_dir_url(__FILE__));
+
+		return $plugin_url."images/flags/flag_".$language_code.".png";
+	}
+
 	function get_post_types_for_metabox($data = array())
 	{
 		if(!isset($data['public'])){		$data['public'] = true;}

@@ -3108,13 +3108,6 @@ function show_textfield($data)
 		break;
 	}
 
-	/*$arr_accepted_types = array('text', 'email', 'url', 'date', 'month', 'time', 'number', 'range', 'color');
-
-	if(!isset($data['type']) || !in_array($data['type'], $arr_accepted_types))
-	{
-		$data['type'] = 'text';
-	}*/
-
 	if($data['value'] == "0000-00-00"){$data['value'] = "";}
 
 	if(preg_match("/\[(.*)\]/", $data['id']))

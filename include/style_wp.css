@@ -111,7 +111,7 @@
 		overflow: hidden;
 	}
 
-		.wp-list-table .column-image img, .wp-list-table .column-username img, .rwmb-field img, .post-revisions img, .defaultavatarpicker img
+		.wp-list-table .column-image img, .wp-list-table .column-username img, .rwmb-field img, .post-revisions img, .defaultavatarpicker img, .wp-list-table .locked-info .avatar
 		{
 			max-height: 80px;
 			object-fit: cover;

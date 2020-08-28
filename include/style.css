@@ -25,7 +25,7 @@
 		white-space: normal !important;
 	}
 
-	.wrap .error, .wrap .update-nag, .wrap .updated, #mf-content .error, #mf-content .update-nag, #mf-content .updated
+	.wrap .error, #mf-content .error/*, .wrap .update-nag, #mf-content .update-nag*/, .wrap .updated, #mf-content .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -39,9 +39,14 @@
 			border-color: #dd3d36;
 		}
 
-		.wrap .update-nag, #mf-content .update-nag
+		/*.wrap .update-nag, #mf-content .update-nag, */#wpbody-content .update-nag
 		{
+			background-color: #fff;
 			border-color: #ffba00;
+			border-left-width: 4px;
+			border-left-style: solid;
+			color: #444;
+			padding: 1px 12px;
 		}
 
 		.wrap .updated, #mf-content .updated

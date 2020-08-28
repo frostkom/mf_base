@@ -3586,7 +3586,7 @@ function show_select($data)
 
 									if($is_disabled)
 									{
-										$out .= " disabled";
+										//$out .= " disabled";
 										$out .= " class='is_disabled'";
 									}
 

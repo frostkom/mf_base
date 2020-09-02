@@ -850,7 +850,7 @@ class mf_base
 		return $actions;
 	}
 
-	function media_buttons_context($button)
+	function media_buttons($button)
 	{
 		global $pagenow;
 

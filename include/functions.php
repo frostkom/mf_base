@@ -878,7 +878,7 @@ function render_image_tag($data)
 	{
 		global $wpdb;
 
-		$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE guid = %s", $data['src']));
+		$attachment_id = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE guid LIKE %s", $data['src']));
 
 		if($attachment_id > 0)
 		{

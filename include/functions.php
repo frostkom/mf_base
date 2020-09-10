@@ -1567,7 +1567,7 @@ function require_plugin($required_path, $required_name, $require_url = "")
 	}
 }
 
-function get_current_user_role($id = 0)
+function get_current_user_role($id = 0) // Change into function get_user_role()???
 {
 	if(!($id > 0))
 	{

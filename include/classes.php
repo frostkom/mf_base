@@ -3554,27 +3554,34 @@ class mf_import
 		return $out;
 	}
 
+	function get_columns_for_select()
+	{
+		$this->columns_for_select = array(
+			'' => "-- ".__("Choose Here", 'lang_base')." --"
+		);
+
+		foreach($this->columns as $key => $value)
+		{
+			$this->columns_for_select[$key] = $value;
+		}
+	}
+
 	function get_result()
 	{
+		global $error_text;
+
 		$out = "";
 
 		$count_temp_rows = count($this->data);
 
 		if($this->action != '' && $count_temp_rows > 0)
 		{
-			$arr_data = array(
-				'' => "-- ".__("Choose Here", 'lang_base')." --"
-			);
-
-			foreach($this->columns as $key => $value)
-			{
-				$arr_data[$key] = $value;
-			}
+			$this->get_columns_for_select();
 
 			$out .= "<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Run", 'lang_base')."</h3>
-				<div class='inside'>
-					<p>".__("Rows", 'lang_base').": ".$count_temp_rows."</p>";
+				<div class='inside'>"
+					."<p>".__("Rows", 'lang_base').": ".$count_temp_rows."</p>";
 
 					$arr_values = $this->data[0];
 					$count_temp_values = count($arr_values);
@@ -3583,20 +3590,25 @@ class mf_import
 					{
 						$import_text = $arr_values[$i];
 
+						if($error_text == '' && count(array_keys($arr_values, $import_text)) > 1)
+						{
+							$error_text = __("There are multiple columns with the same name. This might become a problem when importing data.", 'lang_base')." (".$import_text.")";
+						}
+
 						$strRowField = check_var('strRowCheck'.$i);
 
 						if($strRowField == '')
 						{
-							if(isset($arr_data[$import_text]))
+							if(isset($this->columns_for_select[$import_text]))
 							{
-								$strRowField = $arr_data[$import_text];
+								$strRowField = $this->columns_for_select[$import_text];
 							}
 
 							else
 							{
-								foreach($arr_data as $key => $value)
+								foreach($this->columns_for_select as $key => $value)
 								{
-									if($value == $import_text)
+									if($value == $import_text || strpos(strtolower($import_text), strtolower($value)) !== false)
 									{
 										$strRowField = $key;
 									}
@@ -3604,10 +3616,11 @@ class mf_import
 							}
 						}
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
+						$out .= show_select(array('data' => $this->columns_for_select, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
 					}
 
 					$out .= "&nbsp;"
+					.get_notification()
 					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", 'lang_base')))
 					.wp_nonce_field('import_run', '_wpnonce_import_run', true, false)
 					.wp_nonce_field('import_data_'.md5(json_encode($this->data)), '_wpnonce_import_data', true, false)

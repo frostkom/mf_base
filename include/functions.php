@@ -475,15 +475,7 @@ function contains_html($string)
 {
 	$string_decoded = htmlspecialchars_decode($string);
 
-	if($string != strip_tags($string) || $string_decoded != strip_tags($string_decoded))
-	{
-		return true;
-	}
-
-	else
-	{
-		return false;
-	}
+	return ($string != strip_tags($string) || $string_decoded != strip_tags($string_decoded));
 }
 
 function send_email($data)

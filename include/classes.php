@@ -785,6 +785,7 @@ class mf_base
 			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
 			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
 			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
+			array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
 			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
 			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),

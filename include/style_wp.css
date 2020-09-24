@@ -118,6 +118,22 @@
 			width: auto;
 		}
 
+		.wp-list-table .status-draft
+		{
+			filter: gray;
+			-webkit-filter: grayscale(1);
+			filter: grayscale(1);
+			opacity: .7;
+		}
+
+			.wp-list-table .status-draft:hover
+			{
+				filter: none;
+				-webkit-filter: grayscale(0);
+				filter: grayscale(0);
+				opacity: 1;
+			}
+
 		.positive
 		{
 			background: #d9f1bf !important;

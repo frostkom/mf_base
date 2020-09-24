@@ -671,7 +671,9 @@
 
 				.mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
 				{
-					filter: grayscale(100%);
+					filter: gray;
+					-webkit-filter: grayscale(1);
+					filter: grayscale(1);
 					opacity: .3;
 				}
 

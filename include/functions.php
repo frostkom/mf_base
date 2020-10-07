@@ -206,7 +206,7 @@ function show_flot_graph($data)
 		}
 
 		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>
-		<script>
+		<script defer>
 			function plot_flot_".$flot_count."()
 			{
 				jQuery.plot(jQuery('#flot_".$flot_count."'),

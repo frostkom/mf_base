@@ -960,11 +960,11 @@ class mf_base
 
 	function wp_head()
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
 		if(is_admin() || apply_filters('is_theme_active', false))
 		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
-
 			/* We should probably check if it is used somewhere, shouldn't we? */
 			/*$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
 
@@ -978,8 +978,9 @@ class mf_base
 			}
 
 			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
-			mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
 		}
+
+		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
 	}
 
 	function phpmailer_init($phpmailer)

@@ -144,6 +144,16 @@
 			background: #fbe3e4 !important;
 		}
 
+	.postbox .display_on_hover
+	{
+		display: none;
+	}
+
+		.postbox:hover .display_on_hover
+		{
+			display: block;
+		}
+
 	.postbox.active, .postbox.active h3
 	{
 		background: #fff8df;

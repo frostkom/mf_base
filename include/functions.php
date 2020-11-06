@@ -1985,6 +1985,7 @@ function get_users_for_select($data = array())
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['include'])){			$data['include'] = array();}
+	if(!isset($data['exclude_inactive'])){	$data['exclude_inactive'] = true;}
 	if(!isset($data['callback'])){			$data['callback'] = '';}
 
 	$data_temp = array(
@@ -2013,7 +2014,7 @@ function get_users_for_select($data = array())
 
 		//$user = apply_filters('filter_user_for_select', $user, $user_data);
 
-		if(isset($user_data->roles[0]) && $user_data->roles[0] != '') // && !isset($user->exclude_from_list)
+		if($data['exclude_inactive'] == false || (isset($user_data->roles[0]) && $user_data->roles[0] != '')) // && !isset($user->exclude_from_list)
 		{
 			if($data['callback'] != '' && is_callable($data['callback']))
 			{

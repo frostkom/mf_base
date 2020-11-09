@@ -625,7 +625,7 @@ class mf_base
 			$updated = false;
 
 			echo "<h3>".__("Child Sites", 'lang_base')."</h3>
-			<ol>";
+			<ol class='text_columns columns_3'>";
 
 				foreach($option_sync_sites as $url => $site)
 				{

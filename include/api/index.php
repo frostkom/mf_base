@@ -31,7 +31,7 @@ switch($type_action)
 	break;
 
 	/*case 'import':
-		if(get_current_user_id() > 0 && $type_action_type == "check")
+		if($type_action_type == "check" && is_user_logged_in())
 		{
 			$plugin_name = substr($type_class, 0, -7);
 

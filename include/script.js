@@ -140,6 +140,14 @@ jQuery(function($)
 			}
 		}
 	});
+	
+	$("a[rel='external']").each(function()
+	{
+		if($(this).children("*").length == 0)
+		{
+			$(this).append("&nbsp;<i class='fas fa-external-link-alt'></i>");
+		}
+	});
 
 	$(document).on('click', "a[rel='external']", function(e)
 	{

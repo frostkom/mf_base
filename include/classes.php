@@ -552,8 +552,13 @@ class mf_base
 
 					echo "<p>
 						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-						.__("DB", 'lang_base').": <span title='".$table_names."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+						.__("DB", 'lang_base').": <span title='".__("Prefix", 'lang_base').": ".$wpdb->prefix.", ".$table_names."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
 					."</p>";
+				}
+
+				else
+				{
+					echo "<p><i class='fa fa-check green'></i> ".__("DB", 'lang_base')." ".__("Prefix", 'lang_base').": ".$wpdb->prefix."</p>";
 				}
 
 				/*else

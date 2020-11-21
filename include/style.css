@@ -5,14 +5,19 @@
 		display: none !important;
 	}
 
-	.show, .block
+	/*.show, .block, .display_block
 	{
 		display: block;
-	}
+	}*/
 
 	.display_inline
 	{
 		display: inline;
+	}
+
+	.display_inline_block
+	{
+		display: inline-block;
 	}
 
 	.nowrap
@@ -25,7 +30,7 @@
 		white-space: normal !important;
 	}
 
-	.wrap .error, #mf-content .error/*, .wrap .update-nag, #mf-content .update-nag*/, .wrap .updated, #mf-content .updated
+	.wrap .error, #mf-content .error, .wrap .updated, #mf-content .updated
 	{
 		border-left-width: 4px;
 		border-left-style: solid;
@@ -39,7 +44,7 @@
 			border-color: #dd3d36;
 		}
 
-		/*.wrap .update-nag, #mf-content .update-nag, */#wpbody-content .update-nag
+		#wpbody-content .update-nag
 		{
 			background-color: #fff;
 			border-color: #ffba00;

@@ -140,7 +140,7 @@ jQuery(function($)
 			}
 		}
 	});
-	
+
 	$("a[rel='external']").each(function()
 	{
 		if($(this).children("*").length == 0)

@@ -744,7 +744,7 @@ class mf_base
 		{
 			case 'apache':
 				$setting_key = get_setting_key(__FUNCTION__);
-				$option = get_option($setting_key, 'yes');
+				$option = get_option($setting_key, 'no');
 
 				echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 
@@ -1293,7 +1293,7 @@ class mf_base
 
 			$success = false;
 
-			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'yes') == 'yes')
+			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'no') == 'yes')
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 

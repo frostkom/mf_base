@@ -483,8 +483,6 @@ class mf_base
 			}
 		}
 
-		do_log("Test: ".var_export($out, true));
-
 		return $out;
 	}
 
@@ -533,7 +531,7 @@ class mf_base
 		echo "<div class='flex_flow'>
 			<div>
 				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-				<p><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+				<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
 				if(!($has_required_php_version && $has_required_mysql_version))
 				{
@@ -552,32 +550,30 @@ class mf_base
 
 				if(isset($free_percent))
 				{
+					$size_title = "";
+
 					$option_base_ftp_size = get_site_option('option_base_ftp_size');
 					$option_base_db_size = get_site_option('option_base_db_size');
+					
+					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
+					{
+						$size_title .= __("Used", 'lang_base').": ";
+						
+						if($option_base_ftp_size > 0)
+						{
+							$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
+						}
+						
+						if($option_base_db_size > 0)
+						{
+							$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
+						}
+					}
 
-					echo "<p>
+					echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
 						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
 						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 					."</p>";
-
-					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
-					{
-						echo "<p>
-							<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-							." - ".__("Used", 'lang_base').": ";
-						
-							if($option_base_ftp_size > 0)
-							{
-								echo show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
-							}
-							
-							if($option_base_db_size > 0)
-							{
-								echo ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
-							}
-							
-						echo "</p>";
-					}
 				}
 
 				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
@@ -598,14 +594,9 @@ class mf_base
 					echo "<p>
 						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
 						.__("DB", 'lang_base').": "
-						."<span title='".__("Prefix", 'lang_base').": ".$wpdb->prefix.", ".$table_names
+						."<span title='".$table_names
 						."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
 					."</p>";
-				}
-
-				else
-				{
-					echo "<p><i class='fa fa-check green'></i> ".__("DB", 'lang_base')." ".__("Prefix", 'lang_base').": ".$wpdb->prefix."</p>";
 				}
 
 				/*else

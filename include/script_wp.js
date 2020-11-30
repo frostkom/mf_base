@@ -47,25 +47,28 @@ jQuery(function($)
 		}
 	});
 
-	$(".wp-list-table").removeClass('fixed');
+	var dom_tables = $(".wp-list-table");
 
-	$(".wp-list-table tr").each(function()
+	if(dom_tables.length > 0)
 	{
-		var self = $(this);
-
-		if(self.find(".set_tr_color").length > 0)
+		dom_tables.removeClass('fixed').find("tr").each(function()
 		{
-			self.find(".set_tr_color").each(function()
-			{
-				var add_class = $(this).attr('rel');
+			var self = $(this);
 
-				if(add_class != '')
+			if(self.find(".set_tr_color").length > 0)
+			{
+				self.find(".set_tr_color").each(function()
 				{
-					self.addClass(add_class);
-				}
-			});
-		}
-	});
+					var add_class = $(this).attr('rel');
+
+					if(add_class != '')
+					{
+						self.addClass(add_class);
+					}
+				});
+			}
+		});
+	}
 
 	var dom_obj_toggle = $(".view_data i");
 

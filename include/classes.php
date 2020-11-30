@@ -259,6 +259,14 @@ class mf_base
 		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
 	}
 
+	function get_ftp_size($data)
+	{
+		if(!is_dir($data['file']))
+		{
+			$this->ftp_size += filesize($data['file']);
+		}
+	}
+
 	function cron_base()
 	{
 		global $wpdb;
@@ -303,12 +311,20 @@ class mf_base
 			}
 			############################
 
-			// Save how many large tables there are
+			// Save disc size and large table sizes
 			############################
 			if(is_main_site())
 			{
-				$arr_tables = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
-				update_site_option('option_base_large_tables', $arr_tables);
+				$this->ftp_size = 0;
+
+				get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
+
+				update_site_option('option_base_ftp_size', $this->ftp_size);
+
+				$arr_db_info = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
+
+				update_site_option('option_base_db_size', $arr_db_info['db_size']);
+				update_site_option('option_base_large_tables', $arr_db_info['tables']);
 			}
 			############################
 		}
@@ -420,7 +436,10 @@ class mf_base
 
 		if(!isset($data['limit'])){		$data['limit'] = pow(1024, 2);}
 
-		$arr_tables = array();
+		$out = array(
+			'db_size' => 0,
+			'tables' => array(),
+		);
 
 		$result = $wpdb->get_results("SHOW TABLES", ARRAY_N);
 
@@ -429,6 +448,8 @@ class mf_base
 			$table_id = $table_name = $r[0];
 
 			$table_size = $wpdb->get_var($wpdb->prepare("SELECT (DATA_LENGTH + INDEX_LENGTH) FROM information_schema.TABLES WHERE table_schema = %s AND table_name = %s", DB_NAME, $table_id));
+
+			$out['db_size'] += $table_size;
 
 			if($table_size > $data['limit'])
 			{
@@ -454,7 +475,7 @@ class mf_base
 					}
 				}
 
-				$arr_tables[] = array(
+				$out['tables'][] = array(
 					'name' => $table_name,
 					'size' => show_final_size($table_size),
 					'content' => $arr_content,
@@ -462,7 +483,9 @@ class mf_base
 			}
 		}
 
-		return $arr_tables;
+		do_log("Test: ".var_export($out, true));
+
+		return $out;
 	}
 
 	function setting_base_info_callback()
@@ -529,10 +552,32 @@ class mf_base
 
 				if(isset($free_percent))
 				{
+					$option_base_ftp_size = get_site_option('option_base_ftp_size');
+					$option_base_db_size = get_site_option('option_base_db_size');
+
 					echo "<p>
 						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
 						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 					."</p>";
+
+					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
+					{
+						echo "<p>
+							<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+							." - ".__("Used", 'lang_base').": ";
+						
+							if($option_base_ftp_size > 0)
+							{
+								echo show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
+							}
+							
+							if($option_base_db_size > 0)
+							{
+								echo ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
+							}
+							
+						echo "</p>";
+					}
 				}
 
 				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
@@ -552,7 +597,9 @@ class mf_base
 
 					echo "<p>
 						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-						.__("DB", 'lang_base').": <span title='".__("Prefix", 'lang_base').": ".$wpdb->prefix.", ".$table_names."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+						.__("DB", 'lang_base').": "
+						."<span title='".__("Prefix", 'lang_base').": ".$wpdb->prefix.", ".$table_names
+						."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
 					."</p>";
 				}
 
@@ -1185,7 +1232,7 @@ class mf_base
 				."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
 				."\r\n"
 				."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
-				.	"RewriteRule .* /404/ [L,NC]\r\n"
+				."	RewriteRule .* /404/ [L,NC]\r\n"
 				."</IfModule>";
 			break;
 
@@ -1277,19 +1324,22 @@ class mf_base
 		if($new_md5 != $old_md5)
 		{
 			$old_content = get_match("/(\# BEGIN ".$data['plugin_name']."(.*)\# END ".$data['plugin_name'].")/is", $content, false);
-			$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\r\n".$data['update_with']."\r\n# END ".$data['plugin_name']; //htmlspecialchars()
+			$new_content = "";
+
+			if($data['update_with'] != '')
+			{
+				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\r\n".$data['update_with']."\r\n# END ".$data['plugin_name'];
+			}
 
 			if($old_content != '')
 			{
 				$content = str_replace($old_content, $new_content, $content);
 			}
 
-			else
+			else if($new_content != '')
 			{
 				$content = $new_content."\r\n\r\n".$content;
 			}
-
-			//$out .= "Trying to replace:<br>#####################<br>".nl2br($old_content)."<br>#####################<br><br>...with:<br>#####################<br>".nl2br($new_content)."<br>#####################<br><br>...so that the result is:<br>#####################<br>".nl2br($content)."<br>#####################";
 
 			$success = false;
 
@@ -1305,7 +1355,7 @@ class mf_base
 				}
 			}
 
-			if($success == false)
+			if($success == false && $data['update_with'] != '')
 			{
 				$new_content = "# BEGIN ".$data['plugin_name']." (".$new_md5.")\r\n"
 					.htmlspecialchars($data['update_with'])."\r\n"

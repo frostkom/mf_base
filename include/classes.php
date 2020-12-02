@@ -263,7 +263,7 @@ class mf_base
 	{
 		if(!is_dir($data['file']))
 		{
-			$this->ftp_size += filesize($data['file']);
+			$this->ftp_size += @filesize($data['file']);
 		}
 	}
 
@@ -554,16 +554,16 @@ class mf_base
 
 					$option_base_ftp_size = get_site_option('option_base_ftp_size');
 					$option_base_db_size = get_site_option('option_base_db_size');
-					
+
 					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
 					{
 						$size_title .= __("Used", 'lang_base').": ";
-						
+
 						if($option_base_ftp_size > 0)
 						{
 							$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
 						}
-						
+
 						if($option_base_db_size > 0)
 						{
 							$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";

@@ -18,12 +18,17 @@
 			padding: 0 6px;
 		}
 
-	#poststuff .add-new-h2
+	.wrap .add-new-h2
 	{
 		display: inline-block;
+		margin-left: .8em;
+	}
+
+	/*#poststuff .add-new-h2
+	{
 		margin-bottom: .3em;
 		top: auto !important;
-	}
+	}*/
 
 	#poststuff .mf_form h4
 	{

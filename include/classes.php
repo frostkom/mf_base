@@ -292,6 +292,8 @@ class mf_base
 					),
 				));
 
+				$log_message = sprintf("Getting sync from %s returned an error", $setting_base_template_site);
+
 				switch($headers['http_code'])
 				{
 					case 200:
@@ -302,10 +304,11 @@ class mf_base
 							do_action('cron_sync', $json);
 						}
 
+						do_log($log_message, 'trash');
 					break;
 
 					default:
-						do_log(sprintf("Getting sync from %s returned an error (%s)", $setting_base_template_site, $content));
+						do_log($log_message." (".$content.")");
 					break;
 				}
 			}

@@ -51,7 +51,7 @@
 			border-left-width: 4px;
 			border-left-style: solid;
 			color: #444;
-			padding: 1px 12px;
+			padding: .5em 1em;
 		}
 
 		.wrap .updated, #mf-content .updated

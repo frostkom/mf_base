@@ -2259,71 +2259,20 @@ function get_sidebars_for_select()
 	return $arr_data;
 }
 
-//Sort array
-#########################
-# array			array(array("firstname" => "Martin", "surname" => "Fors"))
-# on			Ex. surname
-# order			asc/desc
-# keep_index	true/false
-#########################
-function array_sort($data)
+if(!function_exists('array_sort'))
 {
-	if(!isset($data['on'])){			$data['on'] = 0;}
-	if(!isset($data['order'])){			$data['order'] = "asc";}
-	if(!isset($data['keep_index'])){	$data['keep_index'] = false;}
-
-	$new_array = array();
-	$sortable_array = array();
-
-	if(count($data['array']) > 0)
+	function array_sort($data)
 	{
-		foreach($data['array'] as $k => $v)
-		{
-			if(is_array($v))
-			{
-				foreach($v as $k2 => $v2)
-				{
-					if($k2 == $data['on'])
-					{
-						$sortable_array[$k] = $v2;
-					}
-				}
-			}
+		global $obj_base;
 
-			else
-			{
-				$sortable_array[$k] = $v;
-			}
+		if(!isset($obj_base))
+		{
+			$obj_base = new mf_base();
 		}
 
-		switch($data['order'])
-		{
-			case "asc":
-				asort($sortable_array);
-			break;
-
-			case "desc":
-				arsort($sortable_array);
-			break;
-		}
-
-		foreach($sortable_array as $k => $v)
-		{
-			if($data['keep_index'] == true)
-			{
-				$new_array[$k] = $data['array'][$k];
-			}
-
-			else
-			{
-				$new_array[] = $data['array'][$k];
-			}
-		}
+		return $obj_base->array_sort($data);
 	}
-
-	return $new_array;
 }
-#########################
 
 #################
 function validate_url($value, $link = true, $http = true)

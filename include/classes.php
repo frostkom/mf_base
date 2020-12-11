@@ -170,6 +170,72 @@ class mf_base
 		return ($hsl->lightness > 200 ? "#333" : "#fff");
 	}
 
+	//Sort array
+	#########################
+	# array			array(array("firstname" => "Martin", "surname" => "Fors"))
+	# on			Ex. surname
+	# order			asc/desc
+	# keep_index	true/false
+	#########################
+	function array_sort($data)
+	{
+		if(!isset($data['on'])){			$data['on'] = 0;}
+		if(!isset($data['order'])){			$data['order'] = "asc";}
+		if(!isset($data['keep_index'])){	$data['keep_index'] = false;}
+
+		$new_array = array();
+		$sortable_array = array();
+
+		if(count($data['array']) > 0)
+		{
+			foreach($data['array'] as $k => $v)
+			{
+				if(is_array($v))
+				{
+					foreach($v as $k2 => $v2)
+					{
+						if($k2 == $data['on'])
+						{
+							$sortable_array[$k] = $v2;
+						}
+					}
+				}
+
+				else
+				{
+					$sortable_array[$k] = $v;
+				}
+			}
+
+			switch($data['order'])
+			{
+				case "asc":
+					asort($sortable_array);
+				break;
+
+				case "desc":
+					arsort($sortable_array);
+				break;
+			}
+
+			foreach($sortable_array as $k => $v)
+			{
+				if($data['keep_index'] == true)
+				{
+					$new_array[$k] = $data['array'][$k];
+				}
+
+				else
+				{
+					$new_array[] = $data['array'][$k];
+				}
+			}
+		}
+
+		return $new_array;
+	}
+	#########################
+
 	function reschedule_base($option = '')
 	{
 		if($option == ''){	$option = get_option('setting_base_cron', 'every_ten_minutes');}
@@ -825,6 +891,7 @@ class mf_base
 			array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", 'lang_base')),
 			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+			array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
 			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
 			array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
 			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),

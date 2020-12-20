@@ -853,7 +853,15 @@ class mf_base
 				$setting_key = get_setting_key(__FUNCTION__);
 				$option = get_option($setting_key, 'no');
 
-				echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+				if(!is_multisite() || is_main_site())
+				{
+					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+				}
+
+				else
+				{
+					echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
+				}
 
 				$file_htaccess = get_home_path().".htaccess";
 
@@ -1404,7 +1412,7 @@ class mf_base
 
 			$success = false;
 
-			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'no') == 'yes')
+			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'no') == 'yes' && (!is_multisite() || is_main_site()))
 			{
 				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 

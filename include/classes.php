@@ -855,7 +855,14 @@ class mf_base
 
 				if(!is_multisite() || is_main_site())
 				{
-					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+					$description = "";
+
+					if($option != 'yes')
+					{
+						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", 'lang_base');
+					}
+
+					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
 				}
 
 				else
@@ -1232,6 +1239,8 @@ class mf_base
 	{
 		if(!isset($data['file'])){		$data['file'] = '';}
 
+		$update_with = "";
+
 		/*$this->all_is_https = true;
 		$this->update_with = $this->update_with_https = "";
 
@@ -1250,69 +1259,74 @@ class mf_base
 			$this->get_site_redirect();
 		}*/
 
-		$subfolder = get_url_part(array('type' => 'path'));
-
-		switch($this->get_server_type())
+		if(!is_multisite() || is_main_site())
 		{
-			default:
-			case 'apache':
-				$update_with = "ServerSignature Off\r\n"
-				."\r\n"
-				."DirectoryIndex index.php\r\n"
-				."Options -Indexes\r\n"
-				."\r\n"
-				."Header set X-XSS-Protection \"1; mode=block\"\r\n"
-				."Header set X-Content-Type-Options nosniff\r\n"
-				."Header set X-Powered-By \"Me\"\r\n"
-				."\r\n"
-				."<IfModule mod_rewrite.c>\r\n"
-				."	RewriteEngine On\r\n";
+			$subfolder = get_url_part(array('type' => 'path'));
 
-				/*if($subfolder != "")
-				{
-					$update_with .= "	RewriteBase ".$subfolder."\r\n";
-				}*/
+			switch($this->get_server_type())
+			{
+				default:
+				case 'apache':
+					$update_with = "ServerSignature Off\r\n"
+					//."ServerTokens Prod\r\n" // Test before using
+					."\r\n"
+					."DirectoryIndex index.php\r\n"
+					."Options -Indexes\r\n"
+					."\r\n"
+					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
+					."Header set X-Content-Type-Options nosniff\r\n"
+					."Header set X-Powered-By \"Me\"\r\n"
+					."\r\n"
+					."<IfModule mod_rewrite.c>\r\n"
+					."	RewriteEngine On\r\n";
 
-				$update_with .= "\r\n"
-				."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-				."	RewriteRule .* - [F]\r\n";
-
-				/*if($this->update_with != '')
-				{
-					$update_with .= $this->update_with;
-
-					if($this->all_is_https == true)
+					/*if($subfolder != "")
 					{
-						$update_with .= "\r\n"
-						."	RewriteCond %{HTTPS} !=on\r\n"
-						."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
-						."\r\n"
-						."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
-					}
+						$update_with .= "	RewriteBase ".$subfolder."\r\n";
+					}*/
 
-					else if($this->update_with_https != '')
+					$update_with .= "\r\n"
+					."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+					."	RewriteRule .* - [F]\r\n";
+
+					/*if($this->update_with != '')
 					{
-						$update_with .= $this->update_with_https;
-					}
-				}*/
+						$update_with .= $this->update_with;
 
-				$update_with .= "\r\n"
-				."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
-				."\r\n"
-				."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
-				."	RewriteRule .* /404/ [L,NC]\r\n"
-				."</IfModule>";
-			break;
+						if($this->all_is_https == true)
+						{
+							$update_with .= "\r\n"
+							."	RewriteCond %{HTTPS} !=on\r\n"
+							."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+							."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
+							."\r\n"
+							."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
+						}
 
-			case 'nginx':
-				$update_with = "index index.php;\r\n"
-				."autoindex off;\r\n"
-				."\r\n"
-				."location = /my_ip {\r\n"
-				."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
-				."}";
-			break;
+						else if($this->update_with_https != '')
+						{
+							$update_with .= $this->update_with_https;
+						}
+					}*/
+
+					$update_with .= "\r\n"
+					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+					."\r\n"
+					."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
+					."	RewriteRule .* /404/ [L,NC]\r\n"
+					."</IfModule>";
+				break;
+
+				case 'nginx':
+					$update_with = "index index.php;\r\n"
+					."autoindex off;\r\n"
+					."server_tokens off;\r\n"
+					."\r\n"
+					."location = /my_ip {\r\n"
+					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
+					."}";
+				break;
+			}
 		}
 
 		$data['html'] .= $this->update_config(array(

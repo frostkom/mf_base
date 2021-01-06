@@ -3175,6 +3175,7 @@ function show_password_field($data)
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['maxlength'])){		$data['maxlength'] = "";}
+	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
@@ -3183,6 +3184,11 @@ function show_password_field($data)
 	if($data['maxlength'] != '')
 	{
 		$data['xtra'] .= " maxlength='".$data['maxlength']."'";
+	}
+
+	if($data['required'])
+	{
+		$data['xtra'] .= " required";
 	}
 
 	if($data['placeholder'] != '')

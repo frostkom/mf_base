@@ -129,6 +129,19 @@ jQuery(function($)
 				}
 			break;
 		}
+
+		/* Hide parent postbox if no fields are visible */
+		var dom_postbox = dom_obj_action.parent(".rwmb-meta-box").parent(".inside").parent(".postbox");
+
+		if(dom_obj_action.siblings(".rwmb-field:not(.hide)").length > 0)
+		{
+			dom_postbox.removeClass('hide');
+		}
+
+		else
+		{
+			dom_postbox.addClass('hide');
+		}
 	}
 
 	function init_conditions(dom_obj, parent_selector)

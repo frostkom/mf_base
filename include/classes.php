@@ -444,6 +444,30 @@ class mf_base
 				update_site_option('option_base_large_tables', $arr_db_info['tables']);
 			}
 			############################
+
+			// Reset time limited settings
+			############################
+			$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
+
+			$has_changed = false;
+
+			foreach($option_base_time_limited as $key => $value)
+			{
+				if($value < date("Y-m-d H:i:s"))
+				{
+					delete_option($key);
+					
+					unset($option_base_time_limited[$key]);
+
+					$has_changed = true;
+				}
+			}
+
+			if($has_changed == true)
+			{
+				update_option('option_base_time_limited', $option_base_time_limited, 'no');
+			}
+			############################
 		}
 
 		$obj_cron->end();

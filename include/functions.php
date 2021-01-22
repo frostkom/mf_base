@@ -1,5 +1,22 @@
 <?php
 
+function setting_time_limit($data)
+{
+	if(!isset($data['time_limit'])){	$data['time_limit'] = 6;}
+
+	if($data['value'] == 'yes' || is_array($data['value']) && count($data['value']) > 0)
+	{
+		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
+
+		if(!isset($option_base_time_limited[$data['key']]))
+		{
+			$option_base_time_limited[$data['key']] = date("Y-m-d H:i:s", strtotime("+".$data['time_limit']." hour"));
+
+			update_option('option_base_time_limited', $option_base_time_limited, 'no');
+		}
+	}
+}
+
 function get_rwmb_post_id($data)
 {
 	if(!isset($data['user_id'])){		$data['user_id'] = get_current_user_id();}

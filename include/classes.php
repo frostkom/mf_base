@@ -7,6 +7,54 @@ class mf_base
 		$this->meta_prefix = 'mf_base_';
 	}
 
+	function filter_phpmailer_data()
+	{
+		global $phpmailer;
+
+		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'Host', 'Port', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'Hostname', 'DKIM_copyHeaderFields');
+
+		$this->phpmailer_temp = array();
+
+		foreach($phpmailer as $key => $value)
+		{
+			if(is_array($value))
+			{
+				foreach($value as $key2 => $value2)
+				{
+					if(!in_array($key2, $arr_exclude) && trim($value2) != '')
+					{
+						$this->phpmailer_temp[$key][$key2] = $value2;
+					}
+
+					else
+					{
+						$this->phpmailer_temp[$key][$key2] = shorten_text(array('string' => htmlspecialchars($value2), 'limit' => 4));
+					}
+				}
+			}
+
+			else
+			{
+				if(!in_array($key, $arr_exclude) && trim($value) != '')
+				{
+					$this->phpmailer_temp[$key] = $value;
+				}
+
+				/*else
+				{
+					$this->phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
+				}*/
+			}
+
+			$this->phpmailer_temp['to'] = $phpmailer->getToAddresses()[0][0];
+
+			if(!isset($phpmailer->getToAddresses()[0][0]))
+			{
+				do_log(__("I could not get recipient address", 'lang_base').": ".var_export($phpmailer->getToAddresses(), true));
+			}
+		}
+	}
+
 	function get_language_code($language)
 	{
 		switch($language)

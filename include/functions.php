@@ -503,7 +503,19 @@ function send_email($data)
 
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
-	if(!isset($data['save_log'])){		$data['save_log'] = true;}
+	if(!isset($data['save_log_type'])){	$data['save_log_type'] = 'plugin';}
+
+	if(!isset($data['save_log']))
+	{
+		$setting_email_log = get_option('setting_email_log');
+
+		$data['save_log'] = (is_array($setting_email_log) && in_array('plugin', $setting_email_log));
+	}
+
+	if(!isset($obj_base))
+	{
+		$obj_base = new mf_base();
+	}
 
 	if($data['to'] == '')
 	{
@@ -523,11 +535,6 @@ function send_email($data)
 	{
 		if(contains_html($data['content']))
 		{
-			if(!isset($obj_base))
-			{
-				$obj_base = new mf_base();
-			}
-
 			add_filter('wp_mail_content_type', array($obj_base, 'set_html_content_type'));
 
 			$data['content'] = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>".$data['content']."</body></html>";
@@ -541,56 +548,16 @@ function send_email($data)
 			unset($data_temp['content']);
 			unset($data_temp['attachment']);
 			unset($data_temp['save_log']);
+			unset($data_temp['save_log_type']);
 
-			$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'Host', 'Port', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'Hostname');
-
-			$phpmailer_temp = array();
-
-			foreach($phpmailer as $key => $value)
-			{
-				if(is_array($value))
-				{
-					foreach($value as $key2 => $value2)
-					{
-						if(!in_array($key2, $arr_exclude) && trim($value2) != '')
-						{
-							$phpmailer_temp[$key][$key2] = $value2;
-						}
-
-						else
-						{
-							$phpmailer_temp[$key][$key2] = shorten_text(array('string' => htmlspecialchars($value2), 'limit' => 4));
-						}
-					}
-				}
-
-				else
-				{
-					if(!in_array($key, $arr_exclude) && trim($value) != '')
-					{
-						$phpmailer_temp[$key] = $value;
-					}
-
-					/*else
-					{
-						$phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
-					}*/
-				}
-
-				$phpmailer_temp['to'] = $phpmailer->getToAddresses()[0][0];
-
-				if(!isset($phpmailer->getToAddresses()[0][0]))
-				{
-					do_log("I could not get recipient address: ".var_export($phpmailer->getToAddresses(), true));
-				}
-			}
+			$obj_base->filter_phpmailer_data();
 		}
 
 		if($sent)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(sprintf("Message sent: %s", htmlspecialchars(var_export($data_temp, true))." -> ".var_export($phpmailer_temp, true)), 'notification');
+				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true), 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -601,7 +568,7 @@ function send_email($data)
 
 		else
 		{
-			do_log(sprintf("I could not send the email to %s", var_export($data_temp, true).", ".var_export($phpmailer_temp, true)));
+			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true));
 
 			do_action('sent_email_error', $phpmailer->From);
 		}
@@ -1629,7 +1596,12 @@ function point2int($in)
 
 		for($i = 1; $i <= $count_temp; $i++)
 		{
-			$str_version += $arr_version[$count_temp - $i] * $multiplier;
+			$str_version += (int)$arr_version[$count_temp - $i] * $multiplier;
+
+			if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
+			{
+				do_log("point2int() Error: ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
+			}
 
 			$multiplier *= 100;
 		}

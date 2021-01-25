@@ -456,7 +456,7 @@ class mf_base
 				if($value < date("Y-m-d H:i:s"))
 				{
 					delete_option($key);
-					
+
 					unset($option_base_time_limited[$key]);
 
 					$has_changed = true;

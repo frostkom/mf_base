@@ -1,5 +1,10 @@
 <?php
 
+function get_placeholder_email()
+{
+	return __("your-name", 'lang_base')."@".get_site_url_clean(array('trim' => "/"));
+}
+
 function setting_time_limit($data)
 {
 	if(!isset($data['time_limit'])){	$data['time_limit'] = 6;}
@@ -3014,7 +3019,7 @@ function show_textfield($data)
 
 			if($data['placeholder'] == '')
 			{
-				$data['placeholder'] = __("your-name", 'lang_base')."@".get_site_url_clean(array('trim' => "/"));
+				$data['placeholder'] = get_placeholder_email();
 			}
 		break;
 

@@ -1530,6 +1530,8 @@ function get_install_link_tags($require_url, $required_name)
 {
 	if($require_url == '')
 	{
+		$required_name = str_replace(array("& ", "&"), "", $required_name);
+
 		if(is_multisite())
 		{
 			$require_url = network_admin_url("plugin-install.php?tab=search&type=term&s=".$required_name);
@@ -1861,7 +1863,7 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(function_exists('is_plugin_active') && is_plugin_active('mf_users/index.php'))
+		if(function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php"))
 		{
 			$obj_users = new mf_users();
 			$obj_users->hide_roles();
@@ -3664,14 +3666,28 @@ function show_form_alternatives($data)
 
 						if(is_array($option))
 						{
-							$data_text = $option[0];
-							$data_desc = $option[1];
+							if(isset($option[0]) && isset($option[1]))
+							{
+								$data_text = $option[0];
+								$data_desc = $option[1];
+							}
+
+							else
+							{
+								$data_text = $option['name'];
+								$data_desc = '';
+							}
 						}
 
 						else
 						{
 							$data_text = $option;
 							$data_desc = '';
+
+							$option = array(
+								'name' => $option,
+								'attributes' => array(),
+							);
 						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)

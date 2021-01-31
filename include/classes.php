@@ -516,7 +516,7 @@ class mf_base
 
 		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
 
-		if(is_plugin_active('mf_media/index.php') || is_plugin_active('mf_site_manager/index.php') || is_plugin_active('mf_theme_core/index.php'))
+		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
 		{
 			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
 		}
@@ -991,7 +991,7 @@ class mf_base
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
 		);
 
-		if(!(is_plugin_active('tiny-compress-images/tiny-compress-images.php') || is_plugin_active('optimus/optimus.php') || is_plugin_active('wp-smushit/wp-smush.php')))
+		if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
 		{
 			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
 			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
@@ -2716,7 +2716,7 @@ class mf_export
 {
 	function __construct($data = array())
 	{
-		$this->has_excel_support = is_plugin_active('mf_phpexcel/index.php');
+		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 		$this->dir_exists = true;
 
 		$this->plugin = isset($data['plugin']) ? $data['plugin'] : '';
@@ -2940,7 +2940,7 @@ class mf_import
 		$this->is_run = false;
 		$this->unique_check = "OR";
 
-		$this->has_excel_support = is_plugin_active('mf_phpexcel/index.php');
+		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 
 		$this->get_defaults();
 		$this->fetch_request();
@@ -3626,7 +3626,7 @@ class mf_import
 							break;
 						}
 
-						$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'format' => (is_plugin_active('mf_phpexcel/index.php') ? 'xls' : 'csv'), 'data' => $arr_export_data));
+						$obj_export = new mf_export(array('plugin' => 'mf_base', 'do_export' => true, 'name' => 'import_result', 'format' => (is_plugin_active("mf_phpexcel/index.php") ? 'xls' : 'csv'), 'data' => $arr_export_data));
 
 						$out .= get_notification();
 					}

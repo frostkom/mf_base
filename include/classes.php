@@ -1193,7 +1193,14 @@ class mf_base
 
 		if($phpmailer->ContentType == 'text/html')
 		{
-			$phpmailer->AltBody = strip_tags($phpmailer->Body);
+			$phpmailer->IsHTML(true);
+
+			$setting_email_preferred_content_types = get_option('setting_email_preferred_content_types');
+
+			if(!is_array($setting_email_preferred_content_types) || count($setting_email_preferred_content_types) == 0 || in_array('plain', $setting_email_preferred_content_types))
+			{
+				$phpmailer->AltBody = strip_tags($phpmailer->Body);
+			}
 		}
 	}
 

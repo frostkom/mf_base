@@ -557,10 +557,31 @@ function send_email($data)
 	{
 		if(contains_html($data['content']))
 		{
-			add_filter('wp_mail_content_type', array($obj_base, 'set_html_content_type'));
+			$setting_email_preferred_content_types = get_option('setting_email_preferred_content_types');
 
-			$data['content'] = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>".$data['content']."</body></html>";
+			if(!is_array($setting_email_preferred_content_types) || count($setting_email_preferred_content_types) == 0 || in_array('html', $setting_email_preferred_content_types))
+			{
+				add_filter('wp_mail_content_type', array($obj_base, 'set_html_content_type'));
+
+				$data['content'] = "<html>
+					<head>
+						<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+					</head>
+					<body>"
+						.$data['content']
+					."</body>
+				</html>";
+			}
+
+			else
+			{
+				$data['content'] = strip_tags($data['content']);
+			}
 		}
+
+		// Needed when & is sent through a textfield, which otherwise becomes &amp; on the receiving end
+		$data['subject'] = html_entity_decode($data['subject']);
+		$data['content'] = html_entity_decode($data['content']);
 
 		$sent = wp_mail($data['to'], $data['subject'], $data['content'], $data['headers'], $data['attachment']);
 

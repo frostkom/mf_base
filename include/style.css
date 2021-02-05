@@ -635,7 +635,7 @@
 			.mf_form .form_checkbox input, .mf_form .form_radio input
 			{
 				display: inline-block;
-				margin-right: 2%;
+				margin-right: .5em;
 				margin-bottom: -.4em;
 			}
 

@@ -397,8 +397,10 @@ class mf_base
 
 			if($setting_base_template_site != '' && $setting_base_template_site != $site_url && filter_var($setting_base_template_site, FILTER_VALIDATE_URL))
 			{
+				$url = $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync";
+
 				list($content, $headers) = get_url_content(array(
-					'url' => $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync",
+					'url' => $url,
 					'catch_head' => true,
 					'post_data' => array(
 						'site_name' => get_bloginfo('name'),
@@ -406,7 +408,7 @@ class mf_base
 					),
 				));
 
-				$log_message = sprintf("Getting sync from %s returned an error", $setting_base_template_site);
+				$log_message = sprintf("Getting sync from %s returned an error", $url);
 
 				switch($headers['http_code'])
 				{
@@ -422,7 +424,7 @@ class mf_base
 					break;
 
 					default:
-						do_log($log_message." (".$content.")");
+						do_log($log_message." (".$headers['http_code'].")");
 					break;
 				}
 			}

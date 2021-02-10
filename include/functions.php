@@ -663,6 +663,14 @@ function replace_option($data)
 	}
 }
 
+function replace_post_meta($data)
+{
+	global $wpdb;
+
+	$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->postmeta." SET meta_key = %s WHERE meta_key = %s", $data['new'], $data['old']));
+	//do_log("replace_post_meta(): ".$wpdb->prepare("UPDATE ".$wpdb->postmeta." SET meta_key = %s WHERE meta_key = %s", $data['new'], $data['old']));
+}
+
 function replace_user_meta($data)
 {
 	if(!isset($data['single'])){	$data['single'] = true;}

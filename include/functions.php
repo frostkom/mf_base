@@ -842,7 +842,12 @@ function mf_uninstall_plugin($data)
 
 function is_domain_valid($email, $record = 'MX')
 {
-	list($user, $domain) = explode('@', $email);
+	if(strpos($email, "@") === false)
+	{
+		do_log("Error in is_domain_valid(): ".$email." (".$record.")");
+	}
+
+	list($user, $domain) = explode("@", $email);
 
 	return checkdnsrr($domain, $record);
 }
@@ -2403,6 +2408,13 @@ function get_url_content($data = array())
 		curl_setopt($ch, CURLOPT_CAPATH, $data['ca_path']); // A directory that holds multiple CA certificates
 	}
 
+	else
+	{
+		// This will prevent server from returning HTTP_CODE 0 due to certificate
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}
+
 	if($data['ssl_cert_path'] != '')
 	{
 		curl_setopt($ch, CURLOPT_SSLCERT, $data['ssl_cert_path']);
@@ -3695,16 +3707,16 @@ function show_form_alternatives($data)
 
 						if(is_array($option))
 						{
-							if(isset($option[0]) && isset($option[1]))
+							if(isset($option[0]))
 							{
 								$data_text = $option[0];
-								$data_desc = $option[1];
+								$data_desc = (isset($option[1]) ? $option[1] : '');
 							}
 
 							else
 							{
 								$data_text = $option['name'];
-								$data_desc = '';
+								$data_desc = (isset($option['desc']) ? $option['desc'] : '');
 							}
 						}
 
@@ -3715,8 +3727,13 @@ function show_form_alternatives($data)
 
 							$option = array(
 								'name' => $option,
-								'attributes' => array(),
+								//'attributes' => array(),
 							);
+						}
+
+						if(!isset($option['attributes']))
+						{
+							$option['attributes'] = array();
 						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)

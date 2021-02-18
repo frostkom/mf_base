@@ -600,7 +600,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true), 'notification');
+				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
 			}
 
 			if(isset($phpmailer->From))

@@ -5,6 +5,7 @@ class mf_base
 	function __construct()
 	{
 		$this->meta_prefix = 'mf_base_';
+		$this->lang_key = 'lang_base';
 	}
 
 	function filter_phpmailer_data()
@@ -50,7 +51,7 @@ class mf_base
 
 			if(!isset($phpmailer->getToAddresses()[0][0]))
 			{
-				do_log(__("I could not get recipient address", 'lang_base').": ".var_export($phpmailer->getToAddresses(), true));
+				do_log(__("I could not get recipient address", $this->lang_key).": ".var_export($phpmailer->getToAddresses(), true));
 			}
 		}
 	}
@@ -359,11 +360,11 @@ class mf_base
 	function cron_schedules($schedules)
 	{
 		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => "Manually");
-		$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
-		$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
+		$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", $this->lang_key));
+		$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", $this->lang_key));
 
-		$schedules['weekly'] = array('interval' => 60 * 60 * 24 * 7, 'display' => __("Weekly", 'lang_base'));
-		$schedules['monthly'] = array('interval' => 60 * 60 * 24 * 7 * 4, 'display' => __("Monthly", 'lang_base'));
+		$schedules['weekly'] = array('interval' => 60 * 60 * 24 * 7, 'display' => __("Weekly", $this->lang_key));
+		$schedules['monthly'] = array('interval' => 60 * 60 * 24 * 7 * 4, 'display' => __("Monthly", $this->lang_key));
 
 		return $schedules;
 	}
@@ -500,8 +501,8 @@ class mf_base
 		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
 		$arr_settings = array(
-			'setting_base_info' => __("Status", 'lang_base'),
-			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+			'setting_base_info' => __("Status", $this->lang_key),
+			'setting_base_cron' => __("Scheduled to run", $this->lang_key),
 		);
 
 		switch($this->get_server_type())
@@ -516,16 +517,16 @@ class mf_base
 			break;
 		}
 
-		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
+		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", $this->lang_key), $config_file);
 
 		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
 		{
-			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
+			$arr_settings['setting_base_template_site'] = __("Template Site", $this->lang_key);
 		}
 
 		if(IS_SUPER_ADMIN)
 		{
-			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
+			$arr_settings['setting_base_recommend'] = __("Recommendations", $this->lang_key);
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -535,7 +536,7 @@ class mf_base
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
 
-		echo settings_header($setting_key, __("Common", 'lang_base'));
+		echo settings_header($setting_key, __("Common", $this->lang_key));
 	}
 
 	function return_bytes($value)
@@ -674,11 +675,11 @@ class mf_base
 		echo "<div class='flex_flow'>
 			<div>
 				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-				<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+				<p title='".__("Prefix", $this->lang_key).": ".$wpdb->prefix."'><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
 				if(!($has_required_php_version && $has_required_mysql_version))
 				{
-					echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
+					echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", $this->lang_key)."</a></p>";
 				}
 
 				if($date_diff > 60)
@@ -688,7 +689,7 @@ class mf_base
 
 				else
 				{
-					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
+					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", $this->lang_key).": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
 				}
 
 				if(isset($free_percent))
@@ -700,22 +701,22 @@ class mf_base
 
 					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
 					{
-						$size_title .= __("Used", 'lang_base').": ";
+						$size_title .= __("Used", $this->lang_key).": ";
 
 						if($option_base_ftp_size > 0)
 						{
-							$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
+							$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", $this->lang_key).")";
 						}
 
 						if($option_base_db_size > 0)
 						{
-							$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
+							$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", $this->lang_key).")";
 						}
 					}
 
 					echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
 						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+						.__("Disc Space", $this->lang_key).": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 					."</p>";
 				}
 
@@ -736,9 +737,9 @@ class mf_base
 
 					echo "<p>
 						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-						.__("DB", 'lang_base').": "
+						.__("DB", $this->lang_key).": "
 						."<span title='".$table_names
-						."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+						."'>".sprintf(__("%d tables larger than %s", $this->lang_key), $option_base_large_table_amount, "10MB")."</span>"
 					."</p>";
 				}
 
@@ -750,7 +751,7 @@ class mf_base
 					{
 						echo "<p>
 							<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-							.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
+							.__("DB", $this->lang_key).": ".sprintf(__("%d tables larger than %s", $this->lang_key), $option_base_large_table_amount, "10MB")
 						."</p>";
 					}
 				}*/
@@ -759,11 +760,11 @@ class mf_base
 			<div>
 				<p>
 					<i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
-					.__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)
+					.__("Memory Limit", $this->lang_key).": ".show_final_size($memory_limit)
 				."</p>
-				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
-				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>
+				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 1 ".__("min", $this->lang_key).": ".mf_format_number($load[0])."</p>
+				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 5 ".__("min", $this->lang_key).": ".mf_format_number($load[1])."</p>
+				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 15 ".__("min", $this->lang_key).": ".mf_format_number($load[2])."</p>
 			</div>
 		</div>";
 	}
@@ -810,7 +811,7 @@ class mf_base
 		{
 			$updated = false;
 
-			echo "<h3>".__("Child Sites", 'lang_base')."</h3>
+			echo "<h3>".__("Child Sites", $this->lang_key)."</h3>
 			<ol class='text_columns columns_3'>";
 
 				foreach($option_sync_sites as $url => $site)
@@ -838,7 +839,7 @@ class mf_base
 	{
 		if(!isset($this->server_type))
 		{
-			if(preg_match("/Apache/i", $_SERVER['SERVER_SOFTWARE']))
+			if(preg_match("/[Apache|LiteSpeed]/i", $_SERVER['SERVER_SOFTWARE']))
 			{
 				$this->server_type = 'apache';
 			}
@@ -872,7 +873,7 @@ class mf_base
 
 			if($next_cron != '')
 			{
-				$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
+				$select_suffix = sprintf(__("Next scheduled %s", $this->lang_key), $next_cron);
 			}
 
 			echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
@@ -882,7 +883,7 @@ class mf_base
 		{
 			$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
 
-			echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
+			echo "<a href='".$cron_url."'>".__("Run schedule manually", $this->lang_key)."</a> ";
 		}
 
 		$obj_cron = new mf_cron();
@@ -897,25 +898,25 @@ class mf_base
 		{
 			if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
 			{
-				echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
+				echo "<span>".__("Running schedule...", $this->lang_key)."</span> ";
 
 				do_action('cron_base');
 			}
 
 			else
 			{
-				echo "<em>".sprintf(__("Last run %s", 'lang_base'), format_date($option_cron_run))."</em>";
+				echo "<em>".sprintf(__("Last run %s", $this->lang_key), format_date($option_cron_run))."</em>";
 			}
 		}
 
 		else if($option_cron_started > $option_cron_run)
 		{
-			echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
+			echo "<em>".sprintf(__("Last started %s but has not finished", $this->lang_key), format_date($option_cron_started))."</em>";
 		}
 
 		else
 		{
-			echo "<em>".__("Has never been run", 'lang_base')."</em>";
+			echo "<em>".__("Has never been run", $this->lang_key)."</em>";
 		}
 	}
 
@@ -933,7 +934,7 @@ class mf_base
 
 					if($option != 'yes')
 					{
-						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", 'lang_base');
+						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", $this->lang_key);
 					}
 
 					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
@@ -941,7 +942,7 @@ class mf_base
 
 				else
 				{
-					echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
+					echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", $this->lang_key)."</a></p><br>";
 				}
 
 				$file_htaccess = get_home_path().".htaccess";
@@ -964,7 +965,7 @@ class mf_base
 			break;
 
 			default:
-				do_log("Unknown Server: ".$_SERVER['SERVER_SOFTWARE']);
+				echo __("Unknown Server", $this->lang_key).": ".$_SERVER['SERVER_SOFTWARE'];
 			break;
 		}
 	}
@@ -972,32 +973,32 @@ class mf_base
 	function setting_base_recommend_callback()
 	{
 		$arr_recommendations = array(
-			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
-			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
-			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-			array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
-			array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", 'lang_base')),
-			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
-			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
-			array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
-			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
-			array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
-			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
-			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
-			array("Wordfence Security", 'wordfence/wordfence.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
-			array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
-			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
-			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
-			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
+			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", $this->lang_key)),
+			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", $this->lang_key)),
+			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", $this->lang_key)),
+			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", $this->lang_key)),
+			array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", $this->lang_key)),
+			array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", $this->lang_key)),
+			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", $this->lang_key)),
+			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", $this->lang_key)),
+			array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", $this->lang_key)),
+			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", $this->lang_key)),
+			array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", $this->lang_key)),
+			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", $this->lang_key)),
+			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", $this->lang_key)),
+			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", $this->lang_key)),
+			array("Wordfence Security", 'wordfence/wordfence.php', __("to add security measures and the possibility to scan for vulnerabilities", $this->lang_key)),
+			array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", $this->lang_key)),
+			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", $this->lang_key)),
+			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", $this->lang_key)),
+			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", $this->lang_key)),
 		);
 
 		if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
 		{
-			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
-			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
-			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
+			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", $this->lang_key));
+			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", $this->lang_key));
+			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", $this->lang_key));
 		}
 
 		foreach($arr_recommendations as $value)
@@ -1024,7 +1025,7 @@ class mf_base
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
 		wp_enqueue_script('jquery-ui-autocomplete');
-		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", 'lang_base')), $plugin_version);
+		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", $this->lang_key)), $plugin_version);
 
 		if($pagenow == 'options-general.php' && check_var('page') == 'settings_mf_base')
 		{
@@ -1067,7 +1068,7 @@ class mf_base
 			{
 				$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button'>
 					<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span> "
-					.__("Add Content", 'lang_base')
+					.__("Add Content", $this->lang_key)
 				."</a>";
 			}
 		}
@@ -1084,8 +1085,8 @@ class mf_base
 			echo "<div id='mf_shortcode_container' class='hide'>
 				<div class='mf_form mf_shortcode_wrapper'>"
 					.apply_filters('get_shortcode_output', '')
-					.show_button(array('text' => __("Insert", 'lang_base')))
-					.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary"))
+					.show_button(array('text' => __("Insert", $this->lang_key)))
+					.show_button(array('text' => __("Cancel", $this->lang_key), 'class' => "button-secondary"))
 				."</div>
 			</div>";
 		}
@@ -1120,7 +1121,7 @@ class mf_base
 	{
 		$meta_boxes[] = array(
 			'id' => $this->meta_prefix.'content',
-			'title' => __("Added Content", 'lang_base'),
+			'title' => __("Added Content", $this->lang_key),
 			'post_types' => array('page'),
 			//'context' => 'side',
 			'priority' => 'low',
@@ -1185,7 +1186,7 @@ class mf_base
 			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
 		}
 
-		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", 'lang_base'), 'read_more' => __("Read More", 'lang_base')), $plugin_version);
+		mf_enqueue_script('script_base', $plugin_include_url."script.js", array('confirm_question' => __("Are you sure?", $this->lang_key), 'read_more' => __("Read More", $this->lang_key)), $plugin_version);
 	}
 
 	function phpmailer_init($phpmailer)
@@ -1516,7 +1517,7 @@ class mf_base
 
 				if($success)
 				{
-					$done_text = sprintf(__("I successfully updated %s", 'lang_base'), ".htaccess");
+					$done_text = sprintf(__("I successfully updated %s", $this->lang_key), ".htaccess");
 
 					$out .= get_notification();
 				}
@@ -1543,7 +1544,7 @@ class mf_base
 				$out .= "<div class='mf_form'>"
 					."<h3 class='display_warning'>
 						<i class='fa fa-exclamation-triangle yellow'></i> "
-						.sprintf(__("Add this to the beginning of %s", 'lang_base'), $config_file)
+						.sprintf(__("Add this to the beginning of %s", $this->lang_key), $config_file)
 					."</h3>"
 					."<p class='input'>".nl2br($new_content)."</p>"
 				."</div>";
@@ -1593,7 +1594,7 @@ class mf_base
 
 		if(in_array('lost_connection', $arr_type) && !isset($this->template_lost_connection))
 		{
-			$out .= "<div id='overlay_lost_connection' class='overlay_container hide'><div>".__("Lost Connection", 'lang_base')."</div></div>";
+			$out .= "<div id='overlay_lost_connection' class='overlay_container hide'><div>".__("Lost Connection", $this->lang_key)."</div></div>";
 
 			$this->template_lost_connection = true;
 		}
@@ -1681,7 +1682,7 @@ class recommend_plugin
 {
 	function __construct($data)
 	{
-		global $pagenow;
+		global $obj_base, $pagenow;
 
 		if(!isset($data['url'])){			$data['url'] = "";}
 		if(!isset($data['show_notice'])){	$data['show_notice'] = true;}
@@ -1693,7 +1694,7 @@ class recommend_plugin
 
 			if($pagenow == 'plugins.php' && $data['show_notice'] == true && $data['name'] != '')
 			{
-				$this->message = sprintf(__("We highly recommend that you install %s aswell", 'lang_base'), $a_start.$data['name'].$a_end).($data['text'] != '' ? " ".$data['text'] : "");
+				$this->message = sprintf(__("We highly recommend that you install %s aswell", $obj_base->lang_key), $a_start.$data['name'].$a_end).($data['text'] != '' ? " ".$data['text'] : "");
 
 				add_action('network_admin_notices', array($this, 'show_notice'));
 				add_action('admin_notices', array($this, 'show_notice'));
@@ -2040,11 +2041,13 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function get_bulk_actions()
 	{
+		global $obj_base;
+
 		$actions = array();
 
 		if(isset($this->columns['cb']))
 		{
-			$actions['delete'] = __("Delete", 'lang_base');
+			$actions['delete'] = __("Delete", $obj_base->lang_key);
 		}
 
 		return $actions;
@@ -2085,6 +2088,8 @@ class mf_list_table extends WP_List_Table
 
 	protected function extra_tablenav( $which )
 	{
+		global $obj_base;
+
 		echo "<div class='alignleft actions'>";
 
 			if('top' === $which && !is_singular())
@@ -2117,7 +2122,7 @@ class mf_list_table extends WP_List_Table
 				{
 					echo $output;
 
-					submit_button(__("Filter", 'lang_base'), '', 'filter_action', false, array('id' => 'post-query-submit'));
+					submit_button(__("Filter", $obj_base->lang_key), '', 'filter_action', false, array('id' => 'post-query-submit'));
 				}
 			}
 
@@ -2218,9 +2223,11 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
+		global $obj_base;
+
 		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
-			$this->search_box(__("Search", 'lang_base'), $this->search_key);
+			$this->search_box(__("Search", $obj_base->lang_key), $this->search_key);
 
 			echo input_hidden(array('name' => 'page', 'value' => $this->page));
 
@@ -2237,7 +2244,7 @@ class mf_list_table extends WP_List_Table
 
 	function select_data($data = array())
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		if(!isset($data['full_data'])){		$data['full_data'] = false;}
 		if(!isset($data['sort_data'])){		$data['sort_data'] = false;}
@@ -2310,7 +2317,7 @@ class mf_list_table extends WP_List_Table
 			{
 				case 'echo':
 					echo "<br>mf_list_table->select_data() query: ".$wpdb->last_query."<br>"
-					.__("Rows", 'lang_base').": ".$this->num_rows."<br>";
+					.__("Rows", $obj_base->lang_key).": ".$this->num_rows."<br>";
 				break;
 
 				case 'return':
@@ -2332,7 +2339,7 @@ class mf_list_table extends WP_List_Table
 			{
 				if($data['debug'] == true)
 				{
-					echo __("Sorting", 'lang_base')."&hellip;<br>";
+					echo __("Sorting", $obj_base->lang_key)."&hellip;<br>";
 				}
 
 				$this->sort_data();
@@ -2340,7 +2347,7 @@ class mf_list_table extends WP_List_Table
 
 				if($data['debug'] == true)
 				{
-					echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
+					echo __("Rows", $obj_base->lang_key).": ".$this->num_rows."<br>";
 				}
 			}
 		}
@@ -2414,8 +2421,10 @@ if(class_exists('RWMB_Field'))
 	{
 		static public function html($meta, $field)
 		{
+			global $obj_base;
+
 			return sprintf(
-				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", 'lang_base')."&hellip;'%s>",
+				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", $obj_base->lang_key)."&hellip;'%s>",
 				$field['field_name'],
 				$field['id'],
 				$meta,
@@ -2462,9 +2471,11 @@ class settings_page
 
 	public function add_plugin_page()
 	{
+		global $obj_base;
+
 		add_options_page(
-			__("My Settings", 'lang_base'),
-			__("My Settings", 'lang_base'),
+			__("My Settings", $obj_base->lang_key),
+			__("My Settings", $obj_base->lang_key),
 			'manage_options',
 			$this->options_page,
 			array($this, 'create_admin_page')
@@ -2507,8 +2518,10 @@ class settings_page
 
 	public function create_admin_page()
 	{
+		global $obj_base;
+
 		echo "<div class='wrap'>
-			<h2>".__("My Settings", 'lang_base')."</h2>
+			<h2>".__("My Settings", $obj_base->lang_key)."</h2>
 			<div class='settings-wrap loading'>
 				<div class='settings-nav contextual-help-tabs'>
 					<ul></ul>
@@ -2728,6 +2741,8 @@ class mf_export
 {
 	function __construct($data = array())
 	{
+		global $obj_base;
+
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 		$this->dir_exists = true;
 
@@ -2744,7 +2759,7 @@ class mf_export
 		$this->types = array();
 
 		$this->formats = array(
-			'' => "-- ".__("Choose Here", 'lang_base')." --",
+			'' => "-- ".__("Choose Here", $obj_base->lang_key)." --",
 			'csv' => "CSV",
 			'json' => "JSON",
 		);
@@ -2778,7 +2793,7 @@ class mf_export
 
 	function save_data()
 	{
-		global $error_text, $done_text;
+		global $obj_base, $error_text, $done_text;
 
 		$out = "";
 
@@ -2823,12 +2838,12 @@ class mf_export
 
 							if($success == true)
 							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+								$done_text = __("Download the exported file here", $obj_base->lang_key).": <a href='".$this->upload_url.$file."'>".$file."</a>";
 							}
 
 							else
 							{
-								$error_text = __("It was not possible to export", 'lang_base');
+								$error_text = __("It was not possible to export", $obj_base->lang_key);
 							}
 						break;
 
@@ -2837,12 +2852,12 @@ class mf_export
 
 							if($success == true)
 							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+								$done_text = __("Download the exported file here", $obj_base->lang_key).": <a href='".$this->upload_url.$file."'>".$file."</a>";
 							}
 
 							else
 							{
-								$error_text = __("It was not possible to export", 'lang_base');
+								$error_text = __("It was not possible to export", $obj_base->lang_key);
 							}
 						break;
 
@@ -2878,14 +2893,14 @@ class mf_export
 							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
 							$objWriter->save($this->upload_path.$file);
 
-							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							$done_text = __("Download the exported file here", $obj_base->lang_key).": <a href='".$this->upload_url.$file."'>".$file."</a>";
 						break;
 					}
 				}
 
 				else
 				{
-					$error_text = __("There was nothing to export", 'lang_base');
+					$error_text = __("There was nothing to export", $obj_base->lang_key);
 				}
 
 				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));
@@ -2893,19 +2908,19 @@ class mf_export
 
 			else
 			{
-				$error_text = __("You have to choose a file type to export to", 'lang_base');
+				$error_text = __("You have to choose a file type to export to", $obj_base->lang_key);
 			}
 		}
 	}
 
 	function get_form()
 	{
-		global $error_text;
+		global $obj_base, $error_text;
 
 		$out = get_notification()
 		."<form action='#' method='post' class='mf_form mf_settings'>"
 			."<div id='poststuff' class='postbox'>
-				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
+				<h3 class='hndle'>".__("Settings", $obj_base->lang_key)."</h3>
 				<div class='inside'>";
 
 					if(count($this->types) > 0)
@@ -2915,11 +2930,11 @@ class mf_export
 
 					if(count($this->formats) > 0)
 					{
-						$out .= show_select(array('data' => $this->formats, 'name' => 'strExportFormat', 'text' => __("File type", 'lang_base'), 'value' => $this->format));
+						$out .= show_select(array('data' => $this->formats, 'name' => 'strExportFormat', 'text' => __("File type", $obj_base->lang_key), 'value' => $this->format));
 					}
 
 					$out .= $this->get_form_xtra()
-					.show_button(array('name' => 'btnExportRun', 'text' => __("Run", 'lang_base')))
+					.show_button(array('name' => 'btnExportRun', 'text' => __("Run", $obj_base->lang_key)))
 					.wp_nonce_field('export_run', '_wpnonce_export_run', true, false)
 				."</div>
 			</div>
@@ -3141,7 +3156,7 @@ class mf_import
 
 	function do_import()
 	{
-		global $wpdb, $done_text, $error_text;
+		global $wpdb, $obj_base, $done_text, $error_text;
 
 		$out = "";
 
@@ -3650,42 +3665,42 @@ class mf_import
 
 					if($this->rows_updated > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d updated", 'lang_base'), $this->rows_updated);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d updated", $obj_base->lang_key), $this->rows_updated);
 					}
 
 					if($this->rows_up_to_date > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d up to date", 'lang_base'), $this->rows_up_to_date);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d up to date", $obj_base->lang_key), $this->rows_up_to_date);
 					}
 
 					if($this->rows_inserted > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d inserted", 'lang_base'), $this->rows_inserted);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d inserted", $obj_base->lang_key), $this->rows_inserted);
 					}
 
 					if($this->rows_not_inserted > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not inserted", 'lang_base'), $this->rows_not_inserted);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not inserted", $obj_base->lang_key), $this->rows_not_inserted);
 					}
 
 					if($this->rows_deleted > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d deleted", 'lang_base'), $this->rows_deleted);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d deleted", $obj_base->lang_key), $this->rows_deleted);
 					}
 
 					if($this->rows_not_deleted > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not deleted", 'lang_base'), $this->rows_not_deleted);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not deleted", $obj_base->lang_key), $this->rows_not_deleted);
 					}
 
 					if($this->rows_exists > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do exist", 'lang_base'), $this->rows_exists);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do exist", $obj_base->lang_key), $this->rows_exists);
 					}
 
 					if($this->rows_not_exists > 0)
 					{
-						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do not exist", 'lang_base'), $this->rows_not_exists);
+						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do not exist", $obj_base->lang_key), $this->rows_not_exists);
 					}
 
 					$out .= get_notification();
@@ -3694,7 +3709,7 @@ class mf_import
 
 			else
 			{
-				$error_text = __("The information that you are trying to import has been changed since checked. Please re-check and then run", 'lang_base');
+				$error_text = __("The information that you are trying to import has been changed since checked. Please re-check and then run", $obj_base->lang_key);
 
 				$out .= get_notification();
 			}
@@ -3719,33 +3734,35 @@ class mf_import
 
 	function get_form()
 	{
+		global $obj_base;
+
 		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import'>" // rel='import/check/".get_class($this)."'
 			."<div id='poststuff' class='postbox'>
-				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
+				<h3 class='hndle'>".__("Check", $obj_base->lang_key)."</h3>
 				<div class='inside'>";
 
 					/*if(count($this->actions) > 1)
 					{*/
 						$arr_data = array(
-							'' => "-- ".__("Choose Here", 'lang_base')." --",
+							'' => "-- ".__("Choose Here", $obj_base->lang_key)." --",
 						);
 
 						if(count($this->actions) == 0 || in_array('delete', $this->actions))
 						{
-							$arr_data['delete'] = __("Delete", 'lang_base');
+							$arr_data['delete'] = __("Delete", $obj_base->lang_key);
 						}
 
 						if(count($this->actions) == 0 || in_array('import', $this->actions))
 						{
-							$arr_data['import'] = __("Import", 'lang_base');
+							$arr_data['import'] = __("Import", $obj_base->lang_key);
 						}
 
 						if(count($this->actions) == 0 || in_array('search', $this->actions))
 						{
-							$arr_data['search'] = __("Search", 'lang_base');
+							$arr_data['search'] = __("Search", $obj_base->lang_key);
 						}
 
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action, 'required' => true));
+						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", $obj_base->lang_key), 'value' => $this->action, 'required' => true));
 					/*}
 
 					else
@@ -3755,17 +3772,17 @@ class mf_import
 
 					if($this->file_location == '')
 					{
-						$out .= show_textarea(array('name' => 'strImportText', 'text' => __("Text", 'lang_base'), 'value' => $this->text, 'size' => 'huge', 'placeholder' => __("Value 1	Value 2	Value 3", 'lang_base')));
+						$out .= show_textarea(array('name' => 'strImportText', 'text' => __("Text", $obj_base->lang_key), 'value' => $this->text, 'size' => 'huge', 'placeholder' => __("Value 1	Value 2	Value 3", $obj_base->lang_key)));
 					}
 
 					if($this->has_excel_support && $this->text == '')
 					{
-						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", 'lang_base'), 'required' => ($this->file_location != '' ? true : false)));
+						$out .= show_file_field(array('name' => 'strImportFile', 'text' => __("File", $obj_base->lang_key), 'required' => ($this->file_location != '' ? true : false)));
 					}
 
-					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip First Row", 'lang_base')))
-					.show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSaveResult', 'value' => $this->save_result, 'text' => __("Save Result", 'lang_base')))
-					.show_button(array('name' => 'btnImportCheck', 'text' => __("Check", 'lang_base')))
+					$out .= show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSkipHeader', 'value' => $this->skip_header, 'text' => __("Skip First Row", $obj_base->lang_key)))
+					.show_select(array('data' => get_yes_no_for_select(array('return_integer' => true)), 'name' => 'intImportSaveResult', 'value' => $this->save_result, 'text' => __("Save Result", $obj_base->lang_key)))
+					.show_button(array('name' => 'btnImportCheck', 'text' => __("Check", $obj_base->lang_key)))
 				."</div>
 			</div>";
 
@@ -3783,8 +3800,10 @@ class mf_import
 
 	function get_columns_for_select()
 	{
+		global $obj_base;
+
 		$this->columns_for_select = array(
-			'' => "-- ".__("Choose Here", 'lang_base')." --"
+			'' => "-- ".__("Choose Here", $obj_base->lang_key)." --"
 		);
 
 		foreach($this->columns as $key => $value)
@@ -3795,7 +3814,7 @@ class mf_import
 
 	function get_result()
 	{
-		global $error_text;
+		global $obj_base, $error_text;
 
 		$out = "";
 
@@ -3806,9 +3825,9 @@ class mf_import
 			$this->get_columns_for_select();
 
 			$out .= "<div id='poststuff' class='postbox'>
-				<h3 class='hndle'>".__("Run", 'lang_base')."</h3>
+				<h3 class='hndle'>".__("Run", $obj_base->lang_key)."</h3>
 				<div class='inside'>"
-					."<p>".__("Rows", 'lang_base').": ".$count_temp_rows."</p>";
+					."<p>".__("Rows", $obj_base->lang_key).": ".$count_temp_rows."</p>";
 
 					$arr_values = $this->data[0];
 					$count_temp_values = count($arr_values);
@@ -3819,7 +3838,7 @@ class mf_import
 
 						if($error_text == '' && count(array_keys($arr_values, $import_text)) > 1)
 						{
-							$error_text = __("There are multiple columns with the same name. This might become a problem when importing data.", 'lang_base')." (".$import_text.")";
+							$error_text = __("There are multiple columns with the same name. This might become a problem when importing data.", $obj_base->lang_key)." (".$import_text.")";
 						}
 
 						$strRowField = check_var('strRowCheck'.$i);
@@ -3843,18 +3862,18 @@ class mf_import
 							}
 						}
 
-						$out .= show_select(array('data' => $this->columns_for_select, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", 'lang_base')." ".($i + 1)." <span>(".$import_text.")</span>"));
+						$out .= show_select(array('data' => $this->columns_for_select, 'name' => 'strRowCheck'.$i, 'value' => $strRowField, 'text' => __("Column", $obj_base->lang_key)." ".($i + 1)." <span>(".$import_text.")</span>"));
 					}
 
 					$out .= "&nbsp;"
 					.get_notification()
-					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", 'lang_base')))
+					.show_button(array('name' => 'btnImportRun', 'text' => __("Run", $obj_base->lang_key)))
 					.wp_nonce_field('import_run', '_wpnonce_import_run', true, false)
 					.wp_nonce_field('import_data_'.md5(json_encode($this->data)), '_wpnonce_import_data', true, false)
 				."</div>
 			</div>
 			<div id='poststuff' class='postbox'>
-				<h3 class='hndle'>".__("Example", 'lang_base')."</h3>
+				<h3 class='hndle'>".__("Example", $obj_base->lang_key)."</h3>
 				<div class='inside'>
 					<table class='widefat striped'>";
 

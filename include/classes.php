@@ -930,14 +930,17 @@ class mf_base
 
 				if(!is_multisite() || is_main_site())
 				{
+					$option = 'no';
+					$xtra = "disabled";
+
 					$description = "";
 
-					if($option != 'yes')
+					/*if($option != 'yes')
 					{
 						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", $this->lang_key);
-					}
+					}*/
 
-					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
+					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'xtra' => $xtra, 'description' => $description));
 				}
 
 				else
@@ -1175,9 +1178,9 @@ class mf_base
 				{
 					$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
 
-					echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-brands-400.woff2' crossorigin>
-					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-regular-400.woff2' crossorigin>
-					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fa-solid-900.woff2' crossorigin>";
+					echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
+					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
+					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
 				}
 
 				mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
@@ -1513,14 +1516,44 @@ class mf_base
 
 			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'no') == 'yes' && (!is_multisite() || is_main_site()))
 			{
-				$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
+				// This has failed too many times, so until I've found a solution we'll just inactivate it
+				/*$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
 
 				if($success)
 				{
 					$done_text = sprintf(__("I successfully updated %s", $this->lang_key), ".htaccess");
 
 					$out .= get_notification();
+				}*/
+
+				// Maybe use this instead?
+				/*$success = file_put_contents($data['file']."_temp", $content);
+	
+				if($success > 0 && $success == count($content))
+				{
+					if(copy($data['file']."_temp", $data['file']))
+					{
+						unlink($data['file']."_temp");
+
+						$done_text = sprintf(__("I successfully updated %s", $this->lang_key), ".htaccess");
+
+						$out .= get_notification();
+					}
+
+					else
+					{
+						$error_text = sprintf(__("I could not update %s from the temp file", $this->lang_key), ".htaccess");
+
+						$out .= get_notification();
+					}
 				}
+	
+				else
+				{
+					$error_text = sprintf(__("I could not successfully update %s", $this->lang_key), ".htaccess")." (".$success." != ".count($content).")";
+
+					$out .= get_notification();
+				}*/
 			}
 
 			if($success == false && $data['update_with'] != '')

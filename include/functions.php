@@ -847,11 +847,16 @@ function is_domain_valid($email, $record = 'MX')
 	if(strpos($email, "@") === false)
 	{
 		do_log("Error in is_domain_valid(): ".$email." (".$record.")");
+
+		return false;
 	}
 
-	list($user, $domain) = explode("@", $email);
+	else
+	{
+		list($user, $domain) = explode("@", $email);
 
-	return checkdnsrr($domain, $record);
+		return checkdnsrr($domain, $record);
+	}
 }
 
 function get_post_meta_or_default($post_id, $key = '', $single = false, $default = '')

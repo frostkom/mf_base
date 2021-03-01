@@ -313,6 +313,19 @@ class mf_base
 		}
 	}
 
+	function plugins_loaded()
+	{
+		if(!defined('EMPTY_TRASH_DAYS'))
+		{
+			$setting_base_empty_trash_days = get_site_option('setting_base_empty_trash_days');
+
+			if($setting_base_empty_trash_days > 0)
+			{
+				define('EMPTY_TRASH_DAYS', $setting_base_empty_trash_days);
+			}
+		}
+	}
+
 	function init()
 	{
 		define('DEFAULT_DATE', "1982-08-04 23:15:00");
@@ -523,6 +536,8 @@ class mf_base
 		{
 			$arr_settings['setting_base_template_site'] = __("Template Site", $this->lang_key);
 		}
+		
+		$arr_settings['setting_base_empty_trash_days'] = __("Empty Trash After", $this->lang_key);
 
 		if(IS_SUPER_ADMIN)
 		{
@@ -833,6 +848,23 @@ class mf_base
 				update_option('option_sync_sites', $option_sync_sites, 'no');
 			}
 		}
+	}
+
+	function setting_base_empty_trash_days_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		settings_save_site_wide($setting_key);
+		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
+
+		$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
+		$description = "";
+
+		if($constant_option != $option)
+		{
+			$description = sprintf(__("This value has already been set to %d", $this->lang_key), $constant_option);
+		}
+
+		echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", $this->lang_key), 'description' => $description));
 	}
 
 	function get_server_type()
@@ -2080,7 +2112,18 @@ class mf_list_table extends WP_List_Table
 
 		if(isset($this->columns['cb']))
 		{
-			$actions['delete'] = __("Delete", $obj_base->lang_key);
+			$post_status = check_var('post_status');
+
+			if($post_status == 'trash')
+			{
+				$actions['restore'] = __("Restore", $obj_base->lang_key);
+				$actions['delete'] = __("Permanently Delete", $obj_base->lang_key);
+			}
+
+			else
+			{
+				$actions['trash'] = __("Trash", $obj_base->lang_key);
+			}
 		}
 
 		return $actions;
@@ -2093,7 +2136,7 @@ class mf_list_table extends WP_List_Table
 	 *
 	 * @see $this->prepare_items()
 	 **************************************************************************/
-	function bulk_delete()
+	function bulk_trash()
 	{
 		if(isset($_GET[$this->post_type]))
 		{
@@ -2106,12 +2149,46 @@ class mf_list_table extends WP_List_Table
 		}
 	}
 
+	function bulk_restore()
+	{
+		if(isset($_GET[$this->post_type]))
+		{
+			foreach($_GET[$this->post_type] as $post_id)
+			{
+				$post_id = check_var($post_id, 'int', false);
+
+				wp_untrash_post($post_id);
+			}
+		}
+	}
+
+	function bulk_delete()
+	{
+		if(isset($_GET[$this->post_type]))
+		{
+			foreach($_GET[$this->post_type] as $post_id)
+			{
+				$post_id = check_var($post_id, 'int', false);
+
+				wp_delete_post($post_id);
+			}
+		}
+	}
+
 	function process_bulk_action()
 	{
 		if(isset($_GET['_wpnonce']) && !empty($_GET['_wpnonce']))
 		{
 			switch($this->current_action())
 			{
+				case 'trash':
+					$this->bulk_trash();
+				break;
+
+				case 'restore':
+					$this->bulk_restore();
+				break;
+
 				case 'delete':
 					$this->bulk_delete();
 				break;
@@ -2119,7 +2196,7 @@ class mf_list_table extends WP_List_Table
 		}
 	}
 
-	protected function extra_tablenav( $which )
+	protected function extra_tablenav($which)
 	{
 		global $obj_base;
 

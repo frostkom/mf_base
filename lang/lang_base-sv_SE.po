@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-01 10:57+0100\n"
+"POT-Creation-Date: 2021-03-02 08:52+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -154,6 +154,10 @@ msgstr "Startades senast %s men har inte avslutats"
 msgid "Has never been run"
 msgstr "Har inte körts tidigare"
 
+#: ../include/classes.php:972
+msgid "Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature"
+msgstr "Var säker på att du vet vad du gör, och har full tillgång till servern där denna fil finns, innan du aktiverar denna funktion"
+
 #: ../include/classes.php:980
 msgid "You can only change this setting on the main site"
 msgstr "Du kan bara ändra denna inställning på huvudwebbplatsen"
@@ -280,6 +284,21 @@ msgstr "Är du säker?"
 msgid "Read More"
 msgstr "Läs mer"
 
+#: ../include/classes.php:1570
+#, php-format
+msgid "I successfully updated %s with %s"
+msgstr "Jag uppdaterade %s med %s"
+
+#: ../include/classes.php:1577
+#, php-format
+msgid "I could not update %s with %s from the temp file"
+msgstr "Jag kunde inte uppdatera %s med %s från den temporära filen"
+
+#: ../include/classes.php:1585
+#, php-format
+msgid "I could not successfully update %s with %s"
+msgstr "Jag lyckades inte uppdatera %s med %s"
+
 #: ../include/classes.php:1612
 #, php-format
 msgid "Add this to the beginning of %s"
@@ -308,8 +327,9 @@ msgid "Permanently Delete"
 msgstr "Radera permanent"
 
 #: ../include/classes.php:2125
-msgid "Trash"
-msgstr "Lägg i papperskorgen"
+#: ../include/classes.php:3862
+msgid "Delete"
+msgstr "Radera"
 
 #: ../include/classes.php:2235
 msgid "Filter"
@@ -439,10 +459,6 @@ msgstr "Informationen som du försöker importera har ändrats sedan du kollade.
 #: ../include/classes.php:3895
 msgid "Check"
 msgstr "Kolla"
-
-#: ../include/classes.php:3862
-msgid "Delete"
-msgstr "Radera"
 
 #: ../include/classes.php:3867
 msgid "Import"
@@ -762,15 +778,8 @@ msgstr "Fredag"
 msgid "Saturday"
 msgstr "Lördag"
 
-#~ msgid ""
-#~ "Make sure that you know what you are doing, and have full access to the "
-#~ "server where the file is located, before activating this feature"
-#~ msgstr ""
-#~ "Var säker på att du vet vad du gör, och har full tillgång till servern "
-#~ "där denna fil finns, innan du aktiverar denna funktion"
-
-#~ msgid "I successfully updated %s"
-#~ msgstr "Jag uppdaterade %s"
+#~ msgid "Trash"
+#~ msgstr "Lägg i papperskorgen"
 
 #~ msgid "Plugin"
 #~ msgstr "Tillägg"

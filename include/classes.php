@@ -536,7 +536,7 @@ class mf_base
 		{
 			$arr_settings['setting_base_template_site'] = __("Template Site", $this->lang_key);
 		}
-		
+
 		$arr_settings['setting_base_empty_trash_days'] = __("Empty Trash After", $this->lang_key);
 
 		if(IS_SUPER_ADMIN)
@@ -962,15 +962,16 @@ class mf_base
 
 				if(!is_multisite() || is_main_site())
 				{
-					$option = 'no';
-					$xtra = "disabled";
-
+					$xtra = "";
 					$description = "";
 
-					/*if($option != 'yes')
+					/*$option = 'no';
+					$xtra = "disabled";*/
+
+					if($option != 'yes')
 					{
 						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", $this->lang_key);
-					}*/
+					}
 
 					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'xtra' => $xtra, 'description' => $description));
 				}
@@ -1509,7 +1510,7 @@ class mf_base
 	############################
 	function update_config($data)
 	{
-		global $done_text;
+		global $done_text, $error_text;
 
 		if(!isset($data['file'])){			$data['file'] = false;}
 		if(!isset($data['auto_update'])){	$data['auto_update'] = false;}
@@ -1522,7 +1523,7 @@ class mf_base
 		}
 
 		$old_md5 = get_match("/BEGIN ".$data['plugin_name']." \((.*?)\)/is", $content, false);
-		$new_md5 = md5($data['update_with']);
+		$new_md5 = ($data['update_with'] != '' ? md5($data['update_with']) : '');
 
 		if($new_md5 != $old_md5)
 		{
@@ -1553,39 +1554,41 @@ class mf_base
 
 				if($success)
 				{
-					$done_text = sprintf(__("I successfully updated %s", $this->lang_key), ".htaccess");
+					$done_text = sprintf(__("I successfully updated %s with %s", $this->lang_key), ".htaccess", $data['plugin_name']);
 
 					$out .= get_notification();
 				}*/
 
 				// Maybe use this instead?
-				/*$success = file_put_contents($data['file']."_temp", $content);
-	
-				if($success > 0 && $success == count($content))
+				$success = file_put_contents($data['file']."_temp", $content);
+
+				if($success > 0 && $success == strlen($content))
 				{
 					if(copy($data['file']."_temp", $data['file']))
 					{
-						unlink($data['file']."_temp");
-
-						$done_text = sprintf(__("I successfully updated %s", $this->lang_key), ".htaccess");
+						$done_text = sprintf(__("I successfully updated %s with %s", $this->lang_key), ".htaccess", $data['plugin_name']);
+						//$done_text .= " (".$new_md5." != ".$old_md5.")";
+						//$done_text .= " (".$old_content." -> ".$new_content." -> ".$content.")";
 
 						$out .= get_notification();
 					}
 
 					else
 					{
-						$error_text = sprintf(__("I could not update %s from the temp file", $this->lang_key), ".htaccess");
+						$error_text = sprintf(__("I could not update %s with %s from the temp file", $this->lang_key), ".htaccess", $data['plugin_name']);
 
 						$out .= get_notification();
 					}
 				}
-	
+
 				else
 				{
-					$error_text = sprintf(__("I could not successfully update %s", $this->lang_key), ".htaccess")." (".$success." != ".count($content).")";
+					$error_text = sprintf(__("I could not successfully update %s with %s", $this->lang_key), ".htaccess", $data['plugin_name'])." (".$success." != ".strlen($content).")";
 
 					$out .= get_notification();
-				}*/
+				}
+
+				@unlink($data['file']."_temp");
 			}
 
 			if($success == false && $data['update_with'] != '')
@@ -2122,7 +2125,7 @@ class mf_list_table extends WP_List_Table
 
 			else
 			{
-				$actions['trash'] = __("Trash", $obj_base->lang_key);
+				$actions['trash'] = __("Delete", $obj_base->lang_key);
 			}
 		}
 

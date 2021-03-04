@@ -1034,6 +1034,7 @@ class mf_base
 		{
 			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", $this->lang_key));
 			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", $this->lang_key));
+			$arr_recommendations[] = array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", $this->lang_key));
 			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", $this->lang_key));
 		}
 

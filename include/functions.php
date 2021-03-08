@@ -4,7 +4,14 @@ function get_placeholder_email()
 {
 	global $obj_base;
 
-	return __("your-name", $obj_base->lang_key)."@".get_site_url_clean(array('trim' => "/"));
+	$site_url_clean = get_site_url_clean(array('trim' => "/"));
+
+	if(strpos($site_url_clean, "/"))
+	{
+		list($site_url_clean, $rest) = explode("/", $site_url_clean, 2);
+	}
+
+	return __("your-name", $obj_base->lang_key)."@".$site_url_clean;
 }
 
 function setting_time_limit($data)

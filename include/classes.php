@@ -685,8 +685,6 @@ class mf_base
 			$free_percent = ($free_space / $total_space) * 100;
 		}
 
-		$load = sys_getloadavg();
-
 		echo "<div class='flex_flow'>
 			<div>
 				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
@@ -776,11 +774,18 @@ class mf_base
 				<p>
 					<i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
 					.__("Memory Limit", $this->lang_key).": ".show_final_size($memory_limit)
-				."</p>
-				<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 1 ".__("min", $this->lang_key).": ".mf_format_number($load[0])."</p>
-				<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 5 ".__("min", $this->lang_key).": ".mf_format_number($load[1])."</p>
-				<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 15 ".__("min", $this->lang_key).": ".mf_format_number($load[2])."</p>
-			</div>
+				."</p>";
+
+				if(function_exists('sys_getloadavg'))
+				{
+					$load = sys_getloadavg();
+
+					echo "<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 1 ".__("min", $this->lang_key).": ".mf_format_number($load[0])."</p>
+					<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 5 ".__("min", $this->lang_key).": ".mf_format_number($load[1])."</p>
+					<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 15 ".__("min", $this->lang_key).": ".mf_format_number($load[2])."</p>";
+				}
+
+			echo "</div>
 		</div>";
 	}
 

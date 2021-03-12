@@ -616,12 +616,12 @@ class mf_base
 
 				if(preg_match('/_posts$/', $table_name))
 				{
-						$result_post_types = $wpdb->get_results($wpdb->prepare("SELECT post_type, COUNT(post_type) AS post_type_amount FROM ".$table_name." GROUP BY post_type ORDER BY post_type_amount DESC LIMIT 0, 3"));
+					$result_post_types = $wpdb->get_results($wpdb->prepare("SELECT post_type, COUNT(post_type) AS post_type_amount FROM ".$table_name." GROUP BY post_type ORDER BY post_type_amount DESC LIMIT 0, 3"));
 
-						foreach($result_post_types as $r)
-						{
-							$arr_content[$r->post_type] = $r->post_type_amount;
-						}
+					foreach($result_post_types as $r)
+					{
+						$arr_content[$r->post_type] = $r->post_type_amount;
+					}
 				}
 
 				else if(preg_match('/_postmeta$/', $table_name))

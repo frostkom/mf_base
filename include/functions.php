@@ -631,24 +631,35 @@ function send_email($data)
 
 function shorten_text($data)
 {
-	if(!isset($data['string'])){	$data['string'] = '';}
-	if(!isset($data['count'])){		$data['count'] = false;}
+	if(!isset($data['string'])){		$data['string'] = '';}
+	if(!isset($data['count'])){			$data['count'] = false;}
+	if(!isset($data['add_title'])){		$data['add_title'] = false;}
 
 	$out = "";
 
 	if(strlen($data['string']) > $data['limit'])
 	{
-		$out = trim(mb_substr($data['string'], 0, $data['limit']))."&hellip;";
-
-		if($data['count'] == true)
+		if($data['add_title'])
 		{
-			$out .= " (".strlen($data['string']).")";
+			$out .= "<span title='".$data['string']."'>";
+		}
+
+			$out .= trim(mb_substr($data['string'], 0, $data['limit']))."&hellip;";
+
+			if($data['count'] == true)
+			{
+				$out .= " (".strlen($data['string']).")";
+			}
+
+		if($data['add_title'])
+		{
+			$out .= "</span>";
 		}
 	}
 
 	else
 	{
-		$out = $data['string'];
+		$out .= $data['string'];
 	}
 
 	return $out;

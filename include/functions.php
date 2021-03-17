@@ -1553,18 +1553,14 @@ if(!function_exists('get_attachment_id_by_url'))
 	{
 		global $wpdb;
 
-		$out = "";
-
 		list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
 
 		$parsed_url = preg_replace("/\-\d+x\d+\./", ".", $parsed_url);
 
 		if($parsed_url != '')
 		{
-			$out = $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND guid RLIKE %s", $parsed_url));
+			return $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND guid RLIKE %s", 'attachment', $parsed_url));
 		}
-
-		return $out;
 	}
 }
 
@@ -1575,9 +1571,7 @@ function mf_format_number($in, $dec = 2)
 		$in = (float)$in;
 	}
 
-	$out = number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
-
-	return $out;
+	return number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
 }
 
 function mf_get_post_content($id, $field = 'post_content')

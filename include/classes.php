@@ -1243,9 +1243,9 @@ class mf_base
 		{
 			$phpmailer->IsHTML(true);
 
-			$setting_email_preferred_content_types = get_option('setting_email_preferred_content_types');
+			$arr_preferred_content_types = apply_filters('get_preferred_content_types', array(), $phpmailer->From);
 
-			if(!is_array($setting_email_preferred_content_types) || count($setting_email_preferred_content_types) == 0 || in_array('plain', $setting_email_preferred_content_types))
+			if(!is_array($arr_preferred_content_types) || count($arr_preferred_content_types) == 0 || in_array('plain', $arr_preferred_content_types))
 			{
 				$phpmailer->AltBody = strip_tags($phpmailer->Body);
 			}

@@ -532,7 +532,9 @@ function send_email($data)
 {
 	global $error_text, $phpmailer, $obj_base;
 
-	if(!isset($data['headers'])){		$data['headers'] = "From: ".get_bloginfo('name')." <".get_bloginfo('admin_email').">\r\n";}
+	if(!isset($data['from'])){			$data['from'] = get_bloginfo('admin_email');}
+	if(!isset($data['from_name'])){		$data['from_name'] = get_bloginfo('name');}
+	if(!isset($data['headers'])){		$data['headers'] = "From: ".$data['from_name']." <".$data['from'].">\r\n";}
 	if(!isset($data['attachment'])){	$data['attachment'] = array();}
 	if(!isset($data['save_log_type'])){	$data['save_log_type'] = 'plugin';}
 
@@ -566,9 +568,9 @@ function send_email($data)
 	{
 		if(contains_html($data['content']))
 		{
-			$setting_email_preferred_content_types = get_option('setting_email_preferred_content_types');
+			$arr_preferred_content_types = apply_filters('get_preferred_content_types', array(), $data['from']);
 
-			if(!is_array($setting_email_preferred_content_types) || count($setting_email_preferred_content_types) == 0 || in_array('html', $setting_email_preferred_content_types))
+			if(!is_array($arr_preferred_content_types) || count($arr_preferred_content_types) == 0 || in_array('html', $arr_preferred_content_types))
 			{
 				add_filter('wp_mail_content_type', array($obj_base, 'set_html_content_type'));
 

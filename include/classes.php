@@ -1528,8 +1528,17 @@ class mf_base
 			$content = get_file_content(array('file' => $data['file']));
 		}
 
-		$old_md5 = get_match("/BEGIN ".$data['plugin_name']." \((.*?)\)/is", $content, false);
 		$new_md5 = ($data['update_with'] != '' ? md5($data['update_with']) : '');
+		
+		if(preg_match("/BEGIN ".$data['plugin_name']." \(".$new_md5."\)/is", $content)) // If there are multiple "BEGIN [plugin_name] (md5)" due to differences depending on subsite
+		{
+			$old_md5 = $new_md5;
+		}
+
+		else
+		{
+			$old_md5 = get_match("/BEGIN ".$data['plugin_name']." \((.*?)\)/is", $content, false);
+		}
 
 		if($new_md5 != $old_md5)
 		{

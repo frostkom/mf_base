@@ -520,7 +520,6 @@ class mf_base
 
 		switch($this->get_server_type())
 		{
-			default:
 			case 'apache':
 				$config_file = ".htaccess";
 			break;
@@ -528,9 +527,20 @@ class mf_base
 			case 'nginx':
 				$config_file = "nginx.conf";
 			break;
+
+			case 'iis':
+				$config_file = "web.config";
+			break;
+
+			default:
+				$config_file = "";
+			break;
 		}
 
-		$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", $this->lang_key), $config_file);
+		if($config_file != '')
+		{
+			$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", $this->lang_key), $config_file);
+		}
 
 		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
 		{
@@ -876,19 +886,29 @@ class mf_base
 	{
 		if(!isset($this->server_type))
 		{
-			if(preg_match("/[Apache|LiteSpeed]/i", $_SERVER['SERVER_SOFTWARE']))
+			//if(preg_match("/[Apache|LiteSpeed]/i", $_SERVER['SERVER_SOFTWARE']))
+			if(stripos($_SERVER['SERVER_SOFTWARE'], "Apache") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "LiteSpeed") !== false)
 			{
 				$this->server_type = 'apache';
 			}
 
-			else if(preg_match("/Nginx/i", $_SERVER['SERVER_SOFTWARE']))
+			//else if(preg_match("/Nginx/i", $_SERVER['SERVER_SOFTWARE']))
+			else if(stripos($_SERVER['SERVER_SOFTWARE'], "Nginx") !== false)
 			{
 				$this->server_type = 'nginx';
+			}
+
+			//else if(preg_match("/[Microsoft|IIS]/i", $_SERVER['SERVER_SOFTWARE']))
+			else if(stripos($_SERVER['SERVER_SOFTWARE'], "Microsoft") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "IIS") !== false)
+			{
+				$this->server_type = 'iis';
 			}
 
 			else
 			{
 				$this->server_type = '';
+
+				do_log(__("Unknown Server", $this->lang_key).": ".$_SERVER['SERVER_SOFTWARE']);
 			}
 		}
 
@@ -1006,7 +1026,14 @@ class mf_base
 			break;
 
 			default:
-				echo __("Unknown Server", $this->lang_key).": ".$_SERVER['SERVER_SOFTWARE'];
+				$file_htaccess = get_home_path().".htaccess";
+
+				$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+
+				if($config['html'] != '')
+				{
+					echo $config['html'];
+				}
 			break;
 		}
 	}
@@ -1529,7 +1556,7 @@ class mf_base
 		}
 
 		$new_md5 = ($data['update_with'] != '' ? md5($data['update_with']) : '');
-		
+
 		if(preg_match("/BEGIN ".$data['plugin_name']." \(".$new_md5."\)/is", $content)) // If there are multiple "BEGIN [plugin_name] (md5)" due to differences depending on subsite
 		{
 			$old_md5 = $new_md5;
@@ -1614,13 +1641,16 @@ class mf_base
 
 				switch($this->get_server_type())
 				{
-					default:
 					case 'apache':
 						$config_file = ".htaccess";
 					break;
 
 					case 'nginx':
 						$config_file = "nginx.conf";
+					break;
+
+					case 'iis':
+						$config_file = "web.config";
 					break;
 				}
 

@@ -467,49 +467,59 @@ function get_toggler_container($data)
 
 function get_user_info($data = array())
 {
+	global $obj_base;
+
 	if(!isset($data['id'])){	$data['id'] = get_current_user_id();}
 	if(!isset($data['type'])){	$data['type'] = 'name';}
 
-	$user_data = get_userdata($data['id']);
-
-	if(isset($user_data->display_name))
+	if($data['id'] > 0)
 	{
-		switch($data['type'])
+		$user_data = get_userdata($data['id']);
+
+		if(isset($user_data->display_name))
 		{
-			case 'name':
-				return $user_data->display_name;
-			break;
+			switch($data['type'])
+			{
+				case 'name':
+					return $user_data->display_name;
+				break;
 
-			case 'shortname':
-			case 'short_name':
-				$display_name = $user_data->display_name;
+				case 'shortname':
+				case 'short_name':
+					$display_name = $user_data->display_name;
 
-				$arr_name = explode(" ", $display_name);
+					$arr_name = explode(" ", $display_name);
 
-				$short_name = "";
+					$short_name = "";
 
-				foreach($arr_name as $name)
-				{
-					$name_first_letter = substr($name, 0, 1);
-
-					if(htmlspecialchars($name_first_letter) == '')
+					foreach($arr_name as $name)
 					{
-						$name_first_letter = substr($name, 0, 2);
+						$name_first_letter = substr($name, 0, 1);
+
+						if(htmlspecialchars($name_first_letter) == '')
+						{
+							$name_first_letter = substr($name, 0, 2);
+						}
+
+						$short_name .= $name_first_letter;
 					}
 
-					$short_name .= $name_first_letter;
-				}
+					return "<span title='".$display_name."'>".$short_name."</span>";
+				break;
+			}
+		}
 
-				return "<span title='".$display_name."'>".$short_name."</span>";
-			break;
+		else
+		{
+			return '';
+
+			do_log(sprintf("There was no display name for %s (%d)", var_export($user_data, true), $data['id']));
 		}
 	}
 
 	else
 	{
-		return '';
-
-		do_log(sprintf("There was no display name for %s (%d)", var_export($user_data, true), $data['id']));
+		return __("Unknown", $obj_base->lang_key);
 	}
 }
 
@@ -1241,7 +1251,7 @@ function delete_base($data)
 	$data['field_prefix'] = esc_sql($data['field_prefix']);
 	$data['table'] = esc_sql($data['table']);
 
-	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
+	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND (".$data['field_prefix']."DeletedDate IS null OR ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)) LIMIT 0, 1000");
 
 	foreach($result as $r)
 	{
@@ -1249,19 +1259,32 @@ function delete_base($data)
 
 		$rows = 0;
 
+		$debug = "Checking ".$data['table_prefix'].$data['table']." #".$intID;
+
 		foreach($data['child_tables'] as $child_table => $child_table_type)
 		{
 			if($child_table_type['action'] == "trash" && does_table_exist($data['table_prefix'].$child_table))
 			{
 				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
-				$rows_temp = $wpdb->num_rows;
 
-				if($rows_temp > 0)
+				if($wpdb->num_rows > 0)
 				{
 					$wpdb->query($wpdb->prepare("UPDATE ".$data['table_prefix'].$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
 
-					$rows += $rows_temp;
+					$rows += $wpdb->rows_affected;
+
+					$debug .= ", Trashed ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
 				}
+
+				else
+				{
+					$debug .= ", No rows to delete in ".$data['table_prefix'].$child_table;
+				}
+			}
+
+			else
+			{
+				$debug .= ", No action (".$child_table_type['action'].") or table ".$data['table_prefix'].$child_table;
 			}
 		}
 
@@ -1272,11 +1295,17 @@ function delete_base($data)
 				if($child_table_type['action'] == "delete")
 				{
 					$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+
+					$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
 				}
 			}
 
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+
+			$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$data['table'];
 		}
+
+		//do_log("delete_base: ".$debug);
 	}
 }
 

@@ -492,7 +492,7 @@ class mf_base
 	function run_cron_end()
 	{
 		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
-		delete_option('option_cron_started');
+		//delete_option('option_cron_started');
 	}
 
 	function has_page_template($data = array())
@@ -951,7 +951,12 @@ class mf_base
 		$option_cron_started = get_option('option_cron_started');
 		$option_cron_run = get_option('option_cron_run');
 
-		if($option_cron_run != '' && $option_cron_run > $option_cron_started)
+		if($option_cron_started > $option_cron_run)
+		{
+			echo "<em>".sprintf(__("Last started %s but has not finished", $this->lang_key), format_date($option_cron_started))."</em>";
+		}
+
+		else if($option_cron_run != '')
 		{
 			if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
 			{
@@ -962,13 +967,15 @@ class mf_base
 
 			else
 			{
-				echo "<em>".sprintf(__("Last run %s", $this->lang_key), format_date($option_cron_run))."</em>";
-			}
-		}
+				$out_temp = format_date($option_cron_started);
 
-		else if($option_cron_started > $option_cron_run)
-		{
-			echo "<em>".sprintf(__("Last started %s but has not finished", $this->lang_key), format_date($option_cron_started))."</em>";
+				if(format_date($option_cron_run) != $out_temp)
+				{
+					$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_run);
+				}
+
+				echo "<em>".sprintf(__("Last run %s", $this->lang_key), $out_temp)."</em>";
+			}
 		}
 
 		else

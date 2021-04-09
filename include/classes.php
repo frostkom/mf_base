@@ -790,9 +790,9 @@ class mf_base
 				{
 					$load = sys_getloadavg();
 
-					echo "<p><i class='".($load[0] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 1 ".__("min", $this->lang_key).": ".mf_format_number($load[0])."</p>
-					<p><i class='".($load[1] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 5 ".__("min", $this->lang_key).": ".mf_format_number($load[1])."</p>
-					<p><i class='".($load[2] < 1 ? "fa fa-check green" : "fa fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 15 ".__("min", $this->lang_key).": ".mf_format_number($load[2])."</p>";
+					echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 1 ".__("min", $this->lang_key).": ".mf_format_number($load[0])."</p>
+					<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 5 ".__("min", $this->lang_key).": ".mf_format_number($load[1])."</p>
+					<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", $this->lang_key)." &lt; 15 ".__("min", $this->lang_key).": ".mf_format_number($load[2])."</p>";
 				}
 
 			echo "</div>

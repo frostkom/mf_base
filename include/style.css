@@ -657,9 +657,9 @@
 
 			.form_button button.is_disabled, .form_button .button.is_disabled
 			{
-				cursor: default;
+				cursor: no-drop;
 				opacity: .5;
-				pointer-events: none;
+				/*pointer-events: none;*/ /* This will prevent title/hover to work */
 			}
 
 			.form_button button.loading, .form_button .button.loading

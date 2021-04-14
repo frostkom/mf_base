@@ -26,11 +26,12 @@
 		top: 0;
 	}
 
-	/*#poststuff .add-new-h2
-	{
-		margin-bottom: .3em;
-		top: auto !important;
-	}*/
+		.wrap .add-new-h2.is_disabled
+		{
+			cursor: no-drop;
+			opacity: .5;
+			/*pointer-events: none;*/ /* This will prevent title/hover to work */
+		}
 
 	#poststuff .mf_form h4
 	{

@@ -697,8 +697,8 @@ class mf_base
 
 		echo "<div class='flex_flow'>
 			<div>
-				<p><i class='".($has_required_php_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-				<p title='".__("Prefix", $this->lang_key).": ".$wpdb->prefix."'><i class='".($has_required_mysql_version ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+				<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
+				<p title='".__("Prefix", $this->lang_key).": ".$wpdb->prefix."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
 				if(!($has_required_php_version && $has_required_mysql_version))
 				{
@@ -707,7 +707,7 @@ class mf_base
 
 				if($date_diff > 60)
 				{
-					echo "<p><i class='".($date_diff < 60 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
+					echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
 				}
 
 				else
@@ -738,7 +738,7 @@ class mf_base
 					}
 
 					echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
-						<i class='".($free_percent > 10 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+						<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 						.__("Disc Space", $this->lang_key).": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 					."</p>";
 				}
@@ -759,7 +759,7 @@ class mf_base
 					}
 
 					echo "<p>
-						<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+						<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 						.__("DB", $this->lang_key).": "
 						."<span title='".$table_names
 						."'>".sprintf(__("%d tables larger than %s", $this->lang_key), $option_base_large_table_amount, "10MB")."</span>"
@@ -773,7 +773,7 @@ class mf_base
 					if($option_base_large_table_amount > 0)
 					{
 						echo "<p>
-							<i class='".($option_base_large_table_amount == 0 ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+							<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("DB", $this->lang_key).": ".sprintf(__("%d tables larger than %s", $this->lang_key), $option_base_large_table_amount, "10MB")
 						."</p>";
 					}
@@ -782,7 +782,7 @@ class mf_base
 			echo "</div>
 			<div>
 				<p>
-					<i class='".($memory_limit > 200 * pow(1024, 2) ? "fa fa-check green" : "fa fa-times red display_warning")."'></i> "
+					<i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-times red display_warning")."'></i> "
 					.__("Memory Limit", $this->lang_key).": ".show_final_size($memory_limit)
 				."</p>";
 

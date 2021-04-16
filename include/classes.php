@@ -3155,6 +3155,11 @@ class mf_import
 	function updated_new($id){}
 	function update_options_extend($id){}
 
+	function filter_value($strRowField, $value)	
+	{
+		return $value;
+	}
+
 	function get_used_separator($data)
 	{
 		$str_separator = "";
@@ -3399,6 +3404,8 @@ class mf_import
 							{
 								$value = check_var($value, $this->validate_columns[$strRowField], false, '', true);
 							}
+
+							$value = $this->filter_value($strRowField, $value);
 
 							$this->get_external_value($strRowField, $value);
 

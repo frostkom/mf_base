@@ -519,7 +519,7 @@ function get_user_info($data = array())
 
 	else
 	{
-		return __("Unknown", $obj_base->lang_key);
+		return __("unknown", $obj_base->lang_key);
 	}
 }
 
@@ -1668,7 +1668,7 @@ function get_current_user_role($id = 0) // Change into function get_user_role()?
 
 	$user_data = get_userdata($id);
 
-	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("Unknown", $obj_base->lang_key).")";
+	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("unknown", $obj_base->lang_key).")";
 }
 
 //main_version * 10000 + minor_version * 100 + sub_version. For example, 4.1.0 is returned as 40100

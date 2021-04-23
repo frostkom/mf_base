@@ -3155,7 +3155,7 @@ class mf_import
 	function updated_new($id){}
 	function update_options_extend($id){}
 
-	function filter_value($strRowField, $value)	
+	function filter_value($strRowField, $value)
 	{
 		return $value;
 	}

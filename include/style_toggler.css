@@ -1,0 +1,100 @@
+@media all
+{
+	.toggler
+	{
+		background: rgba(255, 255, 255, .5);
+		border: 2px solid #eee;
+		border-radius: .2em;
+		display: block;
+		margin-top: .5em;
+		margin-bottom: .5em;
+		padding: .5em 1em;
+	}
+
+		.toggler.open
+		{
+			background: rgba(230, 230, 230, .5);
+			border-radius: .2em .2em 0 0;
+			margin-bottom: 0;
+		}
+
+		.toggler .fa + span, .toggler span + .fa
+		{
+			margin-left: .4em;
+		}
+
+			.toggler.icon_last
+			{
+				padding-right: 1.5em !important;
+				position: relative;
+			}
+
+				.toggler.icon_last > .fa
+				{
+					position: absolute;
+					right: .4em;
+				}
+
+			.toggler .toggle_icon_open
+			{
+				display: none;
+			}
+
+				.toggler.open .toggle_icon_closed
+				{
+					display: none;
+				}
+
+				.toggler.open .toggle_icon_open
+				{
+					display: inline;
+				}
+
+	.toggle_container
+	{
+		background: rgba(255, 255, 255, .5);
+		border-radius: 0 0 .2em .2em;
+		border: 2px solid #eee;
+		border-top-width: 0;
+		margin: 0 0 .5em 0;
+		overflow: hidden;
+		padding: .5em 1em;
+	}
+
+		.toggler.open.hide + .toggle_container
+		{
+			display: none;
+		}
+
+		.toggler.open + .toggle_container
+		{
+			display: block;
+		}
+
+		.toggle_container ol, .toggle_container ul
+		{
+			margin: .5em 0 0 .5em;
+			list-style: disc outside;
+		}
+
+			.toggle_container li + li
+			{
+				margin-top: 1em;
+			}
+
+				/*#mf-content .toggle_container p
+				{
+					margin: 0 0 .2em !important;
+				}*/
+
+				.toggle_container p:first-child
+				{
+					margin-top: 0;
+				}
+
+				.toggle_container span.grey a
+				{
+					color: inherit;
+					display: inline !important;
+				}
+}

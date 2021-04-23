@@ -437,6 +437,12 @@ function get_toggler_container($data)
 	switch($data['type'])
 	{
 		case 'start':
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
+
+			mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css", $plugin_version);
+			mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js", $plugin_version);
+
 			$icon = "<i class='".$data['icon']." fa-lg toggle_icon_closed'></i>
 			<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";

@@ -2613,7 +2613,15 @@ function get_url_content($data = array())
 					$data['url'] = $headers['redirect_url'];
 					$data['follow_redirect'] = false;
 
-					$out = get_url_content($data);
+					if($data['catch_head'] == true)
+					{
+						list($content, $headers) = get_url_content($data);
+					}
+
+					else
+					{
+						$content = get_url_content($data);
+					}
 				}
 			break;
 		}

@@ -1063,7 +1063,7 @@ class mf_base
 			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", $this->lang_key)),
 			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", $this->lang_key)),
 			array("Wordfence Security", 'wordfence/wordfence.php', __("to add security measures and the possibility to scan for vulnerabilities", $this->lang_key)),
-			array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", $this->lang_key)),
+			//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", $this->lang_key)),
 			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", $this->lang_key)),
 			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", $this->lang_key)),
 			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", $this->lang_key)),
@@ -2465,7 +2465,15 @@ class mf_list_table extends WP_List_Table
 
 		if($data['order_by'] != '')
 		{
-			$query_order .= " ORDER BY ".$data['order_by']." ".$data['order'];
+			if(is_array($data['order_by']) || is_array($data['order']))
+			{
+				do_log("select_data() - Error: ".var_export($data, true));
+			}
+
+			else
+			{
+				$query_order .= " ORDER BY ".$data['order_by']." ".$data['order'];
+			}
 		}
 
 		if($data['amount'] > 0)

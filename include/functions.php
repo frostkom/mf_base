@@ -11,7 +11,7 @@ function get_placeholder_email()
 		list($site_url_clean, $rest) = explode("/", $site_url_clean, 2);
 	}
 
-	return __("your-name", $obj_base->lang_key)."@".$site_url_clean;
+	return __("your-name", 'lang_base')."@".$site_url_clean;
 }
 
 function setting_time_limit($data)
@@ -334,9 +334,9 @@ function get_url_part($data)
 
 	$parsed_url = parse_url($data['url']);
 
-	$scheme = isset($parsed_url['scheme']) ? $parsed_url['scheme'].'://' : '';
-	$host = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-	$path = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+	$scheme = (isset($parsed_url['scheme']) ? $parsed_url['scheme'].'://' : '');
+	$host = (isset($parsed_url['host']) ? $parsed_url['host'] : '');
+	$path = (isset($parsed_url['path']) ? $parsed_url['path'] : '');
 
 	switch($data['type'])
 	{
@@ -525,7 +525,7 @@ function get_user_info($data = array())
 
 	else
 	{
-		return __("unknown", $obj_base->lang_key);
+		return __("unknown", 'lang_base');
 	}
 }
 
@@ -568,14 +568,14 @@ function send_email($data)
 
 	if($data['to'] == '')
 	{
-		$error_text = sprintf(__("The message had no recipient so %s could not be sent", $obj_base->lang_key), $data['subject']);
+		$error_text = sprintf(__("The message had no recipient so %s could not be sent", 'lang_base'), $data['subject']);
 
 		return false;
 	}
 
 	else if($data['content'] == '')
 	{
-		$error_text = sprintf(__("The message was empty so I could not send %s to %s", $obj_base->lang_key), $data['subject'], $data['to']);
+		$error_text = sprintf(__("The message was empty so I could not send %s to %s", 'lang_base'), $data['subject'], $data['to']);
 
 		return false;
 	}
@@ -627,7 +627,7 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(__("Message Sent", $obj_base->lang_key)." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
+				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -638,7 +638,7 @@ function send_email($data)
 
 		else
 		{
-			do_log(__("Message NOT Sent", $obj_base->lang_key)." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true));
+			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true));
 
 			do_action('sent_email_error', $phpmailer->From);
 		}
@@ -1107,7 +1107,7 @@ function format_date($in)
 
 			else if($one_day_ago == $date_short)
 			{
-				$out .= __("Yesterday", $obj_base->lang_key)."&nbsp;";
+				$out .= __("Yesterday", 'lang_base')."&nbsp;";
 			}
 
 			if($date_year != date("Y") && $in < $one_week_ago)
@@ -1164,7 +1164,7 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 		if($dir_exists == false)
 		{
-			$error_text = sprintf(__("Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder", $obj_base->lang_key), $subfolder);
+			$error_text = sprintf(__("Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $subfolder);
 
 			$upload_path = $upload_url = "";
 		}
@@ -1204,7 +1204,7 @@ function insert_attachment($data)
 
 		if(!($intFileID > 0))
 		{
-			$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", $obj_base->lang_key).": ".$temp_file;
+			$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", 'lang_base').": ".$temp_file;
 		}
 	}
 
@@ -1375,10 +1375,10 @@ function get_media_library($data)
 	if(!isset($data['value'])){			$data['value'] = '';}
 	if(!isset($data['description'])){	$data['description'] = '';}
 
-	$add_file_text = __("Add File", $obj_base->lang_key);
-	$change_file_text = __("Change File", $obj_base->lang_key);
-	$insert_file_text = __("Insert File", $obj_base->lang_key);
-	$insert_text = __("Insert", $obj_base->lang_key);
+	$add_file_text = __("Add File", 'lang_base');
+	$change_file_text = __("Change File", 'lang_base');
+	$insert_file_text = __("Insert File", 'lang_base');
+	$insert_text = __("Insert", 'lang_base');
 
 	if(!isset($is_media_library_init))
 	{
@@ -1436,7 +1436,7 @@ function get_media_button($data = array())
 
 	if(!isset($data['name'])){				$data['name'] = "mf_media_urls";}
 	if(!isset($data['label'])){				$data['label'] = "";}
-	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", $obj_base->lang_key);}
+	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", 'lang_base');}
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
 	if(!isset($data['multiple'])){			$data['multiple'] = true;}
@@ -1459,9 +1459,9 @@ function get_media_button($data = array())
 			mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
 			mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 				//'multiple' => $data['multiple'],
-				'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", $obj_base->lang_key),
-				'unknown_title' => __("Unknown title", $obj_base->lang_key),
-				'confirm_question' => __("Are you sure?", $obj_base->lang_key),
+				'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
+				'unknown_title' => __("Unknown title", 'lang_base'),
+				'confirm_question' => __("Are you sure?", 'lang_base'),
 				//'max_file_uploads' => $data['max_file_uploads'],
 			), $plugin_version);
 
@@ -1563,7 +1563,7 @@ function get_attachment_to_send($string)
 
 		if(count($arr_ids) == 0 && count($arr_files) == 0)
 		{
-			$error_text = sprintf(__("The file (%s) could not be found in the DB", $obj_base->lang_key), $string);
+			$error_text = sprintf(__("The file (%s) could not be found in the DB", 'lang_base'), $string);
 		}
 	}
 
@@ -1659,7 +1659,7 @@ function require_plugin($required_path, $required_name, $require_url = "")
 	{
 		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
-		mf_trigger_error(sprintf(__("You need to install the plugin %s first", $obj_base->lang_key), $a_start.$required_name.$a_end), E_USER_ERROR);
+		mf_trigger_error(sprintf(__("You need to install the plugin %s first", 'lang_base'), $a_start.$required_name.$a_end), E_USER_ERROR);
 	}
 }
 
@@ -1674,7 +1674,7 @@ function get_current_user_role($id = 0) // Change into function get_user_role()?
 
 	$user_data = get_userdata($id);
 
-	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("unknown", $obj_base->lang_key).")";
+	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("unknown", 'lang_base').")";
 }
 
 //main_version * 10000 + minor_version * 100 + sub_version. For example, 4.1.0 is returned as 40100
@@ -1751,12 +1751,12 @@ function get_next_cron($data = array()) //$raw = false
 	{
 		if($mins > 0 && $mins < 60)
 		{
-			$out = sprintf(($mins == 1 ? __("in %d minute", $obj_base->lang_key) : __("in %d minutes", $obj_base->lang_key)), $mins);
+			$out = sprintf(($mins == 1 ? __("in %d minute", 'lang_base') : __("in %d minutes", 'lang_base')), $mins);
 		}
 
 		else if($mins == 0)
 		{
-			$out = __("at any moment", $obj_base->lang_key);
+			$out = __("at any moment", 'lang_base');
 		}
 
 		else
@@ -1770,7 +1770,7 @@ function get_next_cron($data = array()) //$raw = false
 
 			if($option_cron_run < date("Y-m-d H:i:s", strtotime("-1 minute")))
 			{
-				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", $obj_base->lang_key)."</a>";
+				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
 
 					if($mins < -1)
 					{
@@ -2033,7 +2033,7 @@ function get_yes_no_for_select($data = array())
 	global $obj_base;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
-	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", $obj_base->lang_key);}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 
 	$arr_data = array();
@@ -2045,14 +2045,14 @@ function get_yes_no_for_select($data = array())
 
 	if($data['return_integer'] == true)
 	{
-		$arr_data[1] = __("Yes", $obj_base->lang_key);
-		$arr_data[0] = __("No", $obj_base->lang_key);
+		$arr_data[1] = __("Yes", 'lang_base');
+		$arr_data[0] = __("No", 'lang_base');
 	}
 
 	else
 	{
-		$arr_data['yes'] = __("Yes", $obj_base->lang_key);
-		$arr_data['no'] = __("No", $obj_base->lang_key);
+		$arr_data['yes'] = __("Yes", 'lang_base');
+		$arr_data['no'] = __("No", 'lang_base');
 	}
 
 	return $arr_data;
@@ -2064,7 +2064,7 @@ function get_roles_for_select($data = array())
 
 	if(!isset($data['array'])){				$data['array'] = array();}
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
-	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", $obj_base->lang_key);}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
 	if(!isset($data['use_capability'])){	$data['use_capability'] = true;}
 	if(!isset($data['exclude'])){			$data['exclude'] = array();}
@@ -2076,7 +2076,7 @@ function get_roles_for_select($data = array())
 
 	if(is_multisite() && $data['use_capability'] == true)
 	{
-		$data['array']['update_core'] = __("Super Admin", $obj_base->lang_key);
+		$data['array']['update_core'] = __("Super Admin", 'lang_base');
 	}
 
 	$roles = get_all_roles();
@@ -2102,7 +2102,7 @@ function get_users_for_select($data = array())
 	global $obj_base;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
-	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", $obj_base->lang_key);}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['include'])){			$data['include'] = array();}
 	if(!isset($data['exclude_inactive'])){	$data['exclude_inactive'] = true;}
 	if(!isset($data['callback'])){			$data['callback'] = '';}
@@ -2171,7 +2171,7 @@ function get_post_types_for_select($data = array())
 		{
 			if($opt_groups == true)
 			{
-				$arr_data['opt_start_pages'] = __("Pages", $obj_base->lang_key);
+				$arr_data['opt_start_pages'] = __("Pages", 'lang_base');
 			}
 
 				foreach($arr_pages as $post_id => $post_title)
@@ -2196,7 +2196,7 @@ function get_post_types_for_select($data = array())
 
 	if($opt_groups == true)
 	{
-		$arr_data['opt_start_post_types'] = __("Post Types", $obj_base->lang_key);
+		$arr_data['opt_start_post_types'] = __("Post Types", 'lang_base');
 	}
 
 		if(in_array('types', $data['include']))
@@ -2242,13 +2242,13 @@ function get_post_types_for_select($data = array())
 
 		if(count($arr_categories) > 0)
 		{
-			$arr_data['is_category()'] = __("Category", $obj_base->lang_key);
+			$arr_data['is_category()'] = __("Category", 'lang_base');
 
 			if(count($arr_categories) > 1)
 			{
 				if($opt_groups == true)
 				{
-					$arr_data['opt_start_categories'] = __("Categories", $obj_base->lang_key);
+					$arr_data['opt_start_categories'] = __("Categories", 'lang_base');
 				}
 
 					foreach($arr_categories as $category)
@@ -2264,9 +2264,9 @@ function get_post_types_for_select($data = array())
 		}
 
 		//$arr_data['is_front_page()'] = "Front Page";
-		$arr_data['is_home()'] = __("Home", $obj_base->lang_key);
+		$arr_data['is_home()'] = __("Home", 'lang_base');
 		//$arr_data['is_page()'] = "Page";
-		$arr_data['is_search()'] = __("Search", $obj_base->lang_key);
+		$arr_data['is_search()'] = __("Search", 'lang_base');
 		//$arr_data['is_single()'] = "Single";
 		//$arr_data['is_sticky()'] = "Sticky";
 	}
@@ -2312,7 +2312,7 @@ function get_posts_for_select($data)
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose Here", $obj_base->lang_key)." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	foreach($result as $r)
@@ -2352,7 +2352,7 @@ function get_categories_for_select($data = array())
 
 	if($data['add_choose_here'] == true)
 	{
-		$arr_data[''] = "-- ".__("Choose Here", $obj_base->lang_key)." --";
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 	}
 
 	$arr_categories = get_categories(array(
@@ -2373,7 +2373,7 @@ function get_sidebars_for_select()
 	global $obj_base;
 
 	$arr_data = array(
-		'' => "-- ".__("Choose Here", $obj_base->lang_key)." --"
+		'' => "-- ".__("Choose Here", 'lang_base')." --"
 	);
 
 	foreach($GLOBALS['wp_registered_sidebars'] as $sidebar)
@@ -4339,7 +4339,7 @@ function get_post_children($data, &$arr_data = array())
 	global $wpdb, $obj_base;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = isset($data['choose_here_text']);}
-	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", $obj_base->lang_key);}
+	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['output_array'])){		$data['output_array'] = true;}
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 	if(!isset($data['depth'])){				$data['depth'] = 0;}
@@ -4467,7 +4467,7 @@ function get_post_children($data, &$arr_data = array())
 
 			if($post_title == '')
 			{
-				$post_title = "(".__("no title", $obj_base->lang_key).")";
+				$post_title = "(".__("no title", 'lang_base').")";
 			}
 
 			if($data['output_array'] == true)
@@ -4533,12 +4533,12 @@ function month_name($data, $ucfirst = 1)
 
 	if($data['short'])
 	{
-		$array = array(__("Jan", $obj_base->lang_key), __("Feb", $obj_base->lang_key), __("Mar", $obj_base->lang_key), __("Apr", $obj_base->lang_key), __("May", $obj_base->lang_key), __("Jun", $obj_base->lang_key), __("Jul", $obj_base->lang_key), __("Aug", $obj_base->lang_key), __("Sep", $obj_base->lang_key), __("Oct", $obj_base->lang_key), __("Nov", $obj_base->lang_key), __("Dec", $obj_base->lang_key));
+		$array = array(__("Jan", 'lang_base'), __("Feb", 'lang_base'), __("Mar", 'lang_base'), __("Apr", 'lang_base'), __("May", 'lang_base'), __("Jun", 'lang_base'), __("Jul", 'lang_base'), __("Aug", 'lang_base'), __("Sep", 'lang_base'), __("Oct", 'lang_base'), __("Nov", 'lang_base'), __("Dec", 'lang_base'));
 	}
 
 	else
 	{
-		$array = array(__("January", $obj_base->lang_key), __("February", $obj_base->lang_key), __("March", $obj_base->lang_key), __("April", $obj_base->lang_key), __("May", $obj_base->lang_key), __("June", $obj_base->lang_key), __("July", $obj_base->lang_key), __("August", $obj_base->lang_key), __("September", $obj_base->lang_key), __("October", $obj_base->lang_key), __("November", $obj_base->lang_key), __("December", $obj_base->lang_key));
+		$array = array(__("January", 'lang_base'), __("February", 'lang_base'), __("March", 'lang_base'), __("April", 'lang_base'), __("May", 'lang_base'), __("June", 'lang_base'), __("July", 'lang_base'), __("August", 'lang_base'), __("September", 'lang_base'), __("October", 'lang_base'), __("November", 'lang_base'), __("December", 'lang_base'));
 	}
 
 	$out = $array[$data['number'] - 1];
@@ -4567,12 +4567,12 @@ function day_name($data, $ucfirst = 1)
 
 	if($data['short'])
 	{
-		$array = array(__("Sun", $obj_base->lang_key), __("Mon", $obj_base->lang_key), __("Tue", $obj_base->lang_key), __("Wed", $obj_base->lang_key), __("Thu", $obj_base->lang_key), __("Fri", $obj_base->lang_key), __("Sat", $obj_base->lang_key));
+		$array = array(__("Sun", 'lang_base'), __("Mon", 'lang_base'), __("Tue", 'lang_base'), __("Wed", 'lang_base'), __("Thu", 'lang_base'), __("Fri", 'lang_base'), __("Sat", 'lang_base'));
 	}
 
 	else
 	{
-		$array = array(__("Sunday", $obj_base->lang_key), __("Monday", $obj_base->lang_key), __("Tuesday", $obj_base->lang_key), __("Wednesday", $obj_base->lang_key), __("Thursday", $obj_base->lang_key), __("Friday", $obj_base->lang_key), __("Saturday", $obj_base->lang_key));
+		$array = array(__("Sunday", 'lang_base'), __("Monday", 'lang_base'), __("Tuesday", 'lang_base'), __("Wednesday", 'lang_base'), __("Thursday", 'lang_base'), __("Friday", 'lang_base'), __("Saturday", 'lang_base'));
 	}
 
 	$out = $array[$data['number']];

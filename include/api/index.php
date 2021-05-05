@@ -19,8 +19,8 @@ $type = check_var('type', 'char');
 $arr_input = explode("/", $type);
 
 $type_action = $arr_input[0];
-$type_action_type = isset($arr_input[1]) ? $arr_input[1] : '';
-$type_class = isset($arr_input[2]) ? $arr_input[2] : '';
+$type_action_type = (isset($arr_input[1]) ? $arr_input[1] : '');
+$type_class = (isset($arr_input[2]) ? $arr_input[2] : '');
 
 switch($type_action)
 {

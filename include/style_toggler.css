@@ -2,21 +2,30 @@
 {
 	.toggler
 	{
-		background: rgba(255, 255, 255, .5);
-		border: 2px solid #eee;
-		border-radius: .2em;
-		display: block;
+		display: inline-block;
 		margin-top: .5em;
 		margin-bottom: .5em;
 		padding: .5em 1em;
 	}
 
+		#wpwrap .toggler, #mf-content .toggler
+		{
+			background: rgba(255, 255, 255, .5);
+			border: 2px solid #eee;
+			border-radius: .2em;
+			display: block;
+		}
+
 		.toggler.open
 		{
-			background: rgba(230, 230, 230, .5);
-			border-radius: .2em .2em 0 0;
 			margin-bottom: 0;
 		}
+
+			#wpwrap .toggler.open, #mf-content .toggler.open
+			{
+				background: rgba(230, 230, 230, .5);
+				border-radius: .2em .2em 0 0;
+			}
 
 		.toggler .fa + span, .toggler span + .fa
 		{
@@ -52,14 +61,18 @@
 
 	.toggle_container
 	{
-		background: rgba(255, 255, 255, .5);
-		border-radius: 0 0 .2em .2em;
-		border: 2px solid #eee;
-		border-top-width: 0;
 		margin: 0 0 .5em 0;
 		overflow: hidden;
 		padding: .5em 1em;
 	}
+
+		#wpwrap .toggle_container, #mf-content .toggle_container
+		{
+			background: rgba(255, 255, 255, .5);
+			border-radius: 0 0 .2em .2em;
+			border: 2px solid #eee;
+			border-top-width: 0;
+		}
 
 		.toggler.open.hide + .toggle_container
 		{

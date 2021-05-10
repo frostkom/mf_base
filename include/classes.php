@@ -2869,6 +2869,7 @@ class mf_font_icons
 			'fas fa-sun',
 			'unlink',
 			'fas fa-user',
+			'fas fa-users',
 			'fas fa-utensils',
 			'fas fa-video',
 			'fas fa-wheelchair',

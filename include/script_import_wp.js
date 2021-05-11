@@ -21,7 +21,7 @@ jQuery(function($)
 				}
 			});
 
-			dom_parent.siblings(".form_select").find("option[value='" + dom_value + "']").addClass('is_disabled').attr('disabled', true);
+			dom_parent.siblings(".form_select").find("option[value='" + dom_value + "']").addClass('is_disabled')/*.attr('disabled', true)*/;
 		}
 	}
 

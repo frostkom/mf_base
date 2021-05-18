@@ -2456,13 +2456,13 @@ class mf_list_table extends WP_List_Table
 			$query_group .= " GROUP BY ".$data['group_by'];
 		}
 
-		if($data['order_by'] != '')
+		if($data['order_by'] != '' && strpos($data['order_by'], " ") === false)
 		{
 			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($query_from)." WHERE Field = %s", $data['order_by']));
 
 			if($wpdb->num_rows == 0)
 			{
-				//do_log("select_data: ".$data['order_by']." does not exist in ".$query_from);
+				do_log("select_data: ".$data['order_by']." does not exist in ".$query_from);
 
 				$data['order_by'] = "";
 			}

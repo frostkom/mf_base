@@ -400,12 +400,31 @@ function get_plugin_version($file)
 		require_once(ABSPATH."wp-admin/includes/plugin.php");
 	}
 
-	$plugin_dir = plugin_dir_path($file)."index.php";
-	$plugin_dir = str_replace("include/", "", $plugin_dir);
+	$plugin_path = plugin_dir_path($file);
+
+	$arr_plugin_path = explode("/", $plugin_path);
+
+	$plugin_path = "";
+
+	foreach($arr_plugin_path as $plugin_path_part)
+	{
+		if($plugin_path_part != '')
+		{
+			$plugin_path .= "/".$plugin_path_part;
+
+			if(substr($plugin_path_part, 0, 3) == "mf_")
+			{
+				break;
+			}
+		}
+	}
+
+	$plugin_dir = $plugin_path."/index.php";
+	//$plugin_dir = str_replace("include/", "", $plugin_dir);
 
 	$arr_plugin_data = get_plugin_data($plugin_dir);
 
-	return $arr_plugin_data['Version'];
+	return $arr_plugin_data['Version']; //." (".$plugin_dir." -> ".var_export($arr_plugin_data, true).")"
 }
 
 function get_theme_version()

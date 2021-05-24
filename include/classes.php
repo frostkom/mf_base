@@ -359,7 +359,7 @@ class mf_base
 		define('IS_EDITOR', $is_editor);
 		define('IS_AUTHOR', $is_author);
 
-		if(get_option('setting_base_use_timezone') == 'yes')
+		if(get_site_option('setting_base_use_timezone') == 'yes')
 		{
 			$timezone_string = get_option('timezone_string');
 
@@ -518,8 +518,12 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			'setting_base_use_timezone' => __("Use Timezone to adjust time", 'lang_base'),
 		);
+
+		if(IS_SUPER_ADMIN)
+		{
+			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+		}
 
 		switch($this->get_server_type())
 		{
@@ -993,7 +997,8 @@ class mf_base
 	function setting_base_use_timezone_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key, 'no');
+		settings_save_site_wide($setting_key);
+		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
 
 		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 	}

@@ -7,6 +7,65 @@ class mf_base
 		$this->meta_prefix = 'mf_base_';
 	}
 
+	function is_classic_editor_plugin_active()
+	{
+		if(!function_exists('is_plugin_active'))
+		{
+			include_once ABSPATH.'wp-admin/includes/plugin.php';
+		}
+
+		if(is_plugin_active('classic-editor/classic-editor.php'))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	function is_gutenberg_active()
+	{
+		// Gutenberg plugin is installed and activated.
+		$gutenberg = !(false === has_filter('replace_editor', 'gutenberg_init'));
+
+		// Block editor since 5.0.
+		$block_editor = version_compare($GLOBALS['wp_version'], '5.0-beta', '>');
+
+		if(!$gutenberg && !$block_editor)
+		{
+			return false;
+		}
+
+		if($this->is_classic_editor_plugin_active())
+		{
+			$editor_option = get_option('classic-editor-replace');
+			$block_editor_active = array('no-replace', 'block');
+
+			return in_array($editor_option, $block_editor_active, true);
+		}
+
+		return true;
+	}
+
+	function get_icons_for_select()
+	{
+		global $obj_font_icons;
+
+		if(!isset($obj_font_icons))
+		{
+			$obj_font_icons = new mf_font_icons();
+		}
+
+		$arr_data = array();
+		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
+
+		foreach($obj_font_icons->get_array(array('allow_optgroup' => false)) as $key => $value)
+		{
+			$arr_data[$key] = $value;
+		}
+
+		return $arr_data;
+	}
+
 	function filter_phpmailer_data()
 	{
 		global $phpmailer;
@@ -1129,7 +1188,9 @@ class mf_base
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
 		}
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		$this->is_gutenberg_active = $this->is_gutenberg_active();
+
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
 		{
 			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js", $plugin_version);
 		}
@@ -1156,7 +1217,7 @@ class mf_base
 
 		$out = "";
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
 		{
 			$count_shortcode_button = apply_filters('count_shortcode_button', 0);
 
@@ -1176,7 +1237,7 @@ class mf_base
 	{
 		global $pagenow;
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')))
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
 		{
 			echo "<div id='mf_shortcode_container' class='hide'>
 				<div class='mf_form mf_shortcode_wrapper'>"
@@ -2854,6 +2915,7 @@ class mf_font_icons
 	function get_font_awesome_icon_list()
 	{
 		$arr_icons = array(
+			'fas fa-award',
 			'fas fa-briefcase',
 			'fas fa-briefcase-medical',
 			'fas fa-bullseye',
@@ -2862,7 +2924,9 @@ class mf_font_icons
 			'fas fa-calendar-alt',
 			'fas fa-chalkboard-teacher',
 			'fas fa-chart-bar',
+			'far fa-clock',
 			'fas fa-clock',
+			'fas fa-coins',
 			'fas fa-download',
 			'eye',
 			'fa fa-exclamation-circle',
@@ -2881,6 +2945,7 @@ class mf_font_icons
 			'fa fa-question',
 			'fas fa-scroll',
 			'fas fa-shopping-cart',
+			'far fa-star',
 			'fas fa-sun',
 			'unlink',
 			'fas fa-user',

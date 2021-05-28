@@ -1170,7 +1170,7 @@ class mf_base
 	{
 		global $pagenow;
 
-		$this->wp_head();
+		$this->wp_head(array('type' => 'admin'));
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
@@ -1315,11 +1315,14 @@ class mf_base
 
 	function login_init()
 	{
-		$this->wp_head();
+		$this->wp_head(array('type' => 'login'));
 	}
 
-	function wp_head()
+	function wp_head($data = array())
 	{
+		if(!is_array($data)){			$data = array();}
+		if(!isset($data['type'])){		$data['type'] = 'public';}
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
@@ -1328,7 +1331,7 @@ class mf_base
 			if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
 			{
 				/* We should probably check if it is used somewhere, shouldn't we? */
-				if(!is_admin())
+				if($data['type'] == 'public') //!is_admin() && $data['type'] != 'login'
 				{
 					$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
 
@@ -2443,15 +2446,9 @@ class mf_list_table extends WP_List_Table
 		{
 			$input_id = esc_attr($input_id."-search-input");
 
-			echo "<div class='search-box alignright flex_flow tight".(is_admin() ? "" : " form_button")."'>";
-
-				//echo "<label class='screen-reader-text' for='".$input_id."'>".$text.":</label>";
-
-				//echo "<input type='search' id='".$input_id."' name='".$this->search_key."' value='".$this->search."'>";
-				echo show_textfield(array('type' => 'search', 'name' => $this->search_key, 'id' => $input_id, 'value' => $this->search));
-
-				//submit_button($text, '', '', false, array('id' => 'search-submit'));
-				echo show_button(array('text' => $text, 'class' => "button", 'xtra' => " id='search-submit'"));
+			echo "<div class='search-box alignright flex_flow tight".(is_admin() ? "" : " form_button")."'>"
+				.show_textfield(array('type' => 'search', 'name' => $this->search_key, 'id' => $input_id, 'value' => $this->search))
+				.show_button(array('text' => $text, 'class' => "button", 'xtra' => " id='search-submit'"));
 
 				$arr_var_keys = array('orderby', 'order', 'post_status'); //post_mime_type, detached
 
@@ -2534,9 +2531,36 @@ class mf_list_table extends WP_List_Table
 
 		if($data['order_by'] != '' && strpos($data['order_by'], " ") === false)
 		{
-			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($query_from)." WHERE Field = %s", $data['order_by']));
+			$arr_tables = array($query_from);
 
-			if($wpdb->num_rows == 0)
+			if($query_join != '')
+			{
+				$arr_tables_temp = get_match_all('/ JOIN (.*?) /is', $query_join, false);
+
+				if(isset($arr_tables_temp[0]))
+				{
+					foreach($arr_tables_temp[0] as $table_name)
+					{
+						$arr_tables[] = $table_name;
+					}
+				}
+			}
+
+			$column_exists = false;
+
+			foreach($arr_tables as $table_name)
+			{
+				$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table_name)." WHERE Field = %s", $data['order_by']));
+
+				if($wpdb->num_rows > 0)
+				{
+					$column_exists = true;
+
+					break;
+				}
+			}
+
+			if($column_exists == false)
 			{
 				//do_log("select_data: ".$data['order_by']." does not exist in ".$query_from);
 
@@ -2548,7 +2572,7 @@ class mf_list_table extends WP_List_Table
 		{
 			if(is_array($data['order_by']) || is_array($data['order']))
 			{
-				do_log("select_data() - Error: ".var_export($data, true));
+				do_log("select_data() - Error: ".var_export($_SERVER, true)." || ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true));
 			}
 
 			else

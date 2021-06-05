@@ -2939,6 +2939,7 @@ class mf_font_icons
 	function get_font_awesome_icon_list()
 	{
 		$arr_icons = array(
+			'fas fa-arrow-right',
 			'fas fa-award',
 			'fas fa-briefcase',
 			'fas fa-briefcase-medical',

@@ -185,16 +185,17 @@
 	}
 }
 
-@media (min-width: 783px)
+/* Does not work in latest Chrome */
+/*@media (min-width: 783px)
 {
-	.wp-list-table thead tr
+	.wp-list-table thead tr th
 	{
 		background: #fff;
 		position: sticky;
-		top: 30px;
+		top: 32px;
 		z-index: 1;
 	}
-}
+}*/
 
 @media print
 {

@@ -1175,7 +1175,7 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 		if(!is_dir($upload_path) && !is_file($upload_path))
 		{
-			if(!@mkdir($upload_path, 0755, true))
+			if(!mkdir($upload_path, 0755, true))
 			{
 				$dir_exists = false;
 			}
@@ -1183,7 +1183,8 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 		if($dir_exists == false)
 		{
-			$error_text = sprintf(__("Could not create %s in uploads. Please add the correct rights for the script to create a new subfolder", 'lang_base'), $subfolder);
+			$error_text = sprintf(__("Could not create %s in %s. Please add the correct rights for the script to create a new subfolder.", 'lang_base'), $subfolder, "uploads");
+			//$error_text .= " (".$upload_path.")";
 
 			$upload_path = $upload_url = "";
 		}
@@ -1434,7 +1435,9 @@ function get_media_library($data)
 				.input_hidden(array('name' => $data['name'], 'value' => $data['value']));
 			}
 
-			$out .= "<div class='form_button'>".show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))."</div>"
+			$out .= "<div class='form_button'>"
+				.show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))
+			."</div>"
 		."</div>";
 
 		if($data['description'] != '')

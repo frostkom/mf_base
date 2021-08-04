@@ -809,6 +809,31 @@ class mf_base
 					."</p>";
 				}
 
+				if(is_multisite() && is_main_site())
+				{
+					$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
+				}
+
+				else
+				{
+					$upload_dir = str_replace("/wp-content/uploads/", "/", wp_upload_dir()['basedir']);
+				}
+
+				if(preg_match("/sites/", $upload_dir))
+				{
+					$upload_dir = str_replace("/sites/".$wpdb->blogid, "/", $upload_dir);
+				}
+
+				$upload_dir = trim($upload_dir, "/");
+
+				$current_dir = realpath(str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__)));
+				$current_dir = trim($current_dir, "/");
+
+				echo "<p>
+					<i class='fa ".($upload_dir == $current_dir ? "fa-check green" : "fa-times red display_warning")."'></i> "
+					.__("Upload Directory", 'lang_base').": ".$upload_dir.($upload_dir == $current_dir ? "" : " != ".$current_dir)
+				."</p>";
+
 				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
 				$option_base_large_table_amount = count($option_base_large_tables);
 
@@ -1563,7 +1588,7 @@ class mf_base
 				break;
 
 				case 'nginx':
-					$update_with = "index index.php;\r\n"
+					$update_with = "index \"index.php\";\r\n"
 					."autoindex off;\r\n"
 					."server_tokens off;\r\n"
 					."\r\n"
@@ -1833,11 +1858,11 @@ class mf_cron
 
 		$this->set_is_running();
 
-		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'content' => date("Y-m-d H:i:s")));
+		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'log' => false, 'content' => date("Y-m-d H:i:s")));
 
 		if(!$success)
 		{
-			do_log(sprintf("I could not create %s, please make sure that I have access to create this file in order for schedules to work as intended", $this->file));
+			do_log(sprintf("I could not create the temporary file in %s, please make sure that I have access to create this file in order for schedules to work as intended", $upload_path)); //$this->file
 		}
 	}
 

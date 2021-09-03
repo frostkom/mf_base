@@ -2390,7 +2390,10 @@ class mf_list_table extends WP_List_Table
 				 *							'top' or 'bottom' for WP_Posts_List_Table,
 				 *							'bar' for WP_Media_List_Table.
 				 */
-				do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which); //$this->screen->post_type
+				if(isset($wpdb->sitemeta) && $wpdb->sitemeta != '') // If for some reason another external DB is in use at this moment, don't bother doing this
+				{
+					do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which); //$this->screen->post_type
+				}
 
 				$output = ob_get_clean();
 

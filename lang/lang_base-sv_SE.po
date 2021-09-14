@@ -198,11 +198,11 @@ msgstr "för att ta backup av alla filer och databasen, och skicka till en exter
 
 #: ../include/classes.php:1156
 msgid "to force WP to revert to the classic editor instead of Gutenberg"
-msgstr "att tvinga WP att använda det klassiska utseendet för textredigeraren istället för Gutenberg"
+msgstr "för att tvinga WP att använda det klassiska utseendet för textredigeraren istället för Gutenberg"
 
 #: ../include/classes.php:1157
 msgid "to force WP to revert to the classic widget view"
-msgstr "att tvinga WP att använda det klassiska utseendet för widgetar"
+msgstr "för att tvinga WP att använda det klassiska utseendet för widgetar"
 
 #: ../include/classes.php:1158
 msgid "to replace existing files by uploading a replacement"

@@ -1228,6 +1228,26 @@ class mf_base
 		}*/
 	}
 
+	function filter_sites_table_settings($arr_settings)
+	{
+		$arr_settings['settings_base'] = array(
+			'setting_base_use_timezone' => array(
+				'type' => 'bool',
+				'global' => true,
+				'icon' => "fas fa-clock",
+				'name' => __("Use Timezone to adjust time", 'lang_base'),
+			),
+			'setting_base_template_site' => array(
+				'type' => 'string',
+				'global' => true,
+				'icon' => "fas fa-copy",
+				'name' => __("Template Site", 'lang_base'),
+			),
+		);
+
+		return $arr_settings;
+	}
+
 	function plugin_action_links($actions, $plugin_file)
 	{
 		if(!IS_SUPER_ADMIN && is_array($actions) && array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))

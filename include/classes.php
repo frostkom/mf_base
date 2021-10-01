@@ -1582,6 +1582,7 @@ class mf_base
 							$update_with .= "\r\n"
 							."	RewriteCond %{HTTPS} !=on\r\n"
 							."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+							//."	RewriteCond %{HTTP:X-Forwarded-Proto} != https\r\n"
 							."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
 							."\r\n"
 							."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";

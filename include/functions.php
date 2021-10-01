@@ -36,7 +36,28 @@ function setting_time_limit($data)
 	{
 		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
 
-		if(!isset($option_base_time_limited[$data['key']]))
+		if(isset($option_base_time_limited[$data['key']]))
+		{
+			if(get_current_visitor_ip() == "2.69.78.200")
+			{
+				$hours_left = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $option_base_time_limited[$data['key']], 'type' => 'round', 'return' => 'hours'));
+
+				if($hours_left > 0)
+				{
+					if($hours_left == 1)
+					{
+						return __("One hour left until it is reset", 'lang_base');
+					}
+
+					else
+					{
+						return sprintf(__("%d hours left until it is reset", 'lang_base'), $hours_left);
+					}
+				}
+			}
+		}
+
+		else
 		{
 			$option_base_time_limited[$data['key']] = date("Y-m-d H:i:s", strtotime("+".$data['time_limit']." hour"));
 

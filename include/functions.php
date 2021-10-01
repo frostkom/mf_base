@@ -1,5 +1,19 @@
 <?php
 
+function get_current_visitor_ip()
+{
+	$out = $_SERVER['REMOTE_ADDR'];
+
+	/*$ip_adresses = array_values(array_filter(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+
+	if(isset($ip_adresses[0]) && $ip_adresses[0] != '' && $ip_adresses[0] != $out)
+	{
+		$out = $ip_adresses[0];
+	}*/
+
+	return $out;
+}
+
 function get_placeholder_email()
 {
 	global $obj_base;

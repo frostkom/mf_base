@@ -1594,7 +1594,8 @@ class mf_base
 					}*/
 
 					$update_with .= "\r\n"
-					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+					//."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
+					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 					."\r\n"
 					."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
 					."	RewriteRule .* /404/ [L,NC]\r\n"
@@ -1607,7 +1608,8 @@ class mf_base
 					."server_tokens off;\r\n"
 					."\r\n"
 					."location = /my_ip {\r\n"
-					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
+					//."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
+					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip break;\r\n"
 					."}";
 				break;
 			}

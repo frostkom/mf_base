@@ -25,9 +25,8 @@ $type_class = (isset($arr_input[2]) ? $arr_input[2] : '');
 switch($type_action)
 {
 	case 'my_ip':
-		$json_output['ip'] = $_SERVER['REMOTE_ADDR'];
-
 		$json_output['success'] = true;
+		$json_output['ip'] = get_current_visitor_ip();
 	break;
 
 	/*case 'import':
@@ -56,7 +55,7 @@ switch($type_action)
 			$option_sync_sites[$remote_site_url] = array(
 				'name' => $remote_site_name,
 				'datetime' => date("Y-m-d H:i:s"),
-				'ip' => $_SERVER['REMOTE_ADDR'],
+				'ip' => get_current_visitor_ip(),
 			);
 
 			update_option('option_sync_sites', $option_sync_sites, 'no');

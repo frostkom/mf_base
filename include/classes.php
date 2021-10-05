@@ -2379,7 +2379,7 @@ class mf_list_table extends WP_List_Table
 
 	protected function extra_tablenav($which)
 	{
-		global $obj_base;
+		global $wpdb, $obj_base;
 
 		echo "<div class='alignleft actions'>";
 

@@ -72,6 +72,39 @@ jQuery(function($)
 {
 	render_required();
 
+	/* Count maxlength */
+	/* ############################ */
+	function display_characters_left(dom_obj, init)
+	{
+		if(init == true)
+		{
+			dom_obj.siblings("label").append("<span class='maxlength_counter'></span>");
+		}
+
+		var dom_obj_maxlength = dom_obj.attr('maxlength'),
+			dom_obj_value_length = dom_obj.val().length;
+
+		dom_obj.siblings("label").children(".maxlength_counter").text((dom_obj_maxlength - dom_obj_value_length) + " " + script_base.characters_left_text);
+
+		if(dom_obj_value_length > dom_obj_maxlength)
+		{
+			dom_obj.val(dom_obj.val().substring(0, dom_obj_maxlength));
+		}
+	}
+
+	var dom_obj = $("input[maxlength], textarea[maxlength]");
+
+	dom_obj.each(function()
+	{
+		display_characters_left($(this), true);
+	});
+
+	dom_obj.on("keyup", function()
+	{
+		display_characters_left($(this), false);
+	});
+	/* ############################ */
+
 	$(".mf_form select[rel='submit_change'], .mf_form input[rel='submit_change']").each(function()
 	{
 		$(this).removeClass('is_disabled');

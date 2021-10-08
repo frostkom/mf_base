@@ -456,10 +456,16 @@
 			width: 100%;
 }
 
-			.mf_form input[readonly], .mf_form textarea[readonly]
+			.mf_form label .maxlength_counter
 			{
-				background-color: #eee;
+				display: inline-block;
+				font-size: .8em;
+				font-style: italic;
+				margin-left: .5em;
+				opacity: .5;
 			}
+
+			.mf_form input[readonly], .mf_form textarea[readonly]
 
 			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
 			{

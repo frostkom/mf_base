@@ -353,7 +353,7 @@ function get_pages_from_shortcode($shortcode)
 
 	$arr_ids = array();
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = 'publish' AND post_content LIKE %s", "%".addslashes($shortcode)."%")); //post_type != 'revision' AND
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".addslashes($shortcode)."%")); //post_type != 'revision' AND
 
 	foreach($result as $r)
 	{

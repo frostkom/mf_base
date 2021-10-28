@@ -956,23 +956,6 @@ class mf_base
 		}
 	}
 
-	function setting_base_empty_trash_days_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		settings_save_site_wide($setting_key);
-		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
-
-		$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
-		$description = "";
-
-		if($constant_option != $option)
-		{
-			$description = sprintf(__("This value has already been set to %d", 'lang_base'), $constant_option);
-		}
-
-		echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", 'lang_base'), 'description' => $description));
-	}
-
 	function get_server_type()
 	{
 		if(!isset($this->server_type))
@@ -1143,6 +1126,23 @@ class mf_base
 				}
 			break;
 		}
+	}
+
+	function setting_base_empty_trash_days_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		settings_save_site_wide($setting_key);
+		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
+
+		$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
+		$description = "";
+
+		if($constant_option != $option)
+		{
+			$description = sprintf(__("This value has already been set to %d", 'lang_base'), $constant_option);
+		}
+
+		echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", 'lang_base'), 'description' => $description));
 	}
 
 	function setting_base_recommend_callback()

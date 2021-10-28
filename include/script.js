@@ -8,7 +8,7 @@ function select_option()
 	jQuery(".mf_form .form_select select[data-value!='']").each(function()
 	{
 		var dom_obj = jQuery(this),
-			dom_value = dom_obj.attr('data-value') || '';
+			dom_value = (dom_obj.attr('data-value') || '');
 
 		if(dom_value != '')
 		{
@@ -76,15 +76,18 @@ jQuery(function($)
 	/* ############################ */
 	function display_characters_left(dom_obj, init)
 	{
-		if(init == true)
+		var dom_obj_maxlength = dom_obj.attr('maxlength'),
+			dom_obj_value_length = dom_obj.val().length,
+			dom_counter = dom_obj.siblings("label").children(".maxlength_counter");
+
+		if(dom_counter.length == 0)
 		{
 			dom_obj.siblings("label").append("<span class='maxlength_counter'></span>");
+
+			dom_counter = dom_obj.siblings("label").children(".maxlength_counter");
 		}
 
-		var dom_obj_maxlength = dom_obj.attr('maxlength'),
-			dom_obj_value_length = dom_obj.val().length;
-
-		dom_obj.siblings("label").children(".maxlength_counter").text((dom_obj_maxlength - dom_obj_value_length) + " " + script_base.characters_left_text);
+		dom_counter.text((dom_obj_maxlength - dom_obj_value_length) + " " + script_base.characters_left_text).removeClass('hide');
 
 		if(dom_obj_value_length > dom_obj_maxlength)
 		{
@@ -94,14 +97,19 @@ jQuery(function($)
 
 	var dom_obj = $("input[maxlength], textarea[maxlength]");
 
-	dom_obj.each(function()
+	/*dom_obj.each(function()
 	{
-		display_characters_left($(this), true);
-	});
+		display_characters_left($(this));
+	});*/
 
 	dom_obj.on("keyup", function()
 	{
-		display_characters_left($(this), false);
+		display_characters_left($(this));
+	});
+
+	dom_obj.on("blur", function()
+	{
+		dom_obj.siblings("label").children(".maxlength_counter").addClass('hide');
 	});
 	/* ############################ */
 

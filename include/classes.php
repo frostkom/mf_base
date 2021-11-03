@@ -886,7 +886,13 @@ class mf_base
 					}
 				}
 
-			echo "</div>
+				$current_visitor_ip = get_current_visitor_ip();
+
+				echo "<p>
+					<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "
+					.__("My IP", 'lang_base').": ".$current_visitor_ip
+				."</p>
+			</div>
 		</div>";
 	}
 

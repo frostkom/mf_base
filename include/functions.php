@@ -1284,7 +1284,7 @@ function do_log($data, $action = 'publish')
 
 	else if($action == 'publish')
 	{
-		error_log($data);
+		error_log(str_replace("\n", "", $data));
 	}
 }
 

@@ -813,7 +813,7 @@ class mf_base
 						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 					."</p>";
 				}
-				
+
 				$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
 
 				if(preg_match("/sites/", $upload_dir))

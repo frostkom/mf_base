@@ -586,6 +586,7 @@ class mf_base
 
 		if(IS_SUPER_ADMIN)
 		{
+			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
 			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
 		}
 
@@ -1062,6 +1063,17 @@ class mf_base
 		{
 			echo "<em>".__("Has never been run", 'lang_base')."</em>";
 		}
+	}
+
+	function setting_base_cron_debug_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+		settings_save_site_wide($setting_key);
+		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
+
+		$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
+
+		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
 	}
 
 	function setting_base_use_timezone_callback()
@@ -1884,9 +1896,16 @@ class mf_cron
 	{
 		global $wpdb;
 
+		$this->type = $type;
+
+		if(get_site_option('setting_base_cron_debug') == 'yes')
+		{
+			do_log("Cron: ".$this->type." started ".$this->date_start);
+		}
+
 		list($upload_path, $upload_url) = get_uploads_folder();
 
-		$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($type, "_");
+		$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
 
 		$this->set_is_running();
 
@@ -1930,11 +1949,23 @@ class mf_cron
 
 		$time_difference = time_between_dates(array('start' => $data['start'], 'end' => $data['end'], 'type' => 'ceil', 'return' => 'seconds'));
 
-		return $time_difference >= ($this->get_interval() * $data['margin']);
+		return ($time_difference >= ($this->get_interval() * $data['margin']));
 	}
 
 	function end()
 	{
+		if(get_site_option('setting_base_cron_debug') == 'yes')
+		{
+			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => date("Y-m-d H:i:s"), 'type' => 'ceil', 'return' => 'seconds'));
+
+			do_log("Cron: ".$this->type." started", 'trash');
+
+			if($time_difference > 1)
+			{
+				do_log("Cron: ".$this->type." ended after ".$time_difference."s");
+			}
+		}
+
 		@unlink($this->file);
 	}
 }

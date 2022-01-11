@@ -1380,6 +1380,24 @@ class mf_base
 		$this->wp_head(array('type' => 'login'));
 	}
 
+	function load_font_awesome($data)
+	{
+		if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
+		{
+			/* We should probably check if it is used somewhere, shouldn't we? */
+			if($data['type'] == 'public') //!is_admin() && $data['type'] != 'login'
+			{
+				$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
+
+				echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
+				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
+				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
+			}
+
+			mf_enqueue_style('font-awesome', $data['plugin_include_url']."font-awesome-5.7.2.php", $data['plugin_version']);
+		}
+	}
+
 	function wp_head($data = array())
 	{
 		if(!is_array($data)){			$data = array();}
@@ -1390,20 +1408,12 @@ class mf_base
 
 		if(is_admin() || apply_filters('is_theme_active', false))
 		{
-			if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
-			{
-				/* We should probably check if it is used somewhere, shouldn't we? */
-				if($data['type'] == 'public') //!is_admin() && $data['type'] != 'login'
-				{
-					$plugin_fonts_url = str_replace("/include/", "/", $plugin_include_url);
+			$data_temp = $data;
 
-					echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
-					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
-					<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
-				}
+			$data_temp['plugin_include_url'] = $plugin_include_url;
+			$data_temp['plugin_version'] = $plugin_version;
 
-				mf_enqueue_style('font-awesome', $plugin_include_url."font-awesome-5.7.2.php", $plugin_version);
-			}
+			$this->load_font_awesome($data_temp);
 
 			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
 		}
@@ -1761,7 +1771,6 @@ class mf_base
 					$out .= get_notification();
 				}*/
 
-				// Maybe use this instead?
 				$success = file_put_contents($data['file']."_temp", $content);
 
 				if($success > 0 && $success == strlen($content))

@@ -90,7 +90,7 @@ jQuery(function($)
 
 					for(var i = 0; i < files.length; i++)
 					{
-						console.log("Multiple Files: " , files[i].toJSON());
+						/*console.log("Multiple Files: " , files[i].toJSON());*/
 					}
 				}
 
@@ -106,9 +106,9 @@ jQuery(function($)
 								$("#" + return_to).val("[mf_file id=" + first.id + " filetype=" + first.subtype + "]");
 							break;
 
-							default:
+							/*default:
 								console.log("Return Type: " + return_type);
-							break;
+							break;*/
 						}
 					}
 

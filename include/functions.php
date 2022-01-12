@@ -2023,7 +2023,7 @@ function get_all_roles($data = array())
 
 	else
 	{
-		if(function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php"))
+		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php"))
 		{
 			$obj_users = new mf_users();
 			$obj_users->hide_roles();

@@ -1792,7 +1792,7 @@ function point2int($in)
 	return $str_version;
 }
 
-function get_next_cron($data = array()) //$raw = false
+function get_next_cron($data = array())
 {
 	global $obj_base;
 

@@ -450,6 +450,11 @@ class mf_base
 
 	function run_cron_start()
 	{
+		/*if(isset($_GET['doing_wp_cron']))
+		{
+			echo "Running cron manually...";
+		}*/
+
 		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
 	}
 
@@ -998,6 +1003,8 @@ class mf_base
 
 	function setting_base_cron_callback()
 	{
+		global $wpdb;
+
 		$setting_key = get_setting_key(__FUNCTION__);
 		$option = get_option($setting_key, 'every_ten_minutes');
 
@@ -1074,6 +1081,51 @@ class mf_base
 		$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
 
 		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
+
+		if($option == 'yes' && IS_SUPER_ADMIN)
+		{
+			$option_cron = get_option('cron');
+
+			if(count($option_cron) > 0)
+			{
+				echo "<ul>";
+
+					foreach($option_cron as $key => $arr_jobs)
+					{
+						//$arr_jobs = $this->array_sort(array('array' => $arr_jobs, 'on' => 1, 'keep_index' => true));
+						//$arr_jobs = uksort($arr_jobs);
+						//echo "<li>".var_export($arr_jobs, true)."</li>";
+
+						foreach($arr_jobs as $key => $arr_job)
+						{
+							echo "<li>"
+								.$key.": ";
+							
+								//echo var_export($arr_job, true);
+
+								foreach($arr_job as $key => $arr_data)
+								{
+									//echo $key." => ".var_export($arr_data, true);
+
+									foreach($arr_data as $key => $value)
+									{
+										switch($key)
+										{
+											case 'schedule':
+											//case 'interval':
+												echo $key." => ".$value;
+											break;
+										}
+									}
+								}
+
+							echo "</li>";
+						}
+					}
+
+				echo "</ul>";
+			}
+		}
 	}
 
 	function setting_base_use_timezone_callback()

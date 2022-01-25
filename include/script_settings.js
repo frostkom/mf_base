@@ -33,6 +33,34 @@ jQuery(function($)
 
 	if(script_base_settings.settings_page)
 	{
+		/* Prevent refresh */
+		var ctrlKeyDown = false;
+
+		$(document).on("keydown", function(e)
+		{
+			if((e.which || e.keyCode) == 116 || ((e.which || e.keyCode) == 82 && ctrlKeyDown))
+			{
+				/* Pressing F5 or Ctrl+R */
+				e.preventDefault();
+			}
+			
+			else if((e.which || e.keyCode) == 17)
+			{
+				/* Pressing only Ctrl */
+				ctrlKeyDown = true;
+			}
+		});
+
+		$(document).on("keyup", function(e)
+		{
+			/* Key up Ctrl */
+			if((e.which || e.keyCode) == 17) 
+			{
+				ctrlKeyDown = false;
+			}
+		});
+
+		/* Add tabs */
 		var dom_nav = $(".settings-nav ul");
 
 		if(dom_nav.children("li").length == 0)

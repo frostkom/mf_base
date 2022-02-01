@@ -1100,7 +1100,7 @@ class mf_base
 						{
 							echo "<li>"
 								.$key.": ";
-							
+
 								//echo var_export($arr_job, true);
 
 								foreach($arr_job as $key => $arr_data)

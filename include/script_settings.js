@@ -43,7 +43,7 @@ jQuery(function($)
 				/* Pressing F5 or Ctrl+R */
 				e.preventDefault();
 			}
-			
+
 			else if((e.which || e.keyCode) == 17)
 			{
 				/* Pressing only Ctrl */

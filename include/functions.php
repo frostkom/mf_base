@@ -1043,7 +1043,16 @@ function get_post_meta_file_src($data)
 		if($data['is_image'] == true)
 		{
 			$file_url = wp_get_attachment_image_src($file_ids, $data['image_size']);
-			$file_url = $file_url[0];
+
+			if(isset($file_url[0]))
+			{
+				$file_url = $file_url[0];
+			}
+
+			/*else
+			{
+				do_log("No image found with get_post_meta_file_src(): ".var_export($data, true)." -> ".var_export($file_url, true));
+			}*/
 		}
 
 		else

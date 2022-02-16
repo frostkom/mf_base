@@ -464,20 +464,22 @@ function get_plugin_version($file)
 
 function get_theme_version()
 {
+	$theme_version = $parent_version = 0;
+
 	if(function_exists('wp_get_theme'))
 	{
 		$arr_theme_data = wp_get_theme();
-		$theme_version = $arr_theme_data['Version'];
+		$theme_version = $arr_theme_data->get('Version');
+
+		$parent = $arr_theme_data->parent();
+
+		if(!empty($parent))
+		{
+			$parent_version = $parent->Version;
+		}
 	}
 
-	else
-	{
-		$theme_version = 0;
-	}
-
-	$theme_version = int2point(point2int($theme_version) + get_option_or_default('option_theme_version', 1));
-
-	return $theme_version;
+	return int2point(point2int($theme_version) + point2int($parent_version) + get_option_or_default('option_theme_version', 1));
 }
 
 function get_toggler_container($data)
@@ -2101,7 +2103,7 @@ function get_role_first_capability($role)
 
 function get_yes_no_for_select($data = array())
 {
-	global $obj_base;
+	//global $obj_base;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}

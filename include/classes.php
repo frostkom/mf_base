@@ -3234,6 +3234,51 @@ class mf_export
 		$this->fetch_request_xtra();
 	}
 
+	function set_file_name()
+	{
+		if(!isset($this->file_name) || $this->file_name == '')
+		{
+			/*$this->file_name = $this->name
+				//.($this->rows_start != '' ? "_".$this->rows_start : "")
+				//.($this->rows_end != '' ? "-".$this->rows_end : "")
+				."_".date("ymdHi")
+				."_".md5("wp_hash".$this->name)
+			.".".$this->action;*/
+			$this->file_name = prepare_file_name($this->name).".".$this->format;
+		}
+	}
+
+	function compress_file()
+	{
+		if(class_exists('ZipArchive'))
+		{
+			$zip = new ZipArchive();
+
+			$file_source = $this->upload_path.$this->file_name;
+			$file_name = basename($file_source);
+			$file_destination = $this->upload_path.$file_name.".zip";
+
+			if(file_exists($file_destination))
+			{
+				unlink($file_destination);
+			}
+
+			if($zip->open($file_destination, ZIPARCHIVE::CREATE))
+			{
+				if(is_file($file_source))
+				{
+					$zip->addFile($file_source, $file_name);
+
+					if($zip->close())
+					{
+						$this->file_name = $file_name.".zip";
+						unlink($file_source);
+					}
+				}
+			}
+		}
+	}
+
 	function save_data()
 	{
 		global $obj_base, $error_text, $done_text;
@@ -3253,7 +3298,8 @@ class mf_export
 
 				if(count($this->data) > 0)
 				{
-					$file = prepare_file_name($this->name).".".$this->format;
+					//$this->file_name = prepare_file_name($this->name).".".$this->format;
+					$this->set_file_name();
 
 					switch($this->format)
 					{
@@ -3277,11 +3323,13 @@ class mf_export
 								}
 							}
 
-							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => trim($out_temp)));
+							$success = set_file_content(array('file' => $this->upload_path.$this->file_name, 'mode' => 'a', 'content' => trim($out_temp)));
 
 							if($success == true)
 							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+								$this->compress_file();
+
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$this->file_name."'>".$this->file_name."</a>";
 							}
 
 							else
@@ -3291,11 +3339,13 @@ class mf_export
 						break;
 
 						case 'json':
-							$success = set_file_content(array('file' => $this->upload_path.$file, 'mode' => 'a', 'content' => json_encode($this->data)));
+							$success = set_file_content(array('file' => $this->upload_path.$this->file_name, 'mode' => 'a', 'content' => json_encode($this->data)));
 
 							if($success == true)
 							{
-								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+								$this->compress_file();
+
+								$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$this->file_name."'>".$this->file_name."</a>";
 							}
 
 							else
@@ -3334,9 +3384,11 @@ class mf_export
 							}
 
 							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
-							$objWriter->save($this->upload_path.$file);
+							$objWriter->save($this->upload_path.$this->file_name);
 
-							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$file."'>".$file."</a>";
+							$this->compress_file();
+
+							$done_text = __("Download the exported file here", 'lang_base').": <a href='".$this->upload_url.$this->file_name."'>".$this->file_name."</a>";
 						break;
 					}
 				}

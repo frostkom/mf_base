@@ -1658,11 +1658,11 @@ if(!function_exists('get_attachment_id_by_url'))
 	{
 		global $wpdb;
 
-		list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
+		@list($rest, $parsed_url) = explode(parse_url(WP_CONTENT_URL, PHP_URL_PATH), $url);
 
 		if($parsed_url == '')
 		{
-			do_log("get_attachment_id_by_url Error: ".$url." / ".parse_url(WP_CONTENT_URL, PHP_URL_PATH)." -> ".$rest." && ".$parsed_url);
+			do_log("get_attachment_id_by_url Error: ".parse_url(WP_CONTENT_URL, PHP_URL_PATH)." could not be exploded by ".$url);
 		}
 
 		$parsed_url = preg_replace("/\-\d+x\d+\./", ".", $parsed_url);

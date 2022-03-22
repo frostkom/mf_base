@@ -114,8 +114,8 @@
 					display: block;
 					padding: .1em .25em;
 					position: absolute;
-					right: 0;
-					top: .1em;
+					right: .3em;
+					top: .3em;
 				}
 
 	#wrapper .tablenav-pages

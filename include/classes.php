@@ -1465,16 +1465,17 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
+		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+
 		if(is_admin() || apply_filters('is_theme_active', false))
 		{
 			$data_temp = $data;
-
 			$data_temp['plugin_include_url'] = $plugin_include_url;
 			$data_temp['plugin_version'] = $plugin_version;
 
 			$this->load_font_awesome($data_temp);
 
-			mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+			mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css", $plugin_version);
 		}
 
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array(

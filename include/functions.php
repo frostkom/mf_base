@@ -4001,6 +4001,11 @@ function show_checkbox($data)
 
 	if($data['switch'] == 1)
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_style('style_base_switch', $plugin_include_url."style_switch.css", $plugin_version);
+
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
 		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i><i class='fa fa-spinner fa-spin fa-lg loading'></i></span>".$data['text'];
 	}

@@ -5,11 +5,6 @@
 		display: none !important;
 	}
 
-	/*.show, .block, .display_block
-	{
-		display: block;
-	}*/
-
 	.display_inline
 	{
 		display: inline;
@@ -29,236 +24,6 @@
 	{
 		white-space: normal !important;
 	}
-
-	.wrap .error, #mf-content .error, .wrap .updated, #mf-content .updated
-	{
-		border-left-width: 4px;
-		border-left-style: solid;
-		color: #444;
-		margin: 5px 15px 2px;
-		padding: 1px 12px;
-	}
-
-		.wrap .error, #mf-content .error
-		{
-			border-color: #dd3d36;
-		}
-
-		#wpbody-content .update-nag
-		{
-			background-color: #fff;
-			border-color: #ffba00;
-			border-left-width: 4px;
-			border-left-style: solid;
-			color: #444;
-			padding: .5em 1em;
-		}
-
-		.wrap .updated, #mf-content .updated
-		{
-			border-color: #7ad03a;
-		}
-
-		#mf-content .error, #mf-content .updated
-		{
-			background: #fff;
-			box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
-			margin: .3em 0 1em;
-		}
-
-			#mf-content .error p, #mf-content .updated p
-			{
-				margin: .3em 0;
-				padding: .15em;
-			}
-
-	.overlay_container
-	{
-		background: #000;
-		background: rgba(0, 0, 0, .5);
-		bottom: 0;
-		left: 0;
-		position: fixed;
-		right: 0;
-		top: 0;
-		z-index: 100000;
-	}
-
-		.overlay_container > div
-		{
-			left: 50%;
-			position: absolute;
-			top: 50vh;
-			-webkit-transform: translate(-50%, -50%);
-			transform: translate(-50%, -50%);
-			max-width: 90%;
-		}
-
-			.overlay_container.modal > div
-			{
-				background: #fff;
-				border-radius: .5em;
-				font-size: 1.5em;
-				padding: 1em;
-			}
-
-				.overlay_container.modal p + p
-				{
-					margin-top: .5em;
-				}
-
-				.overlay_container.modal .fa-times
-				{
-					background: #fff;
-					border-radius: .4em;
-					display: block;
-					padding: .1em .25em;
-					position: absolute;
-					right: .3em;
-					top: .3em;
-				}
-
-	#wrapper .tablenav-pages
-	{
-		text-align: right;
-	}
-
-		#wrapper .tablenav-pages .button
-		{
-			padding: .3em 1em;
-		}
-
-			#wrapper .tablenav-pages .button + span
-			{
-				margin-right: .5em;
-			}
-
-	#wrapper .wp-list-table .toggle-row
-	{
-		display: none;
-	}
-
-	#wrapper .tablenav.bottom
-	{
-		margin-top: 1em;
-	}
-
-	#wrapper .widefat
-	{
-		border: 1px solid #e5e5e5;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
-		border-spacing: 0;
-		clear: both;
-		margin: 0;
-		table-layout: fixed;
-		width: 100%;
-	}
-
-		#wrapper .widefat *
-		{
-			word-wrap: break-word;
-		}
-
-			/* For this to work, a few parents with overflow: hidden has to be changed and tested */
-			#wrapper .widefat thead tr
-			{
-				background: #fff;
-				/*position: sticky;
-				top: 0;*/
-			}
-
-			#wrapper .widefat td, #wrapper .widefat th
-			{
-				color: #555;
-				padding: .8em 1em;
-				vertical-align: top;
-			}
-
-			#wrapper .widefat th
-			{
-				border-bottom: 1px solid #e1e1e1;
-				color: #32373c;
-				cursor: pointer;
-				font-size: .9em;
-				overflow: hidden;
-				text-align: left;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-			}
-
-				.is_mobile #wrapper .widefat th:not(:first-child)
-				{
-					display: none;
-				}
-
-			#wrapper .alternate, #wrapper .striped > tbody > *:nth-child(2n+1), #wrapper ul.striped > li:nth-child(2n+1)
-			{
-				background-color: #f9f9f9;
-			}
-
-				#wrapper .widefat td
-				{
-					font-family: inherit;
-					font-size: inherit;
-					font-weight: inherit;
-					line-height: inherit;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-
-					.is_mobile #wrapper .widefat td
-					{
-						display: block;
-					}
-
-						.is_mobile #wrapper .widefat td:not(:first-child)
-						{
-							padding-left: 2em;
-						}
-
-						.is_mobile #wrapper .widefat td:last-child
-						{
-							border-bottom: 1px solid #e1e1e1;
-						}
-
-					#wrapper .widefat td, #wrapper .widefat td ol, #wrapper .widefat td p, #wrapper .widefat td ul
-					{
-						font-size: .8em;
-					}
-
-					#wrapper .widefat tr .row-actions
-					{
-						color: #999;
-						left: -9999em;
-						padding: 2px 0 0;
-						position: relative;
-						white-space: nowrap;
-					}
-
-						#wrapper .widefat tr:hover .row-actions
-						{
-							position: static;
-						}
-
-						#wrapper .widefat tr .row-actions > * + *:before
-						{
-							content: ' | ';
-						}
-
-						#wrapper .widefat tr .row-actions a
-						{
-							text-decoration: none;
-						}
-
-			#wrapper .widefat tfoot th
-			{
-				border-top: 1px solid #e1e1e1;
-			}
-
-		#wrapper .widefat + h3
-		{
-			margin-top: 1em;
-		}
 
 	.row-actions
 	{
@@ -361,6 +126,8 @@
 		width: 100%;
 	}
 
+	/* Flexbox */
+	/* ####################### */
 	.flex_flow
 	{
 		display: -webkit-box;
@@ -373,6 +140,16 @@
 		flex-wrap: wrap;
 	}
 
+		.is_mobile .flex_flow
+		{
+			display: block;
+		}
+
+			.is_mobile span.flex_flow
+			{
+				display: inline;
+			}
+
 		.flex_flow > *
 		{
 			display: block;
@@ -382,6 +159,12 @@
 			flex: 1 1 0;
 			margin-right: 1em;
 		}
+
+			.is_mobile .flex_flow > *
+			{
+				margin-right: 0;
+				margin-bottom: 1em;
+			}
 
 			.flex_flow > h3
 			{
@@ -408,23 +191,10 @@
 			flex: initial;
 			margin-right: .5em;
 		}
+	/* ####################### */
 
-	.is_mobile .flex_flow
-	{
-		display: block;
-	}
-
-		.is_mobile span.flex_flow
-		{
-			display: inline;
-		}
-
-		.is_mobile .flex_flow > *
-		{
-			margin-right: 0;
-			margin-bottom: 1em;
-		}
-
+	/* Forms */
+	/* ####################### */
 	.mf_form
 	{
 		overflow: hidden;
@@ -464,8 +234,6 @@
 				margin-left: .5em;
 				opacity: .5;
 			}
-
-			/*.mf_form input[readonly], .mf_form textarea[readonly]{}*/
 
 			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
 			{
@@ -582,7 +350,7 @@
 					margin-left: -43px;
 				}
 
-		.form_button button, .form_button .button, #comments #submit
+		.form_button button, .form_button .button
 		{
 			border: 0;
 			cursor: pointer;
@@ -597,7 +365,6 @@
 			{
 				cursor: no-drop;
 				opacity: .5;
-				/*pointer-events: none;*/ /* This will prevent title/hover to work */
 			}
 
 			.form_button button.loading, .form_button .button.loading
@@ -644,73 +411,54 @@
 			{
 				margin: .6em .6em 0 0;
 			}
+	/* ####################### */
 
-	.form_switch
+	/* Overlay */
+	/* ####################### */
+	.overlay_container
 	{
-		margin-right: .1em;
+		background: #000;
+		background: rgba(0, 0, 0, .5);
+		bottom: 0;
+		left: 0;
+		position: fixed;
+		right: 0;
+		top: 0;
+		z-index: 100000;
 	}
 
-		.form_switch input[type=checkbox]
+		.overlay_container > div
 		{
-			/* Has to be this way for required switches to display error message in correct place */
+			left: 50%;
 			position: absolute;
-			visibility: hidden;
+			top: 50vh;
+			-webkit-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+			max-width: 90%;
 		}
 
-			.form_switch label span
+			.overlay_container.modal > div
 			{
-				margin-right: .4em;
+				background: #fff;
+				border-radius: .5em;
+				font-size: 1.5em;
+				padding: 1em;
 			}
 
-			.form_switch .fa-lg
-			{
-				line-height: 0;
-			}
+				.overlay_container.modal p + p
+				{
+					margin-top: .5em;
+				}
 
-			.form_switch input[type=checkbox] + label .checked
-			{
-				display: none;
-			}
-
-			.form_switch input[type=checkbox] + label .unchecked
-			{
-				display: inline-block;
-			}
-
-			/* Checked */
-			.form_switch input[type=checkbox]:checked + label .unchecked
-			{
-				display: none;
-			}
-
-			.form_switch input[type=checkbox]:checked + label .checked
-			{
-				display: inline-block;
-			}
-
-			/* Loading */
-			.form_switch input[type=checkbox] + label .loading
-			{
-				display: none;
-			}
-
-			.form_switch.loading input[type=checkbox] + label .checked, .form_switch.loading input[type=checkbox] + label .unchecked
-			{
-				display: none !important;
-			}
-
-			.form_switch.loading input[type=checkbox] + label .loading
-			{
-				display: inline-block;
-			}
-
-			.form_switch .description
-			{
-				margin-left: .2em;
-			}
-
-		.form_switch .asterisk
-		{
-			display: none;
-		}
+				.overlay_container.modal .fa-times
+				{
+					background: #fff;
+					border-radius: .4em;
+					display: block;
+					padding: .1em .25em;
+					position: absolute;
+					right: .3em;
+					top: .3em;
+				}
+	/* ####################### */
 }

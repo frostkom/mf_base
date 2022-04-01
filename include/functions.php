@@ -1241,7 +1241,7 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 function insert_attachment($data)
 {
-	global $obj_base, $done_text, $error_text;
+	global $wpdb, $obj_base, $done_text, $error_text;
 
 	$intFileID = false;
 
@@ -1268,9 +1268,27 @@ function insert_attachment($data)
 
 		$intFileID = wp_insert_attachment($attachment, $file_url);
 
-		if(!($intFileID > 0))
+		if($intFileID > 0)
+		{
+			list($upload_path, $upload_url) = get_uploads_folder();
+
+			if(is_multisite() && $wpdb->blogid > 1)
+			{
+				$upload_url .= "sites/".$wpdb->blogid."/";
+			}
+
+			//do_log("Replace: ".$file_url." -> ".str_replace($upload_url, "", $file_url)." (".is_multisite().", ".$wpdb->blogid.", ".$upload_dir['url'].")");
+
+			$file_url = str_replace($upload_url, "", $file_url); // Remove http://domain.com/wp-content/uploads/sites/8/
+
+			update_post_meta($intFileID, '_wp_attached_file', $file_url);
+		}
+
+		else
 		{
 			$error_text = __("Well, we tried to save the file but something went wrong internally in Wordpress", 'lang_base').": ".$temp_file;
+
+			do_log("insert_attachment() Error: ".var_export($attachment, true)." (".$file_url.")");
 		}
 	}
 

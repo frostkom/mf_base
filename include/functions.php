@@ -1270,6 +1270,8 @@ function insert_attachment($data)
 
 		if($intFileID > 0)
 		{
+			// Remove http://domain.com/wp-content/uploads/sites/8/
+			##############################
 			list($upload_path, $upload_url) = get_uploads_folder();
 
 			if(is_multisite() && $wpdb->blogid > 1)
@@ -1277,11 +1279,18 @@ function insert_attachment($data)
 				$upload_url .= "sites/".$wpdb->blogid."/";
 			}
 
-			//do_log("Replace: ".$file_url." -> ".str_replace($upload_url, "", $file_url)." (".is_multisite().", ".$wpdb->blogid.", ".$upload_dir['url'].")");
-
-			$file_url = str_replace($upload_url, "", $file_url); // Remove http://domain.com/wp-content/uploads/sites/8/
+			$file_url = str_replace($upload_url, "", $file_url);
 
 			update_post_meta($intFileID, '_wp_attached_file', $file_url);
+			##############################
+
+			// Create thumbnails
+			##############################
+			$imagenew = get_post($intFileID);
+			$fullsizepath = get_attached_file($imagenew->ID);
+			$attach_data = wp_generate_attachment_metadata($intFileID, $fullsizepath);
+			wp_update_attachment_metadata($intFileID, $attach_data);
+			##############################
 		}
 
 		else

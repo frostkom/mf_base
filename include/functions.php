@@ -1215,6 +1215,11 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
 	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");
 
+	if(substr($upload_url, 0, 5) == 'http:' && substr(get_site_url(), 0, 6) == 'https:')
+	{
+		$upload_url = str_replace("http:", "https:", $upload_url);
+	}
+
 	if($subfolder != '')
 	{
 		$dir_exists = true;

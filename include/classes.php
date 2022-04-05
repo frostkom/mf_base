@@ -576,71 +576,6 @@ class mf_base
 		}
 	}
 
-	function settings_base()
-	{
-		define('BASE_OPTIONS_PAGE', "settings_mf_base");
-
-		$options_area = __FUNCTION__;
-
-		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
-
-		$arr_settings = array(
-			'setting_base_info' => __("Status", 'lang_base'),
-			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-		);
-
-		if(IS_SUPER_ADMIN)
-		{
-			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
-			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
-		}
-
-		switch($this->get_server_type())
-		{
-			case 'apache':
-				$config_file = ".htaccess";
-			break;
-
-			case 'nginx':
-				$config_file = "nginx.conf";
-			break;
-
-			case 'iis':
-				$config_file = "web.config";
-			break;
-
-			default:
-				$config_file = "";
-			break;
-		}
-
-		if($config_file != '')
-		{
-			$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
-		}
-
-		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
-		{
-			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
-		}
-
-		$arr_settings['setting_base_empty_trash_days'] = __("Empty Trash After", 'lang_base');
-
-		if(IS_SUPER_ADMIN)
-		{
-			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
-		}
-
-		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
-	}
-
-	function settings_base_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-
-		echo settings_header($setting_key, __("Common", 'lang_base'));
-	}
-
 	function return_bytes($value)
 	{
 		$number = substr($value, 0, -1);
@@ -732,176 +667,6 @@ class mf_base
 		return $out;
 	}
 
-	function setting_base_info_callback()
-	{
-		global $wpdb;
-
-		$php_version = explode("-", phpversion());
-		$php_version = $php_version[0];
-
-		$mysql_version = '';
-
-		if(function_exists('mysql_get_server_info'))
-		{
-			$mysql_version = explode("-", @mysql_get_server_info());
-			$mysql_version = $mysql_version[0];
-		}
-
-		if($mysql_version == '')
-		{
-			$mysql_version = int2point(mysqli_get_client_version());
-		}
-
-		$php_required = "5.2.4";
-		$mysql_required = "5.0";
-
-		$has_required_php_version = version_compare($php_version, $php_required, ">");
-		$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
-
-		$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
-		$ftp_date = strtotime(date("Y-m-d H:i:s"));
-		$date_diff = abs($db_date - $ftp_date);
-
-		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
-
-		$total_space = @disk_total_space('/');
-		$free_space = @disk_free_space('/');
-
-		if($total_space > 0)
-		{
-			$free_percent = ($free_space / $total_space) * 100;
-		}
-
-		echo "<div class='flex_flow'>
-			<div>
-				<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-				<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
-
-				if(!($has_required_php_version && $has_required_mysql_version))
-				{
-					echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
-				}
-
-				if($date_diff > 60)
-				{
-					echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
-				}
-
-				else
-				{
-					echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
-				}
-
-				if(isset($free_percent))
-				{
-					$size_title = "";
-
-					$option_base_ftp_size = get_site_option('option_base_ftp_size');
-					$option_base_db_size = get_site_option('option_base_db_size');
-
-					if($option_base_ftp_size > 0 || $option_base_db_size > 0)
-					{
-						$size_title .= __("Used", 'lang_base').": ";
-
-						if($option_base_ftp_size > 0)
-						{
-							$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
-						}
-
-						if($option_base_db_size > 0)
-						{
-							$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
-						}
-					}
-
-					echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
-						<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-						.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
-					."</p>";
-				}
-
-				$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
-
-				if(preg_match("/sites/", $upload_dir))
-				{
-					$upload_dir = str_replace("/sites/".$wpdb->blogid, "/", $upload_dir);
-				}
-
-				$upload_dir = trim($upload_dir, "/");
-
-				$current_dir = realpath(str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__)));
-				$current_dir = trim($current_dir, "/");
-
-				echo "<p>
-					<i class='fa ".($upload_dir == $current_dir ? "fa-check green" : "fa-times red display_warning")."'></i> "
-					.__("Upload Directory", 'lang_base').": ".$upload_dir.($upload_dir == $current_dir ? "" : " != ".$current_dir)
-				."</p>";
-
-				$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
-				$option_base_large_table_amount = count($option_base_large_tables);
-
-				if($option_base_large_table_amount > 0)
-				{
-					$table_names = "";
-
-					foreach($option_base_large_tables as $arr_table)
-					{
-						$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." ("
-							.$arr_table['size']
-							.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
-						.")";
-					}
-
-					echo "<p>
-						<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-						.__("DB", 'lang_base').": "
-						."<span title='".$table_names
-						."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
-					."</p>";
-				}
-
-				/*else
-				{
-					$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
-
-					if($option_base_large_table_amount > 0)
-					{
-						echo "<p>
-							<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
-						."</p>";
-					}
-				}*/
-
-			echo "</div>
-			<div>
-				<p>
-					<i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-times red display_warning")."'></i> "
-					.__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)
-				."</p>";
-
-				if(function_exists('sys_getloadavg'))
-				{
-					$load = sys_getloadavg();
-
-					if(isset($load[0]))
-					{
-						echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
-						<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-						<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
-					}
-				}
-
-				$current_visitor_ip = get_current_visitor_ip();
-
-				echo "<p>
-					<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "
-					.__("My IP", 'lang_base').": ".$current_visitor_ip
-				."</p>
-			</div>
-		</div>";
-	}
-
 	function get_schedules_for_select()
 	{
 		$arr_schedules = wp_get_schedules();
@@ -914,58 +679,6 @@ class mf_base
 		}
 
 		return $arr_data;
-	}
-
-	function setting_base_template_site_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key);
-
-		$placeholder = get_site_url();
-
-		if($option != '')
-		{
-			if($option == $placeholder)
-			{
-				$option = "";
-			}
-
-			else
-			{
-				$option = trim($option, "/");
-			}
-		}
-
-		echo show_textfield(array('type' => 'url', 'name' => $setting_key, 'value' => $option, 'placeholder' => $placeholder));
-
-		$option_sync_sites = get_option('option_sync_sites', array());
-
-		if(count($option_sync_sites) > 0)
-		{
-			$updated = false;
-
-			echo "<h3>".__("Child Sites", 'lang_base')."</h3>
-			<ol class='text_columns columns_3'>";
-
-				foreach($option_sync_sites as $url => $site)
-				{
-					echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
-
-					if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
-					{
-						unset($option_sync_sites[$url]);
-
-						$updated = true;
-					}
-				}
-
-			echo "</ol>";
-
-			if($updated == true)
-			{
-				update_option('option_sync_sites', $option_sync_sites, 'no');
-			}
-		}
 	}
 
 	function get_server_type()
@@ -1001,271 +714,600 @@ class mf_base
 		return $this->server_type;
 	}
 
-	function setting_base_cron_callback()
+	function settings_base()
 	{
-		global $wpdb;
+		define('BASE_OPTIONS_PAGE', "settings_mf_base");
 
-		$setting_key = get_setting_key(__FUNCTION__);
-		$option = get_option($setting_key, 'every_ten_minutes');
+		$options_area_orig = $options_area = __FUNCTION__;
 
-		$this->reschedule_base($option);
+		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
-		if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
+		$arr_settings = array(
+			'setting_base_info' => __("Status", 'lang_base'),
+			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+		);
+
+		if(IS_SUPER_ADMIN)
 		{
-			$select_suffix = "";
-
-			$next_cron = get_next_cron();
-
-			if($next_cron != '')
-			{
-				$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
-			}
-
-			echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
 
-		if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
-		{
-			$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
+		// Does not work as intended...
+		//show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 
-			echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
-		}
+		// Advanced
+		############################
+		//$options_area = $options_area_orig."_advanced";
 
-		$obj_cron = new mf_cron();
-		$cron_interval = $obj_cron->get_interval() / 60;
+		//add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
-		$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
+		//$arr_settings = array();
 
-		$option_cron_started = get_option('option_cron_started');
-		$option_cron_run = get_option('option_cron_run');
-
-		if($option_cron_started > $option_cron_run)
-		{
-			echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
-		}
-
-		else if($option_cron_run != '')
-		{
-			if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
-			{
-				echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
-
-				do_action('cron_base');
-			}
-
-			else
-			{
-				$out_temp = format_date($option_cron_started);
-
-				if(format_date($option_cron_run) != $out_temp)
-				{
-					$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_run);
-				}
-
-				$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_run, 'type' => 'ceil', 'return' => 'seconds'));
-
-				if($time_difference > 0)
-				{
-					$out_temp .= " (".$time_difference."".__("s", 'lang_base').")";
-				}
-
-				echo "<em>".sprintf(__("Last run %s", 'lang_base'), $out_temp)."</em>";
-			}
-		}
-
-		else
-		{
-			echo "<em>".__("Has never been run", 'lang_base')."</em>";
-		}
-	}
-
-	function setting_base_cron_debug_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		settings_save_site_wide($setting_key);
-		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
-
-		$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
-
-		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
-
-		if($option == 'yes' && IS_SUPER_ADMIN)
-		{
-			$option_cron = get_option('cron');
-
-			if(count($option_cron) > 0)
-			{
-				echo "<ul>";
-
-					foreach($option_cron as $key => $arr_jobs)
-					{
-						//$arr_jobs = $this->array_sort(array('array' => $arr_jobs, 'on' => 1, 'keep_index' => true));
-						//$arr_jobs = uksort($arr_jobs);
-						//echo "<li>".var_export($arr_jobs, true)."</li>";
-
-						foreach($arr_jobs as $key => $arr_job)
-						{
-							echo "<li>"
-								.$key.": ";
-
-								//echo var_export($arr_job, true);
-
-								foreach($arr_job as $key => $arr_data)
-								{
-									//echo $key." => ".var_export($arr_data, true);
-
-									foreach($arr_data as $key => $value)
-									{
-										switch($key)
-										{
-											case 'schedule':
-											//case 'interval':
-												echo $key." => ".$value;
-											break;
-										}
-									}
-								}
-
-							echo "</li>";
-						}
-					}
-
-				echo "</ul>";
-			}
-		}
-	}
-
-	function setting_base_use_timezone_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-		settings_save_site_wide($setting_key);
-		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
-
-		echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-	}
-
-	function setting_base_update_htaccess_callback()
-	{
 		switch($this->get_server_type())
 		{
 			case 'apache':
-				$setting_key = get_setting_key(__FUNCTION__);
-				$option = get_option($setting_key, 'no');
+				$config_file = ".htaccess";
+			break;
 
-				if(!is_multisite() || is_main_site())
-				{
-					$xtra = "";
-					$description = "";
+			case 'nginx':
+				$config_file = "nginx.conf";
+			break;
 
-					/*$option = 'no';
-					$xtra = "disabled";*/
+			case 'iis':
+				$config_file = "web.config";
+			break;
 
-					if($option != 'yes')
+			default:
+				$config_file = "";
+			break;
+		}
+
+		if($config_file != '')
+		{
+			$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
+		}
+
+		if(IS_SUPER_ADMIN)
+		{
+			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
+		}
+
+		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
+		{
+			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
+		}
+
+		$arr_settings['setting_base_empty_trash_days'] = __("Empty Trash After", 'lang_base');
+
+		if(IS_SUPER_ADMIN)
+		{
+			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
+		}
+
+		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
+		############################
+	}
+
+	function settings_base_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+
+		echo settings_header($setting_key, __("Common", 'lang_base'));
+	}
+
+		function setting_base_info_callback()
+		{
+			global $wpdb;
+
+			$php_version = explode("-", phpversion());
+			$php_version = $php_version[0];
+
+			$mysql_version = '';
+
+			if(function_exists('mysql_get_server_info'))
+			{
+				$mysql_version = explode("-", @mysql_get_server_info());
+				$mysql_version = $mysql_version[0];
+			}
+
+			if($mysql_version == '')
+			{
+				$mysql_version = int2point(mysqli_get_client_version());
+			}
+
+			$php_required = "5.2.4";
+			$mysql_required = "5.0";
+
+			$has_required_php_version = version_compare($php_version, $php_required, ">");
+			$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
+
+			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
+			$ftp_date = strtotime(date("Y-m-d H:i:s"));
+			$date_diff = abs($db_date - $ftp_date);
+
+			$memory_limit = $this->return_bytes(ini_get('memory_limit'));
+
+			$total_space = @disk_total_space('/');
+			$free_space = @disk_free_space('/');
+
+			if($total_space > 0)
+			{
+				$free_percent = ($free_space / $total_space) * 100;
+			}
+
+			echo "<div class='flex_flow'>
+				<div>
+					<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
+					<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+
+					if(!($has_required_php_version && $has_required_mysql_version))
 					{
-						$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", 'lang_base');
+						echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
 					}
 
-					echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'xtra' => $xtra, 'description' => $description));
+					if($date_diff > 60)
+					{
+						echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
+					}
+
+					else
+					{
+						echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
+					}
+
+					if(isset($free_percent))
+					{
+						$size_title = "";
+
+						$option_base_ftp_size = get_site_option('option_base_ftp_size');
+						$option_base_db_size = get_site_option('option_base_db_size');
+
+						if($option_base_ftp_size > 0 || $option_base_db_size > 0)
+						{
+							$size_title .= __("Used", 'lang_base').": ";
+
+							if($option_base_ftp_size > 0)
+							{
+								$size_title .= show_final_size($option_base_ftp_size)." (".__("Files", 'lang_base').")";
+							}
+
+							if($option_base_db_size > 0)
+							{
+								$size_title .= ($option_base_ftp_size > 0 ? ", " : "").show_final_size($option_base_db_size)." (".__("DB", 'lang_base').")";
+							}
+						}
+
+						echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
+							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+						."</p>";
+					}
+
+					$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
+
+					if(preg_match("/sites/", $upload_dir))
+					{
+						$upload_dir = str_replace("/sites/".$wpdb->blogid, "/", $upload_dir);
+					}
+
+					$upload_dir = trim($upload_dir, "/");
+
+					$current_dir = realpath(str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__)));
+					$current_dir = trim($current_dir, "/");
+
+					echo "<p>
+						<i class='fa ".($upload_dir == $current_dir ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("Upload Directory", 'lang_base').": ".$upload_dir.($upload_dir == $current_dir ? "" : " != ".$current_dir)
+					."</p>";
+
+					$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
+					$option_base_large_table_amount = count($option_base_large_tables);
+
+					if($option_base_large_table_amount > 0)
+					{
+						$table_names = "";
+
+						foreach($option_base_large_tables as $arr_table)
+						{
+							$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." ("
+								.$arr_table['size']
+								.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
+							.")";
+						}
+
+						echo "<p>
+							<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("DB", 'lang_base').": "
+							."<span title='".$table_names
+							."'>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+						."</p>";
+					}
+
+					/*else
+					{
+						$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
+
+						if($option_base_large_table_amount > 0)
+						{
+							echo "<p>
+								<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+								.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
+							."</p>";
+						}
+					}*/
+
+				echo "</div>
+				<div>
+					<p>
+						<i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)
+					."</p>";
+
+					if(function_exists('sys_getloadavg'))
+					{
+						$load = sys_getloadavg();
+
+						if(isset($load[0]))
+						{
+							echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
+							<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
+							<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
+						}
+					}
+
+					$current_visitor_ip = get_current_visitor_ip();
+
+					echo "<p>
+						<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("My IP", 'lang_base').": ".$current_visitor_ip
+					."</p>
+				</div>
+			</div>";
+		}
+
+		function setting_base_cron_callback()
+		{
+			global $wpdb;
+
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 'every_ten_minutes');
+
+			$this->reschedule_base($option);
+
+			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
+			{
+				$select_suffix = "";
+
+				$next_cron = get_next_cron();
+
+				if($next_cron != '')
+				{
+					$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
+				}
+
+				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
+			}
+
+			if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
+			{
+				$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
+
+				echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
+			}
+
+			$obj_cron = new mf_cron();
+			$cron_interval = $obj_cron->get_interval() / 60;
+
+			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
+
+			$option_cron_started = get_option('option_cron_started');
+			$option_cron_run = get_option('option_cron_run');
+
+			if($option_cron_started > $option_cron_run)
+			{
+				echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
+			}
+
+			else if($option_cron_run != '')
+			{
+				if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
+				{
+					echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
+
+					do_action('cron_base');
 				}
 
 				else
 				{
-					echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
+					$out_temp = format_date($option_cron_started);
+
+					if(format_date($option_cron_run) != $out_temp)
+					{
+						$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_run);
+					}
+
+					$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_run, 'type' => 'ceil', 'return' => 'seconds'));
+
+					if($time_difference > 0)
+					{
+						$out_temp .= " (".$time_difference."".__("s", 'lang_base').")";
+					}
+
+					echo "<em>".sprintf(__("Last run %s", 'lang_base'), $out_temp)."</em>";
 				}
+			}
 
-				$file_htaccess = get_home_path().".htaccess";
-
-				$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
-
-				if($config['html'] != '')
-				{
-					echo $config['html'];
-				}
-			break;
-
-			case 'nginx':
-				$config = apply_filters('recommend_config', array('html' => ''));
-
-				if($config['html'] != '')
-				{
-					echo $config['html'];
-				}
-			break;
-
-			default:
-				$file_htaccess = get_home_path().".htaccess";
-
-				$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
-
-				if($config['html'] != '')
-				{
-					echo $config['html'];
-				}
-			break;
+			else
+			{
+				echo "<em>".__("Has never been run", 'lang_base')."</em>";
+			}
 		}
-	}
 
-	function setting_base_empty_trash_days_callback()
+		function setting_base_recommend_callback()
+		{
+			$arr_recommendations = array(
+				array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
+				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+				array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
+				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
+				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
+				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+				array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
+				array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", 'lang_base')),
+				array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
+				array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+				array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
+				array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
+				array("SSL Zen", 'ssl-zen/ssl_zen.php', __("to add a certificate to encrypt the site", 'lang_base')),
+				array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
+				array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
+				array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
+				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
+				array("Wordfence Security", 'wordfence/wordfence.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
+				//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
+				array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
+				array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
+				array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
+			);
+
+			if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
+			{
+				$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
+				$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
+				$arr_recommendations[] = array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base'));
+				$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
+			}
+
+			foreach($arr_recommendations as $value)
+			{
+				$name = $value[0];
+				$path = $value[1];
+				$text = isset($value[2]) ? $value[2] : "";
+
+				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
+			}
+		}
+
+	function settings_base_advanced_callback()
 	{
 		$setting_key = get_setting_key(__FUNCTION__);
-		settings_save_site_wide($setting_key);
-		$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
 
-		$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
-		$description = "";
-
-		if($constant_option != $option)
-		{
-			$description = sprintf(__("This value has already been set to %d", 'lang_base'), $constant_option);
-		}
-
-		echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", 'lang_base'), 'description' => $description));
+		echo settings_header($setting_key, __("Common", 'lang_base')." - ".__("Advanced", 'lang_base'));
 	}
 
-	function setting_base_recommend_callback()
-	{
-		$arr_recommendations = array(
-			array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
-			array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-			array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
-			array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
-			array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
-			array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-			array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
-			array("Menu Icons", 'menu-icons/menu-icons.php', __("to add icons to menus", 'lang_base')),
-			array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
-			array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
-			array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
-			array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
-			array("SSL Zen", 'ssl-zen/ssl_zen.php', __("to add a certificate to encrypt the site", 'lang_base')),
-			array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
-			array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
-			array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-			array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
-			array("Wordfence Security", 'wordfence/wordfence.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
-			//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
-			array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
-			array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
-			array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
-		);
-
-		if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
+		function setting_base_update_htaccess_callback()
 		{
-			$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
-			$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
-			$arr_recommendations[] = array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base'));
-			$arr_recommendations[] = array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base'));
+			switch($this->get_server_type())
+			{
+				case 'apache':
+					$setting_key = get_setting_key(__FUNCTION__);
+					$option = get_option($setting_key, 'no');
+
+					if(!is_multisite() || is_main_site())
+					{
+						$xtra = "";
+						$description = "";
+
+						/*$option = 'no';
+						$xtra = "disabled";*/
+
+						if($option != 'yes')
+						{
+							$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", 'lang_base');
+						}
+
+						echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'xtra' => $xtra, 'description' => $description));
+					}
+
+					else
+					{
+						echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
+					}
+
+					$file_htaccess = get_home_path().".htaccess";
+
+					$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+
+					if($config['html'] != '')
+					{
+						echo $config['html'];
+					}
+				break;
+
+				case 'nginx':
+					$config = apply_filters('recommend_config', array('html' => ''));
+
+					if($config['html'] != '')
+					{
+						echo $config['html'];
+					}
+				break;
+
+				default:
+					$file_htaccess = get_home_path().".htaccess";
+
+					$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+
+					if($config['html'] != '')
+					{
+						echo $config['html'];
+					}
+				break;
+			}
 		}
 
-		foreach($arr_recommendations as $value)
+		function get_automatic_updates_for_select()
 		{
-			$name = $value[0];
-			$path = $value[1];
-			$text = isset($value[2]) ? $value[2] : "";
-
-			new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
+			return array(
+				'core' => __("Core", 'lang_base'),
+				'theme' => __("Theme", 'lang_base'),
+				'plugin' => __("Plugin", 'lang_base'),
+			);
 		}
-	}
+
+		function setting_base_automatic_updates_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, array()));
+
+			echo show_select(array('data' => $this->get_automatic_updates_for_select(), 'name' => $setting_key."[]", 'value' => $option));
+		}
+
+		function setting_base_template_site_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key);
+
+			$placeholder = get_site_url();
+
+			if($option != '')
+			{
+				if($option == $placeholder)
+				{
+					$option = "";
+				}
+
+				else
+				{
+					$option = trim($option, "/");
+				}
+			}
+
+			echo show_textfield(array('type' => 'url', 'name' => $setting_key, 'value' => $option, 'placeholder' => $placeholder));
+
+			$option_sync_sites = get_option('option_sync_sites', array());
+
+			if(count($option_sync_sites) > 0)
+			{
+				$updated = false;
+
+				echo "<h3>".__("Child Sites", 'lang_base')."</h3>
+				<ol class='text_columns columns_3'>";
+
+					foreach($option_sync_sites as $url => $site)
+					{
+						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
+
+						if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
+						{
+							unset($option_sync_sites[$url]);
+
+							$updated = true;
+						}
+					}
+
+				echo "</ol>";
+
+				if($updated == true)
+				{
+					update_option('option_sync_sites', $option_sync_sites, 'no');
+				}
+			}
+		}
+
+		function setting_base_empty_trash_days_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
+
+			$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
+			$description = "";
+
+			if($constant_option != $option)
+			{
+				$description = sprintf(__("This value has already been set to %d", 'lang_base'), $constant_option);
+			}
+
+			echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", 'lang_base'), 'description' => $description));
+		}
+
+		function setting_base_use_timezone_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
+
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+		}
+
+		function setting_base_cron_debug_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
+
+			$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
+
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
+
+			if($option == 'yes' && IS_SUPER_ADMIN)
+			{
+				$option_cron = get_option('cron');
+
+				if(count($option_cron) > 0)
+				{
+					echo "<ul>";
+
+						foreach($option_cron as $key => $arr_jobs)
+						{
+							//$arr_jobs = $this->array_sort(array('array' => $arr_jobs, 'on' => 1, 'keep_index' => true));
+							//$arr_jobs = uksort($arr_jobs);
+							//echo "<li>".var_export($arr_jobs, true)."</li>";
+
+							foreach($arr_jobs as $key => $arr_job)
+							{
+								echo "<li>"
+									.$key.": ";
+
+									//echo var_export($arr_job, true);
+
+									foreach($arr_job as $key => $arr_data)
+									{
+										//echo $key." => ".var_export($arr_data, true);
+
+										foreach($arr_data as $key => $value)
+										{
+											switch($key)
+											{
+												case 'schedule':
+												//case 'interval':
+													echo $key." => ".$value;
+												break;
+											}
+										}
+									}
+
+								echo "</li>";
+							}
+						}
+
+					echo "</ul>";
+				}
+			}
+		}
 
 	function admin_init()
 	{

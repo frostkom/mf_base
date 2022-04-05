@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 1.1.0.2
+Version: 1.1.0.3
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -57,6 +57,30 @@ else
 {
 	add_action('login_init', array($obj_base, 'login_init'), 0);
 	add_action('wp_head', array($obj_base, 'wp_head'), 0);
+}
+
+// https://wordpress.org/support/article/configuring-automatic-background-updates/
+// https://developer.wordpress.org/reference/functions/core_auto_updates_settings/
+$setting_base_automatic_updates = get_site_option('setting_base_automatic_updates', array());
+
+/*if(!in_array('', $setting_base_automatic_updates) && !has_filter('automatic_updater_disabled', '__return_true'))
+{
+	add_filter('automatic_updater_disabled', '__return_true');
+}*/
+
+if(!in_array('core', $setting_base_automatic_updates) && !has_filter('auto_update_core', '__return_false'))
+{
+	add_filter('auto_update_core', '__return_false');
+}
+
+if(!in_array('theme', $setting_base_automatic_updates) && !has_filter('auto_update_theme', '__return_false'))
+{
+	add_filter('auto_update_theme', '__return_false');
+}
+
+if(!in_array('plugin', $setting_base_automatic_updates) && !has_filter('auto_update_plugin', '__return_false'))
+{
+	add_filter('auto_update_plugin', '__return_false');
 }
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: 
-Version: 1.1.0.4
+Version: 1.1.0.5
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://frostkom.se
@@ -61,7 +61,7 @@ else
 
 // https://wordpress.org/support/article/configuring-automatic-background-updates/
 // https://developer.wordpress.org/reference/functions/core_auto_updates_settings/
-$setting_base_automatic_updates = get_site_option('setting_base_automatic_updates', array());
+$setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
 
 /*if(!in_array('', $setting_base_automatic_updates) && !has_filter('automatic_updater_disabled', '__return_true'))
 {

@@ -598,7 +598,8 @@ class mf_base
 				break;
 
 				default:
-					do_log("There was no suffix in return_bytes() (".$value.")");
+					// ...then assume that it already is bytes
+					//do_log("There was no suffix in return_bytes() (".$value.")");
 				break;
 			}
 		}
@@ -828,11 +829,12 @@ class mf_base
 
 			$memory_limit = $this->return_bytes(ini_get('memory_limit'));
 
-			$total_space = @disk_total_space('/');
-			$free_space = @disk_free_space('/');
+			$total_space = (function_exists('disk_total_space') ? disk_total_space('/') : 0);
 
 			if($total_space > 0)
 			{
+				$free_space = disk_free_space('/');
+
 				$free_percent = ($free_space / $total_space) * 100;
 			}
 
@@ -881,6 +883,14 @@ class mf_base
 						echo "<p".($size_title != '' ? " title='".$size_title."'" : "").">
 							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Disc Space", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+						."</p>";
+					}
+
+					else
+					{
+						echo "<p>
+							<i class='fa fa-times red display_warning'></i> "
+							.__("Disc Space", 'lang_base').": ".__("Unknown", 'lang_base')
 						."</p>";
 					}
 
@@ -950,9 +960,9 @@ class mf_base
 
 						if(isset($load[0]))
 						{
-							echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
-							<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-							<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
+							echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
+							<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
+							<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
 						}
 					}
 

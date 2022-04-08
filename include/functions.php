@@ -762,7 +762,6 @@ function replace_post_meta($data)
 	global $wpdb;
 
 	$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->postmeta." SET meta_key = %s WHERE meta_key = %s", $data['new'], $data['old']));
-	//do_log("replace_post_meta(): ".$wpdb->prepare("UPDATE ".$wpdb->postmeta." SET meta_key = %s WHERE meta_key = %s", $data['new'], $data['old']));
 }
 
 function replace_user_meta($data)
@@ -1408,8 +1407,6 @@ function delete_base($data)
 
 			$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$data['table'];
 		}
-
-		//do_log("delete_base: ".$debug);
 	}
 }
 
@@ -2274,6 +2271,8 @@ function get_post_types_for_select($data = array())
 
 		if(count($arr_pages) > 0)
 		{
+			$page_for_posts = get_option('page_for_posts');
+
 			if($opt_groups == true)
 			{
 				$arr_data['opt_start_pages'] = __("Pages", 'lang_base');
@@ -2281,14 +2280,21 @@ function get_post_types_for_select($data = array())
 
 				foreach($arr_pages as $post_id => $post_title)
 				{
+					$key_prefix = "";
+
+					if($post_id == $page_for_posts)
+					{
+						$key_prefix = "disabled_";
+					}
+
 					if($data['add_is'] == true)
 					{
-						$arr_data['is_page('.$post_id.')'] = $post_title;
+						$arr_data[$key_prefix.'is_page('.$post_id.')'] = $post_title;
 					}
 
 					else
 					{
-						$arr_data[$post_id] = $post_title;
+						$arr_data[$key_prefix.$post_id] = $post_title;
 					}
 				}
 
@@ -2368,8 +2374,37 @@ function get_post_types_for_select($data = array())
 			}
 		}
 
-		//$arr_data['is_front_page()'] = "Front Page";
-		$arr_data['is_home()'] = __("Home", 'lang_base');
+		$show_on_front = get_option('show_on_front');
+		$page_on_front = get_option('page_on_front');
+		$page_for_posts = get_option('page_for_posts');
+
+		$front_page_title = __("Front Page", 'lang_base');
+		$home_title = __("Home", 'lang_base');
+
+		switch($show_on_front)
+		{
+			case 'post':
+				if($page_for_posts > 0)
+				{
+					$front_page_title = $home_title = get_post_title($page_for_posts);
+				}
+			break;
+
+			case 'page':
+				if($page_on_front > 0)
+				{
+					$front_page_title = get_post_title($page_on_front);
+				}
+
+				if($page_for_posts > 0)
+				{
+					$home_title = get_post_title($page_for_posts);
+				}
+			break;
+		}
+
+		$arr_data['is_front_page()'] = $front_page_title;
+		$arr_data['is_home()'] = $home_title;
 		//$arr_data['is_page()'] = "Page";
 		$arr_data['is_search()'] = __("Search", 'lang_base');
 		//$arr_data['is_single()'] = "Single";

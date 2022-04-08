@@ -599,7 +599,6 @@ class mf_base
 
 				default:
 					// ...then assume that it already is bytes
-					//do_log("There was no suffix in return_bytes() (".$value.")");
 				break;
 			}
 		}
@@ -829,11 +828,11 @@ class mf_base
 
 			$memory_limit = $this->return_bytes(ini_get('memory_limit'));
 
-			$total_space = (function_exists('disk_total_space') ? disk_total_space('/') : 0);
+			$total_space = (function_exists('disk_total_space') ? disk_total_space(ABSPATH) : 0);
 
 			if($total_space > 0)
 			{
-				$free_space = disk_free_space('/');
+				$free_space = disk_free_space(ABSPATH);
 
 				$free_percent = ($free_space / $total_space) * 100;
 			}
@@ -2774,8 +2773,6 @@ class mf_list_table extends WP_List_Table
 
 			if($column_exists == false)
 			{
-				//do_log("select_data: ".$data['order_by']." does not exist in ".$query_from);
-
 				$data['order_by'] = "";
 			}
 		}

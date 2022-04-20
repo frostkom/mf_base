@@ -612,7 +612,7 @@ function send_email($data)
 
 	if(!isset($data['save_log']))
 	{
-		$setting_email_log = get_option('setting_email_log');
+		$setting_email_log = get_site_option('setting_email_log');
 
 		$data['save_log'] = (is_array($setting_email_log) && in_array('plugin', $setting_email_log));
 	}

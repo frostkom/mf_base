@@ -3753,7 +3753,7 @@ class mf_import
 					break;
 				}
 
-				$i_start = $this->skip_header ? 1 : 0;
+				$i_start = $this->skip_header;
 
 				for($i = $i_start; $i < $count_temp_rows; $i++)
 				{

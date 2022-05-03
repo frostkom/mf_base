@@ -213,7 +213,7 @@
 			line-height: 1.8;
 		}
 
-		.mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form p.input, #comments #comment
+		.mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form div.input, .mf_form p.input, #comments #comment
 		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
@@ -225,6 +225,11 @@
 			padding: .4em;
 			width: 100%;
 		}
+
+			.mf_form div.input, .mf_form p.input
+			{
+				border-radius: .4em;
+			}
 
 			.mf_form label .maxlength_counter
 			{

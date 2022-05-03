@@ -121,7 +121,7 @@ function get_option_page_suffix($data)
 
 	if($data['value'] > 0)
 	{
-		$out = "<a href='".admin_url("post.php?post=".$data['value']."&action=edit")."'><i class='fa fa-wrench fa-lg'></i></a>";
+		$out = "<a href='".admin_url("post.php?post=".$data['value']."&action=edit")."'><i class='fa fa-wrench fa-lg'></i></a> <a href='".get_permalink($data['value'])."'><i class='fa fa-eye fa-lg'></i></a>";
 	}
 
 	else

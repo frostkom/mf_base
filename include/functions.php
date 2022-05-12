@@ -711,6 +711,11 @@ function shorten_text($data)
 
 	$out = "";
 
+	if(is_array($data['string']))
+	{
+		do_log("shorten_text() - String is array: ".var_export($data, true)." (".var_export(debug_backtrace(), true).")");
+	}
+
 	if(strlen($data['string']) > $data['limit'])
 	{
 		if($data['add_title'])
@@ -1118,7 +1123,7 @@ function time_between_dates($data)
 
 function delete_files($data)
 {
-	if(!isset($data['time_limit'])){	$data['time_limit'] = 60 * 60 * 24 * 2;} //2 days
+	if(!isset($data['time_limit'])){	$data['time_limit'] = 60 * 60 * 24 * 2;} // DAY_IN_SECONDS * 2
 
 	$time_now = time();
 	$time_file = @filemtime($data['file']);

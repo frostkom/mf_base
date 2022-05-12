@@ -1356,15 +1356,15 @@ class mf_base
 	function filter_sites_table_settings($arr_settings)
 	{
 		$arr_settings['settings_base'] = array(
-			'setting_base_use_timezone' => array(
+			/*'setting_base_use_timezone' => array(
 				'type' => 'bool',
 				'global' => true,
 				'icon' => "fas fa-clock",
 				'name' => __("Use Timezone to adjust time", 'lang_base'),
-			),
+			),*/
 			'setting_base_template_site' => array(
 				'type' => 'string',
-				'global' => true,
+				'global' => false,
 				'icon' => "fas fa-copy",
 				'name' => __("Template Site", 'lang_base'),
 			),

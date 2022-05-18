@@ -2249,7 +2249,15 @@ function get_users_for_select($data = array())
 
 			else
 			{
-				$arr_data[$user->ID] = $user->display_name;
+				if($user->display_name != '')
+				{
+					$arr_data[$user->ID] = $user->display_name;
+				}
+
+				else if($user->first_name != '' && $user->last_name != '')
+				{
+					$arr_data[$user->ID] = $user->first_name." ".$user->last_name;
+				}
 			}
 		}
 	}

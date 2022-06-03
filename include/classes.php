@@ -3348,7 +3348,6 @@ class mf_export
 
 				if(count($this->data) > 0)
 				{
-					//$this->file_name = prepare_file_name($this->name).".".$this->format;
 					$this->set_file_name();
 
 					switch($this->format)

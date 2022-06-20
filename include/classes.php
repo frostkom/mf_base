@@ -264,7 +264,7 @@ class mf_base
 				$h = 4.0 + ($r - $g) / ($maxC - $minC);
 			}
 
-			$h = $h / 6.0; 
+			$h = $h / 6.0;
 		}
 
 		$h = (int)round(255.0 * $h);
@@ -1215,9 +1215,11 @@ class mf_base
 				echo "<h3>".__("Child Sites", 'lang_base')."</h3>
 				<ol class='text_columns columns_3'>";
 
+					$option_sync_sites = $this->array_sort(array('array' => $option_sync_sites, 'on' => 'datetime', 'order' => 'desc', 'keep_index' => true));
+
 					foreach($option_sync_sites as $url => $site)
 					{
-						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
+						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>"; // (".format_date($site['datetime']).")
 
 						if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
 						{

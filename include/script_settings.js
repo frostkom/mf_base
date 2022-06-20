@@ -54,7 +54,7 @@ jQuery(function($)
 		$(document).on("keyup", function(e)
 		{
 			/* Key up Ctrl */
-			if((e.which || e.keyCode) == 17) 
+			if((e.which || e.keyCode) == 17)
 			{
 				ctrlKeyDown = false;
 			}

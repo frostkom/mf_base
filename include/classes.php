@@ -542,6 +542,7 @@ class mf_base
 			{
 				if($value < date("Y-m-d H:i:s"))
 				{
+					delete_site_option($key);
 					delete_option($key);
 
 					unset($option_base_time_limited[$key]);
@@ -3172,9 +3173,11 @@ class mf_font_icons
 			'fas fa-graduation-cap',
 			'fas fa-handshake',
 			'fas fa-hospital-alt',
+			'fab fa-instagram',
 			'fas fa-key',
 			'fa fa-link',
 			'lock',
+			'fas fa-map-marker-alt',
 			'paper-plane',
 			'fas fa-parking',
 			'fas fa-play-circle',
@@ -3444,7 +3447,7 @@ class mf_export
 					}
 				}
 
-				else
+				else if($error_text == '')
 				{
 					$error_text = __("There was nothing to export", 'lang_base');
 				}

@@ -926,6 +926,18 @@ class mf_base
 					<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
 					<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
+					switch(get_bloginfo('language'))
+					{
+						case 'sv-SE':
+							$collation_name = $wpdb->get_var($wpdb->prepare("SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = %s LIMIT 1", DB_NAME));
+
+							if($collation_name != 'utf8mb4_swedish_ci')
+							{
+								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to %s", 'lang_base'), $collation_name, 'utf8mb4_swedish_ci')."</p>";
+							}
+						break;
+					}
+
 					if(!($has_required_php_version && $has_required_mysql_version))
 					{
 						echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";

@@ -47,12 +47,12 @@ function setting_time_limit($data)
 			{
 				if($hours_left == 1)
 				{
-					return __("One hour left until it is reset", 'lang_base');
+					return "<em>".__("One hour left until it is reset", 'lang_base')."</em>";
 				}
 
 				else
 				{
-					return sprintf(__("%d hours left until it is reset", 'lang_base'), $hours_left);
+					return "<em>".sprintf(__("%d hours left until it is reset", 'lang_base'), $hours_left)."</em>";
 				}
 			}
 		}

@@ -110,6 +110,11 @@
 				white-space: nowrap;
 			}
 
+				#wrapper .widefat th:hover
+				{
+					white-space: normal;
+				}
+
 				.is_mobile #wrapper .widefat th:not(:first-child)
 				{
 					display: none;

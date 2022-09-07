@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-31 10:51+0100\n"
+"POT-Creation-Date: 2022-09-01 09:09+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -102,7 +102,7 @@ msgstr ""
 
 #: ../include/classes.php:936
 msgid "Language"
-msgstr ""
+msgstr "Språk"
 
 #: ../include/classes.php:936
 #, php-format

@@ -931,9 +931,9 @@ class mf_base
 						case 'sv-SE':
 							$collation_name = $wpdb->get_var($wpdb->prepare("SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = %s LIMIT 1", DB_NAME));
 
-							if($collation_name != 'utf8mb4_swedish_ci')
+							if($collation_name != 'utf8mb4_swedish_ci' && $collation_name != 'latin1_swedish_ci')
 							{
-								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to %s", 'lang_base'), $collation_name, 'utf8mb4_swedish_ci')."</p>";
+								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to %s or %s", 'lang_base'), $collation_name, 'utf8mb4_swedish_ci', 'latin1_swedish_ci')."</p>";
 							}
 						break;
 					}
@@ -982,7 +982,7 @@ class mf_base
 							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Space Left", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 						."</p>";
-						
+
 						echo "<ul>";
 
 							if($option_base_ftp_size > 0)
@@ -1152,7 +1152,7 @@ class mf_base
 										.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
 									.")</li>";
 								}
-							
+
 							echo "</ul>";
 						}
 					}
@@ -1316,7 +1316,7 @@ class mf_base
 			{
 				$name = $value[0];
 				$path = $value[1];
-				$text = isset($value[2]) ? $value[2] : "";
+				$text = (isset($value[2]) ? $value[2] : '');
 
 				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 			}
@@ -3803,7 +3803,7 @@ class mf_import
 		$this->action = check_var('strTableAction');
 		$this->skip_header = check_var('intImportSkipHeader', '', true, '0');
 		$this->save_result = check_var('intImportSaveResult', '', true, '0');
-		$this->text = isset($_POST['strImportText']) ? trim($_POST['strImportText']) : "";
+		$this->text = (isset($_POST['strImportText']) ? trim($_POST['strImportText']) : '');
 
 		if($this->text != '')
 		{
@@ -3904,7 +3904,7 @@ class mf_import
 			}
 		}
 
-		$this->is_run = isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce_import_run'], 'import_run') && $this->action != '' && count($this->data) > 0;
+		$this->is_run = (isset($_POST['btnImportRun']) && wp_verify_nonce($_POST['_wpnonce_import_run'], 'import_run') && $this->action != '' && count($this->data) > 0);
 	}
 
 	function update_options($id)

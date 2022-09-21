@@ -340,7 +340,6 @@ function show_flot_graph($data)
 			arr_flot_functions.push('plot_flot_".$flot_count."');
 		</script>";
 
-
 		$flot_count++;
 	}
 
@@ -4249,7 +4248,20 @@ function get_file_content($data)
 	{
 		if($fh = @fopen(realpath($data['file']), 'r'))
 		{
-			$content = fread($fh, filesize($data['file']));
+			/*$memory_usage = memory_get_usage();
+			$file_size = filesize($data['file']);
+			$memory_limit = (str_replace("M", "", ini_get('memory_limit')) * 1024 * 1024); // Presumes that the limit ends with M (MB)...
+
+			if(($file_size + $memory_usage) > ($memory_limit * .9))
+			{
+				do_log("We are almost out of memory because the file ".$data['file']." (".show_final_size($file_size).") and used memory (".show_final_size($memory_usage).") is close to the memory limit (".show_final_size($memory_limit).")");
+			}
+
+			else
+			{*/
+				$content = fread($fh, $file_size);
+			//}
+
 			fclose($fh);
 		}
 

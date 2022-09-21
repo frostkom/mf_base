@@ -7,7 +7,7 @@
 
 	.display_inline
 	{
-		display: inline;
+		display: inline !important;
 	}
 
 	.display_inline_block

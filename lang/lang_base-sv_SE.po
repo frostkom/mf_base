@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-01 09:09+0100\n"
+"POT-Creation-Date: 2022-09-21 14:32+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -19,13 +19,13 @@ msgstr ""
 #: ../include/classes.php:3483
 #: ../include/classes.php:4526
 #: ../include/classes.php:4585
-#: ../include/functions.php:2143
-#: ../include/functions.php:2174
-#: ../include/functions.php:2212
-#: ../include/functions.php:2468
-#: ../include/functions.php:2508
-#: ../include/functions.php:2529
-#: ../include/functions.php:4500
+#: ../include/functions.php:2142
+#: ../include/functions.php:2173
+#: ../include/functions.php:2211
+#: ../include/functions.php:2467
+#: ../include/functions.php:2507
+#: ../include/functions.php:2528
+#: ../include/functions.php:4512
 msgid "Choose Here"
 msgstr "Välj här"
 
@@ -106,8 +106,8 @@ msgstr "Språk"
 
 #: ../include/classes.php:936
 #, php-format
-msgid "This is currently set to %s but to get the correct order on Swedish characters you should change to %s"
-msgstr "Detta är för närvarande angett till %s men för att få korrekt sortering på svenska tecken så bör du ändra till %s"
+msgid "This is currently set to %s but to get the correct order on Swedish characters you should change to %s or %s"
+msgstr "Detta är för närvarande angett till %s men för att få korrekt sortering på svenska tecken så bör du ändra till %s eller %s"
 
 #: ../include/classes.php:943
 msgid "Requirements"
@@ -345,7 +345,7 @@ msgid "Add Content"
 msgstr "Lägg till innehåll"
 
 #: ../include/classes.php:1643
-#: ../include/functions.php:1481
+#: ../include/functions.php:1480
 msgid "Insert"
 msgstr "Lägg till"
 
@@ -358,7 +358,7 @@ msgid "Added Content"
 msgstr "Tilllagt innehåll"
 
 #: ../include/classes.php:1759
-#: ../include/functions.php:1566
+#: ../include/functions.php:1565
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
@@ -427,7 +427,7 @@ msgstr "Töm papperskorgen"
 
 #: ../include/classes.php:2910
 #: ../include/classes.php:4541
-#: ../include/functions.php:2422
+#: ../include/functions.php:2421
 msgid "Search"
 msgstr "Sök"
 
@@ -586,282 +586,282 @@ msgstr "En timme kvar tills det återställs"
 msgid "%d hours left until it is reset"
 msgstr "%d timmar kvar tills det återställs"
 
-#: ../include/functions.php:584
-#: ../include/functions.php:1784
+#: ../include/functions.php:583
+#: ../include/functions.php:1783
 msgid "unknown"
 msgstr "okänt"
 
-#: ../include/functions.php:627
+#: ../include/functions.php:626
 #, php-format
 msgid "The message had no recipient so %s could not be sent"
 msgstr "Meddelandet hade ingen mottagare så %s kunde inte skickas"
 
-#: ../include/functions.php:634
+#: ../include/functions.php:633
 #, php-format
 msgid "The message was empty so I could not send %s to %s"
 msgstr "Meddelandet var tomt så jag kunde inte skickas %s till %s"
 
-#: ../include/functions.php:686
+#: ../include/functions.php:685
 msgid "Message Sent"
 msgstr "Meddelandet skickades"
 
-#: ../include/functions.php:697
+#: ../include/functions.php:696
 msgid "Message NOT Sent"
 msgstr "Meddelandet skickades INTE"
 
-#: ../include/functions.php:1179
+#: ../include/functions.php:1178
 msgid "Yesterday"
 msgstr "Igår"
 
-#: ../include/functions.php:1241
+#: ../include/functions.php:1240
 #, php-format
 msgid "Could not create %s in %s. Please add the correct rights for the script to create a new subfolder."
 msgstr "Det gick inte att skapa mappen %s i %s. Lägg till rätt behörigheter för att kunna skapa en ny undermapp."
 
-#: ../include/functions.php:1307
+#: ../include/functions.php:1306
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:1478
+#: ../include/functions.php:1477
 msgid "Add File"
 msgstr "Lägg till fil"
 
-#: ../include/functions.php:1479
+#: ../include/functions.php:1478
 msgid "Change File"
 msgstr "Byt fil"
 
-#: ../include/functions.php:1480
+#: ../include/functions.php:1479
 msgid "Insert File"
 msgstr "Lägg in fil"
 
-#: ../include/functions.php:1541
+#: ../include/functions.php:1540
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-#: ../include/functions.php:1564
+#: ../include/functions.php:1563
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till filen som du la till. Var vänlig försök igen och se till så att Länk till är angett som Mediafil"
 
-#: ../include/functions.php:1565
+#: ../include/functions.php:1564
 msgid "Unknown title"
 msgstr "Okänt namn"
 
-#: ../include/functions.php:1668
+#: ../include/functions.php:1667
 #, php-format
 msgid "The file (%s) could not be found in the DB"
 msgstr "Filen (%s) kunde inte hittas i databasen"
 
-#: ../include/functions.php:1769
+#: ../include/functions.php:1768
 #, php-format
 msgid "You need to install the plugin %s first"
 msgstr "Du måste installera pluginet %s först"
 
-#: ../include/functions.php:1861
+#: ../include/functions.php:1860
 #, php-format
 msgid "in %d minute"
 msgstr "om %d minut"
 
-#: ../include/functions.php:1861
+#: ../include/functions.php:1860
 #, php-format
 msgid "in %d minutes"
 msgstr "om %d minuter"
 
-#: ../include/functions.php:1866
+#: ../include/functions.php:1865
 msgid "at any moment"
 msgstr "alldeles strax"
 
-#: ../include/functions.php:1880
+#: ../include/functions.php:1879
 msgid "Run Now"
 msgstr "Kör nu"
 
-#: ../include/functions.php:2155
-#: ../include/functions.php:2161
+#: ../include/functions.php:2154
+#: ../include/functions.php:2160
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:2156
-#: ../include/functions.php:2162
+#: ../include/functions.php:2155
+#: ../include/functions.php:2161
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:2186
+#: ../include/functions.php:2185
 msgid "Super Admin"
 msgstr "Superadmin"
 
-#: ../include/functions.php:2291
+#: ../include/functions.php:2290
 msgid "Pages"
 msgstr "Sidor"
 
-#: ../include/functions.php:2323
+#: ../include/functions.php:2322
 msgid "Post Types"
 msgstr "Sidtyper"
 
-#: ../include/functions.php:2369
+#: ../include/functions.php:2368
 msgid "Category"
 msgstr "Kategori"
 
-#: ../include/functions.php:2375
+#: ../include/functions.php:2374
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../include/functions.php:2394
+#: ../include/functions.php:2393
 msgid "Front Page"
 msgstr "Startsida"
 
-#: ../include/functions.php:2395
+#: ../include/functions.php:2394
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:4628
+#: ../include/functions.php:4640
 msgid "no title"
 msgstr "ingen titel"
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Jan"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Feb"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Mar"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Apr"
 msgstr ""
 
-#: ../include/functions.php:4694
-#: ../include/functions.php:4699
+#: ../include/functions.php:4706
+#: ../include/functions.php:4711
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Jun"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Jul"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Aug"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Sep"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Oct"
 msgstr "Okt"
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Nov"
 msgstr ""
 
-#: ../include/functions.php:4694
+#: ../include/functions.php:4706
 msgid "Dec"
 msgstr ""
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "April"
 msgstr ""
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "September"
 msgstr ""
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "November"
 msgstr ""
 
-#: ../include/functions.php:4699
+#: ../include/functions.php:4711
 msgid "December"
 msgstr ""
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Sun"
 msgstr "Sön"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Mon"
 msgstr "Mån"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Tue"
 msgstr "Tis"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Wed"
 msgstr "Ons"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Thu"
 msgstr "Tors"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Fri"
 msgstr "Fre"
 
-#: ../include/functions.php:4728
+#: ../include/functions.php:4740
 msgid "Sat"
 msgstr "Lör"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:4733
+#: ../include/functions.php:4745
 msgid "Saturday"
 msgstr "Lördag"
 

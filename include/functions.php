@@ -4248,9 +4248,9 @@ function get_file_content($data)
 	{
 		if($fh = @fopen(realpath($data['file']), 'r'))
 		{
-			/*$memory_usage = memory_get_usage();
+			//$memory_usage = memory_get_usage();
 			$file_size = filesize($data['file']);
-			$memory_limit = (str_replace("M", "", ini_get('memory_limit')) * 1024 * 1024); // Presumes that the limit ends with M (MB)...
+			/*$memory_limit = (str_replace("M", "", ini_get('memory_limit')) * 1024 * 1024); // Presumes that the limit ends with M (MB)...
 
 			if(($file_size + $memory_usage) > ($memory_limit * .9))
 			{

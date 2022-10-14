@@ -906,6 +906,8 @@ class mf_base
 			$has_required_php_version = version_compare($php_version, $php_required, ">");
 			$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
+			$mysql_title = __("DB", 'lang_base').": ".DB_NAME.", ".__("Prefix", 'lang_base').": ".$wpdb->prefix;
+
 			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
 			$ftp_date = strtotime(date("Y-m-d H:i:s"));
 			$date_diff = abs($db_date - $ftp_date);
@@ -924,7 +926,7 @@ class mf_base
 			echo "<div class='flex_flow'>
 				<div>
 					<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-					<p title='".__("Prefix", 'lang_base').": ".$wpdb->prefix."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+					<p title='".$mysql_title."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
 
 					switch(get_bloginfo('language'))
 					{
@@ -1262,9 +1264,9 @@ class mf_base
 
 					$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_run, 'type' => 'ceil', 'return' => 'seconds'));
 
-					if($time_difference > 0)
+					if($time_difference > 0 && $time_difference < 60)
 					{
-						$out_temp .= " (".$time_difference."".__("s", 'lang_base').")";
+						$out_temp .= " (".$time_difference.__("s", 'lang_base').")";
 					}
 
 					echo "<em>".sprintf(__("Last run %s", 'lang_base'), $out_temp)."</em>";

@@ -957,132 +957,115 @@ class mf_base
 
 					if(isset($free_percent))
 					{
-						$size_title = "";
-
-						$option_base_ftp_size = get_site_option('option_base_ftp_size');
-						$option_base_ftp_size_folders = get_site_option('option_base_ftp_size_folders');
-						$option_base_db_size = get_site_option('option_base_db_size');
-
-						if($option_base_ftp_size > 0 || $option_base_db_size > 0)
-						{
-							//$size_title .= __("Used", 'lang_base').": ";
-
-							if($option_base_ftp_size > 0)
-							{
-								$size_title .= __("Files", 'lang_base').": ".show_final_size($option_base_ftp_size);
-							}
-
-							if($option_base_db_size > 0)
-							{
-								$size_title .= ($option_base_ftp_size > 0 ? ", " : "").__("DB", 'lang_base').": ".show_final_size($option_base_db_size);
-							}
-						}
-
-						echo "<p class='display_next_on_hover'"
-							//.($size_title != '' ? " title='".$size_title."'" : "")
-						.">
+						echo "<p class='display_next_on_hover'>
 							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Space Left", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 						."</p>";
 
-						echo "<ul>";
+						if(IS_SUPER_ADMIN)
+						{
+							$option_base_ftp_size = get_site_option('option_base_ftp_size');
+							$option_base_ftp_size_folders = get_site_option('option_base_ftp_size_folders');
+							$option_base_db_size = get_site_option('option_base_db_size');
 
-							if($option_base_ftp_size > 0)
-							{
-								echo "<li>".__("Files", 'lang_base').": ".show_final_size($option_base_ftp_size)."</li>";
-							}
+							echo "<ul>";
 
-							if(is_array($option_base_ftp_size_folders) && count($option_base_ftp_size_folders) > 0)
-							{
-								//$size_limit = (100 * pow(1024, 2));
-								$size_limit = ($option_base_ftp_size * .02);
-
-								foreach($option_base_ftp_size_folders as $key => $arr_value)
+								if($option_base_ftp_size > 0)
 								{
-									if(isset($arr_value['children']) && count($arr_value['children']) > 0)
+									echo "<li>".__("Files", 'lang_base').": ".show_final_size($option_base_ftp_size)."</li>";
+								}
+
+								if(is_array($option_base_ftp_size_folders) && count($option_base_ftp_size_folders) > 0)
+								{
+									$size_limit = ($option_base_ftp_size * .02);
+
+									foreach($option_base_ftp_size_folders as $key => $arr_value)
 									{
-										$out_temp = "";
-
-										foreach($arr_value['children'] as $sub_key => $arr_sub_value)
+										if(isset($arr_value['children']) && count($arr_value['children']) > 0)
 										{
-											if(isset($arr_sub_value['children']) && count($arr_sub_value['children']) > 0)
+											$out_temp = "";
+
+											foreach($arr_value['children'] as $sub_key => $arr_sub_value)
 											{
-												$sub_out_temp = "";
-
-												foreach($arr_sub_value['children'] as $sub_sub_key => $arr_sub_sub_value)
+												if(isset($arr_sub_value['children']) && count($arr_sub_value['children']) > 0)
 												{
-													if(isset($arr_sub_sub_value['children']) && count($arr_sub_sub_value['children']) > 0)
-													{
-														$sub_sub_out_temp = "";
+													$sub_out_temp = "";
 
-														foreach($arr_sub_sub_value['children'] as $sub_sub_sub_key => $arr_sub_sub_sub_value)
+													foreach($arr_sub_value['children'] as $sub_sub_key => $arr_sub_sub_value)
+													{
+														if(isset($arr_sub_sub_value['children']) && count($arr_sub_sub_value['children']) > 0)
 														{
-															if(isset($arr_sub_sub_sub_value['children']) && count($arr_sub_sub_sub_value['children']) > 0)
+															$sub_sub_out_temp = "";
+
+															foreach($arr_sub_sub_value['children'] as $sub_sub_sub_key => $arr_sub_sub_sub_value)
 															{
-																// Can this happen???
+																if(isset($arr_sub_sub_sub_value['children']) && count($arr_sub_sub_sub_value['children']) > 0)
+																{
+																	// Can this happen???
+																}
+
+																else if($arr_sub_sub_sub_value['size'] > $size_limit)
+																{
+																	$path_temp = $key."/".$sub_key."/".$sub_sub_key;
+
+																	if(is_multisite() && $path_temp == "wp-content/uploads/sites")
+																	{
+																		$path_temp = __("Files", 'lang_base')." (".get_blog_option($sub_sub_sub_key, 'blogname').")";
+																	}
+
+																	else
+																	{
+																		$path_temp .= "/".$sub_sub_sub_key;
+																	}
+
+																	$sub_sub_out_temp .= "<li>".$path_temp.": ".show_final_size($arr_sub_sub_sub_value['size'])."</li>";
+																}
 															}
 
-															else if($arr_sub_sub_sub_value['size'] > $size_limit)
+															if($sub_sub_out_temp != '')
 															{
-																$path_temp = $key."/".$sub_key."/".$sub_sub_key;
-
-																if(is_multisite() && $path_temp == "wp-content/uploads/sites")
-																{
-																	$path_temp = __("Files", 'lang_base')." (".get_blog_option($sub_sub_sub_key, 'blogname').")";
-																}
-
-																else
-																{
-																	$path_temp .= "/".$sub_sub_sub_key;
-																}
-
-																$sub_sub_out_temp .= "<li>".$path_temp.": ".show_final_size($arr_sub_sub_sub_value['size'])."</li>";
+																$sub_out_temp .= "<ul>".$sub_sub_out_temp."</ul>";
 															}
 														}
 
-														if($sub_sub_out_temp != '')
+														else if($arr_sub_sub_value['size'] > $size_limit)
 														{
-															$sub_out_temp .= "<ul>".$sub_sub_out_temp."</ul>";
+															$sub_out_temp .= "<li>".$key."/".$sub_key."/".$sub_sub_key.": ".show_final_size($arr_sub_sub_value['size'])."</li>";
 														}
 													}
 
-													else if($arr_sub_sub_value['size'] > $size_limit)
+													if($sub_out_temp != '')
 													{
-														$sub_out_temp .= "<li>".$key."/".$sub_key."/".$sub_sub_key.": ".show_final_size($arr_sub_sub_value['size'])."</li>";
+														$out_temp .= "<ul>".$sub_out_temp."</ul>";
 													}
 												}
 
-												if($sub_out_temp != '')
+												else if($arr_sub_value['size'] > $size_limit)
 												{
-													$out_temp .= "<ul>".$sub_out_temp."</ul>";
+													$out_temp .= "<li>".$key."/".$sub_key.": ".show_final_size($arr_sub_value['size'])."</li>";
 												}
 											}
 
-											else if($arr_sub_value['size'] > $size_limit)
+											if($out_temp != '')
 											{
-												$out_temp .= "<li>".$key."/".$sub_key.": ".show_final_size($arr_sub_value['size'])."</li>";
+												echo "<ul>".$out_temp."</ul>";
 											}
 										}
 
-										if($out_temp != '')
+										else if($arr_value['size'] > $size_limit)
 										{
-											echo "<ul>".$out_temp."</ul>";
+											echo "<li>".$key.": ".show_final_size($arr_value['size'])."</li>";
 										}
-									}
-
-									else if($arr_value['size'] > $size_limit)
-									{
-										echo "<li>".$key.": ".show_final_size($arr_value['size'])."</li>";
 									}
 								}
-							}
 
-							if($option_base_db_size > 0)
-							{
-								echo "<li>".__("DB", 'lang_base').": ".show_final_size($option_base_db_size)."</li>";
-							}
+								if($option_base_db_size > 0)
+								{
+									echo "<li>".__("DB", 'lang_base').": ".show_final_size($option_base_db_size)."</li>";
+								}
 
-						echo "</ul>";
+							echo "</ul>";
+						}
 					}
 
 					else
@@ -1093,31 +1076,34 @@ class mf_base
 						."</p>";
 					}
 
-					$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
-
-					if(preg_match("/sites/", $upload_dir))
+					if(IS_SUPER_ADMIN)
 					{
-						$upload_dir = str_replace("/sites/".$wpdb->blogid, "/", $upload_dir);
-					}
+						$upload_dir = str_replace("/wp-content/uploads", "/", wp_upload_dir()['basedir']);
 
-					$upload_dir = trim($upload_dir, "/");
-					$current_dir = realpath(str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__)));
-					$current_dir = trim($current_dir, "/");
+						if(preg_match("/sites/", $upload_dir))
+						{
+							$upload_dir = str_replace("/sites/".$wpdb->blogid, "/", $upload_dir);
+						}
 
-					if($upload_dir == $current_dir)
-					{
-						echo "<p>
-							<i class='fa fa-check green'></i> "
-							.__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
-						."</p>";
-					}
+						$upload_dir = trim($upload_dir, "/");
+						$current_dir = realpath(str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__)));
+						$current_dir = trim($current_dir, "/");
 
-					else
-					{
-						echo "<p>
-							<i class='fa fa-times red display_warning'></i> "
-							.__("Upload Directory", 'lang_base').": ".$upload_dir." != ".$current_dir
-						."</p>";
+						if($upload_dir == $current_dir)
+						{
+							echo "<p>
+								<i class='fa fa-check green'></i> "
+								.__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
+							."</p>";
+						}
+
+						else
+						{
+							echo "<p>
+								<i class='fa fa-times red display_warning'></i> "
+								.__("Upload Directory", 'lang_base').": ".$upload_dir." != ".$current_dir
+							."</p>";
+						}
 					}
 
 					$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
@@ -1125,25 +1111,13 @@ class mf_base
 
 					if($option_base_large_table_amount > 0)
 					{
-						/*$table_names = "";
-
-						foreach($option_base_large_tables as $arr_table)
-						{
-							$table_names .= ($table_names != '' ? ", " : "").$arr_table['name']." ("
-								.$arr_table['size']
-								.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
-							.")";
-						}*/
-
 						echo "<p".(count($option_base_large_tables) > 0 ? " class='display_next_on_hover'" : "").">
 							<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("DB", 'lang_base').": "
-							."<span"
-								//." title='".$table_names."'"
-							.">".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+							."<span>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
 						."</p>";
 
-						if(count($option_base_large_tables) > 0)
+						if(IS_SUPER_ADMIN && count($option_base_large_tables) > 0)
 						{
 							echo "<ul>";
 
@@ -1158,19 +1132,6 @@ class mf_base
 							echo "</ul>";
 						}
 					}
-
-					/*else
-					{
-						$option_base_large_table_amount = get_site_option('option_base_large_table_amount');
-
-						if($option_base_large_table_amount > 0)
-						{
-							echo "<p>
-								<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-								.__("DB", 'lang_base').": ".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")
-							."</p>";
-						}
-					}*/
 
 				echo "</div>
 				<div>

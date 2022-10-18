@@ -647,7 +647,6 @@ class mf_base
 	function run_cron_end()
 	{
 		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
-		//delete_option('option_cron_started');
 	}
 
 	function has_page_template($data = array())
@@ -769,19 +768,16 @@ class mf_base
 	{
 		if(!isset($this->server_type))
 		{
-			//if(preg_match("/[Apache|LiteSpeed]/i", $_SERVER['SERVER_SOFTWARE']))
 			if(stripos($_SERVER['SERVER_SOFTWARE'], "Apache") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "LiteSpeed") !== false)
 			{
 				$this->server_type = 'apache';
 			}
 
-			//else if(preg_match("/Nginx/i", $_SERVER['SERVER_SOFTWARE']))
 			else if(stripos($_SERVER['SERVER_SOFTWARE'], "Nginx") !== false)
 			{
 				$this->server_type = 'nginx';
 			}
 
-			//else if(preg_match("/[Microsoft|IIS]/i", $_SERVER['SERVER_SOFTWARE']))
 			else if(stripos($_SERVER['SERVER_SOFTWARE'], "Microsoft") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "IIS") !== false)
 			{
 				$this->server_type = 'iis';
@@ -1305,9 +1301,6 @@ class mf_base
 						$xtra = "";
 						$description = "";
 
-						/*$option = 'no';
-						$xtra = "disabled";*/
-
 						if($option != 'yes')
 						{
 							$description = __("Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature", 'lang_base');
@@ -1406,7 +1399,7 @@ class mf_base
 
 					foreach($option_sync_sites as $url => $site)
 					{
-						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>"; // (".format_date($site['datetime']).")
+						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
 
 						if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
 						{
@@ -1471,21 +1464,13 @@ class mf_base
 
 						foreach($option_cron as $key => $arr_jobs)
 						{
-							//$arr_jobs = $this->array_sort(array('array' => $arr_jobs, 'on' => 1, 'keep_index' => true));
-							//$arr_jobs = uksort($arr_jobs);
-							//echo "<li>".var_export($arr_jobs, true)."</li>";
-
 							foreach($arr_jobs as $key => $arr_job)
 							{
 								echo "<li>"
 									.$key.": ";
 
-									//echo var_export($arr_job, true);
-
 									foreach($arr_job as $key => $arr_data)
 									{
-										//echo $key." => ".var_export($arr_data, true);
-
 										foreach($arr_data as $key => $value)
 										{
 											switch($key)
@@ -1616,7 +1601,6 @@ class mf_base
 
 		$out = "";
 
-		//$post_id = filter_input(INPUT_GET, 'post', FILTER_SANITIZE_NUMBER_INT);
 		//$post_id = check_var('post', 'int');
 		$post_id = $post->ID;
 
@@ -1839,7 +1823,7 @@ class mf_base
 			return $template;
 		}
 
-		$file = WP_CONTENT_DIR.$template_temp; //plugin_dir_path(__FILE__)."templates/".
+		$file = WP_CONTENT_DIR.$template_temp;
 
 		if(file_exists($file))
 		{
@@ -2222,7 +2206,7 @@ class mf_cron
 
 		if(!$success)
 		{
-			do_log(sprintf("I could not create the temporary file in %s, please make sure that I have access to create this file in order for schedules to work as intended", $upload_path)); //$this->file
+			do_log(sprintf("I could not create the temporary file in %s, please make sure that I have access to create this file in order for schedules to work as intended", $upload_path));
 		}
 	}
 
@@ -2327,15 +2311,6 @@ class recommend_plugin
 
 if(!class_exists('WP_List_Table'))
 {
-	/*$hook_suffix = '';
-	if ( isset( $page_hook ) ) {
-		$hook_suffix = $page_hook;
-	} elseif ( isset( $plugin_page ) ) {
-		$hook_suffix = $plugin_page;
-	} elseif ( isset( $pagenow ) ) {
-		$hook_suffix = $pagenow;
-	}*/
-
 	$GLOBALS['hook_suffix'] = '';
 
 	require_once(ABSPATH.'wp-admin/includes/admin.php');
@@ -3385,13 +3360,6 @@ class mf_font_icons
 
 	function get_symbol_tag($data)
 	{
-		/*if(!is_array($data))
-		{
-			$data = array(
-				'symbol' => $data,
-			);
-		}*/
-
 		if(!isset($data['title'])){		$data['title'] = '';}
 		if(!isset($data['class'])){		$data['class'] = '';}
 
@@ -3479,12 +3447,6 @@ class mf_export
 	{
 		if(!isset($this->file_name) || $this->file_name == '')
 		{
-			/*$this->file_name = $this->name
-				//.($this->rows_start != '' ? "_".$this->rows_start : "")
-				//.($this->rows_end != '' ? "-".$this->rows_end : "")
-				."_".date("ymdHi")
-				."_".md5("wp_hash".$this->name)
-			.".".$this->action;*/
 			$this->file_name = prepare_file_name($this->name).".".$this->format;
 		}
 	}
@@ -3953,11 +3915,6 @@ class mf_import
 					$arr_values = $this->data[$i];
 					$count_temp_values = count($arr_values);
 
-					/*if($count_temp_values == 1)
-					{
-						do_log("The row only had one column (".var_export($arr_values, true).")");
-					}*/
-
 					for($j = 0; $j < $count_temp_values; $j++)
 					{
 						$this->current_column = $j;
@@ -4365,20 +4322,6 @@ class mf_import
 
 									foreach($result as $r)
 									{
-										/*$arr_values = array();
-
-										/*foreach($this->columns as $key => $value)
-										{
-											$arr_values[] = $r[$key];
-										}
-
-										$this->result[] = array(
-											'type' => 'missing',
-											'action' => 'fa fa-question blue',
-											'id' => $r[$this->table_id],
-											'data' => $arr_values,
-										);*/
-
 										$data_temp = array(
 											'missing',
 											$r[$this->table_id],
@@ -4483,34 +4426,26 @@ class mf_import
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";
 
-					/*if(count($this->actions) > 1)
-					{*/
-						$arr_data = array(
-							'' => "-- ".__("Choose Here", 'lang_base')." --",
-						);
+					$arr_data = array(
+						'' => "-- ".__("Choose Here", 'lang_base')." --",
+					);
 
-						if(count($this->actions) == 0 || in_array('delete', $this->actions))
-						{
-							$arr_data['delete'] = __("Delete", 'lang_base');
-						}
-
-						if(count($this->actions) == 0 || in_array('import', $this->actions))
-						{
-							$arr_data['import'] = __("Import", 'lang_base');
-						}
-
-						if(count($this->actions) == 0 || in_array('search', $this->actions))
-						{
-							$arr_data['search'] = __("Search", 'lang_base');
-						}
-
-						$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action, 'required' => true));
-					/*}
-
-					else
+					if(count($this->actions) == 0 || in_array('delete', $this->actions))
 					{
-						$out .= input_hidden(array('name' => 'strTableAction', 'value' => $this->actions[0]));
-					}*/
+						$arr_data['delete'] = __("Delete", 'lang_base');
+					}
+
+					if(count($this->actions) == 0 || in_array('import', $this->actions))
+					{
+						$arr_data['import'] = __("Import", 'lang_base');
+					}
+
+					if(count($this->actions) == 0 || in_array('search', $this->actions))
+					{
+						$arr_data['search'] = __("Search", 'lang_base');
+					}
+
+					$out .= show_select(array('data' => $arr_data, 'name' => 'strTableAction', 'text' => __("Action", 'lang_base'), 'value' => $this->action, 'required' => true));
 
 					if($this->file_location == '')
 					{

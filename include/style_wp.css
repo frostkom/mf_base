@@ -18,6 +18,12 @@
 			padding: 0 6px;
 		}
 
+	.wrap h2 span
+	{
+		font-size: .6em;
+		font-weight: normal;
+	}
+
 	.wrap .add-new-h2
 	{
 		display: inline-block;

@@ -18,7 +18,7 @@
 			padding: 0 6px;
 		}
 
-	.wrap h2 span
+	.wrap > h2 span
 	{
 		font-size: .6em;
 		font-weight: normal;

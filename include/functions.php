@@ -3676,16 +3676,17 @@ function get_select_size($data)
 
 function show_select($data)
 {
-	if(!isset($data['data'])){			$data['data'] = array();}
-	if(!isset($data['name'])){			$data['name'] = "";}
-	if(!isset($data['text'])){			$data['text'] = "";}
-	if(!isset($data['value'])){			$data['value'] = "";}
-	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['required'])){		$data['required'] = false;}
-	if(!isset($data['class'])){			$data['class'] = "";}
-	if(!isset($data['attributes'])){	$data['attributes'] = array();}
-	if(!isset($data['suffix'])){		$data['suffix'] = "";}
-	if(!isset($data['description'])){	$data['description'] = "";}
+	if(!isset($data['data'])){				$data['data'] = array();}
+	if(!isset($data['name'])){				$data['name'] = "";}
+	if(!isset($data['text'])){				$data['text'] = "";}
+	if(!isset($data['value'])){				$data['value'] = "";}
+	if(!isset($data['xtra'])){				$data['xtra'] = "";}
+	if(!isset($data['required'])){			$data['required'] = false;}
+	if(!isset($data['class'])){				$data['class'] = "";}
+	if(!isset($data['attributes'])){		$data['attributes'] = array();}
+	if(!isset($data['suffix'])){			$data['suffix'] = "";}
+	if(!isset($data['description'])){		$data['description'] = "";}
+	if(!isset($data['allow_hidden_field'])){$data['allow_hidden_field'] = true;}
 
 	if(!is_array($data['value']) && substr($data['value'], 0, 2) == "<%")
 	{
@@ -3712,7 +3713,7 @@ function show_select($data)
 			$container_class .= " form_select_multiple";
 		}
 
-		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
+		if($count_temp == 1 && $data['allow_hidden_field']) // && $obj_base->data['required'] && $obj_base->data['text'] != ''
 		{
 			$out = $obj_base->get_hidden_field();
 		}

@@ -807,11 +807,6 @@ class mf_base
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
 		);
 
-		if(IS_SUPER_ADMIN)
-		{
-			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
-		}
-
 		// Does not work as intended...
 		//show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 
@@ -849,6 +844,7 @@ class mf_base
 
 		if(IS_SUPER_ADMIN)
 		{
+			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
@@ -863,6 +859,7 @@ class mf_base
 		{
 			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
 			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
+			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -1344,6 +1341,15 @@ class mf_base
 					}
 				break;
 			}
+		}
+
+		function setting_base_prefer_www_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key));
+
+			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
 
 		function get_automatic_updates_for_select()
@@ -1915,8 +1921,32 @@ class mf_base
 						}
 					}*/
 
+					switch(get_site_option('setting_base_prefer_www'))
+					{
+						case 'yes':
+							$update_with .= "\r\n"
+							/*."	RewriteCond %{HTTPS} off\r\n"
+							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
+							."	RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]\r\n"
+							."\r\n"*/
+							."	RewriteCond %{HTTPS} on\r\n"
+							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
+							."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n";
+						break;
+
+						case 'no':
+							$update_with .= "\r\n"
+							/*."	RewriteCond %{HTTPS} off\r\n"
+							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
+							."	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]\r\n"
+							."\r\n"*/
+							."	RewriteCond %{HTTPS} on\r\n"
+							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
+							."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n";
+						break;
+					}
+
 					$update_with .= "\r\n"
-					//."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ [L]\r\n"
 					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 					."\r\n"
 					."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"

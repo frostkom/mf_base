@@ -2,8 +2,15 @@
 
 if(!defined('ABSPATH'))
 {
-	header("Content-Type: text/css; charset=utf-8");
+	header("Content-Type: text/css; charset=utf-8"); // Has to be here to not screw up pages where this file is loaded inline
 
+	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
+
+	require_once($folder."wp-load.php");
+}
+
+if(!defined('ABSPATH'))
+{
 	$plugin_fonts_url = "/wp-content/plugins/mf_base/fonts/";
 }
 

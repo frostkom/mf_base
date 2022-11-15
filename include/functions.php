@@ -2136,8 +2136,6 @@ function get_role_first_capability($role)
 
 function get_yes_no_for_select($data = array())
 {
-	//global $obj_base;
-
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}

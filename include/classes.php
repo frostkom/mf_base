@@ -1084,10 +1084,67 @@ class mf_base
 
 						if($upload_dir == $current_dir)
 						{
-							echo "<p>
-								<i class='fa fa-check green'></i> "
-								.__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
-							."</p>";
+							$filesystem_method = get_filesystem_method();
+
+							if($filesystem_method == 'direct')
+							{
+								$uploads_icon = "fa-check green";
+							}
+
+							else
+							{
+								$uploads_icon = "fa-times red display_warning";
+							}
+
+							echo "<p class='display_next_on_hover'>
+								<i class='fa ".$uploads_icon."'></i> ".__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
+							."</p>
+							<ul>";
+
+								if(!defined('FS_CHMOD_DIR'))
+								{
+									define('FS_CHMOD_DIR', (fileperms(ABSPATH) & 0777 | 0755));
+								}
+								
+								if(!defined('FS_CHMOD_FILE'))
+								{
+									define('FS_CHMOD_FILE', (fileperms(ABSPATH.'index.php') & 0777 | 0644));
+								}
+
+								echo "<li>".__("Method", 'lang_base').": ";
+
+									switch($filesystem_method)
+									{
+										case 'direct':
+											echo __("Direct", 'lang_base');
+										break;
+
+										case 'ssh':
+											echo __("SSH", 'lang_base');
+										break;
+
+										case 'ftpext':
+											echo __("FTP", 'lang_base');
+										break;
+
+										case 'ftpsockets':
+											echo __("FTP Sockets", 'lang_base');
+										break;
+									}
+								
+								echo "</li>";
+
+								if(defined('FS_CHMOD_DIR'))
+								{
+									echo "<li>".__("Directories", 'lang_base').": ".FS_CHMOD_DIR."</li>";
+								}
+
+								if(defined('FS_CHMOD_FILE'))
+								{
+									echo "<li>".__("Files", 'lang_base').": ".FS_CHMOD_FILE."</li>";
+								}
+
+							echo "</ul>";
 						}
 
 						else

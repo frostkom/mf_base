@@ -101,4 +101,16 @@
 			{
 				margin: 1em 0;
 			}
+
+			.settings-wrap .settings-tabs ul.no_style
+			{
+				margin-top: 0;
+				margin-left: 1em;
+				padding-top: 1em;
+			}
+
+				.settings-wrap .settings-tabs ul.no_style li
+				{
+					list-style: none;
+				}
 }

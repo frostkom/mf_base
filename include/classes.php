@@ -5,6 +5,36 @@ class mf_base
 	function __construct()
 	{
 		$this->meta_prefix = 'mf_base_';
+
+		$this->chmod_dir = 0755;
+		$this->chmod_file = 0644;
+
+		$this->memory_limit_base = 200;
+		$this->upload_max_filesize_base = 20;
+		$this->post_max_size_base = 20;
+
+		$this->memory_limit = ($this->memory_limit_base * pow(1024, 2));
+		$this->upload_max_filesize = ($this->upload_max_filesize_base * pow(1024, 2));
+		$this->post_max_size = ($this->post_max_size_base * pow(1024, 2));
+
+		$this->memory_limit_current = $this->return_bytes(ini_get('memory_limit'));
+		$this->post_max_size_current = $this->return_bytes(ini_get('post_max_size'));
+		$this->upload_max_filesize_current = $this->return_bytes(ini_get('upload_max_filesize'));
+
+		if($this->memory_limit_current < $this->memory_limit)
+		{
+			ini_set('memory_limit', $this->memory_limit_base."M");
+		}
+
+		if($this->upload_max_filesize_current < $this->upload_max_filesize)
+		{
+			ini_set('upload_max_filesize', $this->upload_max_filesize_base."M");
+		}
+
+		if($this->post_max_size_current < $this->post_max_size)
+		{
+			ini_set('post_max_size', $this->post_max_size_base."M");
+		}
 	}
 
 	function is_classic_editor_plugin_active()
@@ -905,8 +935,6 @@ class mf_base
 			$ftp_date = strtotime(date("Y-m-d H:i:s"));
 			$date_diff = abs($db_date - $ftp_date);
 
-			$memory_limit = $this->return_bytes(ini_get('memory_limit'));
-
 			$total_space = (function_exists('disk_total_space') ? disk_total_space(ABSPATH) : 0);
 
 			if($total_space > 0)
@@ -1086,32 +1114,13 @@ class mf_base
 						{
 							$filesystem_method = get_filesystem_method();
 
-							if($filesystem_method == 'direct')
-							{
-								$uploads_icon = "fa-check green";
-							}
-
-							else
-							{
-								$uploads_icon = "fa-times red display_warning";
-							}
+							$uploads_icon = ($filesystem_method == 'direct' ? "fa-check green" : "fa-times red display_warning");
 
 							echo "<p class='display_next_on_hover'>
 								<i class='fa ".$uploads_icon."'></i> ".__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
 							."</p>
-							<ul>";
-
-								if(!defined('FS_CHMOD_DIR'))
-								{
-									define('FS_CHMOD_DIR', (fileperms(ABSPATH) & 0777 | 0755));
-								}
-								
-								if(!defined('FS_CHMOD_FILE'))
-								{
-									define('FS_CHMOD_FILE', (fileperms(ABSPATH.'index.php') & 0777 | 0644));
-								}
-
-								echo "<li>".__("Method", 'lang_base').": ";
+							<ul class='no_style'>
+								<li><i class='fa ".$uploads_icon."'></i> ".__("Method", 'lang_base').": ";
 
 									switch($filesystem_method)
 									{
@@ -1134,14 +1143,40 @@ class mf_base
 								
 								echo "</li>";
 
+								if(!defined('FS_CHMOD_DIR'))
+								{
+									define('FS_CHMOD_DIR', (fileperms(ABSPATH) & 0777 | 0755));
+								}
+
 								if(defined('FS_CHMOD_DIR'))
 								{
-									echo "<li>".__("Directories", 'lang_base').": ".FS_CHMOD_DIR."</li>";
+									echo "<li>
+										<i class='fa ".(FS_CHMOD_DIR >= $this->chmod_dir ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Directories", 'lang_base').": ".decoct(FS_CHMOD_DIR);
+
+										if(FS_CHMOD_DIR < $this->chmod_dir)
+										{
+											echo " < ".decoct($this->chmod_dir);
+										}
+									
+									echo "</li>";
+								}
+
+								if(!defined('FS_CHMOD_FILE'))
+								{
+									define('FS_CHMOD_FILE', (fileperms(ABSPATH.'index.php') & 0777 | 0644));
 								}
 
 								if(defined('FS_CHMOD_FILE'))
 								{
-									echo "<li>".__("Files", 'lang_base').": ".FS_CHMOD_FILE."</li>";
+									echo "<li>
+										<i class='fa ".(FS_CHMOD_FILE >= $this->chmod_file ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Files", 'lang_base').": ".decoct(FS_CHMOD_FILE);
+
+										if(FS_CHMOD_FILE < $this->chmod_file)
+										{
+											echo " < ".decoct($this->chmod_file);
+										}
+									
+									echo "</li>";
 								}
 
 							echo "</ul>";
@@ -1186,9 +1221,43 @@ class mf_base
 				echo "</div>
 				<div>
 					<p>
-						<i class='fa ".($memory_limit > 200 * pow(1024, 2) ? "fa-check green" : "fa-times red display_warning")."'></i> "
-						.__("Memory Limit", 'lang_base').": ".show_final_size($memory_limit)
-					."</p>";
+						<i class='fa ".($this->memory_limit_current >= $this->memory_limit ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("Memory Limit", 'lang_base').": ".show_final_size($this->memory_limit_current);
+
+							if($this->memory_limit_current < $this->memory_limit)
+							{
+								echo " < ".show_final_size($this->memory_limit);
+							}
+
+						echo "</p>";
+
+					if($this->post_max_size_current != $this->memory_limit_current)
+					{
+						echo "<p>
+							<i class='fa ".($this->post_max_size_current >= $this->post_max_size ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Post Limit", 'lang_base').": ".show_final_size($this->post_max_size_current);
+
+							if($this->post_max_size_current < $this->post_max_size)
+							{
+								echo " < ".show_final_size($this->post_max_size);
+							}
+
+						echo "</p>";
+					}
+
+					if($this->upload_max_filesize_current != $this->memory_limit_current)
+					{
+						echo "<p>
+							<i class='fa ".($this->upload_max_filesize_current >= $this->upload_max_filesize ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Upload Limit", 'lang_base').": ".show_final_size($this->upload_max_filesize_current);
+
+							if($this->upload_max_filesize_current < $this->upload_max_filesize)
+							{
+								echo " < ".show_final_size($this->upload_max_filesize);
+							}
+
+						echo "</p>";
+					}
 
 					if(function_exists('sys_getloadavg'))
 					{
@@ -2009,6 +2078,34 @@ class mf_base
 					."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
 					."	RewriteRule .* /404/ [L,NC]\r\n"
 					."</IfModule>";
+
+					switch(php_sapi_name())
+					{
+						case 'apache2handler':
+							/*if($this->memory_limit_current < $this->memory_limit)
+							{*/
+								$update_with .= "\r\nphp_value memory_limit ".$this->memory_limit_base."M";
+							/*}
+
+							if($this->upload_max_filesize_current < $this->upload_max_filesize)
+							{*/
+								$update_with .= "\r\nphp_value upload_max_filesize ".$this->upload_max_filesize_base."M";
+							/*}
+
+							if($this->post_max_size_current < $this->post_max_size)
+							{*/
+								$update_with .= "\r\nphp_value post_max_size ".$this->post_max_size_base."M";
+							//}
+						break;
+
+						case 'fpm-fcgi':
+							// Do nothing. It will cause 500 Server Error
+						break;
+
+						default:
+							do_log("The server is running '".php_sapi_name()."' and might allow upload_max_filesize etc. in .htaccess");
+						break;
+					}
 				break;
 
 				case 'nginx':

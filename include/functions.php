@@ -104,7 +104,7 @@ function get_or_set_transient($data)
 
 				if($out != '')
 				{
-					set_transient($data['key'], $out, DAY_IN_SECONDS); //HOUR_IN_SECONDS, WEEK_IN_SECONDS
+					set_transient($data['key'], $out, DAY_IN_SECONDS);
 				}
 			}
 		}
@@ -228,12 +228,12 @@ function show_final_size($in)
 
 	$count_temp = count($arr_suffix);
 
-	for($i = 0; ($in > 1024 || $i < 1) && $i < $count_temp; $i++) //Forces at least kB
+	for($i = 0; ($in > KB_IN_BYTES || $i < 1) && $i < $count_temp; $i++) //Forces at least kB
 	{
-		$in /= 1024;
+		$in /= KB_IN_BYTES;
 	}
 
-	$out = strlen(round($in)) < 3 ? round($in, 1) : round($in); //If less than 3 digits, show one decimal aswell
+	$out = (strlen(round($in)) < 3 ? round($in, 1) : round($in)); //If less than 3 digits, show one decimal aswell
 
 	return $out."&nbsp;".$arr_suffix[$i];
 }
@@ -1097,9 +1097,9 @@ function time_between_dates($data)
 	if(!isset($data['return'])){	$data['return'] = 'days';}
 
 	$arr_return_types = array(
-		'days' => 60 * 60 * 24,
-		'hours' => 60 * 60,
-		'minutes' => 60,
+		'days' => DAY_IN_SECONDS,
+		'hours' => HOUR_IN_SECONDS,
+		'minutes' => MINUTE_IN_SECONDS,
 		'seconds' => 1,
 	);
 
@@ -1122,7 +1122,7 @@ function time_between_dates($data)
 
 function delete_files($data)
 {
-	if(!isset($data['time_limit'])){	$data['time_limit'] = 60 * 60 * 24 * 2;} // DAY_IN_SECONDS * 2
+	if(!isset($data['time_limit'])){	$data['time_limit'] = (DAY_IN_SECONDS * 2);}
 
 	$time_now = time();
 	$time_file = @filemtime($data['file']);
@@ -1130,11 +1130,6 @@ function delete_files($data)
 	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
 	{
 		@unlink($data['file']);
-
-		/*if(!preg_match("/(uploads\/(mf_form|mf_group)\/)/", $data['file']))
-		{
-			do_log("Removed File: ".$data['file']);
-		}*/
 	}
 }
 
@@ -4249,7 +4244,7 @@ function get_file_content($data)
 		{
 			//$memory_usage = memory_get_usage();
 			$file_size = filesize($data['file']);
-			/*$memory_limit = (str_replace("M", "", ini_get('memory_limit')) * 1024 * 1024); // Presumes that the limit ends with M (MB)...
+			/*$memory_limit = (str_replace("M", "", ini_get('memory_limit')) * MB_IN_BYTES); // Presumes that the limit ends with M (MB)...
 
 			if(($file_size + $memory_usage) > ($memory_limit * .9))
 			{

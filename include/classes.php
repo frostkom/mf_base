@@ -13,11 +13,11 @@ class mf_base
 		$this->upload_max_filesize_base = 20;
 		$this->post_max_size_base = 20;
 
-		$this->memory_limit = ($this->memory_limit_base * pow(1024, 2));
-		$this->upload_max_filesize = ($this->upload_max_filesize_base * pow(1024, 2));
-		$this->post_max_size = ($this->post_max_size_base * pow(1024, 2));
+		$this->memory_limit = (MB_IN_BYTES * $this->memory_limit_base);
+		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
+		$this->post_max_size = (MB_IN_BYTES * $this->post_max_size_base);
 
-		$this->memory_limit_current = $this->return_bytes(ini_get('memory_limit'));
+		$this->memory_limit_current = $this->return_bytes(ini_get('memory_limit')); //Use WP_MEMORY_LIMIT instead?
 		$this->post_max_size_current = $this->return_bytes(ini_get('post_max_size'));
 		$this->upload_max_filesize_current = $this->return_bytes(ini_get('upload_max_filesize'));
 
@@ -469,11 +469,11 @@ class mf_base
 	function cron_schedules($schedules)
 	{
 		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => "Manually");
-		$schedules['every_two_minutes'] = array('interval' => 60 * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
-		$schedules['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
+		$schedules['every_two_minutes'] = array('interval' => MINUTE_IN_SECONDS * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
+		$schedules['every_ten_minutes'] = array('interval' => MINUTE_IN_SECONDS * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
 
-		$schedules['weekly'] = array('interval' => 60 * 60 * 24 * 7, 'display' => __("Weekly", 'lang_base'));
-		$schedules['monthly'] = array('interval' => 60 * 60 * 24 * 7 * 4, 'display' => __("Monthly", 'lang_base'));
+		$schedules['weekly'] = array('interval' => WEEK_IN_SECONDS, 'display' => __("Weekly", 'lang_base')); //60 * 60 * 24 * 7
+		$schedules['monthly'] = array('interval' => MONTH_IN_SECONDS, 'display' => __("Monthly", 'lang_base')); //60 * 60 * 24 * 7 * 4
 
 		return $schedules;
 	}
@@ -638,7 +638,7 @@ class mf_base
 				update_site_option('option_base_ftp_size', $this->ftp_size);
 				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
 
-				$arr_db_info = $this->get_db_info(array('limit' => (10 * pow(1024, 2))));
+				$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
 
 				update_site_option('option_base_db_size', $arr_db_info['db_size']);
 				update_site_option('option_base_large_tables', $arr_db_info['tables']);
@@ -699,15 +699,15 @@ class mf_base
 			switch($suffix)
 			{
 				case 'G':
-					$number *= pow(1024, 3);
+					$number *= GB_IN_BYTES;
 				break;
 
 				case 'M':
-					$number *= pow(1024, 2);
+					$number *= MB_IN_BYTES;
 				break;
 
 				case 'K':
-					$number *= 1024;
+					$number *= KB_IN_BYTES;
 				break;
 
 				default:
@@ -728,7 +728,7 @@ class mf_base
 	{
 		global $wpdb;
 
-		if(!isset($data['limit'])){		$data['limit'] = pow(1024, 2);}
+		if(!isset($data['limit'])){		$data['limit'] = MB_IN_BYTES;}
 
 		$out = array(
 			'db_size' => 0,

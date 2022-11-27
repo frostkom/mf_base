@@ -3323,6 +3323,14 @@ function show_textfield($data)
 		break;
 
 		case 'color':
+			/*$plugin_include_url = plugin_dir_url(__FILE__);
+			$plugin_version = get_plugin_version(__FILE__);
+
+			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js", $plugin_version);
+
+			$data['suffix'] .= " <div class='form_button display_inline'><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
+		break;
+
 		case 'date':
 		case 'range':
 		case 'time':

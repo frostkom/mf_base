@@ -6,7 +6,7 @@ function init_media_library()
 			dom_media_container = dom_parent.find(".media_container"),
 			dom_value = jQuery(this).find("input[type='hidden']").val();
 
-		if(dom_value != '')
+		if(typeof dom_value !== 'undefined' && dom_value != '')
 		{
 			var arr_value = dom_value.split("/"),
 				arr_file = arr_value[arr_value.length - 1].split("."),

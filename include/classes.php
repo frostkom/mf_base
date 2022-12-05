@@ -2088,6 +2088,7 @@ class mf_base
 					switch(php_sapi_name())
 					{
 						case 'apache2handler':
+						case 'litespeed':
 							/*if($this->memory_limit_current < $this->memory_limit)
 							{*/
 								$update_with .= "\r\nphp_value memory_limit ".$this->memory_limit_base."M";
@@ -2105,6 +2106,7 @@ class mf_base
 						break;
 
 						case 'fpm-fcgi':
+						case 'cgi-fcgi':
 							// Do nothing. It will cause 500 Server Error
 						break;
 

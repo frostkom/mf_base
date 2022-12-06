@@ -658,10 +658,11 @@ function send_email($data)
 			else
 			{
 				$data['content'] = strip_tags($data['content']);
+				$data['content'] = preg_replace("/[\r\n]+/", "\r\n", $data['content']);
 			}
 		}
 
-		// Needed when & is sent through a textfield, which otherwise becomes &amp; on the receiving end
+		// Needed when '&' is sent through a textfield, which otherwise becomes &amp; on the receiving end
 		$data['subject'] = html_entity_decode($data['subject']);
 		$data['content'] = html_entity_decode($data['content']);
 

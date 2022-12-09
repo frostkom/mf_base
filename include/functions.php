@@ -1225,7 +1225,7 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 		if(!is_dir($upload_path) && !is_file($upload_path))
 		{
-			if(!mkdir($upload_path, 0755, true))
+			if(!@mkdir($upload_path, 0755, true))
 			{
 				$dir_exists = false;
 			}

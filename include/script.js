@@ -18,13 +18,13 @@ function select_option()
 
 				_.each(arr_values, function(value, key)
 				{
-					dom_obj.children("option[value='" + value + "']").prop('selected', true);
+					dom_obj.find("option[value='" + value + "']").prop('selected', true);
 				});
 			}
 
 			else
 			{
-				dom_obj.children("option[value='" + dom_value + "']").prop('selected', true);
+				dom_obj.find("option[value='" + dom_value + "']").prop('selected', true);
 			}
 		}
 	});

@@ -1085,7 +1085,7 @@ class mf_base
 							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Space Left", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
 						."</p>";
-						
+
 						if($ul_content != '')
 						{
 							echo "<ul>".$ul_content."</ul>";
@@ -1143,7 +1143,7 @@ class mf_base
 											echo __("FTP Sockets", 'lang_base');
 										break;
 									}
-								
+
 								echo "</li>";
 
 								$test_folder = ABSPATH;
@@ -1168,7 +1168,7 @@ class mf_base
 										{
 											echo " < ".decoct($this->chmod_dir);
 										}
-									
+
 									echo "</li>";
 								}
 
@@ -1181,7 +1181,7 @@ class mf_base
 										{
 											echo " < ".decoct($this->chmod_file);
 										}
-									
+
 									echo "</li>";
 								}
 
@@ -1214,7 +1214,7 @@ class mf_base
 
 								foreach($option_base_large_tables as $arr_table)
 								{
-									echo "<li>".$arr_table['name']." ("
+									echo "<li>".str_replace($wpdb->prefix, "", $arr_table['name'])." ("
 										.$arr_table['size']
 										.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
 									.")</li>";

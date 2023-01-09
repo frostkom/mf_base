@@ -1739,7 +1739,6 @@ class mf_base
 
 		$out = "";
 
-		//$post_id = check_var('post', 'int');
 		$post_id = $post->ID;
 
 		if($post_id > 0)

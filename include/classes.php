@@ -890,6 +890,7 @@ class mf_base
 			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
 			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
+			$arr_settings['setting_base_php_info'] = __("PHP Info", 'lang_base');
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
@@ -1408,6 +1409,29 @@ class mf_base
 
 				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 			}
+		}
+
+		function setting_base_php_info_callback()
+		{
+			ob_start();
+
+			phpinfo();
+			phpinfo(INFO_MODULES);
+
+			$phpinfo = ob_get_contents();
+			ob_end_clean();
+
+			$exclude = $include = array();
+			$exclude[] = "/\<style.*?\/style\>/s";			$include[] = "";
+			$exclude[] = "/\<title.*?\/title\>/s";			$include[] = "";
+			$exclude[] = "/\<meta.*?\>/s";					$include[] = "";
+
+			$phpinfo = preg_replace($exclude, $include, $phpinfo);
+
+			echo "<p>
+				".__("Display Information", 'lang_base')
+			."</p>
+			<div>".$phpinfo."</div>";
 		}
 
 	function settings_base_advanced_callback()

@@ -144,10 +144,15 @@
 				column-count: 3;
 			}
 
-	.postbox .display_on_hover, .display_next_on_hover + ul
+	.postbox .display_on_hover, .display_next_on_hover + div, .display_next_on_hover + ul
 	{
 		display: none;
 	}
+
+		.postbox:hover .display_on_hover, .display_next_on_hover:hover + div, .display_next_on_hover:hover + ul
+		{
+			display: block;
+		}
 
 		.display_next_on_hover + ul li
 		{
@@ -159,11 +164,6 @@
 			{
 				margin-left: .3em;
 			}
-
-		.postbox:hover .display_on_hover, .display_next_on_hover:hover + ul
-		{
-			display: block;
-		}
 
 	.postbox.active, .postbox.active h3
 	{

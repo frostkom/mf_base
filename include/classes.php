@@ -890,7 +890,7 @@ class mf_base
 			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
 			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
-			$arr_settings['setting_base_php_info'] = __("PHP Info", 'lang_base');
+			//$arr_settings['setting_base_php_info'] = __("PHP Info", 'lang_base'); // This will mess with the right column in setting_base_info
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));

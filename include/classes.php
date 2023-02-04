@@ -2524,20 +2524,25 @@ class recommend_plugin
 	}
 }
 
+if(!function_exists('convert_to_screen'))
+{
+	require_once(ABSPATH.'wp-admin/includes/template.php');
+}
+
+// Needed when displaying tables in Front-End Admin
+if(!class_exists('WP_Screen'))
+{
+	require_once(ABSPATH.'wp-admin/includes/screen.php');
+	require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
+}
+
 if(!class_exists('WP_List_Table'))
 {
 	$GLOBALS['hook_suffix'] = '';
 
 	require_once(ABSPATH.'wp-admin/includes/admin.php');
 
-	// Needed when displaying tables in Front-End Admin
-	/*if(!class_exists('WP_Screen'))
-	{
-		require_once(ABSPATH.'wp-admin/includes/screen.php');
-		require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
-	}
-
-	require_once(ABSPATH.'wp-admin/includes/template.php');
+	/*require_once(ABSPATH.'wp-admin/includes/template.php');
 	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');*/
 }
 

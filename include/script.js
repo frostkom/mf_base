@@ -138,17 +138,17 @@ jQuery(function($)
 		var dom_obj = $(this),
 			dom_val = dom_obj.val();
 
-		if(dom_val.length == 1)
+		/*if(dom_val.length == 1)
 		{
-			if(dom_val != 'h' && dom_val != '/')
+			if(dom_val != 'h' && dom_val != '/' && dom_val != 'm' && dom_val != 't')
 			{
 				dom_obj.val("http://" + dom_val);
 			}
 		}
 
-		else if(dom_val.length > 4)
+		else */if(dom_val.length > 4)
 		{
-			if(dom_val.substring(0, 4) != 'http' && dom_val.substring(0, 2) != '//')
+			if(dom_val.substring(0, 4) != 'http' && dom_val.substring(0, 2) != '//' && dom_val.substring(0, 4) != 'tel:' && dom_val.substring(0, 7) != 'mailto:')
 			{
 				dom_obj.val("http://" + dom_val);
 			}

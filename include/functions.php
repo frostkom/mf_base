@@ -4603,7 +4603,7 @@ function get_post_children($data, &$arr_data = array())
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = $wpdb->num_rows;
 
 	if($data['debug'] == true)
@@ -4641,6 +4641,11 @@ function get_post_children($data, &$arr_data = array())
 			if($post_title == '')
 			{
 				$post_title = "(".__("no title", 'lang_base').")";
+			}
+
+			if($data['post_status'] == '' && $r->post_status == 'draft')
+			{
+				$post_title .= " (".__("Draft", 'lang_base').")";
 			}
 
 			if($data['output_array'] == true)

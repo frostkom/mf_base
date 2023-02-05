@@ -3251,6 +3251,7 @@ function show_textfield($data)
 {
 	if(!isset($data['type'])){				$data['type'] = '';}
 	if(!isset($data['custom_tag'])){		$data['custom_tag'] = 'div';}
+	if(!isset($data['xtra_class'])){		$data['xtra_class'] = "";}
 	if(!isset($data['name'])){				$data['name'] = "";}
 	if(!isset($data['id'])){				$data['id'] = $data['name'];}
 	if(!isset($data['text'])){				$data['text'] = "";}
@@ -3265,7 +3266,7 @@ function show_textfield($data)
 	if(!isset($data['pattern'])){			$data['pattern'] = "";}
 	if(!isset($data['title'])){				$data['title'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
-	if(!isset($data['xtra_class'])){		$data['xtra_class'] = "";}
+	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
 	if(!isset($data['datalist'])){			$data['datalist'] = array();}
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
@@ -3352,63 +3353,6 @@ function show_textfield($data)
 		$data['id'] = '';
 	}
 
-	if($data['required'])
-	{
-		$data['xtra'] .= " required";
-	}
-
-	if($data['autocorrect'] == false)
-	{
-		$data['xtra'] .= " autocorrect='off'";
-	}
-
-	if($data['autocapitalize'] == false)
-	{
-		$data['xtra'] .= " autocapitalize='off'";
-	}
-
-	if($data['readonly'] == true)
-	{
-		$data['xtra'] .= " readonly";
-	}
-
-	if($data['size'] > 0)
-	{
-		$data['xtra'] .= " size='".$data['size']."'";
-	}
-
-	if($data['maxlength'] > 0)
-	{
-		$data['xtra'] .= " maxlength='".$data['maxlength']."'";
-	}
-
-	if($data['placeholder'] != '')
-	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
-	}
-
-	if($data['pattern'] != '')
-	{
-		$data['xtra'] .= " pattern='".$data['pattern']."'";
-	}
-
-	if($data['title'] != '')
-	{
-		$data['xtra'] .= " title='".$data['title']."'";
-	}
-
-	$count_temp = count($data['datalist']);
-
-	if($count_temp > 0)
-	{
-		$data['xtra'] .= " list='".$data['name']."_list'";
-	}
-
-	if($data['description'] != '')
-	{
-		$data['xtra'] .= " aria-describedby='".$data['name']."-description'";
-	}
-
 	if($data['suffix'] != '')
 	{
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."has_suffix";
@@ -3426,7 +3370,88 @@ function show_textfield($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='".$data['type']."'".($data['name'] != '' ? " name='".$data['name']."'" : "").($data['id'] != '' ? " id='".$data['id']."'" : "")." value=\"".stripslashes($data['value'])."\"".($data['xtra'] != '' ? " ".trim($data['xtra']) : '').">";
+		$out .= "<input type='".$data['type']."'";
+
+			if($data['id'] != '')
+			{
+				$out .= " id='".$data['id']."'";
+			}
+
+			if($data['name'] != '')
+			{
+				$out .= " name='".$data['name']."'";
+			}
+
+			$out .= " value=\"".stripslashes($data['value'])."\"";
+
+			if($data['field_class'] != '')
+			{
+				$out .= " class='".$data['field_class']."'";
+			}
+
+			if($data['required'])
+			{
+				$out .= " required";
+			}
+
+			if($data['autocorrect'] == false)
+			{
+				$out .= " autocorrect='off'";
+			}
+
+			if($data['autocapitalize'] == false)
+			{
+				$out .= " autocapitalize='off'";
+			}
+
+			if($data['readonly'] == true)
+			{
+				$out .= " readonly";
+			}
+
+			if($data['size'] > 0)
+			{
+				$out .= " size='".$data['size']."'";
+			}
+
+			if($data['maxlength'] > 0)
+			{
+				$out .= " maxlength='".$data['maxlength']."'";
+			}
+
+			if($data['placeholder'] != '')
+			{
+				$out .= " placeholder='".$data['placeholder']."&hellip;'";
+			}
+
+			if($data['pattern'] != '')
+			{
+				$out .= " pattern='".$data['pattern']."'";
+			}
+
+			if($data['title'] != '')
+			{
+				$out .= " title='".$data['title']."'";
+			}
+
+			$count_datalist = count($data['datalist']);
+
+			if($count_datalist > 0)
+			{
+				$out .= " list='".$data['name']."_list'";
+			}
+
+			if($data['description'] != '')
+			{
+				$out .= " aria-describedby='".$data['name']."-description'";
+			}
+
+			if($data['xtra'] != '')
+			{
+				$out .= " ".trim($data['xtra']);
+			}
+
+		$out .= ">";
 
 		if($data['suffix'] != '')
 		{
@@ -3438,11 +3463,11 @@ function show_textfield($data)
 			$out .= "<p class='description' id='".$data['name']."-description'>".$data['description']."</p>";
 		}
 
-		if($count_temp > 0)
+		if($count_datalist > 0)
 		{
 			$out .= "<datalist id='".$data['name']."_list'>";
 
-				for($i = 0; $i < $count_temp; $i++)
+				for($i = 0; $i < $count_datalist; $i++)
 				{
 					$out .= "<option value='".$data['datalist'][$i]."'>";
 				}
@@ -3472,23 +3497,9 @@ function show_password_field($data)
 	if(!isset($data['required'])){		$data['required'] = false;}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
+	if(!isset($data['field_class'])){	$data['field_class'] = "mf_form_field";}
 	if(!isset($data['suffix'])){		$data['suffix'] = "";}
 	if(!isset($data['description'])){	$data['description'] = "";}
-
-	if($data['maxlength'] != '')
-	{
-		$data['xtra'] .= " maxlength='".$data['maxlength']."'";
-	}
-
-	if($data['required'])
-	{
-		$data['xtra'] .= " required";
-	}
-
-	if($data['placeholder'] != '')
-	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
-	}
 
 	if($data['suffix'] != '')
 	{
@@ -3502,7 +3513,30 @@ function show_password_field($data)
 			$out .= "<label for='".$data['name']."'>".$data['text']."</label>";
 		}
 
-		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'".$data['xtra'].">";
+		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'"
+			.$data['xtra'];
+
+			if($data['maxlength'] != '')
+			{
+				$out .= " maxlength='".$data['maxlength']."'";
+			}
+
+			if($data['required'])
+			{
+				$out .= " required";
+			}
+
+			if($data['placeholder'] != '')
+			{
+				$out .= " placeholder='".$data['placeholder']."&hellip;'";
+			}
+
+			if($data['field_class'] != '')
+			{
+				$out .= " class='".$data['field_class']."'";
+			}
+
+		$out .= ">";
 
 		if($data['suffix'] != '')
 		{
@@ -3523,27 +3557,18 @@ function show_password_field($data)
 ######################################
 function show_textarea($data)
 {
+	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 	if(!isset($data['name'])){			$data['name'] = "";}
 	if(!isset($data['text'])){			$data['text'] = "";}
 	if(!isset($data['value'])){			$data['value'] = "";}
 	if(!isset($data['xtra'])){			$data['xtra'] = "";}
-	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['field_class'])){	$data['field_class'] = "mf_form_field";}
 	if(!isset($data['placeholder'])){	$data['placeholder'] = "";}
 	if(!isset($data['required'])){		$data['required'] = false;}
-	if(!isset($data['wysiwyg'])){		$data['wysiwyg'] = false;}
 	if(!isset($data['description'])){	$data['description'] = "";}
 
 	$data['value'] = str_replace("\\", "", $data['value']);
-
-	if($data['required'])
-	{
-		$data['xtra'] .= " required";
-	}
-
-	if($data['placeholder'] != '')
-	{
-		$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
-	}
 
 	$out = "<div class='form_textarea".($data['class'] != '' ? " ".$data['class'] : "")."'>";
 
@@ -3559,7 +3584,27 @@ function show_textarea($data)
 
 		else
 		{
-			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'".$data['xtra'].">".stripslashes($data['value'])."</textarea>";
+			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'"
+				.$data['xtra'];
+				
+				if($data['required'])
+				{
+					$data['xtra'] .= " required";
+				}
+
+				if($data['placeholder'] != '')
+				{
+					$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
+				}
+
+				if($data['field_class'] != '')
+				{
+					$out .= " class='".$data['field_class']."'";
+				}
+
+			$out .= ">"
+				.stripslashes($data['value'])
+			."</textarea>";
 		}
 
 		if($data['description'] != '')
@@ -3678,13 +3723,14 @@ function get_select_size($data)
 
 function show_select($data)
 {
+	if(!isset($data['class'])){				$data['class'] = "";}
 	if(!isset($data['data'])){				$data['data'] = array();}
 	if(!isset($data['name'])){				$data['name'] = "";}
 	if(!isset($data['text'])){				$data['text'] = "";}
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
+	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
 	if(!isset($data['required'])){			$data['required'] = false;}
-	if(!isset($data['class'])){				$data['class'] = "";}
 	if(!isset($data['attributes'])){		$data['attributes'] = array();}
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
@@ -3760,7 +3806,24 @@ function show_select($data)
 					$out .= "<label for='".$obj_base->data['name']."'>".$obj_base->data['text']."</label>";
 				}
 
-				$out .= "<select".($obj_base->data['name'] != '' ? " id='".preg_replace("/\[(.*)\]/", "", $obj_base->data['name'])."' name='".$obj_base->data['name']."'" : "").($obj_base->data['xtra'] != '' ? " ".$obj_base->data['xtra'] : "").">";
+				$out .= "<select";
+
+					if($obj_base->data['name'] != '')
+					{
+						$out .= " id='".preg_replace("/\[(.*)\]/", "", $obj_base->data['name'])."' name='".$obj_base->data['name']."'";
+					}
+
+					if($obj_base->data['xtra'] != '')
+					{
+						$out .= " ".$obj_base->data['xtra'];
+					}
+
+					if($obj_base->data['field_class'] != '')
+					{
+						$out .= " class='".$obj_base->data['field_class']."'";
+					}
+
+				$out .= ">";
 
 					foreach($obj_base->data['data'] as $key => $option)
 					{
@@ -3891,9 +3954,9 @@ function show_form_alternatives($data)
 
 	$out = "";
 
-	$count_temp = count($obj_base->data['data']);
+	$count_datalist = count($obj_base->data['data']);
 
-	if($count_temp > 0)
+	if($count_datalist > 0)
 	{
 		if($data['multiple'])
 		{

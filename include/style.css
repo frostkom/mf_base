@@ -211,9 +211,10 @@
 			cursor: pointer;
 			display: block;
 			line-height: 1.8;
+			padding: 0 .4em;
 		}
 
-		.mf_form .form_textfield input, .mf_form select, .mf_form textarea, .mf_form .form_password input, .mf_form div.input, .mf_form p.input, #comments #comment
+		.mf_form .mf_form_field, .mf_form div.input, .mf_form p.input, #comments #comment
 		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
@@ -240,7 +241,7 @@
 				opacity: .5;
 			}
 
-			.mf_form .form_textfield.has_suffix input, .mf_form .has_suffix select, .mf_form .has_suffix textarea, .mf_form .form_password.has_suffix input
+			.mf_form .has_suffix .mf_form_field
 			{
 				width: auto;
 				max-width: 80%;
@@ -285,13 +286,13 @@
 					padding-right: 0;
 				}
 
-			.mf_form .form_textfield input[type='color']
+			.mf_form .mf_form_field[type='color']
 			{
 				height: 2em;
 				width: 4em;
 			}
 
-			.mf_form .form_textfield input[type='date'], .mf_form .form_textfield input[type='time']
+			.mf_form .mf_form_field[type='date'], .mf_form .mf_form_field[type='time']
 			{
 				-webkit-appearance: none;
 			}
@@ -301,7 +302,7 @@
 			margin: 0 0 .8em;
 		}
 
-			.mf_form .form_textfield input:focus, .mf_form select:focus, .mf_form textarea:focus, .mf_form .form_password input:focus
+			.mf_form .mf_form_field:focus, .mf_form select:focus
 			{
 				border-color: #999;
 				outline: none;

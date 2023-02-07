@@ -2721,7 +2721,7 @@ class mf_list_table extends WP_List_Table
 					$url_xtra .= "&s=".$this->search;
 				}
 
-				$this->views[$key] = "<a href='admin.php?page=".$this->page."&".$data['db_field']."=".$key.$url_xtra."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
+				$this->views[$key] = "<a href='".(is_admin() ? admin_url("admin.php?page=".$this->page)."&" : "?").$data['db_field']."=".$key.$url_xtra."'".($key == $db_value ? " class='current'" : "").">".$value." <span class='count'>(".$amount.")</span></a>";
 			}
 		}
 

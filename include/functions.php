@@ -3586,7 +3586,7 @@ function show_textarea($data)
 		{
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'"
 				.$data['xtra'];
-				
+
 				if($data['required'])
 				{
 					$data['xtra'] .= " required";

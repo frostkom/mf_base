@@ -3968,7 +3968,7 @@ function show_form_alternatives($data)
 			$container_class = "form_radio_multiple";
 		}
 
-		if($count_temp == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
+		if($count_datalist == 1 && $obj_base->data['required'] && $obj_base->data['text'] != '')
 		{
 			$out = $obj_base->get_hidden_field();
 		}

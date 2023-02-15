@@ -3094,7 +3094,7 @@ class mf_list_table extends WP_List_Table
 
 		else
 		{
-			$string = "%".$string."%s";
+			$string = "%".$string."%";
 		}
 
 		return $string;

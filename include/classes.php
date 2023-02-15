@@ -3080,6 +3080,26 @@ class mf_list_table extends WP_List_Table
 		echo "</form>";
 	}
 
+	function filter_search_before_like($string)
+	{
+		if(strpos($string, "%") !== false)
+		{
+			// Do nothing
+		}
+
+		else if(strpos($string, "*") !== false)
+		{
+			$string = str_replace("*", "%", $string);
+		}
+
+		else
+		{
+			$string = "%".$string."%s";
+		}
+
+		return $string;
+	}
+
 	function select_data($data = array())
 	{
 		global $wpdb, $obj_base;

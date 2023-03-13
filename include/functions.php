@@ -795,11 +795,11 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 		if($upload_path != '' && file_exists($upload_path))
 		{
-			do_log("Delete the folder ".$upload_path);
+			//do_log("Delete the folder ".$upload_path);
 
-			/*get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
+			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
 
-			rmdir($upload_path);*/
+			rmdir($upload_path);
 		}
 	}
 }
@@ -4556,11 +4556,13 @@ function show_table_header($arr_header, $shorten_text = true)
 function does_post_exists($data)
 {
 	if(!isset($data['post_type'])){		$data['post_type'] = 'page';}
+	if(!isset($data['post_status'])){	$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['meta'])){			$data['meta'] = array();}
 
 	$arr_data = array();
 	get_post_children(array(
 		'post_type' => $data['post_type'],
+		'post_status' => $data['post_status'],
 		'is_trusted' => true,
 		'meta' => $data['meta'],
 		'limit' => 1,

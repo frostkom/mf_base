@@ -17,9 +17,9 @@ class mf_base
 		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
 		$this->post_max_size = (MB_IN_BYTES * $this->post_max_size_base);
 
-		$this->memory_limit_current = $this->return_bytes(ini_get('memory_limit')); //Use WP_MEMORY_LIMIT instead?
-		$this->post_max_size_current = $this->return_bytes(ini_get('post_max_size'));
-		$this->upload_max_filesize_current = $this->return_bytes(ini_get('upload_max_filesize'));
+		$this->memory_limit_current = $this->return_bytes('memory_limit'); //Use WP_MEMORY_LIMIT instead?
+		$this->post_max_size_current = $this->return_bytes('post_max_size');
+		$this->upload_max_filesize_current = $this->return_bytes('upload_max_filesize');
 
 		if($this->memory_limit_current < $this->memory_limit)
 		{
@@ -689,8 +689,10 @@ class mf_base
 		}
 	}
 
-	function return_bytes($value)
+	function return_bytes($type)
 	{
+		$value = ini_get($type);
+
 		$number = substr($value, 0, -1);
 		$suffix = strtoupper(substr($value, -1));
 
@@ -718,7 +720,7 @@ class mf_base
 
 		else
 		{
-			do_log("The value was nothing in return_bytes() (".$value.")");
+			do_log("The value was nothing in return_bytes() (".$type." -> ".$value.")");
 		}
 
 		return $number;

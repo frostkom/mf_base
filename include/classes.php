@@ -100,7 +100,7 @@ class mf_base
 	{
 		global $phpmailer;
 
-		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'Host', 'Port', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'Hostname', 'DKIM_copyHeaderFields');
+		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port'
 
 		$this->phpmailer_temp = array();
 
@@ -1263,6 +1263,22 @@ class mf_base
 							if($this->upload_max_filesize_current < $this->upload_max_filesize)
 							{
 								echo " < ".show_final_size($this->upload_max_filesize);
+							}
+
+						echo "</p>";
+					}
+
+					if(is_multisite())
+					{
+						$fileupload_maxk = (1024 * $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM ".$wpdb->sitemeta." WHERE meta_key = %s LIMIT 0, 1", 'fileupload_maxk')));
+
+						echo "<p>
+							<i class='fa ".($fileupload_maxk >= $this->upload_max_filesize ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Upload Limit", 'lang_base')." (".__("Network", 'lang_base')."): ".show_final_size($fileupload_maxk);
+
+							if($fileupload_maxk < $this->upload_max_filesize)
+							{
+								echo " < ".show_final_size($this->upload_max_filesize)." <a href='".network_admin_url("settings.php")."'><i class='fa fa-wrench'></i></a>";
 							}
 
 						echo "</p>";

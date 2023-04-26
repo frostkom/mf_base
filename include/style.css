@@ -385,6 +385,11 @@
 				margin-bottom: .5em !important;
 			}
 
+				.mf_form .button-primary:last-of-type, .mf_form .button-secondary:last-of-type, .mf_form .button:last-of-type
+				{
+					margin-right: 0 !important;
+				}
+
 				.mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
 				{
 					filter: gray;

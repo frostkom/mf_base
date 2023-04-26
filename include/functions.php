@@ -683,7 +683,9 @@ function send_email($data)
 		{
 			if($data['save_log'] == true)
 			{
-				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
+				$obj_microtime = new mf_microtime();
+
+				do_log(__("Message Sent", 'lang_base')." (".$data['save_log_type']."): ".$obj_microtime->now.", ".htmlspecialchars(var_export($data_temp, true))." -> ".var_export($obj_base->phpmailer_temp, true)." (".$_SERVER['REQUEST_URI'].")", 'notification');
 			}
 
 			if(isset($phpmailer->From))
@@ -1098,6 +1100,9 @@ function time_between_dates($data)
 	if(!isset($data['return'])){	$data['return'] = 'days';}
 
 	$arr_return_types = array(
+		'years' => YEAR_IN_SECONDS,
+		'months' => MONTH_IN_SECONDS,
+		'weeks' => WEEK_IN_SECONDS,
 		'days' => DAY_IN_SECONDS,
 		'hours' => HOUR_IN_SECONDS,
 		'minutes' => MINUTE_IN_SECONDS,

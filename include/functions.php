@@ -1512,7 +1512,7 @@ function get_media_library($data)
 					."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>"
 					."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>"
 				."</div>"
-				.input_hidden(array('name' => $data['name'], 'value' => $data['value']));
+				.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true));
 			}
 
 			$out .= "<div class='form_button'>"

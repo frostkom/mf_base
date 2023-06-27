@@ -926,7 +926,7 @@ class mf_base
 				$mysql_version = int2point(mysqli_get_client_version());
 			}
 
-			$php_required = "5.2.4";
+			$php_required = "7.4";
 			$mysql_required = "5.0";
 
 			$has_required_php_version = version_compare($php_version, $php_required, ">");

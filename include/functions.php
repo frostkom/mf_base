@@ -1098,6 +1098,9 @@ function time_between_dates($data)
 {
 	if(!isset($data['type'])){		$data['type'] = 'round';}
 	if(!isset($data['return'])){	$data['return'] = 'days';}
+	if(!isset($data['debug'])){		$data['debug'] = false;}
+
+	$log_message = $data['start']." -> ".$data['end'];
 
 	$arr_return_types = array(
 		'years' => YEAR_IN_SECONDS,
@@ -1109,11 +1112,15 @@ function time_between_dates($data)
 		'seconds' => 1,
 	);
 
-	$out = strtotime($data['end']) - strtotime($data['start']);
+	$out = (strtotime($data['end']) - strtotime($data['start']));
+
+	$log_message .= ", ".$out;
 
 	if(isset($arr_return_types[$data['return']]))
 	{
 		$out /= $arr_return_types[$data['return']];
+
+		$log_message .= ", ".$data['return']." -> ".$arr_return_types[$data['return']]." -> ".$out;
 	}
 
 	switch($data['type'])
@@ -1121,6 +1128,13 @@ function time_between_dates($data)
 		case 'ceil':			$out = ceil($out);		break;
 		default: case 'round':	$out = round($out);		break;
 		case 'floor':			$out = floor($out);		break;
+	}
+
+	$log_message .= ", ".$data['type']." -> ".$out;
+
+	if($data['debug'] == true)
+	{
+		do_log($log_message);
 	}
 
 	return $out;

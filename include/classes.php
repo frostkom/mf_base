@@ -957,7 +957,7 @@ class mf_base
 						case 'sv-SE':
 							$collation_name = $wpdb->get_var($wpdb->prepare("SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = %s LIMIT 1", DB_NAME));
 
-							if($collation_name != 'utf8mb4_swedish_ci' && $collation_name != 'latin1_swedish_ci')
+							if(!in_array($collation_name, array('utf8mb4_swedish_ci', 'latin1_swedish_ci', 'utf8mb3_swedish_ci')))
 							{
 								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to %s or %s", 'lang_base'), $collation_name, 'utf8mb4_swedish_ci', 'latin1_swedish_ci')."</p>";
 							}

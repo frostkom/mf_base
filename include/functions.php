@@ -816,7 +816,10 @@ function mf_uninstall_meta($data)
 		{
 			foreach($data['meta'] as $meta_key)
 			{
-				delete_user_meta($user->ID, $meta_key);
+				if(isset($user->ID))
+				{
+					delete_user_meta($user->ID, $meta_key);
+				}
 			}
 		}
 	}

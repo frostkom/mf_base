@@ -222,7 +222,7 @@ function remove_table_filter($data)
 	delete_user_meta($user_id, $meta_key);
 }
 
-function show_final_size($in)
+function show_final_size($in, $suffix = true)
 {
 	$arr_suffix = array("B", "kB", "MB", "GB", "TB");
 
@@ -235,7 +235,12 @@ function show_final_size($in)
 
 	$out = (strlen(round($in)) < 3 ? round($in, 1) : round($in)); //If less than 3 digits, show one decimal aswell
 
-	return $out."&nbsp;".$arr_suffix[$i];
+	if($suffix == true)
+	{
+		$out .= "&nbsp;".$arr_suffix[$i];
+	}
+
+	return $out;
 }
 
 function show_flot_graph($data)

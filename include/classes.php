@@ -949,8 +949,24 @@ class mf_base
 
 			echo "<div class='flex_flow'>
 				<div>
-					<p><i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version."</p>
-					<p title='".$mysql_title."'><i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version."</p>";
+					<p>
+						<i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version;
+
+						if(!$has_required_php_version)
+						{
+							echo " <a href='//wordpress.org/about/requirements/'><i class='fa fa-info-circle blue'></i></a>";
+						}
+
+					echo "</p>
+					<p title='".$mysql_title."'>
+						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version;
+
+						if(!$has_required_mysql_version)
+						{
+							echo " <a href='//wordpress.org/about/requirements/'><i class='fa fa-info-circle blue'></i></a>";
+						}
+
+					echo "</p>";
 
 					switch(get_bloginfo('language'))
 					{
@@ -963,11 +979,6 @@ class mf_base
 								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to one of these %s", 'lang_base'), $collation_name, implode(", ", $arr_collation_name_recommended))."</p>";
 							}
 						break;
-					}
-
-					if(!($has_required_php_version && $has_required_mysql_version))
-					{
-						echo "<p><a href='//wordpress.org/about/requirements/'>".__("Requirements", 'lang_base')."</a></p>";
 					}
 
 					if($date_diff > 60)
@@ -1236,7 +1247,7 @@ class mf_base
 
 							if($this->memory_limit_current < $this->memory_limit)
 							{
-								echo " < ".show_final_size($this->memory_limit);
+								echo " < ".show_final_size($this->memory_limit)." <i class='fa fa-info-circle blue' title='memory_limit = ".show_final_size($this->memory_limit, false)."M'></i>";
 							}
 
 						echo "</p>";
@@ -1249,7 +1260,7 @@ class mf_base
 
 							if($this->post_max_size_current < $this->post_max_size)
 							{
-								echo " < ".show_final_size($this->post_max_size);
+								echo " < ".show_final_size($this->post_max_size)." <i class='fa fa-info-circle blue' title='post_max_size = ".show_final_size($this->post_max_size, false)."M'></i>";
 							}
 
 						echo "</p>";
@@ -1263,7 +1274,7 @@ class mf_base
 
 							if($this->upload_max_filesize_current < $this->upload_max_filesize)
 							{
-								echo " < ".show_final_size($this->upload_max_filesize);
+								echo " < ".show_final_size($this->upload_max_filesize)." <i class='fa fa-info-circle blue' title='upload_max_filesize = ".show_final_size($this->upload_max_filesize, false)."M'></i>";
 							}
 
 						echo "</p>";

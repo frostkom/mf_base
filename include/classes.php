@@ -2,16 +2,37 @@
 
 class mf_base
 {
+	var $meta_prefix = 'mf_base_';
+	var $chmod_dir = 0755;
+	var $chmod_file = 0644;
+	var $memory_limit_base = 200;
+	var $upload_max_filesize_base = 20;
+	var $post_max_size_base = 20;
+	var $memory_limit = "";
+	var $upload_max_filesize = "";
+	var $post_max_size = "";
+	var $memory_limit_current = "";
+	var $post_max_size_current = "";
+	var $upload_max_filesize_current = "";
+	var $data = array();
+	var $templates = array();
+	var $is_gutenberg_active = "";
+	var $ftp_size = 0;
+	var $ftp_size_folders = array();
+	var $template_lost_connection = "";
+	var $template_loading = "";
+	var $server_type = "";
+
 	function __construct()
 	{
-		$this->meta_prefix = 'mf_base_';
+		/*$this->meta_prefix = 'mf_base_';
 
 		$this->chmod_dir = 0755;
 		$this->chmod_file = 0644;
 
 		$this->memory_limit_base = 200;
 		$this->upload_max_filesize_base = 20;
-		$this->post_max_size_base = 20;
+		$this->post_max_size_base = 20;*/
 
 		$this->memory_limit = (MB_IN_BYTES * $this->memory_limit_base);
 		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
@@ -798,7 +819,7 @@ class mf_base
 
 	function get_server_type()
 	{
-		if(!isset($this->server_type))
+		if(!isset($this->server_type) || $this->server_type == '')
 		{
 			if(stripos($_SERVER['SERVER_SOFTWARE'], "Apache") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "LiteSpeed") !== false)
 			{
@@ -2423,6 +2444,12 @@ class mf_base
 
 class mf_cron
 {
+	var $schedules = array();
+	var $type = "";
+	var $date_start = "";
+	var $file = "";
+	var $is_running = "";
+
 	function __construct()
 	{
 		$this->schedules = wp_get_schedules();
@@ -2510,6 +2537,8 @@ class mf_cron
 
 class recommend_plugin
 {
+	var $message = "";
+
 	function __construct($data)
 	{
 		global $obj_base, $pagenow;
@@ -3383,9 +3412,11 @@ if(class_exists('RWMB_Field'))
 
 class settings_page
 {
+	var $options_page = "settings_mf_base";
+
 	public function __construct()
 	{
-		$this->options_page = "settings_mf_base";
+		//$this->options_page = "settings_mf_base";
 
 		add_action('admin_menu', array($this, 'add_plugin_page'));
 	}
@@ -3508,10 +3539,13 @@ class mf_microtime
 
 class mf_font_icons
 {
+	var $id = "";
+	var $fonts = array();
+
 	function __construct($id = "")
 	{
 		$this->id = $id;
-		$this->fonts = array();
+		//$this->fonts = array();
 
 		if($this->id == "" || $this->id == 'icomoon')
 		{

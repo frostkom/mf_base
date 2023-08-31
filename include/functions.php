@@ -806,7 +806,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
 
-			rmdir($upload_path);
+			@rmdir($upload_path);
 		}
 	}
 }
@@ -3919,7 +3919,7 @@ function show_select($data)
 
 									if($is_disabled)
 									{
-										//$out .= " disabled";
+										$out .= " disabled";
 										$out .= " class='is_disabled'";
 									}
 

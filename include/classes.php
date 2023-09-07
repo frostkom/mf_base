@@ -501,12 +501,18 @@ class mf_base
 
 	function run_cron_start()
 	{
-		/*if(isset($_GET['doing_wp_cron']))
-		{
-			echo "Running cron manually...";
-		}*/
+		$obj_cron = new mf_cron();
+		$obj_cron->start(__CLASS__);
 
-		update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+		if($obj_cron->is_running == false)
+		{
+			/*if(isset($_GET['doing_wp_cron']))
+			{
+				echo "Running cron manually...";
+			}*/
+
+			update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+		}
 	}
 
 	function get_ftp_size($data)
@@ -1370,7 +1376,7 @@ class mf_base
 			}
 
 			$obj_cron = new mf_cron();
-			$cron_interval = $obj_cron->get_interval() / 60;
+			$cron_interval = ($obj_cron->get_interval() / 60);
 
 			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
 

@@ -440,6 +440,15 @@ class mf_base
 		}
 	}
 
+	function get_toggler_includes()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css", $plugin_version);
+		mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js", $plugin_version);
+	}
+
 	function init()
 	{
 		define('DEFAULT_DATE', "1982-08-04 23:15:00");
@@ -703,7 +712,7 @@ class mf_base
 
 	function run_cron_end()
 	{
-		update_option('option_cron_run', date("Y-m-d H:i:s"), 'no');
+		update_option('option_cron_ended', date("Y-m-d H:i:s"), 'no');
 	}
 
 	function has_page_template($data = array())
@@ -1381,16 +1390,16 @@ class mf_base
 			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
 
 			$option_cron_started = get_option('option_cron_started');
-			$option_cron_run = get_option('option_cron_run');
+			$option_cron_ended = get_option('option_cron_ended');
 
-			if($option_cron_started > $option_cron_run)
+			if($option_cron_started > $option_cron_ended)
 			{
 				echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
 			}
 
-			else if($option_cron_run != '')
+			else if($option_cron_ended != '')
 			{
-				if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_run < $last_run_threshold)
+				if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_ended < $last_run_threshold)
 				{
 					echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
 
@@ -1401,12 +1410,12 @@ class mf_base
 				{
 					$out_temp = format_date($option_cron_started);
 
-					if(format_date($option_cron_run) != $out_temp)
+					if(format_date($option_cron_ended) != $out_temp)
 					{
-						$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_run);
+						$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_ended);
 					}
 
-					$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_run, 'type' => 'ceil', 'return' => 'seconds'));
+					$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_ended, 'type' => 'ceil', 'return' => 'seconds'));
 
 					if($time_difference > 0 && $time_difference < 60)
 					{

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.1.3.25
+Version: 1.1.3.27
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -101,7 +101,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('setting_base_auto_core_update', 'setting_base_auto_core_email', 'option_base_large_table_amount'),
+		'options' => array('option_cron_run'),
 	));
 }
 
@@ -118,6 +118,6 @@ function uninstall_base()
 {
 	mf_uninstall_plugin(array(
 		'uploads' => 'mf_base',
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_use_timezone', 'setting_base_update_htaccess', 'setting_base_template_site', 'setting_base_empty_trash_days', 'setting_base_recommend', 'option_cron_started', 'option_cron_run', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_use_timezone', 'setting_base_update_htaccess', 'setting_base_template_site', 'setting_base_empty_trash_days', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables'),
 	));
 }

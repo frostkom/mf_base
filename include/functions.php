@@ -488,6 +488,8 @@ function get_theme_version()
 
 function get_toggler_container($data)
 {
+	global $obj_base;
+
 	if(!isset($data['open'])){						$data['open'] = false;}
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
@@ -497,11 +499,7 @@ function get_toggler_container($data)
 	switch($data['type'])
 	{
 		case 'start':
-			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
-
-			mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css", $plugin_version);
-			mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js", $plugin_version);
+			$obj_base->get_toggler_includes();
 
 			$icon = "<i class='".$data['icon']." fa-lg toggle_icon_closed'></i>
 			<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
@@ -1895,9 +1893,10 @@ function get_next_cron($data = array())
 
 		if(($mins < -1 || $mins > 1) && IS_SUPER_ADMIN)
 		{
-			$option_cron_run = get_option('option_cron_run');
+			$option_cron_started = get_option('option_cron_started');
+			$option_cron_ended = get_option('option_cron_ended');
 
-			if($option_cron_run < date("Y-m-d H:i:s", strtotime("-1 minute")))
+			if($option_cron_ended < date("Y-m-d H:i:s", strtotime("-1 minute")) && $option_cron_ended >= $option_cron_started)
 			{
 				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
 

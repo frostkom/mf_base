@@ -1820,7 +1820,7 @@ function int2point($in)
 
 	$sub_version = $in;
 
-	return $main_version.".".$minor_version.".".$sub_version; //." (".$in_orig.")"
+	return $main_version.".".$minor_version.".".$sub_version;
 }
 
 function point2int($in)

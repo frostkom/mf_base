@@ -483,7 +483,7 @@ class mf_base
 		define('IS_EDITOR', $is_editor);
 		define('IS_AUTHOR', $is_author);
 
-		if(get_site_option('setting_base_use_timezone') == 'yes')
+		if(get_site_option('setting_base_use_timezone', 'yes') == 'yes')
 		{
 			$timezone_string = get_option('timezone_string');
 
@@ -1019,7 +1019,7 @@ class mf_base
 
 					if($date_diff > 60)
 					{
-						echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> Time Difference: ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
+						echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Time Difference", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
 					}
 
 					else
@@ -1667,7 +1667,7 @@ class mf_base
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'yes'));
 
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 		}

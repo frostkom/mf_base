@@ -1533,9 +1533,7 @@ class mf_base
 						echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
 					}
 
-					$file_htaccess = get_home_path().".htaccess";
-
-					$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => '')); //get_home_path()
 
 					if($config['html'] != '')
 					{
@@ -1553,9 +1551,7 @@ class mf_base
 				break;
 
 				default:
-					$file_htaccess = get_home_path().".htaccess";
-
-					$config = apply_filters('recommend_config', array('file' => $file_htaccess, 'html' => ''));
+					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => '')); //get_home_path()
 
 					if($config['html'] != '')
 					{
@@ -2285,7 +2281,7 @@ class mf_base
 
 		$out = $content = "";
 
-		if($data['file'] != '')
+		if($data['file'] != '' && file_exists($data['file']))
 		{
 			$content = get_file_content(array('file' => $data['file']));
 		}
@@ -2336,13 +2332,16 @@ class mf_base
 					$out .= get_notification();
 				}*/
 
-				$success = file_put_contents($data['file']."_temp", $content);
+				$file_temp = $data['file']."_temp";
 
-				if($success > 0 && $success == strlen($content))
+				$success = file_put_contents($file_temp, $content);
+
+				if($success > 0 && file_exists($file_temp) && $success == strlen($content))
 				{
-					if(copy($data['file']."_temp", $data['file']))
+					if(copy($file_temp, $data['file']))
 					{
 						$done_text = sprintf(__("I successfully updated %s with %s", 'lang_base'), ".htaccess", $data['plugin_name']);
+						$done_text .= " (".ABSPATH.")";
 						//$done_text .= " (".$new_md5." != ".$old_md5.")";
 						//$done_text .= " (".$old_content." -> ".$new_content." -> ".$content.")";
 
@@ -2351,7 +2350,7 @@ class mf_base
 
 					else
 					{
-						$error_text = sprintf(__("I could not update %s with %s from the temp file", 'lang_base'), ".htaccess", $data['plugin_name']);
+						$error_text = sprintf(__("I could not update %s with %s from the temp file", 'lang_base'), $data['file'], $data['plugin_name']);
 
 						$out .= get_notification();
 					}
@@ -2359,12 +2358,14 @@ class mf_base
 
 				else
 				{
-					$error_text = sprintf(__("I could not successfully update %s with %s", 'lang_base'), ".htaccess", $data['plugin_name'])." (".$success." != ".strlen($content).")";
+					$error_text = sprintf(__("I could not successfully update %s with %s", 'lang_base'), $data['file'], $data['plugin_name']);
+					$error_text .= " (".ABSPATH.")";
+					//$error_text .= " (".$success." != ".strlen($content).")";
 
 					$out .= get_notification();
 				}
 
-				@unlink($data['file']."_temp");
+				@unlink($file_temp);
 			}
 
 			if($success == false && $data['update_with'] != '')

@@ -2341,7 +2341,7 @@ class mf_base
 					if(copy($file_temp, $data['file']))
 					{
 						$done_text = sprintf(__("I successfully updated %s with %s", 'lang_base'), ".htaccess", $data['plugin_name']);
-						$done_text .= " (".ABSPATH.")";
+						//$done_text .= " (".ABSPATH.")";
 						//$done_text .= " (".$new_md5." != ".$old_md5.")";
 						//$done_text .= " (".$old_content." -> ".$new_content." -> ".$content.")";
 

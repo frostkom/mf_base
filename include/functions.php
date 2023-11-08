@@ -1335,6 +1335,8 @@ function insert_attachment($data)
 
 function do_log($data, $action = 'publish')
 {
+	global $obj_log;
+
 	if(!class_exists('mf_log') && file_exists(ABSPATH.'wp-content/mf_log/include/classes.php'))
 	{
 		require_once(ABSPATH.'wp-content/mf_log/include/classes.php');
@@ -1342,7 +1344,11 @@ function do_log($data, $action = 'publish')
 
 	if(class_exists('mf_log'))
 	{
-		$obj_log = new mf_log();
+		if(!isset($obj_log))
+		{
+			$obj_log = new mf_log();
+		}
+
 		$obj_log->create($data, $action);
 	}
 

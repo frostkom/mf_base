@@ -156,16 +156,21 @@ class mf_base
 				}*/
 			}
 
-			if(isset($phpmailer->getToAddresses()[0][0]))
+			$to_temp = $phpmailer->getToAddresses();
+
+			if(isset($to_temp[0][0]))
 			{
-				$this->phpmailer_temp['to'] = $phpmailer->getToAddresses()[0][0];
+				$this->phpmailer_temp['to'] = $to_temp[0][0];
 			}
 
 			else
 			{
 				$this->phpmailer_temp['to'] = "";
 
-				do_log(__("I could not get recipient address", 'lang_base').": ".var_export($phpmailer->getToAddresses(), true)." (".$phpmailer->Subject.")");
+				if(count($to_temp) > 0)
+				{
+					do_log(__("I could not get recipient address", 'lang_base').": ".var_export($to_temp, true)." (".$phpmailer->Subject.")");
+				}
 			}
 		}
 	}

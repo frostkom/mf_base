@@ -1763,13 +1763,13 @@ class mf_base
 				'type' => 'bool',
 				'global' => true,
 				'icon' => "fas fa-clock",
-				'name' => __("Use Timezone to adjust time", 'lang_base'),
+				'name' => __("Common", 'lang_base')." - ".__("Use Timezone to adjust time", 'lang_base'),
 			),*/
 			'setting_base_template_site' => array(
 				'type' => 'string',
 				'global' => false,
 				'icon' => "fas fa-copy",
-				'name' => __("Template Site", 'lang_base'),
+				'name' => __("Common", 'lang_base')." - ".__("Template Site", 'lang_base'),
 			),
 		);
 

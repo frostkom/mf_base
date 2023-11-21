@@ -2760,7 +2760,7 @@ class mf_list_table extends WP_List_Table
 			$query .= " WHERE ".$this->query_where;
 		}
 
-		if(isset($this->query_group))
+		/*if(isset($this->query_group))
 		{
 			if($this->query_group != '')
 			{
@@ -2769,9 +2769,9 @@ class mf_list_table extends WP_List_Table
 		}
 
 		else
-		{
+		{*/
 			$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
-		}
+		//}
 
 		foreach($data['types'] as $key => $value)
 		{

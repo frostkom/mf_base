@@ -1741,6 +1741,11 @@ function mf_format_number($in, $dec = 2)
 		$in = (float)$in;
 	}
 
+	if($in == null)
+	{
+		$in = 0;
+	}
+
 	return number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
 }
 

@@ -484,7 +484,7 @@ class mf_base
 		}
 
 		define('IS_SUPER_ADMIN', $is_super_admin);
-		define('IS_ADMIN', $is_admin);
+		define('IS_ADMINISTRATOR', $is_admin);
 		define('IS_EDITOR', $is_editor);
 		define('IS_AUTHOR', $is_author);
 

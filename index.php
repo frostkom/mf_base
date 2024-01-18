@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.1.4.4
+Version: 1.1.4.5
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -12,6 +12,11 @@ Domain Path: /lang
 
 GitHub Plugin URI: frostkom/mf_base
 */
+
+if(!defined('DISALLOW_FILE_EDIT'))
+{
+	define('DISALLOW_FILE_EDIT', true);
+}
 
 include_once("include/classes.php");
 include_once("include/functions.php");

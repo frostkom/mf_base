@@ -23,6 +23,7 @@ class mf_base
 	var $template_loading = "";
 	var $server_type = "";
 	var $phpmailer_temp = array();
+	var $file_warning;
 
 	function __construct()
 	{
@@ -939,6 +940,14 @@ class mf_base
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
 
+		function get_malicious_files($data)
+		{
+			if(!is_dir($data['file']) && get_file_suffix($data['file']) == "php" && !preg_match("/\/backup|bitforms|mailpoet|smush|sucuri\//", $data['file']))
+			{
+				$this->file_warning[] = $data['file'];
+			}
+		}
+
 		function setting_base_info_callback()
 		{
 			global $wpdb;
@@ -1242,6 +1251,29 @@ class mf_base
 								<i class='fa fa-times red display_warning'></i> "
 								.__("Upload Directory", 'lang_base').": ".$upload_dir." != ".$current_dir
 							."</p>";
+						}
+
+						$this->file_warning = array();
+
+						list($upload_path, $upload_url) = get_uploads_folder();
+
+						get_file_info(array('path' => $upload_path, 'callback' => array($this, 'get_malicious_files')));
+
+						echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
+							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Security Scan", 'lang_base').": ".sprintf(__("%d possible malicious files", 'lang_base'), count($this->file_warning))
+						."</p>";
+							
+						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
+						{
+							echo "<ul>";
+
+								foreach($this->file_warning as $file_path)
+								{
+									echo "<li>".$file_path."</li>";
+								}
+
+							echo "</ul>";
 						}
 					}
 

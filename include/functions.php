@@ -848,7 +848,7 @@ function mf_uninstall_post_types($data)
 
 				if($i % 100 == 0)
 				{
-					sleep(0.1);
+					sleep(1);
 					set_time_limit(60);
 				}
 			}

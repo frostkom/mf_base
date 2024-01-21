@@ -22,18 +22,10 @@ class mf_base
 	var $template_lost_connection = "";
 	var $template_loading = "";
 	var $server_type = "";
+	var $phpmailer_temp = array();
 
 	function __construct()
 	{
-		/*$this->meta_prefix = 'mf_base_';
-
-		$this->chmod_dir = 0755;
-		$this->chmod_file = 0644;
-
-		$this->memory_limit_base = 200;
-		$this->upload_max_filesize_base = 20;
-		$this->post_max_size_base = 20;*/
-
 		$this->memory_limit = (MB_IN_BYTES * $this->memory_limit_base);
 		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
 		$this->post_max_size = (MB_IN_BYTES * $this->post_max_size_base);
@@ -1446,6 +1438,7 @@ class mf_base
 				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+				array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
 				//array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
@@ -1458,7 +1451,7 @@ class mf_base
 				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
 				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
 				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-				//array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
+				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
 				//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
 				//array("WP Menu Icons", 'wp-menu-icons.php/wp-menu-icons.php.php', __("to add icons to menus", 'lang_base')),
 				array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
@@ -3513,6 +3506,10 @@ class settings_page
 
 class mf_microtime
 {
+	var $time_limit;
+	var $now;
+	var $time_orig;
+
 	function __construct($data = array())
 	{
 		if(!isset($data['limit'])){	$data['limit'] = 0;}

@@ -952,8 +952,6 @@ class mf_base
 		{
 			global $wpdb;
 
-			ob_start();
-
 			$php_version = explode("-", phpversion());
 			$php_version = $php_version[0];
 

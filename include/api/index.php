@@ -32,6 +32,8 @@ switch($type_action)
 	case 'get_base_info':
 		if(is_user_logged_in())
 		{
+			ob_start();
+
 			$obj_base->get_base_info();
 
 			$json_output['success'] = true;
@@ -47,6 +49,8 @@ switch($type_action)
 	case 'get_base_cron':
 		if(is_user_logged_in())
 		{
+			ob_start();
+
 			$obj_base->get_base_cron();
 
 			$json_output['success'] = true;

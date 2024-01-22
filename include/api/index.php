@@ -11,6 +11,11 @@ if(!defined('ABSPATH'))
 
 do_action('run_cache', array('suffix' => 'json'));
 
+if(!isset($obj_base))
+{
+	$obj_base = new mf_base();
+}
+
 $json_output = array(
 	'success' => false,
 );
@@ -24,6 +29,36 @@ $type_class = (isset($arr_input[2]) ? $arr_input[2] : '');
 
 switch($type_action)
 {
+	case 'get_base_info':
+		if(is_user_logged_in())
+		{
+			$obj_base->get_base_info();
+
+			$json_output['success'] = true;
+			$json_output['html'] = ob_get_clean();
+		}
+
+		else
+		{
+			$json_output['message'] = __("You have to be logged in to access this", 'lang_base');
+		}
+	break;
+
+	case 'get_base_cron':
+		if(is_user_logged_in())
+		{
+			$obj_base->get_base_cron();
+
+			$json_output['success'] = true;
+			$json_output['html'] = ob_get_clean();
+		}
+
+		else
+		{
+			$json_output['message'] = __("You have to be logged in to access this", 'lang_base');
+		}
+	break;
+
 	case 'my_ip':
 		$json_output['success'] = true;
 		$json_output['ip'] = get_current_visitor_ip();

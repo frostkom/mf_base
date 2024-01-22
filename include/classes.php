@@ -942,15 +942,17 @@ class mf_base
 
 		function get_malicious_files($data)
 		{
-			if(!is_dir($data['file']) && get_file_suffix($data['file']) == "php" && !preg_match("/\/backup|bitforms|mailpoet|smush|sucuri\//", $data['file']))
+			if(!is_dir($data['file']) && get_file_suffix($data['file']) == "php" && !preg_match("/\/backup|bitforms|mailpoet|smush|sucuri|wpallimport\//", $data['file']))
 			{
 				$this->file_warning[] = $data['file'];
 			}
 		}
 
-		function setting_base_info_callback()
+		function get_base_info()
 		{
 			global $wpdb;
+
+			ob_start();
 
 			$php_version = explode("-", phpversion());
 			$php_version = $php_version[0];
@@ -1383,37 +1385,27 @@ class mf_base
 			</div>";
 		}
 
-		function setting_base_cron_callback()
+		function setting_base_info_callback()
+		{
+			echo "<div class='get_base_info'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
+		}
+
+		function get_base_cron()
 		{
 			global $wpdb;
+			
+			$obj_cron = new mf_cron();
 
 			$setting_key = get_setting_key(__FUNCTION__);
 			$option = get_option($setting_key, 'every_ten_minutes');
 
 			$this->reschedule_base($option);
 
-			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
-			{
-				$select_suffix = "";
-
-				$next_cron = get_next_cron();
-
-				if($next_cron != '')
-				{
-					$select_suffix = sprintf(__("Next scheduled %s", 'lang_base'), $next_cron);
-				}
-
-				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option, 'suffix' => $select_suffix));
-			}
-
 			if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON == true)
 			{
-				$cron_url = get_site_url()."/wp-cron.php?doing_wp_cron";
-
-				echo "<a href='".$cron_url."'>".__("Run schedule manually", 'lang_base')."</a> ";
+				echo "<a href='".get_site_url()."/wp-cron.php?doing_wp_cron'>".__("Run schedule manually", 'lang_base')."</a> ";
 			}
-
-			$obj_cron = new mf_cron();
+			
 			$cron_interval = ($obj_cron->get_interval() / 60);
 
 			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
@@ -1423,7 +1415,7 @@ class mf_base
 
 			if($option_cron_started > $option_cron_ended)
 			{
-				echo "<em>".sprintf(__("Last started %s but has not finished", 'lang_base'), format_date($option_cron_started))."</em>";
+				echo "<em>".sprintf(__("Last started %s but has not finished.", 'lang_base'), format_date($option_cron_started))."</em>";
 			}
 
 			else if($option_cron_ended != '')
@@ -1451,14 +1443,39 @@ class mf_base
 						$out_temp .= " (".$time_difference.__("s", 'lang_base').")";
 					}
 
-					echo "<em>".sprintf(__("Last run %s", 'lang_base'), $out_temp)."</em>";
+					echo "<em>".sprintf(__("Last run %s.", 'lang_base'), $out_temp)."</em>";
 				}
 			}
 
 			else
 			{
-				echo "<em>".__("Has never been run", 'lang_base')."</em>";
+				echo "<em>".__("Has never been run.", 'lang_base')."</em>";
 			}
+
+			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
+			{
+				$next_cron = get_next_cron();
+
+				if($next_cron != '')
+				{
+					echo " ".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron);
+				}
+			}
+		}
+
+		function setting_base_cron_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 'every_ten_minutes');
+
+			$this->reschedule_base($option);
+
+			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
+			{
+				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
+			}
+
+			echo "<div class='get_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
 		}
 
 		function setting_base_recommend_callback()
@@ -1765,7 +1782,7 @@ class mf_base
 		if($pagenow == 'options-general.php' && check_var('page') == 'settings_mf_base')
 		{
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
-			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true), $plugin_version);
+			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url), $plugin_version);
 		}
 
 		$this->is_gutenberg_active = $this->is_gutenberg_active();
@@ -2196,7 +2213,7 @@ class mf_base
 					$update_with .= "\r\n"
 					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 					."\r\n"
-					."	RewriteCond %{REQUEST_URI} ^/?(wp\-content/+debug\.log|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php)$\r\n"
+					."	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n" //|wp\-content/+debug\.log
 					."	RewriteRule .* /404/ [L,NC]\r\n"
 					."</IfModule>";
 

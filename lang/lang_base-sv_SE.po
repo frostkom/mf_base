@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-21 21:44+0100\n"
+"POT-Creation-Date: 2024-01-22 09:12+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -16,9 +16,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 
 #: ../include/classes.php:103
-#: ../include/classes.php:3768
-#: ../include/classes.php:4784
-#: ../include/classes.php:4837
+#: ../include/classes.php:3785
+#: ../include/classes.php:4801
+#: ../include/classes.php:4854
 #: ../include/functions.php:2173
 #: ../include/functions.php:2204
 #: ../include/functions.php:2242
@@ -76,7 +76,7 @@ msgid "Automatic Updates"
 msgstr "Automatiska uppdateringar"
 
 #: ../include/classes.php:919
-#: ../include/classes.php:1797
+#: ../include/classes.php:1814
 msgid "Template Site"
 msgstr "Mallsida"
 
@@ -97,487 +97,487 @@ msgid "Recommendations"
 msgstr "Rekommendationer"
 
 #: ../include/classes.php:940
-#: ../include/classes.php:1537
-#: ../include/classes.php:1797
+#: ../include/classes.php:1554
+#: ../include/classes.php:1814
 msgid "Common"
 msgstr "Gemensamt"
 
-#: ../include/classes.php:977
-#: ../include/classes.php:1137
-#: ../include/classes.php:1287
+#: ../include/classes.php:979
+#: ../include/classes.php:1139
+#: ../include/classes.php:1289
 msgid "DB"
 msgstr ""
 
-#: ../include/classes.php:977
+#: ../include/classes.php:979
 msgid "Prefix"
 msgstr ""
 
-#: ../include/classes.php:1021
+#: ../include/classes.php:1023
 msgid "Language"
 msgstr "Språk"
 
-#: ../include/classes.php:1021
+#: ../include/classes.php:1023
 #, php-format
 msgid "This is currently set to %s but to get the correct order on Swedish characters you should change to one of these %s"
 msgstr "Detta är för närvarande angett till %s men för att få korrekt sortering på svenska tecken så bör du ändra till någon av dessa %s"
 
-#: ../include/classes.php:1028
+#: ../include/classes.php:1030
 msgid "Time Difference"
 msgstr "Tidsskillnad"
 
-#: ../include/classes.php:1033
+#: ../include/classes.php:1035
 msgid "Time on Server"
 msgstr "Tid på servern"
 
-#: ../include/classes.php:1048
-#: ../include/classes.php:1086
-#: ../include/classes.php:1235
+#: ../include/classes.php:1050
+#: ../include/classes.php:1088
+#: ../include/classes.php:1237
 msgid "Files"
 msgstr "Filer"
 
-#: ../include/classes.php:1143
-#: ../include/classes.php:1156
+#: ../include/classes.php:1145
+#: ../include/classes.php:1158
 msgid "Space Left"
 msgstr "Utrymme kvar"
 
-#: ../include/classes.php:1156
+#: ../include/classes.php:1158
 msgid "Unknown"
 msgstr "Okänt"
 
-#: ../include/classes.php:1180
-#: ../include/classes.php:1252
+#: ../include/classes.php:1182
+#: ../include/classes.php:1254
 msgid "Upload Directory"
 msgstr "Mapp för uppladdning"
 
-#: ../include/classes.php:1183
+#: ../include/classes.php:1185
 msgid "Method"
 msgstr "Metod"
 
-#: ../include/classes.php:1188
+#: ../include/classes.php:1190
 msgid "Direct"
 msgstr "Direkt"
 
-#: ../include/classes.php:1192
+#: ../include/classes.php:1194
 msgid "SSH"
 msgstr ""
 
-#: ../include/classes.php:1196
+#: ../include/classes.php:1198
 msgid "FTP"
 msgstr ""
 
-#: ../include/classes.php:1200
+#: ../include/classes.php:1202
 msgid "FTP Sockets"
 msgstr ""
 
-#: ../include/classes.php:1222
+#: ../include/classes.php:1224
 msgid "Directories"
 msgstr "Mappar"
 
-#: ../include/classes.php:1264
+#: ../include/classes.php:1266
 msgid "Security Scan"
 msgstr "Säkerhetsskanning"
 
-#: ../include/classes.php:1264
+#: ../include/classes.php:1266
 #, php-format
 msgid "%d possible malicious files"
 msgstr "%d möjliga skadliga filer"
 
-#: ../include/classes.php:1288
+#: ../include/classes.php:1290
 #, php-format
 msgid "%d tables larger than %s"
 msgstr "%d tabeller större än %s"
 
-#: ../include/classes.php:1311
+#: ../include/classes.php:1313
 msgid "Memory Limit"
 msgstr "Minnesgräns"
 
-#: ../include/classes.php:1324
+#: ../include/classes.php:1326
 msgid "Post Limit"
 msgstr "Gräns för att skicka data"
 
-#: ../include/classes.php:1338
-#: ../include/classes.php:1354
+#: ../include/classes.php:1340
+#: ../include/classes.php:1356
 msgid "Upload Limit"
 msgstr "Uppladdningsgräns"
 
-#: ../include/classes.php:1354
+#: ../include/classes.php:1356
 msgid "Network"
 msgstr "Nätverk"
 
-#: ../include/classes.php:1370
-#: ../include/classes.php:1371
 #: ../include/classes.php:1372
+#: ../include/classes.php:1373
+#: ../include/classes.php:1374
 msgid "Load"
 msgstr "Belastning"
 
-#: ../include/classes.php:1370
-#: ../include/classes.php:1371
 #: ../include/classes.php:1372
+#: ../include/classes.php:1373
+#: ../include/classes.php:1374
 msgid "min"
 msgstr ""
 
-#: ../include/classes.php:1380
+#: ../include/classes.php:1382
 msgid "My IP"
 msgstr "Min IP"
 
-#: ../include/classes.php:1403
-#, php-format
-msgid "Next scheduled %s"
-msgstr "Nästa schemaläggning %s"
-
-#: ../include/classes.php:1413
+#: ../include/classes.php:1406
 msgid "Run schedule manually"
 msgstr "Kör schemaläggning manuellt"
 
-#: ../include/classes.php:1426
+#: ../include/classes.php:1418
 #, php-format
-msgid "Last started %s but has not finished"
-msgstr "Startades senast %s men har inte avslutats"
+msgid "Last started %s but has not finished."
+msgstr "Startades senast %s men har inte avslutats."
 
-#: ../include/classes.php:1433
+#: ../include/classes.php:1425
 msgid "Running schedule..."
 msgstr "Kör schema..."
 
-#: ../include/classes.php:1451
+#: ../include/classes.php:1443
 msgid "s"
 msgstr ""
 
-#: ../include/classes.php:1454
+#: ../include/classes.php:1446
 #, php-format
-msgid "Last run %s"
-msgstr "Kördes senast %s"
+msgid "Last run %s."
+msgstr "Kördes senast %s."
 
-#: ../include/classes.php:1460
-msgid "Has never been run"
-msgstr "Har inte körts tidigare"
+#: ../include/classes.php:1452
+msgid "Has never been run."
+msgstr "Har inte körts tidigare."
 
-#: ../include/classes.php:1468
+#: ../include/classes.php:1461
+#, php-format
+msgid "Next scheduled %s."
+msgstr "Nästa schemaläggning %s."
+
+#: ../include/classes.php:1485
 msgid "to backup all files and database to an external source"
 msgstr "för att ta backup av alla filer och databasen, och skicka till en extern plats"
 
-#: ../include/classes.php:1469
+#: ../include/classes.php:1486
 msgid "to force WP to revert to the classic editor instead of Gutenberg"
 msgstr "för att tvinga WP att använda det klassiska utseendet för textredigeraren istället för Gutenberg"
 
-#: ../include/classes.php:1470
+#: ../include/classes.php:1487
 msgid "to force WP to revert to the classic widget view"
 msgstr "för att tvinga WP att använda det klassiska utseendet för widgetar"
 
-#: ../include/classes.php:1471
+#: ../include/classes.php:1488
 msgid "to replace existing files by uploading a replacement"
 msgstr "för att kunna ersätta befintliga filer genom att ladda upp en ny fil"
 
-#: ../include/classes.php:1472
+#: ../include/classes.php:1489
 msgid "to add all the favicons needed"
 msgstr "för att kunna lägga till alla sk. favicons som kan behövas"
 
-#: ../include/classes.php:1473
+#: ../include/classes.php:1490
 msgid "if you need to install a fresh version of a plugin or theme"
 msgstr "om du behöver installera en ny kopia av ett tillägg eller tema"
 
-#: ../include/classes.php:1477
+#: ../include/classes.php:1494
 msgid "to redirect pages to internal or external URLs"
 msgstr "för att kunna dirigera om sidor till interna och externa URLer"
 
-#: ../include/classes.php:1478
+#: ../include/classes.php:1495
 msgid "to search & replace text in the database"
 msgstr "för att söka och ersätta text i databasen"
 
-#: ../include/classes.php:1479
+#: ../include/classes.php:1496
 msgid "to reorder posts with drag and drop"
 msgstr "för att ändra ordning på inlägg med dra och släpp"
 
-#: ../include/classes.php:1480
+#: ../include/classes.php:1497
 msgid "to losslessly compress all uploaded images"
 msgstr "för att komprimera bilder utan förlust av kvalité"
 
-#: ../include/classes.php:1482
+#: ../include/classes.php:1499
 msgid "to add security measures and the possibility to scan for vulnerabilities"
 msgstr "för att lägga till säkerhetsåtgärder och möjligheten att skanna efter sårbarheter"
 
-#: ../include/classes.php:1486
+#: ../include/classes.php:1503
 msgid "to add custom classes to widgets"
 msgstr "för att lägga till ikoner i menyer"
 
-#: ../include/classes.php:1489
+#: ../include/classes.php:1506
 msgid "to get a graphical interface to the database"
 msgstr "för att kunna använda ett grafiskt gränssnitt mot databasen"
 
-#: ../include/classes.php:1528
+#: ../include/classes.php:1545
 msgid "Display Information"
 msgstr "Visa information"
 
-#: ../include/classes.php:1537
+#: ../include/classes.php:1554
 msgid "Advanced"
 msgstr "Avancerat"
 
-#: ../include/classes.php:1555
+#: ../include/classes.php:1572
 msgid "Make sure that you know what you are doing, and have full access to the server where the file is located, before activating this feature"
 msgstr "Var säker på att du vet vad du gör, och har full tillgång till servern där denna fil finns, innan du aktiverar denna funktion"
 
-#: ../include/classes.php:1563
+#: ../include/classes.php:1580
 msgid "You can only change this setting on the main site"
 msgstr "Du kan bara ändra denna inställning på huvudwebbplatsen"
 
-#: ../include/classes.php:1606
+#: ../include/classes.php:1623
 msgid "Core"
 msgstr "Kärna"
 
-#: ../include/classes.php:1607
+#: ../include/classes.php:1624
 msgid "Theme"
 msgstr "Tema"
 
-#: ../include/classes.php:1608
+#: ../include/classes.php:1625
 msgid "Plugin"
 msgstr "Tillägg"
 
-#: ../include/classes.php:1649
+#: ../include/classes.php:1666
 msgid "Child Sites"
 msgstr "Undersidor"
 
-#: ../include/classes.php:1686
+#: ../include/classes.php:1703
 #, php-format
 msgid "This value has already been set to %d"
 msgstr "Detta värde har redan angivits som %d"
 
-#: ../include/classes.php:1689
+#: ../include/classes.php:1706
 msgid "days"
 msgstr "dagar"
 
-#: ../include/classes.php:1763
+#: ../include/classes.php:1780
 msgid "Toggle All Data"
 msgstr "Visa/dölj all data"
 
-#: ../include/classes.php:1828
+#: ../include/classes.php:1845
 msgid "Add Content"
 msgstr "Lägg till innehåll"
 
-#: ../include/classes.php:1845
+#: ../include/classes.php:1862
 #: ../include/functions.php:1507
 msgid "Insert"
 msgstr "Lägg till"
 
-#: ../include/classes.php:1846
+#: ../include/classes.php:1863
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../include/classes.php:1879
+#: ../include/classes.php:1896
 msgid "Added Content"
 msgstr "Tilllagt innehåll"
 
-#: ../include/classes.php:1959
+#: ../include/classes.php:1976
 #: ../include/functions.php:1592
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/classes.php:1960
+#: ../include/classes.php:1977
 msgid "Read More"
 msgstr "Läs mer"
 
-#: ../include/classes.php:1961
+#: ../include/classes.php:1978
 msgid "characters left"
 msgstr "tecken kvar"
 
-#: ../include/classes.php:2373
+#: ../include/classes.php:2390
 #, php-format
 msgid "I successfully updated %s with %s"
 msgstr "Jag uppdaterade %s med %s"
 
-#: ../include/classes.php:2383
+#: ../include/classes.php:2400
 #, php-format
 msgid "I could not update %s with %s from the temp file"
 msgstr "Jag kunde inte uppdatera %s med %s från den temporära filen"
 
-#: ../include/classes.php:2391
+#: ../include/classes.php:2408
 #, php-format
 msgid "I could not successfully update %s with %s"
 msgstr "Jag lyckades inte uppdatera %s med %s"
 
-#: ../include/classes.php:2425
+#: ../include/classes.php:2442
 #, php-format
 msgid "Add this to the beginning of %s"
 msgstr "Lägg till detta i början av %s"
 
-#: ../include/classes.php:2475
+#: ../include/classes.php:2492
 msgid "Lost Connection"
 msgstr "Tappade uppkopplingen"
 
-#: ../include/classes.php:2602
+#: ../include/classes.php:2619
 #, php-format
 msgid "We highly recommend that you install %s aswell"
 msgstr "Vi rekommenderar att du installerar %s också"
 
-#: ../include/classes.php:2760
+#: ../include/classes.php:2777
 #, php-format
 msgid "Use %s on %s"
 msgstr "Använd %s på %s"
 
-#: ../include/classes.php:2955
+#: ../include/classes.php:2972
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../include/classes.php:2956
+#: ../include/classes.php:2973
 msgid "Permanently Delete"
 msgstr "Radera permanent"
 
-#: ../include/classes.php:2961
-#: ../include/classes.php:4789
+#: ../include/classes.php:2978
+#: ../include/classes.php:4806
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:3074
+#: ../include/classes.php:3091
 msgid "Filter"
 msgstr "Filtrera"
 
-#: ../include/classes.php:3080
+#: ../include/classes.php:3097
 msgid "Empty Trash"
 msgstr "Töm papperskorgen"
 
-#: ../include/classes.php:3173
-#: ../include/classes.php:4799
+#: ../include/classes.php:3190
+#: ../include/classes.php:4816
 #: ../include/functions.php:2452
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:3316
-#: ../include/classes.php:3346
-#: ../include/classes.php:4861
+#: ../include/classes.php:3333
+#: ../include/classes.php:3363
+#: ../include/classes.php:4878
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:3338
+#: ../include/classes.php:3355
 msgid "Sorting"
 msgstr "Sortering"
 
-#: ../include/classes.php:3423
+#: ../include/classes.php:3440
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
-#: ../include/classes.php:3475
-#: ../include/classes.php:3476
-#: ../include/classes.php:3522
+#: ../include/classes.php:3492
+#: ../include/classes.php:3493
+#: ../include/classes.php:3539
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:3888
-#: ../include/classes.php:3904
-#: ../include/classes.php:3947
+#: ../include/classes.php:3905
+#: ../include/classes.php:3921
+#: ../include/classes.php:3964
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:3893
-#: ../include/classes.php:3909
+#: ../include/classes.php:3910
+#: ../include/classes.php:3926
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:3954
+#: ../include/classes.php:3971
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:3962
+#: ../include/classes.php:3979
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:3974
+#: ../include/classes.php:3991
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:3984
+#: ../include/classes.php:4001
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/classes.php:3988
-#: ../include/classes.php:4859
-#: ../include/classes.php:4901
+#: ../include/classes.php:4005
+#: ../include/classes.php:4876
+#: ../include/classes.php:4918
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:4707
+#: ../include/classes.php:4724
 #, php-format
 msgid "%d updated"
 msgstr "%d uppdaterade"
 
-#: ../include/classes.php:4712
+#: ../include/classes.php:4729
 #, php-format
 msgid "%d up to date"
 msgstr "%d redan uppdaterade"
 
-#: ../include/classes.php:4717
+#: ../include/classes.php:4734
 #, php-format
 msgid "%d inserted"
 msgstr "%d inlagda"
 
-#: ../include/classes.php:4722
+#: ../include/classes.php:4739
 #, php-format
 msgid "%d not inserted"
 msgstr "%d inte inlagda"
 
-#: ../include/classes.php:4727
+#: ../include/classes.php:4744
 #, php-format
 msgid "%d deleted"
 msgstr "%d raderade"
 
-#: ../include/classes.php:4732
+#: ../include/classes.php:4749
 #, php-format
 msgid "%d not deleted"
 msgstr "%d inte raderade"
 
-#: ../include/classes.php:4737
+#: ../include/classes.php:4754
 #, php-format
 msgid "%d do exist"
 msgstr "%d finns"
 
-#: ../include/classes.php:4742
+#: ../include/classes.php:4759
 #, php-format
 msgid "%d do not exist"
 msgstr "%d finns inte"
 
-#: ../include/classes.php:4751
+#: ../include/classes.php:4768
 msgid "The information that you are trying to import has been changed since checked. Please re-check and then run"
 msgstr "Informationen som du försöker importera har ändrats sedan du kollade. Var vänlig kolla igen och därefter kan du köra"
 
-#: ../include/classes.php:4780
-#: ../include/classes.php:4816
+#: ../include/classes.php:4797
+#: ../include/classes.php:4833
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:4794
+#: ../include/classes.php:4811
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:4802
+#: ../include/classes.php:4819
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:4806
+#: ../include/classes.php:4823
 msgid "Text"
 msgstr ""
 
-#: ../include/classes.php:4806
+#: ../include/classes.php:4823
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:4811
+#: ../include/classes.php:4828
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:4814
+#: ../include/classes.php:4831
 msgid "Skip First Row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:4815
+#: ../include/classes.php:4832
 msgid "Save Result"
 msgstr "Spara resultat"
 
-#: ../include/classes.php:4872
+#: ../include/classes.php:4889
 msgid "There are multiple columns with the same name. This might become a problem when importing data."
 msgstr "Det finns flera kolumner med samma namn. Detta kan bli ett problem vid import av data."
 
-#: ../include/classes.php:4896
+#: ../include/classes.php:4913
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:4907
+#: ../include/classes.php:4924
 msgid "Example"
 msgstr "Exempel"
 
@@ -876,6 +876,11 @@ msgstr "Fredag"
 #: ../include/functions.php:4855
 msgid "Saturday"
 msgstr "Lördag"
+
+#: ../include/api/index.php:43
+#: ../include/api/index.php:58
+msgid "You have to be logged in to access this"
+msgstr "Du behöver vara inloggad för att komma åt detta"
 
 #~ msgid "to debug Cron"
 #~ msgstr "för att felsöka Cron"

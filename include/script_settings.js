@@ -141,4 +141,60 @@ jQuery(function($)
 
 		return false;
 	});
+
+	$(".get_base_info").each(function()
+	{
+		var self = $(this);
+
+		$.ajax(
+		{
+			url: script_base_settings.plugin_include_url + 'api/?type=get_base_info',
+			dataType: 'json',
+			success: function(data)
+			{
+				if(data.success)
+				{
+					self.html(data.html);
+				}
+
+				else
+				{
+					console.log(data.message);
+				}
+			}
+		});
+	});
+
+	function get_base_cron(self)
+	{
+		$.ajax(
+		{
+			url: script_base_settings.plugin_include_url + 'api/?type=get_base_cron',
+			dataType: 'json',
+			success: function(data)
+			{
+				if(data.success)
+				{
+					self.html(data.html);
+				}
+
+				else
+				{
+					console.log(data.message);
+				}
+			}
+		});
+	}
+
+	$(".get_base_cron").each(function()
+	{
+		var self = $(this);
+
+		get_base_cron(self);
+
+		setInterval(function()
+		{
+			get_base_cron(self);
+		}, 60000);
+	});
 });

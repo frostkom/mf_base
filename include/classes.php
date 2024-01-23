@@ -24,6 +24,7 @@ class mf_base
 	var $server_type = "";
 	var $phpmailer_temp = array();
 	var $file_warning;
+	var $arr_uploads_ignore_folder;
 
 	function __construct()
 	{
@@ -940,9 +941,32 @@ class mf_base
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
 
+		function get_uploads_ignore_folder()
+		{
+			$arr_data = array();
+
+			$arr_plugins = array(
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-backups'),
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-logs'),
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-temp'),
+				array('plugin' => "wp-smushit/wp-smush.php", 'folder' => 'smush'),
+				array('plugin' => "sucuri-scanner/sucuri.php", 'folder' => 'sucuri'),
+			); //backup|bitforms|mailpoet|wpallimport
+
+			foreach($arr_plugins as $arr_value)
+			{
+				if(is_plugin_active($arr_value['plugin']))
+				{
+					$arr_data[] = $arr_value['folder'];
+				}
+			}
+
+			return $arr_data;
+		}
+
 		function get_malicious_files($data)
 		{
-			if(!is_dir($data['file']) && get_file_suffix($data['file']) == "php" && !preg_match("/\/backup|bitforms|mailpoet|smush|sucuri|wpallimport\//", $data['file']))
+			if(!is_dir($data['file']) && in_array(get_file_suffix($data['file']), array("ccss", "php")) && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder)."\//", $data['file']))
 			{
 				$this->file_warning[] = $data['file'];
 			}
@@ -1254,6 +1278,7 @@ class mf_base
 						}
 
 						$this->file_warning = array();
+						$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder();
 
 						list($upload_path, $upload_url) = get_uploads_folder();
 
@@ -1261,7 +1286,7 @@ class mf_base
 
 						echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
 							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("Security Scan", 'lang_base').": ".sprintf(__("%d possible malicious files", 'lang_base'), count($this->file_warning))
+							.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
 						."</p>";
 							
 						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
@@ -1485,7 +1510,7 @@ class mf_base
 				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-				array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
+				//array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
 				//array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
@@ -2151,7 +2176,8 @@ class mf_base
 					."Header set X-Powered-By \"Me\"\r\n"
 					."\r\n"
 					."<IfModule mod_rewrite.c>\r\n"
-					."	RewriteEngine On\r\n";
+					."	RewriteEngine On\r\n"
+					."	RewriteBase /\r\n";
 
 					/*if($subfolder != "")
 					{
@@ -2212,7 +2238,20 @@ class mf_base
 					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 					."\r\n"
 					."	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n" //|wp\-content/+debug\.log
-					."	RewriteRule .* /404/ [L,NC]\r\n"
+					."	RewriteRule .* /404/ [L,NC]\r\n";
+
+					// Disable execution of PHP files in wp-includes
+					$update_with .= "\r\n";
+
+					if(!is_multisite())
+					{
+						$update_with .= "	RewriteRule ^wp-admin/includes/ - [F,L]\r\n";
+					}
+
+					$update_with .= "	RewriteRule !^wp-includes/ - [S=3]\r\n"
+					."	RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]\r\n"
+					."	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]\r\n"
+					."	RewriteRule ^wp-includes/theme-compat/ - [F,L]\r\n"
 					."</IfModule>";
 
 					switch(php_sapi_name())

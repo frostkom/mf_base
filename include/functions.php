@@ -1858,7 +1858,7 @@ function point2int($in)
 
 			if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
 			{
-				do_log("point2int() Error: ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
+				do_log(__FUNCTION__." Error: ".$in." -> ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
 			}
 
 			$multiplier *= 100;

@@ -946,11 +946,14 @@ class mf_base
 			$arr_data = array();
 
 			$arr_plugins = array(
-				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-backups'),
-				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-logs'),
-				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-temp'),
-				array('plugin' => "wp-smushit/wp-smush.php", 'folder' => 'smush'),
-				array('plugin' => "sucuri-scanner/sucuri.php", 'folder' => 'sucuri'),
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-backups'), //php
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-logs'), //php
+				array('plugin' => "backwpup/backwpup.php", 'folder' => 'backwpup-(.*)-temp'), //php
+				array('plugin' => "facebook-for-woocommerce/facebook-for-woocommerce.php", 'folder' => 'facebook_for_woocommerce'), //htaccess
+				array('plugin' => "wp-smushit/wp-smush.php", 'folder' => 'smush'), //php
+				array('plugin' => "sucuri-scanner/sucuri.php", 'folder' => 'sucuri'), //php
+				array('plugin' => "woocommerce/woocommerce.php", 'folder' => 'wc-logs'), //htaccess
+				array('plugin' => "woocommerce/woocommerce.php", 'folder' => 'woocommerce_uploads'), //htaccess
 			); //backup|bitforms|mailpoet|wpallimport
 
 			foreach($arr_plugins as $arr_value)
@@ -964,11 +967,48 @@ class mf_base
 			return $arr_data;
 		}
 
-		function get_malicious_files($data)
+		function get_suspicious_files($data)
 		{
-			if(!is_dir($data['file']) && in_array(get_file_suffix($data['file']), array("ccss", "php")) && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder)."\//", $data['file']))
+			$file_name = basename($data['file']);
+			$file_suffix = get_file_suffix($data['file']);
+
+			if($file_name == "error_log")
+			{
+				$this->file_warning[] = $data['file']; // There are usually an infected file in the same folder
+			}
+
+			else if($file_suffix == "ccss")
 			{
 				$this->file_warning[] = $data['file'];
+			}
+
+			else if($data['path'] == ABSPATH)
+			{
+				// Do nothing here for now
+			}
+
+			else if(strpos($data['path'], "wp-content/uploads"))
+			{
+				if(!preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder)."\//", $data['file']))
+				{
+					if($file_name == ".htaccess")
+					{
+						$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
+					}
+
+					if($file_suffix == "php")
+					{
+						$this->file_warning[] = $data['file'];
+					}
+				}
+			}
+			
+			else
+			{
+				if($file_name == ".htaccess")
+				{
+					$this->file_warning[] = $data['file'];
+				}
 			}
 		}
 
@@ -1280,9 +1320,7 @@ class mf_base
 						$this->file_warning = array();
 						$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder();
 
-						list($upload_path, $upload_url) = get_uploads_folder();
-
-						get_file_info(array('path' => $upload_path, 'callback' => array($this, 'get_malicious_files')));
+						get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
 
 						echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
 							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "

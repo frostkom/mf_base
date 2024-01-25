@@ -24,8 +24,8 @@ class mf_base
 	var $server_type = "";
 	var $phpmailer_temp = array();
 	var $file_warning;
-	var $arr_uploads_ignore_folder_php;
-	var $arr_uploads_ignore_folder_htaccess;
+	var $arr_uploads_ignore_folder;
+	//var $arr_uploads_ignore_folder_htaccess;
 
 	function __construct()
 	{
@@ -947,26 +947,51 @@ class mf_base
 			$arr_data = array();
 
 			$arr_plugins = array(
-				array('type' => 'htaccess',		'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup'),
+				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'plugins/backwpup'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
-				array('type' => 'htaccess',		'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
+				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
-				array('type' => 'htaccess',		'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
+				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
-				array('type' => 'htaccess',		'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
-				array('type' => 'htaccess',		'plugin' => "facebook-for-woocommerce/facebook-for-woocommerce.php",	'folder' => 'facebook_for_woocommerce'),
-				array('type' => 'htaccess',		'plugin' => "mf_backup/index.php",										'folder' => 'mf_backup'),
+				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
+				//array('type' => 'htaccess',	'plugin' => "facebook-for-woocommerce/facebook-for-woocommerce.php",	'folder' => 'facebook_for_woocommerce'),
+				//array('type' => 'htaccess',	'plugin' => "mf_backup/index.php",										'folder' => 'mf_backup'),
 				array('type' => 'php',			'plugin' => "wp-smushit/wp-smush.php",									'folder' => 'smush'),
 				array('type' => 'php',			'plugin' => "sucuri-scanner/sucuri.php",								'folder' => 'sucuri'),
-				array('type' => 'htaccess',		'plugin' => "woocommerce/woocommerce.php",								'folder' => 'wc-logs'),
-				array('type' => 'htaccess',		'plugin' => "woocommerce/woocommerce.php",								'folder' => 'woocommerce_uploads'),
-			); //backup|bitforms|mailpoet|wpallimport
+				//array('type' => 'htaccess',	'plugin' => "woocommerce/woocommerce.php",								'folder' => 'wc-logs'),
+				//array('type' => 'htaccess',	'plugin' => "woocommerce/woocommerce.php",								'folder' => 'woocommerce_uploads'),
+			);
 
 			foreach($arr_plugins as $arr_value)
 			{
-				if($type == $arr_value['type'] && is_plugin_active($arr_value['plugin']))
+				if($type == $arr_value['type'])
 				{
-					$arr_data[] = $arr_value['folder'];
+					if(is_plugin_active_for_network($arr_value['plugin']))
+					{
+						$arr_data[] = $arr_value['folder'];
+					}
+
+					else
+					{
+						if(!isset($result))
+						{
+							$result = get_sites();
+						}
+
+						foreach($result as $r)
+						{
+							switch_to_blog($r->blog_id);
+
+							if(is_plugin_active($arr_value['plugin']))
+							{
+								$arr_data[] = $arr_value['folder'];
+
+								break;
+							}
+
+							restore_current_blog();
+						}
+					}
 				}
 			}
 
@@ -995,24 +1020,24 @@ class mf_base
 
 			else if(strpos($data['path'], "wp-content/uploads"))
 			{
-				if($file_name == ".htaccess" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_htaccess)."\//", $data['file']))
-				{
-					$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
-				}
-
-				if($file_suffix == "php" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_php)."\//", $data['file']))
+				if($file_suffix == "php" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder)."\//", $data['file']))
 				{
 					$this->file_warning[] = $data['file'];
 				}
+				
+				/*else if($file_name == ".htaccess" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_htaccess)."\//", $data['file']))
+				{
+					$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
+				}*/
 			}
 			
-			else
+			/*else
 			{
 				if($file_name == ".htaccess")
 				{
 					$this->file_warning[] = $data['file'];
 				}
-			}
+			}*/
 		}
 
 		function get_base_info()
@@ -1321,8 +1346,8 @@ class mf_base
 						}
 
 						$this->file_warning = array();
-						$this->arr_uploads_ignore_folder_php = $this->get_uploads_ignore_folder('php');
-						$this->arr_uploads_ignore_folder_htaccess = $this->get_uploads_ignore_folder('htaccess');
+						$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder('php');
+						//$this->arr_uploads_ignore_folder_htaccess = $this->get_uploads_ignore_folder('htaccess');
 
 						get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
 

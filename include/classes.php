@@ -179,6 +179,11 @@ class mf_base
 				return "dk";
 			break;
 
+			case 'de-DE':
+			case 'de_DE':
+				return "de";
+			break;
+
 			case 'nn-NO':
 			case 'nb-NO':
 			case 'nn_NO':

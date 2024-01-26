@@ -973,23 +973,34 @@ class mf_base
 
 					else
 					{
-						if(!isset($result))
+						if(is_multisite())
 						{
-							$result = get_sites();
+							if(!isset($result))
+							{
+								$result = get_sites();
+							}
+
+							foreach($result as $r)
+							{
+								switch_to_blog($r->blog_id);
+
+								if(is_plugin_active($arr_value['plugin']))
+								{
+									$arr_data[] = $arr_value['folder'];
+
+									break;
+								}
+
+								restore_current_blog();
+							}
 						}
 
-						foreach($result as $r)
+						else
 						{
-							switch_to_blog($r->blog_id);
-
 							if(is_plugin_active($arr_value['plugin']))
 							{
 								$arr_data[] = $arr_value['folder'];
-
-								break;
 							}
-
-							restore_current_blog();
 						}
 					}
 				}

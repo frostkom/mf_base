@@ -1040,13 +1040,13 @@ class mf_base
 				{
 					$this->file_warning[] = $data['file'];
 				}
-				
+			
 				/*else if($file_name == ".htaccess" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_htaccess)."\//", $data['file']))
 				{
 					$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
 				}*/
 			}
-			
+		
 			/*else
 			{
 				if($file_name == ".htaccess")
@@ -1371,7 +1371,7 @@ class mf_base
 							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
 						."</p>";
-							
+						
 						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
 						{
 							echo "<ul>";
@@ -1499,7 +1499,7 @@ class mf_base
 		function get_base_cron()
 		{
 			global $wpdb;
-			
+		
 			$obj_cron = new mf_cron();
 
 			$setting_key = get_setting_key(__FUNCTION__);
@@ -1511,7 +1511,7 @@ class mf_base
 			{
 				echo "<a href='".get_site_url()."/wp-cron.php?doing_wp_cron'>".__("Run schedule manually", 'lang_base')."</a> ";
 			}
-			
+		
 			$cron_interval = ($obj_cron->get_interval() / 60);
 
 			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
@@ -3882,12 +3882,25 @@ class mf_font_icons
 
 class mf_export
 {
+	var $has_excel_support;
+	var $dir_exists = true;
+	var $plugin;
+	var $name;
+	var $do_export;
+	var $type;
+	var $format;
+	var $data;
+	var $upload_path;
+	var $upload_url; 
+	var $type_name = '';
+	var $types = array();
+	var $formats;
+
 	function __construct($data = array())
 	{
 		global $obj_base;
 
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
-		$this->dir_exists = true;
 
 		$this->plugin = (isset($data['plugin']) ? $data['plugin'] : '');
 		$this->name = (isset($data['name']) ? $data['name'] : '');
@@ -3897,9 +3910,6 @@ class mf_export
 		$this->format = (isset($data['format']) ? $data['format'] : '');
 
 		$this->data = (isset($data['data']) ? $data['data'] : array());
-
-		$this->upload_path = $this->upload_url = $this->type_name = '';
-		$this->types = array();
 
 		$this->formats = array(
 			'' => "-- ".__("Choose Here", 'lang_base')." --",

@@ -4381,6 +4381,11 @@ function get_file_content($data)
 #######################
 function get_match($regexp, $in, $all = true)
 {
+	if($in == null)
+	{
+		do_log(__FUNCTION__." error: ".$regexp.", ".$in.", ".$all);
+	}
+
 	preg_match($regexp, $in, $out);
 
 	if(count($out) > 0)

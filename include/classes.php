@@ -2216,29 +2216,46 @@ class mf_base
 		return $template;
 	}
 
+	function filter_site_redirect($data) //$site_id = 0, $all_is_https = true
+	{
+		$site_url = ($data['site_id'] > 0 ? get_home_url($data['site_id']) : get_home_url());
+		$is_https = (substr($site_url, 0, 5) == 'https');
+
+		/*$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
+		$has_www = "www." == substr($site_url_clean, 0, 4);
+		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
+		$is_subfolder = substr_count($site_url_clean, '/') > 0;
+
+		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
+		{
+			$site_url_clean_opposite = ($has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean);
+
+			$data['update_with_temp'] .= "\r\n"
+			."RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]\r\n"
+			"RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]\r\n";
+
+			if($is_https)
+			{
+				$data['update_with_https_temp'] .= "\r\n"
+				."RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]\r\n"
+				."RewriteCond	%{HTTPS}		off\r\n"
+				."RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]\r\n";
+			}
+		}*/
+
+		if(!$is_https)
+		{
+			$data['all_is_https'] = false;
+		}
+
+		return $data;
+	}
+
 	function recommend_config($data)
 	{
 		if(!isset($data['file'])){		$data['file'] = '';}
 
 		$update_with = "";
-
-		/*$this->all_is_https = true;
-		$this->update_with = $this->update_with_https = "";
-
-		if(is_multisite())
-		{
-			$result = get_sites(array('deleted' => 0));
-
-			foreach($result as $r)
-			{
-				$this->get_site_redirect($r->blog_id);
-			}
-		}
-
-		else
-		{
-			$this->get_site_redirect();
-		}*/
 
 		if(!is_multisite() || is_main_site())
 		{
@@ -2248,6 +2265,30 @@ class mf_base
 			{
 				default:
 				case 'apache':
+					$all_is_https = true;
+					$update_with_temp = $update_with_https_temp = "";
+					$data_temp = array('site_id' => 0, 'all_is_https' => $all_is_https); //, 'update_with_temp' => $update_with_temp, 'update_with_https_temp' => $update_with_https_temp
+
+					if(is_multisite())
+					{
+						$result = get_sites(array('deleted' => 0));
+
+						foreach($result as $r)
+						{
+							$data_temp['site_id'] = $r->blog_id;
+							$data_temp = $this->filter_site_redirect($data_temp);
+						}
+					}
+
+					else
+					{
+						$data_temp = $this->filter_site_redirect($data_temp);
+					}
+
+					$all_is_https = $data_temp['all_is_https'];
+					//$update_with_temp = $data_temp['update_with_temp'];
+					//$update_with_https_temp = $data_temp['update_with_https_temp'];
+
 					$update_with = "ServerSignature Off\r\n"
 					//."ServerTokens Prod\r\n" // Test before using
 					."\r\n"
@@ -2256,8 +2297,17 @@ class mf_base
 					."\r\n"
 					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
 					."Header set X-Content-Type-Options nosniff\r\n"
-					."Header set X-Powered-By \"Me\"\r\n"
-					."\r\n"
+					."Header set X-Powered-By \"Me\"\r\n";
+
+					if($all_is_https)
+					{
+						$update_with .= "\r\n"
+						."<IfModule mod_headers.c>\r\n"
+						."	Header always set Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload' env=HTTPS\r\n"
+						."</IfModule>\r\n";
+					}
+
+					$update_with .= "\r\n"
 					."<IfModule mod_rewrite.c>\r\n"
 					."	RewriteEngine On\r\n"
 					."	RewriteBase /\r\n";
@@ -2270,27 +2320,6 @@ class mf_base
 					$update_with .= "\r\n"
 					."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
 					."	RewriteRule .* - [F]\r\n";
-
-					/*if($this->update_with != '')
-					{
-						$update_with .= $this->update_with;
-
-						if($this->all_is_https == true)
-						{
-							$update_with .= "\r\n"
-							."	RewriteCond %{HTTPS} !=on\r\n"
-							."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-							//."	RewriteCond %{HTTP:X-Forwarded-Proto} != https\r\n"
-							."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n"
-							."\r\n"
-							."	Strict-Transport-Security: max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\r\n";
-						}
-
-						else if($this->update_with_https != '')
-						{
-							$update_with .= $this->update_with_https;
-						}
-					}*/
 
 					switch(get_site_option('setting_base_prefer_www'))
 					{
@@ -2323,9 +2352,27 @@ class mf_base
 					."	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n" //|wp\-content/+debug\.log
 					."	RewriteRule .* /404/ [L,NC]\r\n";
 
-					// Disable execution of PHP files in wp-includes
+					/*if($update_with_temp != '')
+					{
+						$update_with .= $update_with_temp;
+					}*/
+
+					if($all_is_https == true)
+					{
+						$update_with .= "\r\n"
+						."	RewriteCond %{HTTPS} !=on\r\n"
+						."	RewriteCond %{ENV:HTTPS} !=on\r\n"
+						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n";
+					}
+
+					/*else
+					{
+						$update_with .= $update_with_https_temp;
+					}*/
+
 					$update_with .= "\r\n";
 
+					// Disable execution of PHP files in wp-includes
 					if(!is_multisite())
 					{
 						$update_with .= "	RewriteRule ^wp-admin/includes/ - [F,L]\r\n";
@@ -2335,7 +2382,7 @@ class mf_base
 					."	RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]\r\n"
 					."	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]\r\n"
 					."	RewriteRule ^wp-includes/theme-compat/ - [F,L]\r\n"
-					."</IfModule>";
+					."</IfModule>\r\n";
 
 					switch(php_sapi_name())
 					{
@@ -2567,39 +2614,6 @@ class mf_base
 		}
 
 		return $out;
-	}
-
-	function get_site_redirect($site_id = 0)
-	{
-		$site_url = ($site_id > 0 ? get_home_url($site_id) : get_home_url());
-		$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-
-		$is_https = (substr($site_url, 0, 5) == 'https');
-		$has_www = "www." == substr($site_url_clean, 0, 4);
-		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
-		$is_subfolder = substr_count($site_url_clean, '/') > 0;
-
-		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
-		{
-			$site_url_clean_opposite = $has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean;
-
-			$this->update_with .= "\n
-			RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]
-			RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]";
-
-			if($is_https)
-			{
-				$this->update_with_https .= "\n
-				RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]
-				RewriteCond	%{HTTPS}		off
-				RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]";
-			}
-		}
-
-		if(!$is_https)
-		{
-			$this->all_is_https = false;
-		}
 	}
 	############################
 

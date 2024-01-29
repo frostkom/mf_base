@@ -800,11 +800,9 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 		if($upload_path != '' && file_exists($upload_path))
 		{
-			//do_log("Delete the folder ".$upload_path);
-
 			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
 
-			@rmdir($upload_path);
+			rmdir($upload_path);
 		}
 	}
 }
@@ -4370,7 +4368,7 @@ function get_file_content($data)
 
 		else
 		{
-			do_log("The file could not be opened (".$data['file'].")");
+			do_log("The file could not be opened (".$data['file'].", ".(file_exists($data['file']) ? "Exists" : "Not").")");
 		}
 	}
 
@@ -4531,27 +4529,21 @@ function get_file_info($data)
 					get_file_info($data_temp);
 				}
 
-				if($data['folder_callback'] != '')
+				if($data['folder_callback'] != '' && is_callable($data['folder_callback']))
 				{
-					if(is_callable($data['folder_callback']))
-					{
-						$data_temp = $data;
-						$data_temp['child'] = $child;
+					$data_temp = $data;
+					$data_temp['child'] = $child;
 
-						call_user_func($data['folder_callback'], $data_temp);
-					}
+					call_user_func($data['folder_callback'], $data_temp);
 				}
 			}
 
-			else
+			else if(is_callable($data['callback']))
 			{
-				if(is_callable($data['callback']))
-				{
-					$data_temp = $data;
-					$data_temp['file'] = $file;
+				$data_temp = $data;
+				$data_temp['file'] = $file;
 
-					call_user_func($data['callback'], $data_temp);
-				}
+				call_user_func($data['callback'], $data_temp);
 			}
 
 			$count++;

@@ -19,13 +19,14 @@ class mf_base
 	var $is_gutenberg_active = "";
 	var $ftp_size = 0;
 	var $ftp_size_folders = array();
-	var $template_lost_connection = "";
-	var $template_loading = "";
+	var $template_lost_connection = false;
+	var $template_loading = false;
 	var $server_type = "";
 	var $phpmailer_temp = array();
 	var $file_warning;
 	var $arr_uploads_ignore_folder;
 	//var $arr_uploads_ignore_folder_htaccess;
+	var $file_name = "";
 
 	function __construct()
 	{
@@ -839,7 +840,7 @@ class mf_base
 
 	function get_server_type()
 	{
-		if(!isset($this->server_type) || $this->server_type == '')
+		if($this->server_type == '')
 		{
 			if(stripos($_SERVER['SERVER_SOFTWARE'], "Apache") !== false || stripos($_SERVER['SERVER_SOFTWARE'], "LiteSpeed") !== false)
 			{
@@ -1040,13 +1041,13 @@ class mf_base
 				{
 					$this->file_warning[] = $data['file'];
 				}
-			
+
 				/*else if($file_name == ".htaccess" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_htaccess)."\//", $data['file']))
 				{
 					$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
 				}*/
 			}
-		
+
 			/*else
 			{
 				if($file_name == ".htaccess")
@@ -1371,7 +1372,7 @@ class mf_base
 							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
 							.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
 						."</p>";
-						
+
 						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
 						{
 							echo "<ul>";
@@ -1499,7 +1500,7 @@ class mf_base
 		function get_base_cron()
 		{
 			global $wpdb;
-		
+
 			$obj_cron = new mf_cron();
 
 			$setting_key = get_setting_key(__FUNCTION__);
@@ -1511,7 +1512,7 @@ class mf_base
 			{
 				echo "<a href='".get_site_url()."/wp-cron.php?doing_wp_cron'>".__("Run schedule manually", 'lang_base')."</a> ";
 			}
-		
+
 			$cron_interval = ($obj_cron->get_interval() / 60);
 
 			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
@@ -2137,7 +2138,7 @@ class mf_base
 
 	function theme_page_templates($posts_templates)
 	{
-		if(!isset($this->templates))
+		if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', array());
 		}
@@ -2149,7 +2150,7 @@ class mf_base
 
 	function wp_insert_post_data($data)
 	{
-		if(!isset($this->templates))
+		if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', array());
 		}
@@ -2186,7 +2187,7 @@ class mf_base
 			return $template;
 		}
 
-		if(!isset($this->templates))
+		if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', array());
 		}
@@ -2421,7 +2422,6 @@ class mf_base
 					."server_tokens off;\r\n"
 					."\r\n"
 					."location = /my_ip {\r\n"
-					//."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/my_ip/ break;\r\n"
 					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip break;\r\n"
 					."}";
 				break;
@@ -2621,14 +2621,14 @@ class mf_base
 	{
 		$out = "";
 
-		if(in_array('lost_connection', $arr_type) && !isset($this->template_lost_connection))
+		if(in_array('lost_connection', $arr_type) && $this->template_lost_connection == false)
 		{
 			$out .= "<div id='overlay_lost_connection' class='overlay_container hide'><div>".__("Lost Connection", 'lang_base')."</div></div>";
 
 			$this->template_lost_connection = true;
 		}
 
-		if(in_array('loading', $arr_type) && !isset($this->template_loading))
+		if(in_array('loading', $arr_type) && $this->template_loading == false)
 		{
 			$out .= "<div id='overlay_loading' class='overlay_container hide'><div><i class='fa fa-spinner fa-spin fa-2x'></i></div></div>";
 
@@ -3960,7 +3960,7 @@ class mf_export
 
 	function set_file_name()
 	{
-		if(!isset($this->file_name) || $this->file_name == '')
+		if($this->file_name == '')
 		{
 			$this->file_name = prepare_file_name($this->name).".".$this->format;
 		}

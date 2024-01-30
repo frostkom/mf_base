@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.0.13
+Version: 1.2.0.14
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -25,7 +25,6 @@ load_plugin_textdomain('lang_base', false, dirname(plugin_basename(__FILE__))."/
 
 $obj_base = new mf_base();
 
-add_action('plugins_loaded', array($obj_base, 'plugins_loaded'));
 add_action('init', array($obj_base, 'init'), 0);
 add_filter('cron_schedules', array($obj_base, 'cron_schedules'));
 add_action('cron_base', 'activate_base', mt_rand(1, 10));
@@ -106,7 +105,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('option_cron_run'),
+		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days'),
 	));
 }
 
@@ -123,6 +122,6 @@ function uninstall_base()
 {
 	mf_uninstall_plugin(array(
 		'uploads' => 'mf_base',
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_use_timezone', 'setting_base_update_htaccess', 'setting_base_template_site', 'setting_base_empty_trash_days', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_use_timezone', 'setting_base_update_htaccess', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables'),
 	));
 }

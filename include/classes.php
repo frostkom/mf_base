@@ -433,19 +433,6 @@ class mf_base
 		}
 	}
 
-	function plugins_loaded()
-	{
-		if(!defined('EMPTY_TRASH_DAYS'))
-		{
-			$setting_base_empty_trash_days = get_site_option('setting_base_empty_trash_days');
-
-			if($setting_base_empty_trash_days > 0)
-			{
-				define('EMPTY_TRASH_DAYS', $setting_base_empty_trash_days);
-			}
-		}
-	}
-
 	function get_toggler_includes()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
@@ -879,18 +866,8 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
+			'setting_base_cron_debug' => __("Debug Schedule", 'lang_base'),
 		);
-
-		// Does not work as intended...
-		//show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
-
-		// Advanced
-		############################
-		//$options_area = $options_area_orig."_advanced";
-
-		//add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
-
-		//$arr_settings = array();
 
 		switch($this->get_server_type())
 		{
@@ -927,18 +904,19 @@ class mf_base
 			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
 		}
 
-		$arr_settings['setting_base_empty_trash_days'] = __("Empty Trash After", 'lang_base');
-
 		if(IS_SUPER_ADMIN)
 		{
-			$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
-			$arr_settings['setting_base_cron_debug'] = __("Debug Schedule", 'lang_base');
+			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
+
+			if($date_diff > 10)
+			{
+				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+			}
+
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
-			//$arr_settings['setting_base_php_info'] = __("PHP Info", 'lang_base'); // This will mess with the right column in setting_base_info
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
-		############################
 	}
 
 	function settings_base_callback()
@@ -953,6 +931,7 @@ class mf_base
 			$arr_data = array();
 
 			$arr_plugins = array(
+				array('type' => 'php',			'plugin' => "all-in-one-wp-migration/all-in-one-wp-migration.php",		'folder' => 'wpallimport'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'plugins/backwpup'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
@@ -1057,6 +1036,17 @@ class mf_base
 			}*/
 		}
 
+		function get_date_diff()
+		{
+			global $wpdb;
+
+			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
+			$ftp_date = strtotime(date("Y-m-d H:i:s"));
+			$date_diff = abs($db_date - $ftp_date);
+
+			return array($date_diff, $ftp_date, $db_date);
+		}
+
 		function get_base_info()
 		{
 			global $wpdb;
@@ -1085,9 +1075,7 @@ class mf_base
 
 			$mysql_title = __("DB", 'lang_base').": ".DB_NAME.", ".__("Prefix", 'lang_base').": ".$wpdb->prefix;
 
-			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
-			$ftp_date = strtotime(date("Y-m-d H:i:s"));
-			$date_diff = abs($db_date - $ftp_date);
+			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
 
 			$total_space = (function_exists('disk_total_space') ? disk_total_space(ABSPATH) : 0);
 
@@ -1585,81 +1573,53 @@ class mf_base
 			echo "<div class='get_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
 		}
 
-		function setting_base_recommend_callback()
+		function setting_base_cron_debug_callback()
 		{
-			$arr_recommendations = array(
-				//array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
-				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-				array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
-				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
-				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
-				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
-				//array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
-				//array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
-				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
-				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
-				array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
-				array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
-				array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
-				array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
-				//array("SSL Zen", 'ssl-zen/ssl_zen.php', __("to add a certificate to encrypt the site", 'lang_base')),
-				array("Sucuri", 'sucuri-scanner/sucuri.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
-				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
-				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
-				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
-				//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
-				//array("WP Menu Icons", 'wp-menu-icons.php/wp-menu-icons.php.php', __("to add icons to menus", 'lang_base')),
-				array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
-				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
-				//array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
-			);
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
 
-			/*if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
+			$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
+
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
+
+			if($option == 'yes' && IS_SUPER_ADMIN)
 			{
-				$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
-				$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
-			}*/
+				$option_cron = get_option('cron');
 
-			foreach($arr_recommendations as $value)
-			{
-				$name = $value[0];
-				$path = $value[1];
-				$text = (isset($value[2]) ? $value[2] : '');
+				if(count($option_cron) > 0)
+				{
+					echo "<ul>";
 
-				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
+						foreach($option_cron as $key => $arr_jobs)
+						{
+							foreach($arr_jobs as $key => $arr_job)
+							{
+								echo "<li>"
+									.$key.": ";
+
+									foreach($arr_job as $key => $arr_data)
+									{
+										foreach($arr_data as $key => $value)
+										{
+											switch($key)
+											{
+												case 'schedule':
+												//case 'interval':
+													echo $key." => ".$value;
+												break;
+											}
+										}
+									}
+
+								echo "</li>";
+							}
+						}
+
+					echo "</ul>";
+				}
 			}
 		}
-
-		function setting_base_php_info_callback()
-		{
-			ob_start();
-
-			phpinfo();
-			phpinfo(INFO_MODULES);
-
-			$phpinfo = ob_get_contents();
-			ob_end_clean();
-
-			$exclude = $include = array();
-			$exclude[] = "/\<style.*?\/style\>/s";			$include[] = "";
-			$exclude[] = "/\<title.*?\/title\>/s";			$include[] = "";
-			$exclude[] = "/\<meta.*?\>/s";					$include[] = "";
-
-			$phpinfo = preg_replace($exclude, $include, $phpinfo);
-
-			echo "<p>
-				".__("Display Information", 'lang_base')
-			."</p>
-			<div>".$phpinfo."</div>";
-		}
-
-	function settings_base_advanced_callback()
-	{
-		$setting_key = get_setting_key(__FUNCTION__);
-
-		echo settings_header($setting_key, __("Common", 'lang_base')." - ".__("Advanced", 'lang_base'));
-	}
 
 		function setting_base_update_htaccess_callback()
 		{
@@ -1796,23 +1756,6 @@ class mf_base
 			}
 		}
 
-		function setting_base_empty_trash_days_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 30));
-
-			$constant_option = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : $option);
-			$description = "";
-
-			if($constant_option != $option)
-			{
-				$description = sprintf(__("This value has already been set to %d", 'lang_base'), $constant_option);
-			}
-
-			echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'readonly' => ($constant_option != $option), 'suffix' => __("days", 'lang_base'), 'description' => $description));
-		}
-
 		function setting_base_use_timezone_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
@@ -1822,51 +1765,49 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 		}
 
-		function setting_base_cron_debug_callback()
+		function setting_base_recommend_callback()
 		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
+			$arr_recommendations = array(
+				//array("Advanced Cron Manager", 'advanced-cron-manager/advanced-cron-manager.php', __("to debug Cron", 'lang_base')),
+				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+				array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
+				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
+				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
+				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+				//array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
+				//array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
+				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
+				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
+				array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
+				array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
+				array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
+				array("Smush Image Compression and Optimization", 'wp-smushit/wp-smush.php', __("to losslessly compress all uploaded images", 'lang_base')),
+				//array("SSL Zen", 'ssl-zen/ssl_zen.php', __("to add a certificate to encrypt the site", 'lang_base')),
+				array("Sucuri", 'sucuri-scanner/sucuri.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
+				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
+				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
+				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
+				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
+				//array("WP LetsEncrypt", 'wp-letsencrypt-ssl/wp-letsencrypt.php', __("to add a certificate to encrypt the site", 'lang_base')),
+				//array("WP Menu Icons", 'wp-menu-icons.php/wp-menu-icons.php.php', __("to add icons to menus", 'lang_base')),
+				array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
+				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
+				//array("WP Video Lightbox", 'wp-video-lightbox/wp-video-lightbox.php', __("to view video clips in modals", 'lang_base')),
+			);
 
-			$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
-
-			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
-
-			if($option == 'yes' && IS_SUPER_ADMIN)
+			/*if(!(is_plugin_active("tiny-compress-images/tiny-compress-images.php") || is_plugin_active("optimus/optimus.php") || is_plugin_active("wp-smushit/wp-smush.php")))
 			{
-				$option_cron = get_option('cron');
+				$arr_recommendations[] = array("Compress JPEG & PNG images", 'tiny-compress-images/tiny-compress-images.php', __("to losslessly compress all uploaded images (Max 500 for free / month)", 'lang_base'));
+				$arr_recommendations[] = array("Optimus", 'optimus/optimus.php', __("to losslessly compress all uploaded images (Max 100kB/file for free)", 'lang_base'));
+			}*/
 
-				if(count($option_cron) > 0)
-				{
-					echo "<ul>";
+			foreach($arr_recommendations as $value)
+			{
+				$name = $value[0];
+				$path = $value[1];
+				$text = (isset($value[2]) ? $value[2] : '');
 
-						foreach($option_cron as $key => $arr_jobs)
-						{
-							foreach($arr_jobs as $key => $arr_job)
-							{
-								echo "<li>"
-									.$key.": ";
-
-									foreach($arr_job as $key => $arr_data)
-									{
-										foreach($arr_data as $key => $value)
-										{
-											switch($key)
-											{
-												case 'schedule':
-												//case 'interval':
-													echo $key." => ".$value;
-												break;
-											}
-										}
-									}
-
-								echo "</li>";
-							}
-						}
-
-					echo "</ul>";
-				}
+				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 			}
 		}
 
@@ -1878,9 +1819,6 @@ class mf_base
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
-
-		//add_editor_style($plugin_include_url."font-awesome-5.7.2.php");
-		//add_editor_style($plugin_include_url."style_editor.css");
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
 		wp_enqueue_script('jquery-ui-autocomplete');
@@ -1898,11 +1836,6 @@ class mf_base
 		{
 			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js", $plugin_version);
 		}
-
-		/*else if($pagenow == 'widgets.php')
-		{
-			mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js", $plugin_version);
-		}*/
 	}
 
 	function filter_sites_table_settings($arr_settings)
@@ -2326,10 +2259,6 @@ class mf_base
 					{
 						case 'yes':
 							$update_with .= "\r\n"
-							/*."	RewriteCond %{HTTPS} off\r\n"
-							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
-							."	RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]\r\n"
-							."\r\n"*/
 							."	RewriteCond %{HTTPS} on\r\n"
 							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
 							."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n";
@@ -2337,10 +2266,6 @@ class mf_base
 
 						case 'no':
 							$update_with .= "\r\n"
-							/*."	RewriteCond %{HTTPS} off\r\n"
-							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
-							."	RewriteRule ^(.*)$ http://%1/$1 [R=301,L]\r\n"
-							."\r\n"*/
 							."	RewriteCond %{HTTPS} on\r\n"
 							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
 							."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n";
@@ -3616,8 +3541,6 @@ class settings_page
 
 	public function __construct()
 	{
-		//$this->options_page = "settings_mf_base";
-
 		add_action('admin_menu', array($this, 'add_plugin_page'));
 	}
 
@@ -3655,7 +3578,7 @@ class settings_page
 				call_user_func($section['callback'], $section);
 			}
 
-			if(!isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+			if(!isset($wp_settings_fields) || !isset($wp_settings_fields[$page]) || !isset($wp_settings_fields[$page][$section['id']]))
 			{
 				continue;
 			}
@@ -3749,7 +3672,6 @@ class mf_font_icons
 	function __construct($id = "")
 	{
 		$this->id = $id;
-		//$this->fonts = array();
 
 		if($this->id == "" || $this->id == 'icomoon')
 		{

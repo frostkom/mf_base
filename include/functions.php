@@ -807,7 +807,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 	}
 }
 
-function mf_uninstall_meta($data)
+function mf_uninstall_user_meta($data)
 {
 	if(count($data['meta']) > 0)
 	{
@@ -940,8 +940,8 @@ function mf_uninstall_plugin($data)
 		mf_uninstall_tables($data);
 	}
 
-	mf_uninstall_meta($data);
 	mf_uninstall_uploads($data, true);
+	mf_uninstall_user_meta($data);
 }
 
 function is_domain_valid($email, $record = 'MX')

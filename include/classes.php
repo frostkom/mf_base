@@ -2358,13 +2358,14 @@ class mf_base
 						$update_with .= $update_with_temp;
 					}*/
 
-					if($all_is_https == true)
+					// Not needed when Strict-Transport-Security is used, and might cause trouble on some sites anyway
+					/*if($all_is_https == true)
 					{
 						$update_with .= "\r\n"
 						."	RewriteCond %{HTTPS} !=on\r\n"
 						."	RewriteCond %{ENV:HTTPS} !=on\r\n"
 						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n";
-					}
+					}*/
 
 					/*else
 					{
@@ -2492,6 +2493,8 @@ class mf_base
 
 		if(!isset($data['file'])){			$data['file'] = false;}
 		if(!isset($data['auto_update'])){	$data['auto_update'] = false;}
+
+		$data['update_with'] = trim($data['update_with']);
 
 		$out = $content = "";
 

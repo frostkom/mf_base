@@ -3,6 +3,7 @@
 if(!defined('ABSPATH'))
 {
 	header("Content-Type: application/json");
+	header("Cache-Control: no-cache, must-revalidate");
 
 	$folder = str_replace("/wp-content/plugins/mf_base/include/api", "/", dirname(__FILE__));
 
@@ -38,6 +39,7 @@ switch($type_action)
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
+			$json_output['timestamp'] = date("Y-m-d H:i:s");
 		}
 
 		else
@@ -55,6 +57,7 @@ switch($type_action)
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
+			$json_output['timestamp'] = date("Y-m-d H:i:s");
 		}
 
 		else

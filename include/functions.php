@@ -2277,14 +2277,14 @@ function get_users_for_select($data = array())
 
 			else
 			{
-				if($user->display_name != '')
+				if($user_data->display_name != '')
 				{
-					$arr_data[$user->ID] = $user->display_name;
+					$arr_data[$user->ID] = $user_data->display_name;
 				}
 
-				else if($user->first_name != '' && $user->last_name != '')
+				else if($user_data->first_name != '' && $user_data->last_name != '')
 				{
-					$arr_data[$user->ID] = $user->first_name." ".$user->last_name;
+					$arr_data[$user->ID] = $user_data->first_name." ".$user_data->last_name;
 				}
 			}
 		}
@@ -4379,29 +4379,32 @@ function get_file_content($data)
 #######################
 function get_match($regexp, $in, $all = true)
 {
-	if($in == null)
+	if($in != null && $in != '')
 	{
-		do_log(__FUNCTION__." error: ".$regexp.", ".$in.", ".$all);
+		preg_match($regexp, $in, $out);
+
+		if(count($out) > 0)
+		{
+			if($all == true)
+			{
+				return $out;
+			}
+
+			else if(count($out) <= 1)
+			{
+				return $out[0];
+			}
+
+			else
+			{
+				return $out[1];
+			}
+		}
 	}
 
-	preg_match($regexp, $in, $out);
-
-	if(count($out) > 0)
+	else
 	{
-		if($all == true)
-		{
-			return $out;
-		}
-
-		else if(count($out) <= 1)
-		{
-			return $out[0];
-		}
-
-		else
-		{
-			return $out[1];
-		}
+		return "";
 	}
 }
 #######################

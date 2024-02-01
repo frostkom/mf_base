@@ -3154,7 +3154,7 @@ class mf_list_table extends WP_List_Table
 				}
 			}
 
-			if($this->is_trash && current_user_can(get_post_type_object($this->screen->post_type)->cap->edit_others_posts) && $this->has_items())
+			if($this->has_items()) //$this->is_trash && current_user_can(get_post_type_object($this->screen->post_type)->cap->edit_others_posts) && 
 			{
 				submit_button(__("Empty Trash"), 'apply', 'delete_all', false);
 			}

@@ -2732,8 +2732,9 @@ if(!class_exists('WP_List_Table'))
 
 class mf_list_table extends WP_List_Table
 {
-	var $arr_settings = array();
+	var $arr_settings;
 	var $post_type = "";
+	var $table;
 	var $orderby_default = "post_title";
 	var $orderby_default_order = "ASC";
 
@@ -2745,11 +2746,11 @@ class mf_list_table extends WP_List_Table
 	var $num_rows = 0;
 	var $query_join = "";
 	var $query_where = "";
-	var $search = "";
+	var $search;
 	var $search_key = 's';
-	var $orderby = "";
-	var $order = "";
-	var $page = "";
+	var $orderby;
+	var $order;
+	var $page;
 	var $total_pages = "";
 	var $debug = "";
 
@@ -2864,18 +2865,7 @@ class mf_list_table extends WP_List_Table
 			$query .= " WHERE ".$this->query_where;
 		}
 
-		/*if(isset($this->query_group))
-		{
-			if($this->query_group != '')
-			{
-				$query_group = " GROUP BY ".$this->query_group;
-			}
-		}
-
-		else
-		{*/
-			$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
-		//}
+		$query_group = " GROUP BY ".$this->arr_settings['query_select_id'];
 
 		foreach($data['types'] as $key => $value)
 		{

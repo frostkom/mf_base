@@ -2789,6 +2789,7 @@ function get_url_content($data = array())
 		switch($headers['http_code'])
 		{
 			case 301:
+			case 302:
 				if(isset($headers['redirect_url']) && $headers['redirect_url'] != $data['url'])
 				{
 					$data['url'] = $headers['redirect_url'];

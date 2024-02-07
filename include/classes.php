@@ -3824,6 +3824,7 @@ class mf_export
 	var $type_name = '';
 	var $types = array();
 	var $formats;
+	var $file_name;
 
 	function __construct($data = array())
 	{

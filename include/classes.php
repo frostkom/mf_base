@@ -3749,6 +3749,7 @@ class mf_font_icons
 			'eye',
 			'fa fa-exclamation-circle',
 			'exclamation-triangle',
+			'fas fa-external-link-alt',
 			'fab fa-facebook',
 			'fas fa-file-alt',
 			'fas fa-graduation-cap',

@@ -2026,6 +2026,8 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
+	//$version = filemtime(str_replace($site_url, $site_path, $file));
+
 	$file = remove_protocol(array('url' => $file));
 
 	do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
@@ -2040,6 +2042,8 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$version = $translation;
 		$translation = array();
 	}
+
+	//$version = filemtime(str_replace($site_url, $site_path, $file));
 
 	$file = remove_protocol(array('url' => $file));
 

@@ -888,13 +888,13 @@ class mf_base
 			break;
 		}
 
-		if($config_file != '')
-		{
-			$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
-		}
-
 		if(IS_SUPER_ADMIN)
 		{
+			if($config_file != '')
+			{
+				$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
+			}
+
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}

@@ -906,11 +906,14 @@ class mf_base
 
 		if(IS_SUPER_ADMIN)
 		{
-			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
-
-			if($date_diff > 10)
+			if(get_option('setting_base_use_timezone') == 'yes')
 			{
-				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+				list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
+
+				if($date_diff > 10)
+				{
+					$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+				}
 			}
 
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');

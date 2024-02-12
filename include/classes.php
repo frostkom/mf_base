@@ -1978,19 +1978,15 @@ class mf_base
 
 	function load_font_awesome($data)
 	{
-		if(!(wp_style_is('font-awesome', 'enqueued') || wp_style_is('font-awesome-5', 'enqueued')))
+		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
-			/* We should probably check if it is used somewhere, shouldn't we? */
-			if($data['type'] == 'public') //!is_admin() && $data['type'] != 'login'
-			{
-				$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
+			$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
 
-				echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
-				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
-				<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
-			}
+			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
+			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
+			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
 
-			mf_enqueue_style('font-awesome', $data['plugin_include_url']."font-awesome-5.7.2.php", $data['plugin_version']);
+			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php", $data['plugin_version']);
 		}
 	}
 

@@ -809,13 +809,13 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 function mf_uninstall_user_meta($data)
 {
-	if(count($data['meta']) > 0)
+	if(count($data['user_meta']) > 0)
 	{
 		$users = get_users(array('fields' => array('ID')));
 
 		foreach($users as $user)
 		{
-			foreach($data['meta'] as $meta_key)
+			foreach($data['user_meta'] as $meta_key)
 			{
 				if(isset($user->ID))
 				{

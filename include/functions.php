@@ -857,8 +857,7 @@ function mf_uninstall_post_meta($data)
 
 	foreach($data['post_meta'] as $post_meta)
 	{
-		do_log(__FUNCTION__.": ".$wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key = %s", $post_meta));
-		//$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key = %s", $post_meta));
+		$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key = %s", $post_meta));
 	}
 }
 

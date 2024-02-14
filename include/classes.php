@@ -1980,11 +1980,12 @@ class mf_base
 	{
 		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
-			$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
+			//  Cannot modify header information - headers already sent by (output started at wp-content/plugins/mf_base/include/classes.php:1987) in wp-admin/includes/misc.php on line 1431
+			/*$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
 
 			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
 			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
-			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";
+			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";*/
 
 			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php", $data['plugin_version']);
 		}
@@ -2665,7 +2666,7 @@ class recommend_plugin
 
 	function __construct($data)
 	{
-		global $obj_base, $pagenow;
+		global $pagenow;
 
 		if(!isset($data['url'])){			$data['url'] = "";}
 		if(!isset($data['show_notice'])){	$data['show_notice'] = true;}
@@ -3010,8 +3011,6 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function get_bulk_actions()
 	{
-		global $obj_base;
-
 		$actions = array();
 
 		if(isset($this->columns['cb']))
@@ -3102,7 +3101,7 @@ class mf_list_table extends WP_List_Table
 
 	protected function extra_tablenav($which)
 	{
-		global $wpdb, $obj_base;
+		global $wpdb;
 
 		echo "<div class='alignleft actions'>";
 
@@ -3234,8 +3233,6 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		global $obj_base;
-
 		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['plugin_name']."'" : "").">";
 
 			$this->search_box(__("Search", 'lang_base'), $this->search_key);
@@ -3275,7 +3272,7 @@ class mf_list_table extends WP_List_Table
 
 	function select_data($data = array())
 	{
-		global $wpdb, $obj_base;
+		global $wpdb;
 
 		if(!isset($data['full_data'])){		$data['full_data'] = false;}
 		if(!isset($data['sort_data'])){		$data['sort_data'] = false;}
@@ -3485,8 +3482,6 @@ if(class_exists('RWMB_Field'))
 	{
 		static public function html($meta, $field)
 		{
-			global $obj_base;
-
 			return sprintf(
 				"<input type='tel' name='%s' id='%s' value='%s' class='rwmb-text rwmb-phone' pattern='[\d\s-]*' placeholder='".__("001-888-342-324", 'lang_base')."&hellip;'%s>",
 				$field['field_name'],
@@ -3535,8 +3530,6 @@ class settings_page
 
 	public function add_plugin_page()
 	{
-		global $obj_base;
-
 		add_options_page(
 			__("My Settings", 'lang_base'),
 			__("My Settings", 'lang_base'),
@@ -3582,8 +3575,6 @@ class settings_page
 
 	public function create_admin_page()
 	{
-		global $obj_base;
-
 		echo "<div class='wrap'>
 			<h2>".__("My Settings", 'lang_base')."</h2>
 			<div class='settings-wrap loading'>
@@ -3655,7 +3646,7 @@ class mf_microtime
 
 class mf_font_icons
 {
-	var $id = "";
+	var $id;
 	var $fonts = array();
 
 	function __construct($id = "")
@@ -3815,6 +3806,7 @@ class mf_export
 	var $dir_exists = true;
 	var $plugin;
 	var $name;
+	var $arr_columns = array();
 	var $do_export;
 	var $type;
 	var $format;
@@ -3828,8 +3820,6 @@ class mf_export
 
 	function __construct($data = array())
 	{
-		global $obj_base;
-
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 
 		$this->plugin = (isset($data['plugin']) ? $data['plugin'] : '');
@@ -3915,7 +3905,7 @@ class mf_export
 
 	function save_data()
 	{
-		global $obj_base, $error_text, $done_text;
+		global $error_text, $done_text;
 
 		$out = "";
 
@@ -4043,7 +4033,7 @@ class mf_export
 
 	function get_form()
 	{
-		global $obj_base, $error_text;
+		global $error_text;
 
 		$out = get_notification()
 		."<form action='#' method='post' class='mf_form mf_settings'>"
@@ -4289,7 +4279,7 @@ class mf_import
 
 	function do_import()
 	{
-		global $wpdb, $obj_base, $done_text, $error_text;
+		global $wpdb, $done_text, $error_text;
 
 		$out = "";
 
@@ -4850,8 +4840,6 @@ class mf_import
 
 	function get_form()
 	{
-		global $obj_base;
-
 		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import'>" // rel='import/check/".get_class($this)."'
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
@@ -4908,8 +4896,6 @@ class mf_import
 
 	function get_columns_for_select()
 	{
-		global $obj_base;
-
 		$this->columns_for_select = array(
 			'' => "-- ".__("Choose Here", 'lang_base')." --"
 		);
@@ -4922,7 +4908,7 @@ class mf_import
 
 	function get_result()
 	{
-		global $obj_base, $error_text;
+		global $error_text;
 
 		$out = "";
 

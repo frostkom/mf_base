@@ -398,7 +398,7 @@
 					opacity: .3;
 				}
 
-				.form_button button .fa, .form_button .button .fa
+				.form_button button .fa, .form_button .button .fa, .form_button button .fab, .form_button .button .fab, .form_button button .far, .form_button .button .far, .form_button button .fas, .form_button .button .fas
 				{
 					margin-right: .3em;
 				}

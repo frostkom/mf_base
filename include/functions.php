@@ -800,9 +800,10 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 		if($upload_path != '' && file_exists($upload_path))
 		{
-			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
+			do_log(__FUNCTION__.": I am about to remove all files in ".$upload_path, 'notification');
 
-			rmdir($upload_path);
+			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
+			get_file_info(array('path' => $upload_path, 'folder_callback' => 'delete_empty_folder_callback'));
 		}
 	}
 }
@@ -1157,12 +1158,25 @@ function delete_files($data)
 {
 	if(!isset($data['time_limit'])){	$data['time_limit'] = (DAY_IN_SECONDS * 2);}
 
-	$time_now = time();
-	$time_file = @filemtime($data['file']);
-
-	if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
+	if(file_exists($data['file']))
 	{
-		@unlink($data['file']);
+		$time_now = time();
+		$time_file = filemtime($data['file']);
+
+		if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
+		{
+			unlink($data['file']);
+		}
+	}
+}
+
+function delete_empty_folder_callback($data)
+{
+	$folder = $data['path']."/".$data['child'];
+
+	if(is_dir($folder) && is_array(scandir($folder)) && count(scandir($folder)) == 2)
+	{
+		rmdir($folder);
 	}
 }
 

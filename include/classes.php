@@ -2507,7 +2507,10 @@ class mf_base
 					$out .= get_notification();
 				}
 
-				@unlink($file_temp);
+				if(file_exists($file_temp))
+				{
+					unlink($file_temp);
+				}
 			}
 
 			if($success == false && $data['update_with'] != '')
@@ -2656,7 +2659,10 @@ class mf_cron
 			}
 		}
 
-		@unlink($this->file);
+		if(file_exists($this->file))
+		{
+			unlink($this->file);
+		}
 	}
 }
 
@@ -3822,7 +3828,7 @@ class mf_export
 	{
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 
-		$this->plugin = (isset($data['plugin']) ? $data['plugin'] : '');
+		$this->plugin = (isset($data['plugin']) ? $data['plugin'] : 'mf_unknown');
 		$this->name = (isset($data['name']) ? $data['name'] : '');
 
 		$this->do_export = (isset($data['do_export']) ? $data['do_export'] : false);
@@ -3889,7 +3895,7 @@ class mf_export
 
 			if($zip->open($file_destination, ZIPARCHIVE::CREATE))
 			{
-				if(is_file($file_source))
+				if(file_exists($file_source) && is_file($file_source))
 				{
 					$zip->addFile($file_source, $file_name);
 
@@ -4021,7 +4027,9 @@ class mf_export
 					$error_text = __("There was nothing to export", 'lang_base');
 				}
 
-				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));
+				/*do_log(__FUNCTION__.": I am about to remove all files in ".$this->upload_path, 'notification');
+
+				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));*/
 			}
 
 			else

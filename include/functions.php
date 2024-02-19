@@ -1174,7 +1174,7 @@ function delete_empty_folder_callback($data)
 {
 	$folder = $data['path']."/".$data['child'];
 
-	if(is_dir($folder) && is_array(scandir($folder)) && count(scandir($folder)) == 2)
+	if(file_exists($folder) && is_dir($folder) && is_array(scandir($folder)) && count(scandir($folder)) == 2)
 	{
 		rmdir($folder);
 	}

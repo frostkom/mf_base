@@ -34,7 +34,7 @@ class mf_base
 		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
 		$this->post_max_size = (MB_IN_BYTES * $this->post_max_size_base);
 
-		$this->memory_limit_current = $this->return_bytes('memory_limit'); //Use WP_MEMORY_LIMIT instead?
+		$this->memory_limit_current = $this->return_bytes('memory_limit'); //Use WP_MEMORY_LIMIT/WP_MAX_MEMORY_LIMIT instead?
 		$this->post_max_size_current = $this->return_bytes('post_max_size');
 		$this->upload_max_filesize_current = $this->return_bytes('upload_max_filesize');
 
@@ -749,7 +749,7 @@ class mf_base
 
 		else
 		{
-			do_log("The value was nothing in return_bytes() (".$type." -> ".$value.")");
+			do_log("The value was nothing in return_bytes() (".$type." -> ".$value.")", 'notification');
 		}
 
 		return $number;
@@ -2315,20 +2315,20 @@ class mf_base
 					{
 						case 'apache2handler':
 						case 'litespeed':
-							/*if($this->memory_limit_current < $this->memory_limit)
-							{*/
+							if($this->memory_limit_current < $this->memory_limit)
+							{
 								$update_with .= "\r\nphp_value memory_limit ".$this->memory_limit_base."M";
-							/*}
+							}
 
 							if($this->upload_max_filesize_current < $this->upload_max_filesize)
-							{*/
+							{
 								$update_with .= "\r\nphp_value upload_max_filesize ".$this->upload_max_filesize_base."M";
-							/*}
+							}
 
 							if($this->post_max_size_current < $this->post_max_size)
-							{*/
+							{
 								$update_with .= "\r\nphp_value post_max_size ".$this->post_max_size_base."M";
-							//}
+							}
 						break;
 
 						case 'fpm-fcgi':

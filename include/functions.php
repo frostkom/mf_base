@@ -1166,7 +1166,7 @@ function delete_files_callback($data)
 		if($data['time_limit'] == 0 || (time() - filemtime($data['file']) >= $data['time_limit']))
 		{
 			// Make sure that a file in a /YYYY/MM/ folder is never deleted here
-			if(preg_match("/\/[0-9]{4}\/[0-9]{2}\//") == false)
+			if(preg_match("/\/[0-9]{4}\/[0-9]{2}\//", $data['file']) == false)
 			{
 				unlink($data['file']);
 			}

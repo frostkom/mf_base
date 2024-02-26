@@ -800,9 +800,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 
 		if($upload_path != '' && file_exists($upload_path))
 		{
-			do_log(__FUNCTION__.": I am about to remove all files in ".$upload_path, 'notification');
-
-			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files', 'time_limit' => 0));
+			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files_callback', 'time_limit' => 0));
 			get_file_info(array('path' => $upload_path, 'folder_callback' => 'delete_empty_folder_callback'));
 		}
 	}
@@ -1156,16 +1154,22 @@ function time_between_dates($data)
 
 function delete_files($data)
 {
+	delete_files_callback($data);
+}
+
+function delete_files_callback($data)
+{
 	if(!isset($data['time_limit'])){	$data['time_limit'] = (DAY_IN_SECONDS * 2);}
 
 	if(file_exists($data['file']))
 	{
-		$time_now = time();
-		$time_file = filemtime($data['file']);
-
-		if($data['time_limit'] == 0 || ($time_now - $time_file >= $data['time_limit']))
+		if($data['time_limit'] == 0 || (time() - filemtime($data['file']) >= $data['time_limit']))
 		{
-			unlink($data['file']);
+			// Make sure that a file in a /YYYY/MM/ folder is never deleted here
+			if(preg_match("/\/[0-9]{4}\/[0-9]{2}\//") == false)
+			{
+				unlink($data['file']);
+			}
 		}
 	}
 }

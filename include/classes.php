@@ -2,7 +2,8 @@
 
 class mf_base
 {
-	var $meta_prefix = 'mf_base_';
+	var $post_type = 'mf_base';
+	var $meta_prefix;
 	var $chmod_dir = 0755;
 	var $chmod_file = 0644;
 	var $memory_limit_base = 200;
@@ -30,6 +31,8 @@ class mf_base
 
 	function __construct()
 	{
+		$this->meta_prefix = $this->post_type.'_';
+
 		$this->memory_limit = (MB_IN_BYTES * $this->memory_limit_base);
 		$this->upload_max_filesize = (MB_IN_BYTES * $this->upload_max_filesize_base);
 		$this->post_max_size = (MB_IN_BYTES * $this->post_max_size_base);
@@ -698,6 +701,14 @@ class mf_base
 				update_option('option_base_time_limited', $option_base_time_limited, 'no');
 			}
 			############################
+
+			// Delete old uploads
+			#######################
+			list($upload_path, $upload_url) = get_uploads_folder($this->post_type);
+
+			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files_callback', 'time_limit' => WEEK_IN_SECONDS));
+			get_file_info(array('path' => $upload_path, 'folder_callback' => 'delete_empty_folder_callback'));
+			#######################
 		}
 
 		$obj_cron->end();
@@ -4026,10 +4037,6 @@ class mf_export
 				{
 					$error_text = __("There was nothing to export", 'lang_base');
 				}
-
-				/*do_log(__FUNCTION__.": I am about to remove all files in ".$this->upload_path, 'notification');
-
-				get_file_info(array('path' => $this->upload_path, 'callback' => 'delete_files'));*/
 			}
 
 			else

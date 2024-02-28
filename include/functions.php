@@ -1705,7 +1705,8 @@ function get_attachment_to_send($string)
 
 			if($file_url != '')
 			{
-				$file_url = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+				//$file_url = WP_CONTENT_DIR.str_replace(site_url()."/wp-content", "", $file_url);
+				$file_url = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file_url);
 
 				if(file_exists($file_url))
 				{
@@ -2027,7 +2028,7 @@ function remove_protocol($data)
 	if(!isset($data['clean'])){		$data['clean'] = false;}
 	if(!isset($data['trim'])){		$data['trim'] = false;}
 
-	if($data['clean'] == true)
+	/*if($data['clean'] == true)
 	{
 		$data['url'] = str_replace(array("http://", "https://"), "", $data['url']);
 	}
@@ -2035,7 +2036,9 @@ function remove_protocol($data)
 	else
 	{
 		$data['url'] = str_replace(array("http:", "https:"), "", $data['url']);
-	}
+	}*/
+
+	$data['url'] = str_replace(array("http://", "https://"), ($data['clean'] == true ? "" : "//"), $data['url']);
 
 	if($data['trim'] == true)
 	{
@@ -2053,16 +2056,17 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
-	//$version = filemtime(str_replace($site_url, $site_path, $file));
+	if($version != '' && strpos($file, WP_CONTENT_URL))
+	{
+		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
+	}
 
 	$file = remove_protocol(array('url' => $file));
-
-	//do_action('mf_enqueue_style', array('handle' => $handle, 'file' => $file, 'version' => $version));
 
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false, $add2array = true)
+function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false) //, $add2array = true
 {
 	if(!is_array($translation))
 	{
@@ -2070,14 +2074,12 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	//$version = filemtime(str_replace($site_url, $site_path, $file));
+	if($version != '' && strpos($file, WP_CONTENT_URL))
+	{
+		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
+	}
 
 	$file = remove_protocol(array('url' => $file));
-
-	/*if($add2array == true)
-	{
-		do_action('mf_enqueue_script', array('handle' => $handle, 'file' => $file, 'translation' => $translation, 'version' => $version));
-	}*/
 
 	if(count($translation) > 0)
 	{

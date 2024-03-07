@@ -10,8 +10,6 @@ if(!defined('ABSPATH'))
 	require_once($folder."wp-load.php");
 }
 
-//do_action('run_cache', array('suffix' => 'json'));
-
 if(!isset($obj_base))
 {
 	$obj_base = new mf_base();

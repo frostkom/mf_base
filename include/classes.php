@@ -2326,17 +2326,17 @@ class mf_base
 					{
 						case 'apache2handler':
 						case 'litespeed':
-							if($this->memory_limit_current < $this->memory_limit)
+							if($this->memory_limit_current <= $this->memory_limit)
 							{
 								$update_with .= "\r\nphp_value memory_limit ".$this->memory_limit_base."M";
 							}
 
-							if($this->upload_max_filesize_current < $this->upload_max_filesize)
+							if($this->upload_max_filesize_current <= $this->upload_max_filesize)
 							{
 								$update_with .= "\r\nphp_value upload_max_filesize ".$this->upload_max_filesize_base."M";
 							}
 
-							if($this->post_max_size_current < $this->post_max_size)
+							if($this->post_max_size_current <= $this->post_max_size)
 							{
 								$update_with .= "\r\nphp_value post_max_size ".$this->post_max_size_base."M";
 							}

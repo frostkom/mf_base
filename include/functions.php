@@ -4447,26 +4447,34 @@ function get_match($regexp, $in, $all = true)
 #######################
 function get_match_all($regexp, $in, $all = true)
 {
-	preg_match_all($regexp, $in, $out);
-
-	if(count($out) > 0)
+	if($in != null && $in != '')
 	{
-		if($all == true)
-		{
-			return $out[0];
-		}
+		preg_match_all($regexp, $in, $out);
 
-		else
+		if(count($out) > 0)
 		{
-			$count_temp = count($out);
-
-			for($i = 1; $i < $count_temp; $i++)
+			if($all == true)
 			{
-				$out_new[] = $out[$i];
+				return $out[0];
 			}
 
-			return $out_new;
+			else
+			{
+				$count_temp = count($out);
+
+				for($i = 1; $i < $count_temp; $i++)
+				{
+					$out_new[] = $out[$i];
+				}
+
+				return $out_new;
+			}
 		}
+	}
+
+	else
+	{
+		return "";
 	}
 }
 #######################

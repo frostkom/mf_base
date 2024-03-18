@@ -53,9 +53,10 @@
 	{
 		background: #fff;
 		background: rgba(255, 255, 255, .8);
-		margin-top: 0;
 		border: 1px solid #e1e1e1;
+		margin-top: 0;
 		margin-bottom: .5em;
+		overflow: hidden;
 		padding: .7em 1.1em 0 .7em;
 	}
 

@@ -3824,6 +3824,7 @@ class mf_export
 	var $plugin;
 	var $name;
 	var $arr_columns = array();
+	var $order_by;
 	var $do_export;
 	var $type;
 	var $format;

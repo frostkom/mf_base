@@ -31,9 +31,26 @@ function get_placeholder_email()
 	return __("your-name", 'lang_base')."@".$site_url_clean;
 }
 
+function get_time_limit_description($hours_left)
+{
+	if($hours_left == 1)
+	{
+		return "<em>".__("One hour left until it is reset", 'lang_base')."</em>";
+	}
+
+	else
+	{
+		return "<em>".sprintf(__("%d hours left until it is reset", 'lang_base'), $hours_left)."</em>";
+	}
+}
+
 function setting_time_limit($data)
 {
+	if(!isset($data['return'])){		$data['return'] = '';}
 	if(!isset($data['time_limit'])){	$data['time_limit'] = 6;}
+
+	$has_changed = false;
+	$description = "";
 
 	if($data['value'] == 'yes' || is_array($data['value']) && count($data['value']) > 0)
 	{
@@ -45,24 +62,54 @@ function setting_time_limit($data)
 
 			if($hours_left > 0)
 			{
-				if($hours_left == 1)
+				$description = get_time_limit_description($hours_left);
+			}
+
+			else
+			{
+				delete_site_option($data['key']);
+				delete_option($data['key']);
+
+				unset($option_base_time_limited[$data['key']]);
+
+				$has_changed = true;
+
+				if(is_array($data['value']))
 				{
-					return "<em>".__("One hour left until it is reset", 'lang_base')."</em>";
+					$data['value'] = array();
 				}
 
 				else
 				{
-					return "<em>".sprintf(__("%d hours left until it is reset", 'lang_base'), $hours_left)."</em>";
+					$data['value'] = "";
 				}
 			}
 		}
 
 		else
 		{
+			$description = get_time_limit_description($data['time_limit']);
+
 			$option_base_time_limited[$data['key']] = date("Y-m-d H:i:s", strtotime("+".$data['time_limit']." hour"));
 
-			update_option('option_base_time_limited', $option_base_time_limited, 'no');
+			$has_changed = true;
 		}
+	}
+
+	if($has_changed == true)
+	{
+		update_option('option_base_time_limited', $option_base_time_limited, 'no');
+	}
+
+	switch($data['return'])
+	{
+		default:
+			return $description;
+		break;
+
+		case 'array':
+			return array($data['value'], $description);
+		break;
 	}
 }
 

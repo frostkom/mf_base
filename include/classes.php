@@ -608,6 +608,35 @@ class mf_base
 			}
 		}
 	}
+	
+	function reset_time_limited()
+	{
+		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
+
+		do_log(__FUNCTION__." - Init: ".var_export($option_base_time_limited, true));
+
+		$has_changed = false;
+
+		foreach($option_base_time_limited as $key => $value)
+		{
+			do_log(__FUNCTION__." - Check: ".$key.", ".$value." < ".date("Y-m-d H:i:s"));
+
+			if($value < date("Y-m-d H:i:s"))
+			{
+				delete_site_option($key);
+				delete_option($key);
+
+				unset($option_base_time_limited[$key]);
+
+				$has_changed = true;
+			}
+		}
+
+		if($has_changed == true)
+		{
+			update_option('option_base_time_limited', $option_base_time_limited, 'no');
+		}
+	}
 
 	function cron_base()
 	{
@@ -667,40 +696,17 @@ class mf_base
 
 				get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
 
-				update_site_option('option_base_ftp_size', $this->ftp_size);
-				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
+				update_site_option('option_base_ftp_size', $this->ftp_size, 'no');
+				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders, 'no');
 
 				$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
 
-				update_site_option('option_base_db_size', $arr_db_info['db_size']);
-				update_site_option('option_base_large_tables', $arr_db_info['tables']);
+				update_site_option('option_base_db_size', $arr_db_info['db_size'], 'no');
+				update_site_option('option_base_large_tables', $arr_db_info['tables'], 'no');
 			}
 			############################
 
-			// Reset time limited settings
-			############################
-			$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
-
-			$has_changed = false;
-
-			foreach($option_base_time_limited as $key => $value)
-			{
-				if($value < date("Y-m-d H:i:s"))
-				{
-					delete_site_option($key);
-					delete_option($key);
-
-					unset($option_base_time_limited[$key]);
-
-					$has_changed = true;
-				}
-			}
-
-			if($has_changed == true)
-			{
-				update_option('option_base_time_limited', $option_base_time_limited, 'no');
-			}
-			############################
+			$this->reset_time_limited();
 
 			// Delete old uploads
 			#######################
@@ -1593,7 +1599,7 @@ class mf_base
 			settings_save_site_wide($setting_key);
 			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
 
-			$description = setting_time_limit(array('key' => $setting_key, 'value' => $option));
+			list($option, $description) = setting_time_limit(array('key' => $setting_key, 'value' => $option, 'return' => 'array'));
 
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
 

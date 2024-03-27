@@ -613,14 +613,10 @@ class mf_base
 	{
 		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
 
-		do_log(__FUNCTION__." - Init: ".var_export($option_base_time_limited, true));
-
 		$has_changed = false;
 
 		foreach($option_base_time_limited as $key => $value)
 		{
-			do_log(__FUNCTION__." - Check: ".$key.", ".$value." < ".date("Y-m-d H:i:s"));
-
 			if($value < date("Y-m-d H:i:s"))
 			{
 				delete_site_option($key);

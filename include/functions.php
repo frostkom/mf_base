@@ -1003,7 +1003,7 @@ function is_domain_valid($email, $record = 'MX')
 {
 	if(strpos($email, "@") === false)
 	{
-		do_log("Error in is_domain_valid(): ".$email." (".$record.")");
+		do_log(__FUNCTION__." - No domain: ".$email." (".$record.")", 'notification');
 
 		return false;
 	}
@@ -1012,7 +1012,17 @@ function is_domain_valid($email, $record = 'MX')
 	{
 		list($user, $domain) = explode("@", $email);
 
-		return checkdnsrr($domain, $record);
+		if($domain != '')
+		{
+			return checkdnsrr($domain, $record);
+		}
+
+		else
+		{
+			do_log(__FUNCTION__." - Empty domain: ".$email." (".$record.")", 'notification');
+
+			return false;
+		}
 	}
 }
 

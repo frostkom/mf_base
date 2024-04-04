@@ -1,12 +1,14 @@
 @media all
 {
-	.wrap .error, #mf-content .error, .wrap .updated, #mf-content .updated
+	.wrap .error, #mf-content .error, #wpbody-content .update-nag, .wrap div.updated, #mf-content div.updated
 	{
-		border-left-width: 4px;
+		background-color: #fff;
+		border-left-width: .4em;
 		border-left-style: solid;
+		box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
 		color: #444;
-		margin: 5px 15px 2px;
-		padding: 1px 12px;
+		margin: .3em 0 1em;
+		padding: .1em .8em;
 	}
 
 		.wrap .error, #mf-content .error
@@ -16,27 +18,16 @@
 
 		#wpbody-content .update-nag
 		{
-			background-color: #fff;
 			border-color: #ffba00;
-			border-left-width: 4px;
-			border-left-style: solid;
-			color: #444;
-			padding: .5em 1em;
+			margin-bottom: 0;
 		}
 
-		.wrap .updated, #mf-content .updated
+		.wrap div.updated, #mf-content div.updated
 		{
 			border-color: #7ad03a;
 		}
 
-		#mf-content .error, #mf-content .updated
-		{
-			background: #fff;
-			box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
-			margin: .3em 0 1em;
-		}
-
-			#mf-content .error p, #mf-content .updated p
+			#mf-content .error p, #wpbody-content .update-nag p, #mf-content div.updated p
 			{
 				margin: .3em 0;
 				padding: .15em;

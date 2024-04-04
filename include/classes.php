@@ -608,7 +608,7 @@ class mf_base
 			}
 		}
 	}
-	
+
 	function reset_time_limited()
 	{
 		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());

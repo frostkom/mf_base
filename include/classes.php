@@ -1789,7 +1789,7 @@ class mf_base
 				array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
 				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
-				array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
+				//array("Favicon by RealFaviconGenerator", 'favicon-by-realfavicongenerator/favicon-by-realfavicongenerator.php', __("to add all the favicons needed", 'lang_base')),
 				//array("Force Reinstall", 'force-reinstall/force-reinstall.php', __("if you need to install a fresh version of a plugin or theme", 'lang_base')),
 				//array("jQuery Updater", 'jquery-updater/jquery-updater.php', __("to update jQuery to the latest stable version", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),

@@ -490,6 +490,14 @@ class mf_base
 		}
 
 		$this->reschedule_base();
+
+		// Blocks
+		#######################
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", $plugin_version);
+		#######################
 	}
 
 	function cron_schedules($schedules)

@@ -1,0 +1,34 @@
+.wp-block/*.is-selected*/ .wp_mf_block
+{
+	background: #fff8df;
+	border: 0 solid #ffdf7f;
+	border-left-width: .2em;
+	border-right-width: .2em;
+	display: block;
+	overflow: hidden;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+	.wp-block .wp_mf_block:first-child
+	{
+		border-top-width: .2em;
+		border-top-left-radius: .5em;
+		border-top-right-radius: .5em;
+		padding-top: 1em;
+	}
+
+	.wp-block .wp_mf_block:last-child
+	{
+		border-bottom-width: .2em;
+		border-bottom-left-radius: .5em;
+		border-bottom-right-radius: .5em;
+		padding-bottom: 1em;
+	}
+
+		.wp-block .wp_mf_block .components-button
+		{
+			border: .1em solid #ccc;
+			border-radius: .5em;
+			margin-bottom: .5em;
+		}

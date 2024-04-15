@@ -404,7 +404,7 @@ function get_pages_from_shortcode($shortcode)
 
 	$arr_ids = array();
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".addslashes($shortcode)."%")); //post_type != 'revision' AND
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".addslashes($shortcode)."%"));
 
 	foreach($result as $r)
 	{
@@ -2540,72 +2540,6 @@ function get_post_types_for_select($data = array())
 		$arr_data['is_search()'] = __("Search", 'lang_base');
 		//$arr_data['is_single()'] = "Single";
 		//$arr_data['is_sticky()'] = "Sticky";
-	}
-
-	return $arr_data;
-}
-
-function get_posts_for_select($data)
-{
-	global $wpdb, $obj_base;
-
-	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
-	if(!isset($data['optgroup'])){			$data['optgroup'] = true;}
-
-	if(!isset($data['post_type'])){			$data['post_type'] = "";}
-	if(!isset($data['post_status'])){		$data['post_status'] = "publish";}
-	if(!isset($data['post_parent'])){		$data['post_parent'] = "";}
-	if(!isset($data['order'])){				$data['order'] = "menu_order ASC";}
-
-	$query_where = "";
-
-	if($data['post_type'] != '')
-	{
-		$query_where .= " AND post_type = '".esc_sql($data['post_type'])."'";
-	}
-
-	else
-	{
-		$arr_include = get_post_types(array('public' => true, 'exclude_from_search' => false), 'names');
-
-		if(count($arr_include) > 0)
-		{
-			$query_where .= " AND post_type IN('".implode("','", $arr_include)."')";
-		}
-	}
-
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type, post_title FROM ".$wpdb->posts." WHERE post_status = %s AND post_parent = '%d'".$query_where." ORDER BY post_type ASC, ".esc_sql($data['order']), $data['post_status'], $data['post_parent']));
-
-	$post_type_temp = $data['post_type'];
-	$opt_start_open = false;
-
-	$arr_data = array();
-
-	if($data['add_choose_here'] == true)
-	{
-		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
-	}
-
-	foreach($result as $r)
-	{
-		$post_id = $r->ID;
-		$post_type = $r->post_type;
-		$post_title = $r->post_title;
-
-		if($post_type != $post_type_temp)
-		{
-			if($data['optgroup'] == true && $opt_start_open == true)
-			{
-				$arr_data['opt_end_'.$post_type] = "";
-			}
-
-			$arr_data['opt_start_'.$post_type] = "-- ".$post_type." --";
-			$opt_start_open = true;
-
-			$post_type_temp = $post_type;
-		}
-
-		$arr_data[$post_id] = $post_title;
 	}
 
 	return $arr_data;

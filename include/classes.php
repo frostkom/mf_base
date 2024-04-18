@@ -1498,7 +1498,7 @@ class mf_base
 
 					echo "<p>
 						<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "
-						.__("My IP", 'lang_base').": ".$current_visitor_ip
+						.__("My IP", 'lang_base').": ".$current_visitor_ip." (UID: ".get_current_user_id().")"
 					."</p>
 				</div>
 			</div>";

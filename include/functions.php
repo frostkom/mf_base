@@ -1859,19 +1859,6 @@ function get_install_link_tags($require_url, $required_name)
 	return array("<a href='".$require_url."'>", "</a>");
 }
 
-function mf_trigger_error($message, $errno)
-{
-	if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
-	{
-		echo $message;
-	}
-
-	else
-	{
-		trigger_error($message, $errno);
-	}
-}
-
 function require_plugin($required_path, $required_name, $require_url = "")
 {
 	global $obj_base;
@@ -1880,7 +1867,17 @@ function require_plugin($required_path, $required_name, $require_url = "")
 	{
 		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
 
-		mf_trigger_error(sprintf(__("You need to install the plugin %s first", 'lang_base'), $a_start.$required_name.$a_end), E_USER_ERROR);
+		$message = sprintf(__("You need to install the plugin %s first", 'lang_base'), $a_start.$required_name.$a_end);
+
+		if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
+		{
+			echo $message;
+		}
+
+		else
+		{
+			trigger_error($message, E_USER_ERROR);
+		}
 	}
 }
 

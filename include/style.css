@@ -227,6 +227,17 @@
 			width: 100%;
 		}
 
+			.mf_form .mf_form_field.green
+			{
+				border-color: #76e476;
+				position: relative;
+			}
+
+			.mf_form .mf_form_field.red
+			{
+				border-color: #e47676;
+			}
+
 			.mf_form div.input, .mf_form p.input
 			{
 				border-radius: .4em;
@@ -312,6 +323,12 @@
 		{
 			margin: -.3em 0 .6em;
 		}
+
+			.mf_form .form_textfield > i
+			{
+				position: absolute;
+				margin: .7em -1.3em;
+			}
 
 			.mf_form .description .fa
 			{

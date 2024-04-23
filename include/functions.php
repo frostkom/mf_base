@@ -2190,8 +2190,11 @@ function get_all_roles($data = array())
 	{
 		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php"))
 		{
-			$obj_users = new mf_users();
-			$obj_users->hide_roles();
+			if(class_exists('mf_users'))
+			{
+				$obj_users = new mf_users();
+				$obj_users->hide_roles();
+			}
 		}
 
 		$roles = $wp_roles->get_names();
@@ -3647,14 +3650,14 @@ function show_textarea($data)
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'"
 				.$data['xtra'];
 
-				if($data['required'])
+				if($data['required'] == true)
 				{
-					$data['xtra'] .= " required";
+					$out .= " required";
 				}
 
 				if($data['placeholder'] != '')
 				{
-					$data['xtra'] .= " placeholder='".$data['placeholder']."&hellip;'";
+					$out .= " placeholder='".$data['placeholder']."&hellip;'";
 				}
 
 				if($data['field_class'] != '')

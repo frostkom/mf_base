@@ -3806,6 +3806,11 @@ function show_select($data)
 
 	if(!isset($data['multiple'])){		$data['multiple'] = $obj_base->is_multiple();}
 
+	if($data['multiple'] == true)
+	{
+		$data['allow_hidden_field'] = false;
+	}
+
 	$out = "";
 
 	$count_temp = count($obj_base->data['data']);
@@ -3821,7 +3826,7 @@ function show_select($data)
 			$container_class .= " form_select_multiple";
 		}
 
-		if($count_temp == 1 && $data['allow_hidden_field']) // && $obj_base->data['required'] && $obj_base->data['text'] != ''
+		if($count_temp == 1 && $data['allow_hidden_field'])
 		{
 			$out = $obj_base->get_hidden_field();
 		}

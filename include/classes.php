@@ -1792,8 +1792,8 @@ class mf_base
 		{
 			$arr_recommendations = array(
 				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
-				array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
-				array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
+				//array("Classic Editor", 'classic-editor/classic-editor.php', __("to force WP to revert to the classic editor instead of Gutenberg", 'lang_base')),
+				//array("Classic Widgets", 'classic-widgets/classic-widgets.php', __("to force WP to revert to the classic widget view", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
@@ -1806,7 +1806,7 @@ class mf_base
 				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
 				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
 				//array("WP Menu Icons", 'wp-menu-icons.php/wp-menu-icons.php.php', __("to add icons to menus", 'lang_base')),
-				array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
+				//array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
 				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
 			);
 

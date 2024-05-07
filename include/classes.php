@@ -917,6 +917,7 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
+			$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
 			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
@@ -1707,6 +1708,15 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
 
+		function setting_base_enable_wp_api_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option($setting_key, 'no');
+
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+		}
+
 		function get_automatic_updates_for_select()
 		{
 			return array(
@@ -1861,6 +1871,12 @@ class mf_base
 				'global' => false,
 				'icon' => "fas fa-copy",
 				'name' => __("Common", 'lang_base')." - ".__("Template Site", 'lang_base'),
+			),
+			'setting_base_enable_wp_api' => array(
+				'type' => 'bool',
+				'global' => true,
+				'icon' => "fas fa-network-wired",
+				'name' => __("Common", 'lang_base')." - ".__("Enable XML-RPC", 'lang_base'),
 			),
 		);
 
@@ -2276,6 +2292,27 @@ class mf_base
 							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
 							."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n";
 						break;
+					}
+
+					if((!is_multisite() || is_main_site()) && get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes')
+					{
+						switch($this->get_server_type())
+						{
+							default:
+							case 'apache':
+								$update_with .= "<IfModule mod_rewrite.c>\r\n"
+								."	RewriteEngine On\r\n"
+								."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
+								."	RewriteRule .* /404/ [L,NC]\r\n"
+								."</IfModule>";
+							break;
+
+							case 'nginx':
+								$update_with .= "location /xmlrpc.php {\r\n"
+								."	deny all;\r\n"
+								."}";
+							break;
+						}
 					}
 
 					$update_with .= "\r\n"

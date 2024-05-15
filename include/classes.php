@@ -2255,13 +2255,14 @@ class mf_base
 					."Header set X-Content-Type-Options nosniff\r\n"
 					."Header set X-Powered-By \"Me\"\r\n";
 
-					if($all_is_https)
+					// If something in the code requests an internal http this will ruin the site by not loading the content
+					/*if($all_is_https)
 					{
 						$update_with .= "\r\n"
 						."<IfModule mod_headers.c>\r\n"
 						."	Header always set Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload' env=HTTPS\r\n"
 						."</IfModule>\r\n";
-					}
+					}*/
 
 					$update_with .= "\r\n"
 					."<IfModule mod_rewrite.c>\r\n"

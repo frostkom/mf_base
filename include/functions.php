@@ -2115,8 +2115,6 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
 	}
 
-	$file = remove_protocol(array('url' => $file));
-
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
@@ -2132,8 +2130,6 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 	{
 		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
 	}
-
-	$file = remove_protocol(array('url' => $file));
 
 	if(count($translation) > 0)
 	{

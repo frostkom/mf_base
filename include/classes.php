@@ -3403,9 +3403,16 @@ class mf_list_table extends WP_List_Table
 
 		if($data['order_by'] != '')
 		{
-			if(is_array($data['order_by']) || is_array($data['order']))
+			if(is_array($data['order']))
 			{
-				do_log("select_data() - Error: ".var_export($_SERVER, true)." || ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true));
+				do_log(__FUNCTION__." - Error in 'order': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)); //var_export($_SERVER, true)." || ".
+
+				$data['order'] = "ASC";
+			}
+
+			if(is_array($data['order_by']))
+			{
+				do_log(__FUNCTION__." - Error in 'order_by': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)); //var_export($_SERVER, true)." || ".
 			}
 
 			else

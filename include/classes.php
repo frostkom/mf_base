@@ -4120,6 +4120,45 @@ class mf_export
 
 class mf_import
 {
+	var $prefix;
+	var $table = '';
+	var $post_type = '';
+	var $actions = array();
+	var $columns = array();
+	var $unique_columns = array();
+	var $validate_columns = array();
+	var $row_separator = "
+";
+	var $is_run = false;
+	var $unique_check = "OR";
+	var $has_excel_support;
+	var $save_result;
+	var $result = array();
+	var $rows_updated = 0;
+	var $rows_up_to_date = 0;
+	var $rows_inserted = 0;
+	var $rows_not_inserted = 0;
+	var $rows_deleted = 0;
+	var $rows_not_deleted = 0;
+	var $rows_exists = 0;
+	var $rows_not_exists = 0;
+	var $has_unchanged_data;
+	var $query_base_where;
+	var $table_id;
+	var $query_set;
+	var $query_where_first;
+	var $query_where;
+	var $query_option;
+	var $current_column;
+	var $columns_for_select;
+	var $data;
+	var $file_location;
+	var $action;
+	var $skip_header;
+	var $text;
+	var $text_filtered;
+	var $value_separator;
+
 	function __construct()
 	{
 		global $wpdb;
@@ -4133,28 +4172,11 @@ class mf_import
 		), $plugin_version);
 
 		$this->prefix = $wpdb->prefix;
-		$this->table = $this->post_type = '';
-		$this->actions = $this->columns = $this->unique_columns = $this->validate_columns = array();
-
-		$this->row_separator = "
-";
-		$this->is_run = false;
-		$this->unique_check = "OR";
 
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 
 		$this->get_defaults();
 		$this->fetch_request();
-
-		if($this->save_result)
-		{
-			$this->result = array();
-		}
-
-		else
-		{
-			$this->rows_updated = $this->rows_up_to_date = $this->rows_inserted = $this->rows_not_inserted = $this->rows_deleted = $this->rows_not_deleted = $this->rows_exists = $this->rows_not_exists = 0;
-		}
 	}
 
 	function get_defaults(){}
@@ -4386,7 +4408,7 @@ class mf_import
 
 				for($i = $i_start; $i < $count_temp_rows; $i++)
 				{
-					$this->query_where = $this->query_where_first = $this->query_set = "";
+					$this->query_where = $query_where_fallback = $this->query_where_first = $this->query_set = "";
 					$this->query_option = array();
 
 					$arr_values = $this->data[$i];
@@ -4426,8 +4448,14 @@ class mf_import
 								}
 
 								$this->query_set .= ($this->query_set != '' ? ", " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
+								$query_where_fallback .= ($query_where_fallback != '' ? " AND " : "").esc_sql($strRowField)." = '".esc_sql($value)."'";
 							}
 						}
+					}
+
+					if($this->query_where == '')
+					{
+						$this->query_where = $query_where_fallback;
 					}
 
 					if($this->query_set != '' && $this->query_where != '')
@@ -4500,10 +4528,7 @@ class mf_import
 													);
 												}
 
-												else
-												{
-													$this->rows_updated++;
-												}
+												$this->rows_updated++;
 											}
 
 											else
@@ -4519,10 +4544,7 @@ class mf_import
 													);
 												}
 
-												else
-												{
-													$this->rows_up_to_date++;
-												}
+												$this->rows_up_to_date++;
 											}
 										}
 
@@ -4575,10 +4597,7 @@ class mf_import
 											);
 										}
 
-										else
-										{
-											$this->rows_inserted++;
-										}
+										$this->rows_inserted++;
 									}
 
 									else
@@ -4594,10 +4613,7 @@ class mf_import
 											);
 										}
 
-										else
-										{
-											$this->rows_not_inserted++;
-										}
+										$this->rows_not_inserted++;
 									}
 								}
 							break;
@@ -4750,6 +4766,11 @@ class mf_import
 						);
 					}
 
+					else if(IS_SUPER_ADMIN)
+					{
+						$error_text = __("Set and Where were not set")." (".$this->query_set." && ".$this->query_where.")";
+					}
+
 					if($i % 100 == 0)
 					{
 						sleep(1);
@@ -4843,6 +4864,11 @@ class mf_import
 					if($this->rows_not_inserted > 0)
 					{
 						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d not inserted", 'lang_base'), $this->rows_not_inserted);
+
+						if(IS_SUPER_ADMIN)
+						{
+							$done_text .= " (Ex. ".$table_field_prefix." -> ".$table_created." -> ".$query_insert.")";
+						}
 					}
 
 					if($this->rows_deleted > 0)
@@ -4864,6 +4890,12 @@ class mf_import
 					{
 						$done_text .= ($done_text != '' ? ", " : "").sprintf(__("%d do not exist", 'lang_base'), $this->rows_not_exists);
 					}
+
+					/*if($done_text == "")
+					{
+						$done_text .= ($done_text != '' ? ", " : "").__("Nothing was imported", 'lang_base');
+						$done_text .= " (".$query_select.")";
+					}*/
 
 					$out .= get_notification();
 				}
@@ -4970,6 +5002,11 @@ class mf_import
 
 		$count_temp_rows = count($this->data);
 
+		/*if($this->skip_header)
+		{
+			$count_temp_rows--;
+		}*/
+
 		if($this->action != '' && $count_temp_rows > 0)
 		{
 			$this->get_columns_for_select();
@@ -4977,7 +5014,7 @@ class mf_import
 			$out .= "<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Run", 'lang_base')."</h3>
 				<div class='inside'>"
-					."<p>".__("Rows", 'lang_base').": ".$count_temp_rows."</p>";
+					."<p>".__("Rows", 'lang_base').": ".($count_temp_rows + ($this->skip_header ? -1 : 0))."</p>";
 
 					$arr_values = $this->data[0];
 					$count_temp_values = count($arr_values);
@@ -5031,7 +5068,7 @@ class mf_import
 						{
 							$out .= "<tr>";
 
-								$cell_tag = $i == 0 && $this->skip_header ? "th" : "td";
+								$cell_tag = ($i == 0 && $this->skip_header ? "th" : "td");
 
 								$arr_values = $this->data[$i];
 								$count_temp_values = count($arr_values);

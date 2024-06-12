@@ -2094,6 +2094,38 @@ class mf_base
 		return $out;
 	}
 
+	function filter_site_name($value)
+	{
+		$http_host = $_SERVER['HTTP_HOST'];
+
+		if(!preg_match("/\[/", $value))
+		{
+			$value = trim(str_replace(array("[STAGING]", "[DEV]"), "", $value));
+
+			if(preg_match("/staging/", $http_host))
+			{
+				$value = "[STAGING] ".$value;
+			}
+
+			if(preg_match("/development|dev\./", $http_host))
+			{
+				$value = "[DEV] ".$value;
+			}
+		}
+
+		return $value;
+	}
+
+	function wp_title($title, $sep)
+	{
+		return $this->filter_site_name($title);
+	}
+
+	function option_blogname($value, $option)
+	{
+		return $this->filter_site_name($value);
+	}
+
 	function theme_page_templates($posts_templates)
 	{
 		if(count($this->templates) == 0)

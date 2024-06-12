@@ -1989,11 +1989,11 @@ function get_next_cron($data = array())
 
 			if($option_cron_ended < date("Y-m-d H:i:s", strtotime("-1 minute")) && $option_cron_ended >= $option_cron_started)
 			{
-				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
+				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=".BASE_OPTIONS_PAGE."&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
 
 					if($mins < -1)
 					{
-						$out .= ", <a href='".admin_url("options-general.php?page=settings_mf_base&action=run_cron_now_v2#settings_base")."'>v2</a>";
+						$out .= ", <a href='".admin_url("options-general.php?page=".BASE_OPTIONS_PAGE."&action=run_cron_now_v2#settings_base")."'>v2</a>";
 					}
 
 				$out .= ")";

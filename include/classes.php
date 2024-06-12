@@ -31,6 +31,11 @@ class mf_base
 
 	function __construct()
 	{
+		if(!defined('BASE_OPTIONS_PAGE'))
+		{
+			define('BASE_OPTIONS_PAGE', "settings_mf_base");
+		}
+
 		$this->meta_prefix = $this->post_type.'_';
 
 		$this->memory_limit = (MB_IN_BYTES * $this->memory_limit_base);
@@ -878,8 +883,6 @@ class mf_base
 
 	function settings_base()
 	{
-		define('BASE_OPTIONS_PAGE', "settings_mf_base");
-
 		$options_area_orig = $options_area = __FUNCTION__;
 
 		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
@@ -1668,7 +1671,7 @@ class mf_base
 
 					else
 					{
-						echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=settings_mf_base")."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
+						echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=".BASE_OPTIONS_PAGE)."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
 					}
 
 					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => '')); //get_home_path()
@@ -1843,7 +1846,7 @@ class mf_base
 		wp_enqueue_script('jquery-ui-autocomplete');
 		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", 'lang_base')), $plugin_version);
 
-		if($pagenow == 'options-general.php' && check_var('page') == 'settings_mf_base')
+		if($pagenow == 'options-general.php' && check_var('page') == BASE_OPTIONS_PAGE)
 		{
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url), $plugin_version);
@@ -3578,8 +3581,6 @@ if(class_exists('RWMB_Field'))
 
 class settings_page
 {
-	var $options_page = "settings_mf_base";
-
 	public function __construct()
 	{
 		add_action('admin_menu', array($this, 'add_plugin_page'));
@@ -3591,7 +3592,7 @@ class settings_page
 			__("My Settings", 'lang_base'),
 			__("My Settings", 'lang_base'),
 			'manage_options',
-			$this->options_page,
+			BASE_OPTIONS_PAGE,
 			array($this, 'create_admin_page')
 		);
 	}
@@ -3640,8 +3641,8 @@ class settings_page
 				</div>
 				<form method='post' action='options.php' class='settings-tabs mf_form'>";
 
-					settings_fields($this->options_page);
-					$this->do_settings_sections($this->options_page);
+					settings_fields(BASE_OPTIONS_PAGE);
+					$this->do_settings_sections(BASE_OPTIONS_PAGE);
 					submit_button();
 
 				echo "</div>

@@ -2096,20 +2096,23 @@ class mf_base
 
 	function filter_site_name($value)
 	{
-		$http_host = $_SERVER['HTTP_HOST'];
-
 		if(!preg_match("/\[/", $value))
 		{
-			$value = trim(str_replace(array("[STAGING]", "[DEV]"), "", $value));
+			$http_host = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : get_site_url());
 
-			if(preg_match("/staging/", $http_host))
+			if($http_host != '')
 			{
-				$value = "[STAGING] ".$value;
-			}
+				$value = trim(str_replace(array("[STAGING]", "[DEV]"), "", $value));
 
-			if(preg_match("/development|dev\./", $http_host))
-			{
-				$value = "[DEV] ".$value;
+				if(preg_match("/staging/", $http_host))
+				{
+					$value = "[STAGING] ".$value;
+				}
+
+				if(preg_match("/development|dev\./", $http_host))
+				{
+					$value = "[DEV] ".$value;
+				}
 			}
 		}
 

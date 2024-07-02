@@ -1918,6 +1918,20 @@ class mf_base
 		return $button.$out;
 	}
 
+	function get_page_from_block_code($arr_ids, $block_code)
+	{
+		global $wpdb;
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
+
+		foreach($result as $r)
+		{
+			$arr_ids[] = $r->ID;
+		}
+
+		return $arr_ids;
+	}
+
 	function admin_footer()
 	{
 		global $pagenow;

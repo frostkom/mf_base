@@ -960,13 +960,14 @@ class mf_base
 
 			$arr_plugins = array(
 				array('type' => 'php',			'plugin' => "all-in-one-wp-migration/all-in-one-wp-migration.php",		'folder' => 'wpallimport'),
-				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'plugins/backwpup'),
+				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'plugins\/backwpup'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
+				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup'),
 				//array('type' => 'htaccess',	'plugin' => "facebook-for-woocommerce/facebook-for-woocommerce.php",	'folder' => 'facebook_for_woocommerce'),
 				//array('type' => 'htaccess',	'plugin' => "mf_backup/index.php",										'folder' => 'mf_backup'),
 				array('type' => 'php',			'plugin' => "sucuri-scanner/sucuri.php",								'folder' => 'sucuri'),
@@ -1427,6 +1428,12 @@ class mf_base
 							echo "</ul>";
 						}
 					}
+
+					echo "<p>
+						<i class='fa ".(EMPTY_TRASH_DAYS <= 30 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("Trash", 'lang_base').": "
+						."<span>".sprintf(__("%d days", 'lang_base'), EMPTY_TRASH_DAYS)."</span>"
+					."</p>";
 
 				echo "</div>
 				<div>
@@ -2933,7 +2940,7 @@ class mf_list_table extends WP_List_Table
 
 		if(substr($db_field, -7) == "Deleted")
 		{
-			$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30) * 2;
+			$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30);
 
 			$wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY) LIMIT 0, 1");
 

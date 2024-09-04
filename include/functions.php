@@ -1462,7 +1462,7 @@ function delete_base($data)
 	if(!isset($data['table_prefix'])){	$data['table_prefix'] = $wpdb->prefix;}
 	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
 
-	$empty_trash_days = defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30;
+	$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30);
 
 	$data['field_prefix'] = esc_sql($data['field_prefix']);
 	$data['table'] = esc_sql($data['table']);

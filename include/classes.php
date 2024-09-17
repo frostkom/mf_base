@@ -2115,7 +2115,7 @@ class mf_base
 		return $out;
 	}
 
-	function filter_site_name($value)
+	function option_blogname($value, $option)
 	{
 		if(!preg_match("/\[/", $value))
 		{
@@ -2140,14 +2140,38 @@ class mf_base
 		return $value;
 	}
 
-	function wp_title($title, $sep)
+	function get_site_icon_url($url, $size, $blog_id)
 	{
-		return $this->filter_site_name($title);
-	}
+		//do_log(__FUNCTION__." - ".__LINE__);
 
-	function option_blogname($value, $option)
-	{
-		return $this->filter_site_name($value);
+		$http_host = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : get_site_url());
+
+		if($http_host != '')
+		{
+			//do_log(__FUNCTION__." - ".__LINE__.": ".$http_host);
+
+			if(preg_match("/staging|development|dev\./", $http_host))
+			{
+				$plugin_images_url = str_replace("/include/", "/images/", plugin_dir_url(__FILE__));
+
+				//do_log(__FUNCTION__." - ".__LINE__.": ".$plugin_include_url."/images/staging-favicon.png");
+
+				switch($size)
+				{
+					case 32:
+						return $plugin_images_url."staging-favicon-150x150.png";
+					break;
+
+					default:
+						return $plugin_images_url."staging-favicon-300x300.png";
+					break;
+				}
+
+				
+			}
+		}
+
+		return $url;
 	}
 
 	function theme_page_templates($posts_templates)

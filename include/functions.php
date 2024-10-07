@@ -1415,7 +1415,7 @@ function insert_attachment($data)
 	return $intFileID;
 }
 
-function do_log($data, $action = 'publish')
+function do_log($data, $action = 'publish', $increment = true)
 {
 	global $obj_log;
 
@@ -1431,7 +1431,7 @@ function do_log($data, $action = 'publish')
 			$obj_log = new mf_log();
 		}
 
-		$obj_log->create($data, $action);
+		$obj_log->create($data, $action, $increment);
 	}
 
 	else if($action == 'publish')
@@ -1921,6 +1921,11 @@ function point2int($in)
 
 	if($in != '')
 	{
+		if(strpos($in, "-"))
+		{
+			list($in, $rest) = explode("-", $in);
+		}
+
 		$arr_version = explode(".", $in);
 
 		$count_temp = count($arr_version);

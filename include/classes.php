@@ -965,6 +965,7 @@ class mf_base
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-backups'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-logs'),
+				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-restore'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
 				//array('type' => 'htaccess',	'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup-(.*)-temp'),
 				array('type' => 'php',			'plugin' => "backwpup/backwpup.php",									'folder' => 'backwpup'),
@@ -2142,19 +2143,13 @@ class mf_base
 
 	function get_site_icon_url($url, $size, $blog_id)
 	{
-		//do_log(__FUNCTION__." - ".__LINE__);
-
 		$http_host = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : get_site_url());
 
 		if($http_host != '')
 		{
-			//do_log(__FUNCTION__." - ".__LINE__.": ".$http_host);
-
 			if(preg_match("/staging|development|dev\./", $http_host))
 			{
 				$plugin_images_url = str_replace("/include/", "/images/", plugin_dir_url(__FILE__));
-
-				//do_log(__FUNCTION__." - ".__LINE__.": ".$plugin_include_url."/images/staging-favicon.png");
 
 				switch($size)
 				{
@@ -2166,8 +2161,6 @@ class mf_base
 						return $plugin_images_url."staging-favicon-300x300.png";
 					break;
 				}
-
-				
 			}
 		}
 

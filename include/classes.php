@@ -2963,9 +2963,7 @@ class mf_list_table extends WP_List_Table
 
 			if($wpdb->num_rows > 0)
 			{
-				$error_text = sprintf(__("Use %s on %s"), "delete_base()", $db_field);
-
-				do_log($error_text);
+				do_log(__FUNCTION__.": ".$wpdb->last_query);
 			}
 		}
 	}

@@ -2781,7 +2781,7 @@ class mf_cron
 
 		if(file_exists($this->file))
 		{
-			unlink($this->file);
+			@unlink($this->file);
 		}
 	}
 }

@@ -79,7 +79,7 @@ class mf_base
 
 	function is_gutenberg_active()
 	{
-		// Gutenberg plugin is installed and activated.
+		/*// Gutenberg plugin is installed and activated.
 		$gutenberg = !(false === has_filter('replace_editor', 'gutenberg_init'));
 
 		// Block editor since 5.0.
@@ -98,7 +98,8 @@ class mf_base
 			return in_array($editor_option, $block_editor_active, true);
 		}
 
-		return true;
+		return true;*/
+		return wp_is_block_theme();
 	}
 
 	function get_icons_for_select()

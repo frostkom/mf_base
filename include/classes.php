@@ -973,6 +973,7 @@ class mf_base
 				//array('type' => 'htaccess',	'plugin' => "facebook-for-woocommerce/facebook-for-woocommerce.php",	'folder' => 'facebook_for_woocommerce'),
 				//array('type' => 'htaccess',	'plugin' => "mf_backup/index.php",										'folder' => 'mf_backup'),
 				array('type' => 'php',			'plugin' => "sucuri-scanner/sucuri.php",								'folder' => 'sucuri'),
+				array('type' => 'php',			'plugin' => "wp-smushit/wp-smush.php",									'folder' => 'smush'),
 				//array('type' => 'htaccess',	'plugin' => "woocommerce/woocommerce.php",								'folder' => 'wc-logs'),
 				//array('type' => 'htaccess',	'plugin' => "woocommerce/woocommerce.php",								'folder' => 'woocommerce_uploads'),
 			);
@@ -1826,7 +1827,7 @@ class mf_base
 				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
 				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
 				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-				array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
+				//array("Widget CSS Classes", 'widget-css-classes/widget-css-classes.php', __("to add custom classes to widgets", 'lang_base')),
 				//array("WP Menu Icons", 'wp-menu-icons.php/wp-menu-icons.php.php', __("to add icons to menus", 'lang_base')),
 				//array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
 				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),

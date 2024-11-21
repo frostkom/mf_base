@@ -1387,13 +1387,13 @@ class mf_base
 
 						get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
 
-						echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
-							<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
-						."</p>";
-
 						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
 						{
+							echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
+								<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+								.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
+							."</p>";
+
 							echo "<ul>";
 
 								foreach($this->file_warning as $file_path)

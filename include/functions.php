@@ -427,6 +427,13 @@ function get_url_part($data)
 	switch($data['type'])
 	{
 		case 'domain':
+			$arr_host = explode(".", $host);
+			$arr_host_length = count($arr_host);
+
+			return $scheme.$arr_host[$arr_host_length - 2].".".$arr_host[$arr_host_length - 1];
+		break;
+
+		case 'subdomain':
 			return $scheme.$host;
 		break;
 

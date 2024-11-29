@@ -17,7 +17,6 @@ class mf_base
 	var $upload_max_filesize_current = "";
 	var $data = array();
 	var $templates = array();
-	var $is_gutenberg_active = "";
 	var $ftp_size = 0;
 	var $ftp_size_folders = array();
 	var $template_lost_connection = false;
@@ -75,31 +74,6 @@ class mf_base
 		}
 
 		return false;
-	}
-
-	function is_gutenberg_active()
-	{
-		/*// Gutenberg plugin is installed and activated.
-		$gutenberg = !(false === has_filter('replace_editor', 'gutenberg_init'));
-
-		// Block editor since 5.0.
-		$block_editor = version_compare($GLOBALS['wp_version'], '5.0-beta', '>');
-
-		if(!$gutenberg && !$block_editor)
-		{
-			return false;
-		}
-
-		if($this->is_classic_editor_plugin_active())
-		{
-			$editor_option = get_option('classic-editor-replace');
-			$block_editor_active = array('no-replace', 'block');
-
-			return in_array($editor_option, $block_editor_active, true);
-		}
-
-		return true;*/
-		return wp_is_block_theme();
 	}
 
 	function get_icons_for_select()
@@ -1862,9 +1836,7 @@ class mf_base
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url), $plugin_version);
 		}
 
-		$this->is_gutenberg_active = $this->is_gutenberg_active();
-
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
 			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js", $plugin_version);
 		}
@@ -1912,7 +1884,7 @@ class mf_base
 
 		$out = "";
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
 			$count_shortcode_button = apply_filters('count_shortcode_button', 0);
 
@@ -1946,7 +1918,7 @@ class mf_base
 	{
 		global $pagenow;
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && $this->is_gutenberg_active == false)
+		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
 			echo "<div id='mf_shortcode_container' class='hide'>
 				<div class='mf_form mf_shortcode_wrapper'>"
@@ -3339,7 +3311,7 @@ class mf_list_table extends WP_List_Table
 		{
 			$input_id = esc_attr($input_id."-search-input");
 
-			echo "<div class='search-box alignright flex_flow tight".(is_admin() ? "" : " form_button")."'>"
+			echo "<div".get_form_button_classes("search-box alignright flex_flow tight").">"
 				.show_textfield(array('type' => 'search', 'name' => $this->search_key, 'id' => $input_id, 'value' => $this->search))
 				.show_button(array('text' => $text, 'class' => "button", 'xtra' => " id='search-submit'"));
 
@@ -3574,7 +3546,7 @@ class mf_list_table extends WP_List_Table
 
 	function show_before_display()
 	{
-		echo "<form method='get'".(is_admin() ? "" : " class='form_button'").">
+		echo "<form method='get'".get_form_button_classes().">
 			<input type='hidden' name='page' value='".check_var('page')."'>";
 	}
 

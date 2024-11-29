@@ -10,20 +10,20 @@
 		display: inline !important;
 	}
 
-	.display_inline_block
+	/*.display_inline_block
 	{
 		display: inline-block;
-	}
+	}*/
 
 	.nowrap
 	{
 		white-space: nowrap;
 	}
 
-	.allow_wrap
+	/*.allow_wrap
 	{
 		white-space: normal !important;
-	}
+	}*/
 
 	.row-actions
 	{
@@ -372,6 +372,11 @@
 				{
 					margin-left: -43px;
 				}
+
+		.mf_form .wp-block-button .wp-block-button__link
+		{
+			width: auto;
+		}
 
 		.form_button button, .form_button .button
 		{

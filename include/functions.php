@@ -1577,6 +1577,34 @@ function get_file_suffix($file, $force_last = false)
 	return $suffix;
 }
 
+function get_form_button_classes($out = "")
+{
+	if(is_admin())
+	{
+		// Do nothing
+	}
+
+	else if(wp_is_block_theme())
+	{
+		$out .= ($out != '' ? " " : "")."wp-block-button";
+	}
+
+	else
+	{
+		$out .= ($out != '' ? " " : "")."form_button";
+	}
+
+	if($out != '')
+	{
+		return " class='".$out."'";
+	}
+
+	else
+	{
+		return "";
+	}
+}
+
 function get_media_library($data)
 {
 	global $obj_base, $is_media_library_init;
@@ -1630,7 +1658,7 @@ function get_media_library($data)
 				.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true));
 			}
 
-			$out .= "<div class='form_button'>"
+			$out .= "<div".get_form_button_classes().">"
 				.show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))
 			."</div>"
 		."</div>";
@@ -1694,7 +1722,7 @@ function get_media_button($data = array())
 
 			if(IS_AUTHOR && $data['show_add_button'] == true)
 			{
-				$out .= "<div class='wp-media-buttons form_button'>
+				$out .= "<div".get_form_button_classes("wp-media-buttons").">
 					<div class='button insert-media'>
 						<span>".$data['text']."</span>"
 					."</div>
@@ -3398,7 +3426,7 @@ function show_textfield($data)
 
 			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js", $plugin_version);
 
-			$data['suffix'] .= " <div class='form_button display_inline'><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
+			$data['suffix'] .= " <div".get_form_button_classes("display_inline")."><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
 		break;
 
 		case 'date':
@@ -4337,11 +4365,6 @@ function show_file_field($data)
 ######################
 
 #################
-function show_submit($data)
-{
-	return show_button($data);
-}
-
 function show_button($data)
 {
 	if(!isset($data['type'])){	$data['type'] = "submit";}
@@ -4351,7 +4374,7 @@ function show_button($data)
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")
-		." class='".($data['class'] != '' ? $data['class'] : "button-primary").(" wp-block-button__link")."'"
+		." class='".($data['class'] != '' ? $data['class'] : "button-primary")." wp-block-button__link'"
 		.($data['xtra'] != '' ? " ".$data['xtra'] : "")
 	.">"
 		.$data['text']

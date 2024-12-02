@@ -378,7 +378,7 @@
 			width: auto;
 		}
 
-		.form_button button, .form_button .button
+		.form_button button, .form_button .button, .wp-block-button button, .wp-block-button .button
 		{
 			border: 0;
 			cursor: pointer;
@@ -389,13 +389,13 @@
 			white-space: nowrap;
 		}
 
-			.form_button button.is_disabled, .form_button .button.is_disabled
+			.form_button button.is_disabled, .form_button .button.is_disabled, .wp-block-button button.is_disabled, .wp-block-button .button.is_disabled
 			{
 				cursor: no-drop;
 				opacity: .5;
 			}
 
-			.form_button button.loading, .form_button .button.loading
+			.form_button button.loading, .form_button .button.loading, .wp-block-button button.loading, .wp-block-button .button.loading
 			{
 				cursor: wait;
 				opacity: .5;
@@ -420,7 +420,7 @@
 					opacity: .3;
 				}
 
-				.form_button button .fa, .form_button .button .fa, .form_button button .fab, .form_button .button .fab, .form_button button .far, .form_button .button .far, .form_button button .fas, .form_button .button .fas
+				.form_button button .fa, .form_button .button .fa, .form_button button .fab, .form_button .button .fab, .form_button button .far, .form_button .button .far, .form_button button .fas, .form_button .button .fas, .wp-block-button button .fa, .wp-block-button .button .fa, .wp-block-button button .fab, .wp-block-button .button .fab, .wp-block-button button .far, .wp-block-button .button .far, .wp-block-button button .fas, .wp-block-button .button .fas
 				{
 					margin-right: .3em;
 				}

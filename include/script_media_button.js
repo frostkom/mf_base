@@ -75,7 +75,7 @@ function render_attachment_list()
 
 function init_media_button()
 {
-	jQuery(".wp-admin .mf_media_button .wp-media-buttons").removeClass('form_button');
+	jQuery(".wp-admin .mf_media_button .wp-media-buttons").removeClass('form_button wp-block-button');
 
 	jQuery(".mf_media_button").each(function()
 	{

@@ -1577,6 +1577,68 @@ function get_file_suffix($file, $force_last = false)
 	return $suffix;
 }
 
+function parse_block_attributes($data = array())
+{
+	if(!isset($data['class'])){			$data['class'] = "";}
+	if(!isset($data['attributes'])){	$data['attributes'] = array();}
+
+	$out = "";
+
+	/* var_export($data['attributes'], true) -> array (
+		'align' => 'full', // .alignfull
+		'style' => array (
+			'color' => array (
+				'background' => '#d5e0f0ad', // background: #d5e0f0ad
+			),
+		),
+	)*/
+
+	if(isset($data['attributes']['className']) && $data['attributes']['className'] != '')
+	{
+		$data['class'] .= ($data['class'] != '' ? " " : "").$data['attributes']['className'];
+	}
+
+	$out .= " class='".$data['class']."'";
+
+	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
+	{
+		$style = "";
+
+		foreach($attributes['style'] as $key_parent => $arr_value)
+		{
+			switch($key_parent)
+			{
+				case 'border':
+					foreach($arr_value as $key_child => $value)
+					{
+						switch($key_child)
+						{
+							case 'radius':
+								$style .= "border-radius: ".$value.";";
+							break;
+
+							default:
+								do_log(__FUNCTION__.": The key '".$key_child."' with value '".var_export($arr_value, true)."' has to be taken care of");
+							break;
+						}
+					}
+				break;
+
+				default:
+					do_log(__FUNCTION__.": The key '".$key_parent."' with value '".var_export($arr_value, true)."' has to be taken care of");
+				break;
+			}
+		}
+
+		if($style != '')
+		{
+			$out .= " style='".$style."'";
+		}
+	}
+
+	return $out;
+}
+
 function get_form_button_classes($out = "")
 {
 	if(is_admin())

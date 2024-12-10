@@ -97,11 +97,6 @@ jQuery(function($)
 
 	var dom_obj = $("input[maxlength], textarea[maxlength]");
 
-	/*dom_obj.each(function()
-	{
-		display_characters_left($(this));
-	});*/
-
 	dom_obj.on("keyup", function()
 	{
 		display_characters_left($(this));
@@ -138,15 +133,7 @@ jQuery(function($)
 		var dom_obj = $(this),
 			dom_val = dom_obj.val();
 
-		/*if(dom_val.length == 1)
-		{
-			if(dom_val != 'h' && dom_val != '/' && dom_val != 'm' && dom_val != 't')
-			{
-				dom_obj.val("http://" + dom_val);
-			}
-		}
-
-		else */if(dom_val.length > 4)
+		if(dom_val.length > 4)
 		{
 			if(dom_val.substring(0, 4) != 'http' && dom_val.substring(0, 2) != '//' && dom_val.substring(0, 4) != 'tel:' && dom_val.substring(0, 7) != 'mailto:')
 			{

@@ -430,7 +430,31 @@ function get_url_part($data)
 			$arr_host = explode(".", $host);
 			$arr_host_length = count($arr_host);
 
-			return $scheme.$arr_host[$arr_host_length - 2].".".$arr_host[$arr_host_length - 1];
+			$sld = $tld = "";
+			$sld_index = ($arr_host_length - 2);
+			$tld_index = ($arr_host_length - 1);
+
+			if(isset($arr_host[$sld_index]))
+			{
+				$sld = $arr_host[$sld_index];
+			}
+
+			else
+			{
+				do_log(__FUNCTION__.": No SLD (".$sld_index.") in ".var_export($arr_host, true));
+			}
+
+			if(isset($arr_host[$tld_index]))
+			{
+				$tld = $arr_host[$tld_index];
+			}
+
+			else
+			{
+				do_log(__FUNCTION__.": No TLD (".$tld_index.") in ".var_export($arr_host, true));
+			}
+
+			return $scheme.$sld.".".$tld;
 		break;
 
 		case 'subdomain':
@@ -537,7 +561,7 @@ function get_theme_version()
 		}
 	}
 
-	return int2point(point2int($theme_version) + point2int($parent_version) + get_option_or_default('option_theme_version', 1));
+	return int2point(point2int($theme_version, $arr_theme_data->get('Name')) + point2int($parent_version, $arr_theme_data->get('Name')." (parent)") + get_option_or_default('option_theme_version', 1));
 }
 
 function get_toggler_container($data)
@@ -2011,7 +2035,7 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version;
 }
 
-function point2int($in)
+function point2int($in, $handle)
 {
 	$str_version = 0;
 	$multiplier = 1;
@@ -2040,7 +2064,7 @@ function point2int($in)
 
 			if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
 			{
-				do_log(__FUNCTION__." Error: ".$in." -> ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
+				do_log(__FUNCTION__.": ".$handle.", ".$in." -> ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
 			}
 
 			$multiplier *= 100;

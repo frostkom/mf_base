@@ -2980,9 +2980,11 @@ function get_url_content($data = array())
 	return $out;
 }
 
-function get_notification()
+function get_notification($data = array())
 {
 	global $error_text, $notice_text, $done_text;
+
+	if(!isset($data['add_container'])){		$data['add_container'] = false;}
 
 	$out = "";
 
@@ -3008,6 +3010,11 @@ function get_notification()
 	}
 
 	$error_text = $notice_text = $done_text = "";
+
+	if($out != '' && $data['add_container'] == true)
+	{
+		$out = "<div class='notification'>".$out."</div>";
+	}
 
 	return $out;
 }

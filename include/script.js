@@ -137,7 +137,7 @@ jQuery(function($)
 		{
 			if(dom_val.substring(0, 4) != 'http' && dom_val.substring(0, 2) != '//' && dom_val.substring(0, 4) != 'tel:' && dom_val.substring(0, 7) != 'mailto:')
 			{
-				dom_obj.val("http://" + dom_val);
+				dom_obj.val("https://" + dom_val);
 			}
 		}
 	});

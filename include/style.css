@@ -157,6 +157,14 @@
 			border-color: #5a7052;
 			color: #5a7052;
 		}
+
+			.notification > div > p
+			{
+				margin-top: 0;
+				margin-bottom: 0;
+				padding-top: 0;
+				padding-bottom: 0;
+			}
 	/* ####################### */
 
 	/* Flexbox */

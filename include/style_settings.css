@@ -113,4 +113,10 @@
 				{
 					list-style: none;
 				}
+
+			.settings-wrap .settings-tabs ol
+			{
+				list-style-position: inside;
+				margin: 0;
+			}
 }

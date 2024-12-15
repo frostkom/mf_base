@@ -18,6 +18,6 @@ jQuery(function($)
 			toggle_container.toggleClass('hide');
 		}
 
-		return false;
+		/*return false;*/ /* This prevents a tags inside to be clicked */
 	});
 });

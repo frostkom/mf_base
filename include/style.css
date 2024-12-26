@@ -426,9 +426,14 @@
 			display: inline-block;
 			font: inherit;
 			margin: 0 .5em .5em 0;
-			padding: .5em 1.5em;
+			/*padding: .5em 1.5em;*/ /* Do not override default set in blocks theme */
 			white-space: nowrap;
 		}
+
+			.form_button button, .form_button .button
+			{
+				padding: .5em 1.5em;
+			}
 
 			.form_button button.is_disabled, .form_button .button.is_disabled, .wp-block-button button.is_disabled, .wp-block-button .button.is_disabled
 			{

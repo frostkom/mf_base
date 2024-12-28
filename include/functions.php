@@ -2060,12 +2060,12 @@ function point2int($in, $handle)
 
 		for($i = 1; $i <= $count_temp; $i++)
 		{
-			$str_version += (int)$arr_version[$count_temp - $i] * $multiplier;
+			$str_version += ((int)$arr_version[$count_temp - $i] * $multiplier);
 
-			if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
+			/*if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
 			{
 				do_log(__FUNCTION__.": ".$handle.", ".$in." -> ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
-			}
+			}*/
 
 			$multiplier *= 100;
 		}

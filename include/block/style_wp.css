@@ -1,4 +1,20 @@
-.wp-block/*.is-selected*/ .wp_mf_block
+/* v2 */
+.block-editor-block-inspector__tabs > div > .css-0
+{
+	padding: 1em;
+}
+
+.wp-block .wp_mf_block_container
+{
+	background: #fff;
+	border: .1em solid #eee;
+	border-radius: .5em;
+	color: #000;
+	padding: 1em;
+}
+
+/* v1 */
+.wp-block > .wp_mf_block
 {
 	background: #fff8df;
 	border: 0 solid #ffdf7f;
@@ -10,7 +26,7 @@
 	padding-right: 1em;
 }
 
-	.wp-block .wp_mf_block:first-child
+	.wp-block > .wp_mf_block:first-of-type
 	{
 		border-top-width: .2em;
 		border-top-left-radius: .5em;
@@ -18,7 +34,7 @@
 		padding-top: 1em;
 	}
 
-	.wp-block .wp_mf_block:last-child
+	.wp-block > .wp_mf_block:last-of-type
 	{
 		border-bottom-width: .2em;
 		border-bottom-left-radius: .5em;
@@ -26,7 +42,7 @@
 		padding-bottom: 1em;
 	}
 
-		.wp-block .wp_mf_block .components-button
+		.wp-block > .wp_mf_block .components-button
 		{
 			border: .1em solid #ccc;
 			border-radius: .5em;

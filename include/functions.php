@@ -2321,7 +2321,7 @@ function get_all_roles($data = array())
 
 	if(count($roles) == 0)
 	{
-		do_log("I could not find any roles for this site...?");
+		do_log("I could not find any roles for this site...? (Use 'User Role Editor' to update all roles)");
 	}
 
 	if(isset($data['allowed']))

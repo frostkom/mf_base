@@ -901,7 +901,7 @@ class mf_base
 			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
-		if(is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php"))
+		if((is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php")) && get_option('setting_base_template_site') != '')
 		{
 			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
 		}
@@ -2025,7 +2025,13 @@ class mf_base
 		$data_temp['plugin_version'] = $plugin_version;
 		$this->load_font_awesome($data_temp);
 
-		if(wp_is_block_theme() == false)
+		if(wp_is_block_theme())
+		{
+			
+			mf_enqueue_style('style_base_buttons', $plugin_include_url."style_buttons.css", $plugin_version);
+		}
+
+		else
 		{
 			mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css", $plugin_version);
 		}
@@ -2453,6 +2459,27 @@ class mf_base
 		));
 
 		return $data;
+	}
+
+	function get_block_search($handle)
+	{
+		$post_id = 0;
+
+		global $wpdb;
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s ORDER BY post_modified DESC", 'page', 'publish'));
+
+		//do_log(__FUNCTION__.": ".$wpdb->last_query);
+
+		foreach($result as $r)
+		{
+			if(has_block($handle, $r->ID))
+			{
+				$post_id = $r->ID;
+			}
+		}
+
+		return $post_id;
 	}
 
 	/* Form */

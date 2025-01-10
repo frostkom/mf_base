@@ -2241,10 +2241,15 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
 	}
 
+	if($version != '' || strpos($file, ".php"))
+	{
+		$version .= ".".date("YmdHis");
+	}
+
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false) //, $add2array = true
+function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
 {
 	if(!is_array($translation))
 	{
@@ -2255,6 +2260,11 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 	if($version != '' && strpos($file, WP_CONTENT_URL))
 	{
 		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
+	}
+
+	if($version != '' || strpos($file, ".php"))
+	{
+		$version .= ".".date("YmdHis");
 	}
 
 	if(count($translation) > 0)

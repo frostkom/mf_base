@@ -2469,13 +2469,12 @@ class mf_base
 
 		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s ORDER BY post_modified DESC", 'page', 'publish'));
 
-		//do_log(__FUNCTION__.": ".$wpdb->last_query);
-
 		foreach($result as $r)
 		{
-			if(has_block($handle, $r->ID))
+			if(has_block($handle, get_post($r->ID)))
 			{
 				$post_id = $r->ID;
+				break;
 			}
 		}
 

@@ -419,10 +419,9 @@ class mf_base
 	function get_toggler_includes()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css", $plugin_version);
-		mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js", $plugin_version);
+		mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css");
+		mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js");
 	}
 
 	function init()
@@ -1822,21 +1821,20 @@ class mf_base
 		$this->wp_head(array('type' => 'admin'));
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css", $plugin_version);
+		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css");
 		wp_enqueue_script('jquery-ui-autocomplete');
-		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", 'lang_base')), $plugin_version);
+		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array('plugins_url' => plugins_url(), 'ajax_url' => admin_url('admin-ajax.php'), 'toggle_all_data_text' => __("Toggle All Data", 'lang_base')));
 
 		if($pagenow == 'options-general.php' && check_var('page') == BASE_OPTIONS_PAGE)
 		{
-			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css", $plugin_version);
-			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url), $plugin_version);
+			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css");
+			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url));
 		}
 
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
-			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js", $plugin_version);
+			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js");
 		}
 	}
 
@@ -2006,7 +2004,7 @@ class mf_base
 			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
 			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";*/
 
-			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php", $data['plugin_version']);
+			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php"); //, $data['plugin_version']
 		}
 	}
 
@@ -2016,31 +2014,30 @@ class mf_base
 		if(!isset($data['type'])){		$data['type'] = 'public';}
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
+		//$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base', $plugin_include_url."style.css", $plugin_version);
+		mf_enqueue_style('style_base', $plugin_include_url."style.css");
 
 		$data_temp = $data;
 		$data_temp['plugin_include_url'] = $plugin_include_url;
-		$data_temp['plugin_version'] = $plugin_version;
+		//$data_temp['plugin_version'] = $plugin_version;
 		$this->load_font_awesome($data_temp);
 
 		if(wp_is_block_theme())
 		{
-			
-			mf_enqueue_style('style_base_buttons', $plugin_include_url."style_buttons.css", $plugin_version);
+			mf_enqueue_style('style_base_buttons', $plugin_include_url."style_buttons.css");
 		}
 
 		else
 		{
-			mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css", $plugin_version);
+			mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
 		}
 
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array(
 			'confirm_question' => __("Are you sure?", 'lang_base'),
 			'read_more' => __("Read More", 'lang_base'),
 			'characters_left_text' => __("characters left", 'lang_base'),
-		), $plugin_version);
+		));
 	}
 
 	function phpmailer_init($phpmailer)
@@ -4233,12 +4230,11 @@ class mf_import
 		global $wpdb;
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_import_wp', $plugin_include_url."style_import_wp.css", $plugin_version);
+		mf_enqueue_style('style_import_wp', $plugin_include_url."style_import_wp.css");
 		mf_enqueue_script('script_import_wp', $plugin_include_url."script_import_wp.js", array(
 			'plugin_url' => $plugin_include_url,
-		), $plugin_version);
+		));
 
 		$this->prefix = $wpdb->prefix;
 

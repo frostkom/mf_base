@@ -328,12 +328,11 @@ function show_flot_graph($data)
 	if(is_array($data['data']) && count($data['data']) > 0)
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
 		//Should be moved to admin_init
-		mf_enqueue_style('style_flot', $plugin_include_url."style_flot.css", $plugin_version);
-		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js", $plugin_version);
-		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js", $plugin_version);
+		mf_enqueue_style('style_flot', $plugin_include_url."style_flot.css");
+		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js");
+		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js");
 
 		$style_cont = "width: 95%;";
 
@@ -1628,7 +1627,7 @@ function parse_block_attributes($data = array())
 	{
 		$style = "";
 
-		foreach($attributes['style'] as $key_parent => $arr_value)
+		foreach($data['attributes']['style'] as $key_parent => $arr_value)
 		{
 			switch($key_parent)
 			{
@@ -1642,14 +1641,31 @@ function parse_block_attributes($data = array())
 							break;
 
 							default:
-								do_log(__FUNCTION__.": The key '".$key_child."' with value '".var_export($arr_value, true)."' has to be taken care of");
+								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value, true)."' has to be taken care of");
 							break;
 						}
 					}
 				break;
 
+				case 'color':
+					if(isset($arr_value['text']) && $arr_value['text'] != '')
+					{
+						$style .= "color: ".$arr_value['text'].";";
+					}
+
+					if(isset($arr_value['background']) && $arr_value['background'] != '')
+					{
+						$style .= "background-color: ".$arr_value['background'].";";
+					}
+				break;
+
+				case 'elements':
+					//array ( 'link' => array ( 'color' => array ( 'text' => 'var:preset|color|base', ), ), )
+					//array ( 'link' => array ( 'color' => array ( 'text' => '#ffffff', ), ), )
+				break;
+
 				default:
-					do_log(__FUNCTION__.": The key '".$key_parent."' with value '".var_export($arr_value, true)."' has to be taken care of");
+					do_log(__FUNCTION__.": The key parent '".$key_parent."' with value '".var_export($arr_value, true)."' has to be taken care of");
 				break;
 			}
 		}
@@ -1712,16 +1728,15 @@ function get_media_library($data)
 	if(!isset($is_media_library_init))
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
 		wp_enqueue_media();
-		mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css", $plugin_version);
+		mf_enqueue_style('style_media_library', $plugin_include_url."style_media_library.css");
 		mf_enqueue_script('script_media_library', $plugin_include_url."script_media_library.js", array(
 			'add_file_text' => $add_file_text,
 			'change_file_text' => $change_file_text,
 			'insert_file_text' => $insert_file_text,
 			'insert_text' => $insert_text,
-		), $plugin_version);
+		));
 
 		$is_media_library_init = true;
 	}
@@ -1784,17 +1799,16 @@ function get_media_button($data = array())
 		if(!isset($is_media_button_init))
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
 
 			wp_enqueue_media();
-			mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css", $plugin_version);
+			mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css");
 			mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
 				//'multiple' => $data['multiple'],
 				'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
 				'unknown_title' => __("Unknown title", 'lang_base'),
 				'confirm_question' => __("Are you sure?", 'lang_base'),
 				//'max_file_uploads' => $data['max_file_uploads'],
-			), $plugin_version);
+			));
 
 			$is_media_button_init = true;
 		}
@@ -3476,11 +3490,10 @@ function show_textfield($data)
 	{
 		case 'month':
 			$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
 
-			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css", '1.8.2');
+			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css"); //, '1.8.2'
 			wp_enqueue_script('jquery-ui-datepicker');
-			mf_enqueue_script('script_base_datepicker', $plugin_include_url."script_datepicker.js", $plugin_version);
+			mf_enqueue_script('script_base_datepicker', $plugin_include_url."script_datepicker.js");
 
 			$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
 			$data['type'] = "text";
@@ -3525,9 +3538,8 @@ function show_textfield($data)
 
 		case 'color':
 			/*$plugin_include_url = plugin_dir_url(__FILE__);
-			$plugin_version = get_plugin_version(__FILE__);
 
-			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js", $plugin_version);
+			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js");
 
 			$data['suffix'] .= " <div".get_form_button_classes("display_inline")."><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
 		break;
@@ -3991,9 +4003,8 @@ function show_select($data)
 					if($key == 'condition_selector')
 					{
 						$plugin_include_url = plugin_dir_url(__FILE__);
-						$plugin_version = get_plugin_version(__FILE__);
 
-						mf_enqueue_script('script_base_conditions', $plugin_include_url."script_conditions.js", $plugin_version);
+						mf_enqueue_script('script_base_conditions', $plugin_include_url."script_conditions.js");
 					}
 				}
 			}
@@ -4351,9 +4362,8 @@ function show_checkbox($data)
 	if($data['switch'] == 1)
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
 
-		mf_enqueue_style('style_base_switch', $plugin_include_url."style_switch.css", $plugin_version);
+		mf_enqueue_style('style_base_switch', $plugin_include_url."style_switch.css");
 
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
 		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i><i class='fa fa-spinner fa-spin fa-lg loading'></i></span>".$data['text'];
@@ -4803,6 +4813,7 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
 	if(!isset($data['meta'])){				$data['meta'] = array();}
 
+	if(!isset($data['group_by'])){			$data['group_by'] = '';}
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
 	if(!isset($data['order'])){				$data['order'] = 'ASC';}
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
@@ -4877,7 +4888,7 @@ function get_post_children($data, &$arr_data = array())
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = $wpdb->num_rows;
 
 	if($data['debug'] == true)

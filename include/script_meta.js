@@ -6,7 +6,7 @@ jQuery(function($)
 			dom_parent = dom_obj.parents(parent_selector),
 			condition_type = dom_obj.attr('condition_type'),
 			condition_field = dom_obj.attr('condition_field'),
-			condition_value = dom_obj.attr('condition_value') || '',
+			condition_value = (dom_obj.attr('condition_value') || ''),
 			condition_default = dom_obj.attr('condition_default'),
 			field_obj = $((condition_field.substr(0, 1) == '#' ? '' : '#') + condition_field),
 			field_parent = field_obj.parents(parent_selector);

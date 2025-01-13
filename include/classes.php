@@ -483,12 +483,11 @@ class mf_base
 
 	function cron_schedules($schedules)
 	{
-		//$schedules['every_ten_seconds'] = array('interval' => 10, 'display' => "Manually");
 		$schedules['every_two_minutes'] = array('interval' => MINUTE_IN_SECONDS * 2, 'display' => __("Every 2 Minutes", 'lang_base'));
 		$schedules['every_ten_minutes'] = array('interval' => MINUTE_IN_SECONDS * 10, 'display' => __("Every 10 Minutes", 'lang_base'));
 
-		$schedules['weekly'] = array('interval' => WEEK_IN_SECONDS, 'display' => __("Weekly", 'lang_base')); //60 * 60 * 24 * 7
-		$schedules['monthly'] = array('interval' => MONTH_IN_SECONDS, 'display' => __("Monthly", 'lang_base')); //60 * 60 * 24 * 7 * 4
+		$schedules['weekly'] = array('interval' => WEEK_IN_SECONDS, 'display' => __("Weekly", 'lang_base'));
+		$schedules['monthly'] = array('interval' => MONTH_IN_SECONDS, 'display' => __("Monthly", 'lang_base'));
 
 		return $schedules;
 	}
@@ -1093,17 +1092,22 @@ class mf_base
 			}
 
 			echo "<div class='flex_flow'>
-				<div>
-					<p>
-						<i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version;
+				<div>";
 
-						if(!$has_required_php_version)
-						{
-							echo " <a href='//wordpress.org/about/requirements/'><i class='fa fa-info-circle blue'></i></a>";
-						}
+					if(!$has_required_php_version || $php_version != $mysql_version)
+					{
+						echo "<p>
+							<i class='fa ".($has_required_php_version ? "fa-check green" : "fa-times red display_warning")."'></i> PHP: ".$php_version;
 
-					echo "</p>
-					<p title='".$mysql_title."'>
+							if(!$has_required_php_version)
+							{
+								echo " <a href='//wordpress.org/about/requirements/'><i class='fa fa-info-circle blue'></i></a>";
+							}
+
+						echo "</p>";
+					}
+
+					echo "<p title='".$mysql_title."'>
 						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version;
 
 						if(!$has_required_mysql_version)

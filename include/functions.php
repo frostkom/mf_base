@@ -1604,10 +1604,12 @@ function parse_block_attributes($data = array())
 {
 	if(!isset($data['class'])){			$data['class'] = "";}
 	if(!isset($data['attributes'])){	$data['attributes'] = array();}
+	if(!isset($data['style'])){			$data['style'] = "";}
 
 	$out = "";
 
-	/* var_export($data['attributes'], true) -> array (
+	//$out .= var_export($data, true);
+	/*array (
 		'align' => 'full', // .alignfull
 		'style' => array (
 			'color' => array (
@@ -1625,8 +1627,6 @@ function parse_block_attributes($data = array())
 
 	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
 	{
-		$style = "";
-
 		foreach($data['attributes']['style'] as $key_parent => $arr_value)
 		{
 			switch($key_parent)
@@ -1637,7 +1637,7 @@ function parse_block_attributes($data = array())
 						switch($key_child)
 						{
 							case 'radius':
-								$style .= "border-radius: ".$value.";";
+								$data['style'] .= "border-radius: ".$value."; overflow: hidden;";
 							break;
 
 							default:
@@ -1650,12 +1650,12 @@ function parse_block_attributes($data = array())
 				case 'color':
 					if(isset($arr_value['text']) && $arr_value['text'] != '')
 					{
-						$style .= "color: ".$arr_value['text'].";";
+						$data['style'] .= "color: ".$arr_value['text'].";";
 					}
 
 					if(isset($arr_value['background']) && $arr_value['background'] != '')
 					{
-						$style .= "background-color: ".$arr_value['background'].";";
+						$data['style'] .= "background-color: ".$arr_value['background'].";";
 					}
 				break;
 
@@ -1669,11 +1669,11 @@ function parse_block_attributes($data = array())
 				break;
 			}
 		}
-
-		if($style != '')
-		{
-			$out .= " style='".$style."'";
-		}
+	}
+	
+	if($data['style'] != '')
+	{
+		$out .= " style='".$data['style']."'";
 	}
 
 	return $out;

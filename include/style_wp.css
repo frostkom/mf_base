@@ -104,7 +104,6 @@
 		.wp-list-table .status-draft
 		{
 			filter: gray;
-			-webkit-filter: grayscale(1);
 			filter: grayscale(1);
 			opacity: .7;
 		}
@@ -112,7 +111,6 @@
 			.wp-list-table .status-draft:hover
 			{
 				filter: none;
-				-webkit-filter: grayscale(0);
 				filter: grayscale(0);
 				opacity: 1;
 			}
@@ -129,19 +127,16 @@
 
 		.wp-admin .text_columns
 		{
-			-webkit-column-gap: 2em;
 			column-gap: 2em;
 		}
 
 			.wp-admin .columns_2
 			{
-				-webkit-column-count: 2;
 				column-count: 2;
 			}
 
 			.wp-admin .columns_3
 			{
-				-webkit-column-count: 3;
 				column-count: 3;
 			}
 

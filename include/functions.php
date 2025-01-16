@@ -1670,7 +1670,7 @@ function parse_block_attributes($data = array())
 			}
 		}
 	}
-	
+
 	if($data['style'] != '')
 	{
 		$out .= " style='".$data['style']."'";

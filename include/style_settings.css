@@ -3,9 +3,6 @@
 	.settings-wrap
 	{
 		border: 1px solid #ccc;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: -webkit-flex;
 		display: flex;
 		margin-top: 15px;
 		min-height: 80vh;
@@ -82,9 +79,6 @@
 		{
 			background: #fff;
 			border-left: 1px solid #ccc;
-			-webkit-box-flex: 1 1 0;
-			-webkit-flex: 1 1 0;
-			-ms-flex: 1 1 0;
 			flex: 1 1 0;
 			margin-bottom: 0;
 			overflow: hidden;

@@ -154,68 +154,6 @@ class mf_base
 		}
 	}
 
-	function get_language_code($language)
-	{
-		switch($language)
-		{
-			case 'da-DK':
-			case 'da_DK':
-				return "dk";
-			break;
-
-			case 'de-DE':
-			case 'de_DE':
-				return "de";
-			break;
-
-			case 'nn-NO':
-			case 'nb-NO':
-			case 'nn_NO':
-			case 'nb_NO':
-				return "no";
-			break;
-
-			case 'sv-SE':
-			case 'sv_SE':
-				return "se";
-			break;
-
-			case 'en-UK':
-			case 'en_UK':
-				return "uk";
-			break;
-
-			case 'en-US':
-			case 'en_US':
-			case '':
-				return "us";
-			break;
-
-			default:
-				if($id > 0)
-				{
-					do_log("Someone chose '".$blog_language."' as the language for the site '".$id."'. Please add the flag for this language");
-				}
-
-				else
-				{
-					do_log("Someone chose '".$blog_language."' as the language. Please add the flag for this language");
-				}
-
-				return "";
-			break;
-		}
-	}
-
-	function get_flag_image($language)
-	{
-		$language_code = $this->get_language_code($language);
-
-		$plugin_url = str_replace("/include", "", plugin_dir_url(__FILE__));
-
-		return $plugin_url."images/flags/flag_".$language_code.".png";
-	}
-
 	function get_post_types_for_metabox($data = array())
 	{
 		if(!isset($data['public'])){		$data['public'] = true;}
@@ -2001,7 +1939,7 @@ class mf_base
 	{
 		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
-			//  Cannot modify header information - headers already sent by (output started at wp-content/plugins/mf_base/include/classes.php:1987) in wp-admin/includes/misc.php on line 1431
+			// Cannot modify header information - headers already sent by (output started at wp-content/plugins/mf_base/include/classes.php:1987) in wp-admin/includes/misc.php on line 1431
 			/*$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
 
 			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
@@ -2018,13 +1956,11 @@ class mf_base
 		if(!isset($data['type'])){		$data['type'] = 'public';}
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		//$plugin_version = get_plugin_version(__FILE__);
 
 		mf_enqueue_style('style_base', $plugin_include_url."style.css");
 
 		$data_temp = $data;
 		$data_temp['plugin_include_url'] = $plugin_include_url;
-		//$data_temp['plugin_version'] = $plugin_version;
 		$this->load_font_awesome($data_temp);
 
 		if(wp_is_block_theme())
@@ -2092,57 +2028,6 @@ class mf_base
 		}
 
 		return $out;
-	}
-
-	function option_blogname($value, $option)
-	{
-		if(!preg_match("/\[/", $value))
-		{
-			$http_host = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : get_site_url());
-
-			if($http_host != '')
-			{
-				$value = trim(str_replace(array("[STAGING]", "[DEV]"), "", $value));
-
-				if(preg_match("/staging/", $http_host))
-				{
-					$value = "[STAGING] ".$value;
-				}
-
-				if(preg_match("/development|dev\./", $http_host))
-				{
-					$value = "[DEV] ".$value;
-				}
-			}
-		}
-
-		return $value;
-	}
-
-	function get_site_icon_url($url, $size, $blog_id)
-	{
-		$http_host = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : get_site_url());
-
-		if($http_host != '')
-		{
-			if(preg_match("/staging|development|dev\./", $http_host))
-			{
-				$plugin_images_url = str_replace("/include/", "/images/", plugin_dir_url(__FILE__));
-
-				switch($size)
-				{
-					case 32:
-						return $plugin_images_url."staging-favicon-150x150.png";
-					break;
-
-					default:
-						return $plugin_images_url."staging-favicon-300x300.png";
-					break;
-				}
-			}
-		}
-
-		return $url;
 	}
 
 	function theme_page_templates($posts_templates)

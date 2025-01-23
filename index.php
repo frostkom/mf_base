@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.4.12
+Version: 1.2.4.13
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -38,8 +38,11 @@ if(is_admin())
 	register_deactivation_hook(__FILE__, 'deactivate_base');
 	register_uninstall_hook(__FILE__, 'uninstall_base');
 
+	add_action('wp_before_admin_bar_render', array($obj_base, 'wp_before_admin_bar_render'));
+
 	add_action('admin_init', array($obj_base, 'settings_base'), 0);
 	add_action('admin_init', array($obj_base, 'admin_init'), 0);
+	add_action('admin_menu', array($obj_base, 'admin_menu'));
 
 	add_filter('filter_sites_table_settings', array($obj_base, 'filter_sites_table_settings'));
 

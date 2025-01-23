@@ -794,6 +794,37 @@ class mf_base
 		return $this->server_type;
 	}
 
+	function has_comments()
+	{
+		global $wpdb;
+
+		$out = false;
+
+		if(does_table_exist($wpdb->comments))
+		{
+			$wpdb->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash') AND comment_type = %s LIMIT 0, 1", 'comment'));
+
+			$out = ($wpdb->num_rows > 0);
+		}
+
+		return $out;
+	}
+
+	function wp_before_admin_bar_render()
+	{
+		global $wp_admin_bar;
+
+		$wp_admin_bar->remove_menu('wp-logo');
+		//$wp_admin_bar->remove_menu('view');
+		
+		if($this->has_comments() == false)
+		{
+			$wp_admin_bar->remove_menu('comments');
+		}
+
+		$wp_admin_bar->remove_menu('new-content');
+	}
+
 	function settings_base()
 	{
 		$options_area_orig = $options_area = __FUNCTION__;
@@ -1777,6 +1808,14 @@ class mf_base
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
 			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js");
+		}
+	}
+
+	function admin_menu()
+	{
+		if($this->has_comments() == false)
+		{
+			remove_menu_page("edit-comments.php");
 		}
 	}
 

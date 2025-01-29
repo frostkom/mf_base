@@ -10,20 +10,10 @@
 		display: inline !important;
 	}
 
-	/*.display_inline_block
-	{
-		display: inline-block;
-	}*/
-
 	.nowrap
 	{
 		white-space: nowrap;
 	}
-
-	/*.allow_wrap
-	{
-		white-space: normal !important;
-	}*/
 
 	.row-actions
 	{

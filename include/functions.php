@@ -2242,7 +2242,7 @@ function remove_protocol($data)
 	return $data['url'];
 }
 
-function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
+function mf_enqueue_style($handle, $file = "", $dep = array(), $version = "")
 {
 	if(!is_array($dep))
 	{
@@ -2250,20 +2250,25 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = false)
 		$dep = array();
 	}
 
-	if($version != '' && strpos($file, WP_CONTENT_URL))
+	if(/*$version != '' && */strpos($file, WP_CONTENT_URL))
 	{
-		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
+		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
+
+		if(file_exists($file_dir))
+		{
+			$version .= ".".filemtime($file_dir);
+		}
 	}
 
-	if($version != '' || strpos($file, ".php"))
+	if($version == '') //strpos($file, ".php")
 	{
-		$version .= ".".date("YmdHis");
+		$version = date("YmdHis");
 	}
 
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array(), $version = false)
+function mf_enqueue_script($handle, $file = "", $translation = array(), $version = "")
 {
 	if(!is_array($translation))
 	{
@@ -2271,17 +2276,22 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	if($version != '' && strpos($file, WP_CONTENT_URL))
+	if(/*$version != '' && */strpos($file, WP_CONTENT_URL))
 	{
-		$version .= ".".filemtime(str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file));
+		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
+
+		if(file_exists($file_dir))
+		{
+			$version .= ($version != '' ? "." : "").filemtime($file_dir);
+		}
 	}
 
-	if($version != '' || strpos($file, ".php"))
+	if($version == '') //strpos($file, ".php")
 	{
-		$version .= ".".date("YmdHis");
+		$version = date("YmdHis");
 	}
 
-	if(count($translation) > 0)
+	if(is_array($translation) && count($translation) > 0)
 	{
 		wp_register_script($handle, $file, array('jquery'), $version, true);
 		wp_localize_script($handle, $handle, $translation);

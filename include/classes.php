@@ -1764,6 +1764,7 @@ class mf_base
 			$arr_recommendations = array(
 				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
+				array("Modern Image Formats", 'webp-uploads/load.php', __("to convert images to modern formats when uploaded", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 				array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
@@ -1773,7 +1774,6 @@ class mf_base
 				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
 				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
 				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-				//array("WP phpMyAdmin", 'wp-phpmyadmin-extension/index.php', __("to get a graphical interface to the database", 'lang_base')),
 				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
 			);
 

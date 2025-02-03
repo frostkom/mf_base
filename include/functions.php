@@ -2242,6 +2242,31 @@ function remove_protocol($data)
 	return $data['url'];
 }
 
+function get_source_version($file, $version)
+{
+	if($version == '' && strpos($file, WP_CONTENT_URL))
+	{
+		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
+
+		if(file_exists($file_dir))
+		{
+			$version = filemtime($file_dir);
+		}
+	}
+
+	if($version == '')
+	{
+		$version = date("YmdHis");
+	}
+
+	if($version != '' && strpos($file, $version))
+	{
+		$version = null;
+	}
+
+	return $version;
+}
+
 function mf_enqueue_style($handle, $file = "", $dep = array(), $version = "")
 {
 	if(!is_array($dep))
@@ -2250,20 +2275,7 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = "")
 		$dep = array();
 	}
 
-	if(/*$version != '' && */strpos($file, WP_CONTENT_URL))
-	{
-		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
-
-		if(file_exists($file_dir))
-		{
-			$version .= ".".filemtime($file_dir);
-		}
-	}
-
-	if($version == '') //strpos($file, ".php")
-	{
-		$version = date("YmdHis");
-	}
+	$version = get_source_version($file, $version);
 
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
@@ -2276,20 +2288,7 @@ function mf_enqueue_script($handle, $file = "", $translation = array(), $version
 		$translation = array();
 	}
 
-	if(/*$version != '' && */strpos($file, WP_CONTENT_URL))
-	{
-		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
-
-		if(file_exists($file_dir))
-		{
-			$version .= ($version != '' ? "." : "").filemtime($file_dir);
-		}
-	}
-
-	if($version == '') //strpos($file, ".php")
-	{
-		$version = date("YmdHis");
-	}
+	$version = get_source_version($file, $version);
 
 	if(is_array($translation) && count($translation) > 0)
 	{

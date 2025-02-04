@@ -410,13 +410,13 @@
 				padding: .5em 1.5em;
 			}
 
-			.form_button button.is_disabled, .form_button .button.is_disabled, .wp-block-button button.is_disabled, .wp-block-button .button.is_disabled
+			button.is_disabled, .button.is_disabled
 			{
 				cursor: no-drop;
 				opacity: .5;
 			}
 
-			.form_button button.loading, .form_button .button.loading, .wp-block-button button.loading, .wp-block-button .button.loading
+			button.loading, .button.loading
 			{
 				cursor: wait;
 				opacity: .5;

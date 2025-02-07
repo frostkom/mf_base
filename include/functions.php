@@ -113,25 +113,6 @@ function setting_time_limit($data)
 	}
 }
 
-function get_rwmb_post_id($data)
-{
-	if(!isset($data['user_id'])){		$data['user_id'] = get_current_user_id();}
-
-	$post_id = check_var('post', 'int');
-
-	if($post_id > 0)
-	{
-		update_user_meta($data['user_id'], $data['meta_key'], $post_id);
-	}
-
-	else
-	{
-		$post_id = get_user_meta($data['user_id'], $data['meta_key'], true);
-	}
-
-	return $post_id;
-}
-
 function get_or_set_transient($data)
 {
 	if(!isset($data['key'])){			$data['key'] = '';}
@@ -290,113 +271,6 @@ function show_final_size($in, $suffix = true)
 	return $out;
 }
 
-function show_flot_graph($data)
-{
-	global $flot_count;
-
-	if(!isset($data['type'])){				$data['type'] = 'lines';}
-	if(!isset($data['settings'])){			$data['settings'] = '';}
-	if(!isset($data['height'])){			$data['height'] = '';}
-	if(!isset($data['title'])){				$data['title'] = '';}
-
-	if($data['settings'] == '')
-	{
-		$data['settings'] = ($data['settings'] != '' ? "," : "")."legend: {position: 'nw'},
-		xaxis: {mode: 'time'},
-		yaxis: {
-			tickFormatter: function suffixFormatter(val, axis)
-			{
-				return parseInt(val).toLocaleString();
-			}
-		}";
-	}
-
-	switch($data['type'])
-	{
-		case 'lines':
-			$data['settings'] .= ($data['settings'] != '' ? "," : "")."points: {show: true, radius: 0.5}";
-		break;
-	}
-
-	if(!($flot_count > 0))
-	{
-		$flot_count = 0;
-	}
-
-	$out = "";
-
-	if(is_array($data['data']) && count($data['data']) > 0)
-	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		//Should be moved to admin_init
-		mf_enqueue_style('style_flot', $plugin_include_url."style_flot.css");
-		mf_enqueue_script('jquery-flot', $plugin_include_url."jquery.flot.min.0.7.js");
-		mf_enqueue_script('script_flot', $plugin_include_url."script_flot.js");
-
-		$style_cont = "width: 95%;";
-
-		if($data['height'] > 0)
-		{
-			$style_cont .= "height: ".$data['height']."px;";
-		}
-
-		$out .= "<div id='flot_".$flot_count."' class='flot_graph'".($style_cont != '' ? " style='".$style_cont."'" : "").($data['title'] != '' ? " title='".$data['title']."'" : "")."><i class='fa fa-spinner fa-spin'></i></div>
-		<script defer>
-			function plot_flot_".$flot_count."()
-			{
-				jQuery.plot(jQuery('#flot_".$flot_count."'),
-				[";
-
-					$i = 0;
-
-					foreach($data['data'] as $type_key => $arr_type)
-					{
-						$out .= ($i > 0 ? "," : "")."{label:'".$arr_type['label']."', data:[";
-
-							$j = 0;
-
-							foreach($arr_type['data'] as $point_key => $arr_point)
-							{
-								$data['data'][$type_key][$point_key]['date'] = (strtotime($arr_point['date']." UTC") * 1000);
-
-								$out .= ($j > 0 ? "," : "")."[".(strtotime($arr_point['date']." UTC") * 1000).",".$arr_point['value']."]";
-
-								$j++;
-							}
-
-						$out .= "]";
-
-						if(isset($arr_type['yaxis']))
-						{
-							$out .= ", yaxis: ".$arr_type['yaxis'];
-						}
-
-						$out .= "}";
-
-						$i++;
-					}
-
-				$out .= "],
-				{series: {".$data['type'].": {show: true}},"
-				."grid: {hoverable: true}"
-				.($data['settings'] != '' ? ",".$data['settings'] : "")."});
-			}
-
-			if(typeof arr_flot_functions === 'undefined')
-			{
-				var arr_flot_functions = [];
-			}
-
-			arr_flot_functions.push('plot_flot_".$flot_count."');
-		</script>";
-
-		$flot_count++;
-	}
-
-	return $out;
-}
-
 function get_pages_from_shortcode($shortcode)
 {
 	global $wpdb;
@@ -536,31 +410,10 @@ function get_plugin_version($file)
 	}
 
 	$plugin_dir = $plugin_path."/index.php";
-	//$plugin_dir = str_replace("include/", "", $plugin_dir);
 
 	$arr_plugin_data = get_plugin_data($plugin_dir);
 
-	return $arr_plugin_data['Version']; //." (".$plugin_dir." -> ".var_export($arr_plugin_data, true).")"
-}
-
-function get_theme_version()
-{
-	$theme_version = $parent_version = 0;
-
-	if(function_exists('wp_get_theme'))
-	{
-		$arr_theme_data = wp_get_theme();
-		$theme_version = $arr_theme_data->get('Version');
-
-		$parent = $arr_theme_data->parent();
-
-		if(!empty($parent))
-		{
-			$parent_version = $parent->Version;
-		}
-	}
-
-	return int2point(point2int($theme_version, $arr_theme_data->get('Name')) + point2int($parent_version, $arr_theme_data->get('Name')." (parent)") + get_option_or_default('option_theme_version', 1));
+	return $arr_plugin_data['Version'];
 }
 
 function get_toggler_container($data)
@@ -2222,16 +2075,6 @@ function remove_protocol($data)
 	if(!isset($data['clean'])){		$data['clean'] = false;}
 	if(!isset($data['trim'])){		$data['trim'] = false;}
 
-	/*if($data['clean'] == true)
-	{
-		$data['url'] = str_replace(array("http://", "https://"), "", $data['url']);
-	}
-
-	else
-	{
-		$data['url'] = str_replace(array("http:", "https:"), "", $data['url']);
-	}*/
-
 	$data['url'] = str_replace(array("http://", "https://"), ($data['clean'] == true ? "" : "//"), $data['url']);
 
 	if($data['trim'] == true)
@@ -2672,19 +2515,19 @@ function get_post_types_for_select($data = array())
 			case 'post':
 				if($page_for_posts > 0)
 				{
-					$front_page_title = $home_title = get_post_title($page_for_posts);
+					$front_page_title = $home_title = get_the_title($page_for_posts);
 				}
 			break;
 
 			case 'page':
 				if($page_on_front > 0)
 				{
-					$front_page_title = get_post_title($page_on_front);
+					$front_page_title = get_the_title($page_on_front);
 				}
 
 				if($page_for_posts > 0)
 				{
-					$home_title = get_post_title($page_for_posts);
+					$home_title = get_the_title($page_for_posts);
 				}
 			break;
 		}
@@ -2728,7 +2571,7 @@ function get_categories_for_select($data = array())
 	return $arr_data;
 }
 
-function get_sidebars_for_select()
+/*function get_sidebars_for_select()
 {
 	global $obj_base;
 
@@ -2742,7 +2585,7 @@ function get_sidebars_for_select()
 	}
 
 	return $arr_data;
-}
+}*/
 
 if(!function_exists('array_sort'))
 {
@@ -3119,20 +2962,7 @@ function add_index($array)
 
 			foreach($result as $r)
 			{
-				/*$strIndexTable = $r['Table'];
-				$intIndexNonUnique = $r['Non_unique'];
-				$strIndexKey = $r['Key_name'];
-				$strIndexSeq = $r['Seq_in_index'];*/
-				$strIndexColumn = $r->Column_name;
-				/*$strIndexCollation = $r['Collation'];
-				$strIndexCardinality = $r['Cardinality'];
-				$strIndexSub = $r['Sub_part'];
-				$strIndexPacked = $r['Packed'];
-				$strIndexNull = $r['Null'];
-				$strIndexType = $r['Index_type'];
-				$strIndexComment = $r['Comment'];*/
-
-				$arr_existing_indexes[] = $strIndexColumn;
+				$arr_existing_indexes[] = $r->Column_name;
 			}
 
 			if(!in_array($column, $arr_existing_indexes))
@@ -3178,7 +3008,6 @@ function mf_redirect($location, $arr_vars = array(), $method = 'post')
 
 	echo "</form>
 	<script>document.reload.submit();</script>";
-
 	exit;
 }
 
@@ -3213,21 +3042,6 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 				$temp = $_GET[$in];
 			}
 		}
-
-		/*if(isset($_SESSION[$in]) && ($force_req_type == '' || $force_req_type == "session"))
-		{
-			$temp = $_SESSION[$in] != '' ? $_SESSION[$in] : "";
-		}
-
-		else if(isset($_POST[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == '' || $force_req_type == "post"))
-		{
-			$temp = $_POST[$in] != '' ? $_POST[$in] : "";
-		}
-
-		else if(isset($_GET[$in]) && substr($in, 0, 3) != "ses" && ($force_req_type == '' || $force_req_type == "get"))
-		{
-			$temp = $_GET[$in] != '' ? $_GET[$in] : "";
-		}*/
 	}
 
 	else

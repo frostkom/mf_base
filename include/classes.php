@@ -3175,7 +3175,7 @@ class mf_list_table extends WP_List_Table
 				 */
 				if(!is_multisite() || (isset($wpdb->sitemeta) && $wpdb->sitemeta != '')) // If for some reason another external DB is in use at this moment, don't bother doing this
 				{
-					do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which); //$this->screen->post_type
+					do_action('restrict_manage_posts', ($this->arr_settings['query_from'] != '' ? $this->arr_settings['query_from'] : $this->post_type), $which);
 				}
 
 				$output = ob_get_clean();
@@ -3188,7 +3188,7 @@ class mf_list_table extends WP_List_Table
 				}
 			}
 
-			if($this->has_items()) //$this->is_trash && current_user_can(get_post_type_object($this->screen->post_type)->cap->edit_others_posts) && 
+			if($this->has_items())
 			{
 				submit_button(__("Empty Trash"), 'apply', 'delete_all', false);
 			}
@@ -3223,16 +3223,10 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function prepare_items()
 	{
-		global $wpdb; //This is used only if making any database queries
+		global $wpdb;
 
-		/**
-		 * REQUIRED. Now we need to define our column headers. This includes a complete array of columns to be displayed (slugs & titles), a list of columns to keep hidden, and a list of columns that are sortable. Each of these can be defined in another method (as we've done here) before being used to build the value for our _column_headers property.
-		 */
 		$hidden = array();
 
-		/**
-		 * REQUIRED. Finally, we build an array to be used by the class for column headers. The $this->_column_headers property takes an array which contains 3 other arrays. One for all columns, one for hidden columns, and one for sortable columns.
-		 */
 		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
 
 		$current_page = $this->get_pagenum();
@@ -3250,7 +3244,7 @@ class mf_list_table extends WP_List_Table
 
 	protected function get_table_classes()
 	{
-		return array('widefat', 'striped'); //, 'fixed', $this->_args['plural']
+		return array('widefat', 'striped');
 	}
 
 	function search_box($text, $input_id)
@@ -3263,7 +3257,7 @@ class mf_list_table extends WP_List_Table
 				.show_textfield(array('type' => 'search', 'name' => $this->search_key, 'id' => $input_id, 'value' => $this->search))
 				.show_button(array('text' => $text, 'class' => "button", 'xtra' => " id='search-submit'"));
 
-				$arr_var_keys = array('orderby', 'order', 'post_status'); //post_mime_type, detached
+				$arr_var_keys = array('orderby', 'order', 'post_status');
 
 				foreach($arr_var_keys as $var_key)
 				{

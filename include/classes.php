@@ -3665,10 +3665,10 @@ class mf_microtime
 	{
 		$this->save_now();
 
-		return ($this->now - $this->time_orig) > $limit;
+		return (($this->now - $this->time_orig) > $limit);
 	}
 
-	function output($string, $type = "ms")
+	/*function output($string, $type = "ms")
 	{
 		$time_old = $this->now;
 		$this->save_now();
@@ -3686,7 +3686,7 @@ class mf_microtime
 		{
 			return $string.": ".mf_format_number($time_diff, 4)." (".mf_format_number($time_diff_orig).")<br>";
 		}
-	}
+	}*/
 }
 
 class mf_font_icons

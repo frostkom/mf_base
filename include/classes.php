@@ -560,6 +560,105 @@ class mf_base
 		}
 	}
 
+	function do_optimize()
+	{
+		global $wpdb;
+
+		//Remove old revisions and auto-drafts
+		$wpdb->query("DELETE FROM ".$wpdb->posts." WHERE post_type IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
+
+		//Remove orphan postmeta
+		$wpdb->get_results("SELECT post_id FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL LIMIT 0, 1");
+
+		if($wpdb->num_rows > 0)
+		{
+			$wpdb->query("DELETE ".$wpdb->postmeta." FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL");
+		}
+
+		//Remove duplicate postmeta
+		$result = $wpdb->get_results("SELECT meta_id, COUNT(meta_id) AS count FROM ".$wpdb->postmeta." GROUP BY post_id, meta_key, meta_value HAVING count > 1");
+
+		if($wpdb->num_rows > 0)
+		{
+			foreach($result as $r)
+			{
+				$intMetaID = $r->meta_id;
+
+				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_id = '%d'", $intMetaID));
+			}
+		}
+
+		//Remove duplicate usermeta
+		$result = $wpdb->get_results("SELECT umeta_id, COUNT(umeta_id) AS count FROM ".$wpdb->usermeta." GROUP BY user_id, meta_key, meta_value HAVING count > 1");
+
+		if($wpdb->num_rows > 0)
+		{
+			foreach($result as $r)
+			{
+				$intMetaID = $r->umeta_id;
+
+				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->usermeta." WHERE umeta_id = '%d'", $intMetaID));
+			}
+		}
+
+		// Pingbacks / Trackbacks
+		/*$arr_comment_types = array('pingback', 'trackback');
+
+		foreach($arr_comment_types as $comment_type)
+		{
+			$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_type = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", $comment_type));
+
+			if($wpdb->num_rows > 0)
+			{
+				do_log("Remove ".$comment_type.": ".$wpdb->last_query);
+
+				//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_type = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", $comment_type));
+			}
+		}*/
+
+		//Spam comments
+		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
+
+		if($wpdb->num_rows > 0)
+		{
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
+		}
+
+		//Duplicate comments
+		$wpdb->get_results($wpdb->prepare("SELECT *, COUNT(meta_id) AS count FROM ".$wpdb->commentmeta." GROUP BY comment_id, meta_key, meta_value HAVING count > %d", 1));
+
+		if($wpdb->num_rows > 0)
+		{
+			do_log("Remove duplicate comments: ".$wpdb->last_query);
+		}
+
+		//oEmbed caches
+		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
+
+		if($wpdb->num_rows > 0)
+		{
+			$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
+		}
+
+		/* Optimize Tables */
+		$result = $wpdb->get_results("SHOW TABLE STATUS");
+
+		foreach($result as $r)
+		{
+			$strTableName = $r->Name;
+
+			$wpdb->query("OPTIMIZE TABLE ".$strTableName);
+		}
+
+		// Remove empty folders in uploads
+		list($upload_path, $upload_url) = get_uploads_folder();
+		get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
+
+		update_option('option_base_optimized', date("Y-m-d H:i:s"), 'no');
+
+		return __("I have optimized the site for you", 'lang_base');
+	}
+
 	function cron_base()
 	{
 		global $wpdb;
@@ -569,6 +668,14 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
+			// Optimize
+			#########################
+			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-7 day")))
+			{
+				$this->do_optimize();
+			}
+			#########################
+
 			// Sync with template site
 			############################
 			$setting_base_template_site = get_option('setting_base_template_site');
@@ -885,6 +992,7 @@ class mf_base
 				}
 			}
 
+			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
 
@@ -1759,6 +1867,29 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 		}
 
+		function setting_base_optimize_callback()
+		{
+			$option_base_optimized = get_option('option_base_optimized');
+
+			if($option_base_optimized > DEFAULT_DATE)
+			{
+				$populate_next = format_date(date("Y-m-d H:i:s", strtotime($option_base_optimized." +7 day")));
+
+				$description = sprintf(__("The optimization was last run %s and will be run again %s", 'lang_base'), format_date($option_base_optimized), $populate_next);
+			}
+
+			else
+			{
+				$description = sprintf(__("The optimization has not been run yet but will be %s", 'lang_base'), get_next_cron());
+			}
+
+			echo "<div class='form_button'>"
+				.show_button(array('type' => 'button', 'name' => 'btnBaseOptimize', 'text' => __("Optimize Now", 'lang_base'), 'class' => 'button-secondary'))
+				."<p class='italic'>".$description."</p>"
+			."</div>
+			<div id='optimize_debug'></div>";
+		}
+
 		function setting_base_recommend_callback()
 		{
 			$arr_recommendations = array(
@@ -1803,6 +1934,7 @@ class mf_base
 		{
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css");
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url));
+			mf_enqueue_script('script_base_optimize', $plugin_include_url."script_optimize.js", array('ajax_url' => admin_url('admin-ajax.php')));
 		}
 
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
@@ -1965,6 +2097,32 @@ class mf_base
 		);
 
 		header("Content-Type: application/json");
+		echo json_encode($result);
+		die();
+	}
+
+	function optimize_theme()
+	{
+		global $done_text, $error_text;
+
+		$result = array();
+
+		$done_text = $this->do_optimize();
+
+		$out = get_notification();
+
+		if($out != '')
+		{
+			$result['success'] = true;
+			$result['message'] = $out;
+		}
+
+		else
+		{
+			$result['error'] = $out;
+		}
+
+		header('Content-Type: application/json');
 		echo json_encode($result);
 		die();
 	}

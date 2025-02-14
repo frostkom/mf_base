@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.4.20
+Version: 1.2.4.21
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -72,6 +72,9 @@ else
 	add_action('wp_head', array($obj_base, 'wp_head'), 0);
 }
 
+add_action('wp_ajax_optimize_theme', array($obj_base, 'optimize_theme'));
+add_action('wp_ajax_nopriv_optimize_theme', array($obj_base, 'optimize_theme'));
+
 // https://wordpress.org/support/article/configuring-automatic-background-updates/
 // https://developer.wordpress.org/reference/functions/core_auto_updates_settings/
 $setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
@@ -117,6 +120,8 @@ function activate_base()
 	}
 
 	replace_option(array('old' => 'setting_theme_enable_wp_api', 'new' => 'setting_base_enable_wp_api'));
+	replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
+	replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
 
 	mf_uninstall_plugin(array(
 		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days'),
@@ -140,6 +145,6 @@ function uninstall_base()
 
 	mf_uninstall_plugin(array(
 		'uploads' => $obj_base->post_type,
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_cron_debug', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_use_timezone', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_cron_debug', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_use_timezone', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized'),
 	));
 }

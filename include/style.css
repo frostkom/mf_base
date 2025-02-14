@@ -1,6 +1,6 @@
 @media all
 {
-	.hide, [hidden], .is_desktop .hide_on_desktop, .is_tablet .hide_on_tablet, .is_mobile .hide_on_mobile
+	.hide, [hidden]
 	{
 		display: none !important;
 	}

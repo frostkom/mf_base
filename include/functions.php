@@ -424,18 +424,18 @@ function get_toggler_container($data)
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
 	if(!isset($data['icon'])){						$data['icon'] = "fa fa-caret-right";}
-	if(!isset($data['icon_open'])){					$data['icon_open'] = "fa fa-caret-down";}
+	//if(!isset($data['icon_open'])){					$data['icon_open'] = "fa fa-caret-down";}
 
 	switch($data['type'])
 	{
 		case 'start':
 			$obj_base->get_toggler_includes();
 
-			$icon = "<i class='".$data['icon']." fa-lg toggle_icon_closed'></i>
-			<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
+			$icon = "<i class='".$data['icon']." fa-lg toggle_icon'></i>";
+			//$icon .= "<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";
 
-			$out = "<label class='toggler".($data['open'] ? " open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
+			$out = "<label class='toggler".($data['open'] ? " open is_open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
 
 				if($data['icon_first'])
 				{

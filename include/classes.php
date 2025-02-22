@@ -1893,7 +1893,7 @@ class mf_base
 		function setting_base_recommend_callback()
 		{
 			$arr_recommendations = array(
-				array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
+				//array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				array("Modern Image Formats", 'webp-uploads/load.php', __("to convert images to modern formats when uploaded", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),

@@ -1,5 +1,10 @@
 @media all
 {
+	body
+	{
+		overflow-y: scroll;
+	}
+
 	.hide, [hidden]
 	{
 		display: none !important;

@@ -420,11 +420,13 @@ function get_toggler_container($data)
 {
 	global $obj_base;
 
+	if(!isset($data['label_tag'])){					$data['label_tag'] = 'label';}
+	if(!isset($data['container_tag'])){				$data['container_tag'] = 'div';}
 	if(!isset($data['open'])){						$data['open'] = false;}
 	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
 	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
 	if(!isset($data['icon'])){						$data['icon'] = "fa fa-caret-right";}
-	//if(!isset($data['icon_open'])){					$data['icon_open'] = "fa fa-caret-down";}
+	//if(!isset($data['icon_open'])){				$data['icon_open'] = "fa fa-caret-down";}
 
 	switch($data['type'])
 	{
@@ -435,7 +437,7 @@ function get_toggler_container($data)
 			//$icon .= "<i class='".$data['icon_open']." fa-lg toggle_icon_open'></i>";
 			$text = "<span>".$data['text']."</span>";
 
-			$out = "<label class='toggler".($data['open'] ? " open is_open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
+			$out = "<".$data['label_tag']." class='toggler".($data['open'] ? " open is_open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
 
 				if($data['icon_first'])
 				{
@@ -447,14 +449,14 @@ function get_toggler_container($data)
 					$out .= $text.$icon;
 				}
 
-			$out .= "</label>
-			<div class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
+			$out .= "</".$data['label_tag'].">
+			<".$data['container_tag']." class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
 
 			return $out;
 		break;
 
 		case 'end':
-			return "</div>";
+			return "</".$data['container_tag'].">";
 		break;
 	}
 }
@@ -2570,22 +2572,6 @@ function get_categories_for_select($data = array())
 
 	return $arr_data;
 }
-
-/*function get_sidebars_for_select()
-{
-	global $obj_base;
-
-	$arr_data = array(
-		'' => "-- ".__("Choose Here", 'lang_base')." --"
-	);
-
-	foreach($GLOBALS['wp_registered_sidebars'] as $sidebar)
-	{
-		$arr_data[$sidebar['id']] = $sidebar['name'];
-	}
-
-	return $arr_data;
-}*/
 
 if(!function_exists('array_sort'))
 {

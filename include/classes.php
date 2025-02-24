@@ -975,9 +975,14 @@ class mf_base
 			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
-		if((is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php")) && get_option('setting_base_template_site') != '')
+		if(wp_is_block_theme() == false && (is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php")) && get_option('setting_base_template_site') != '')
 		{
 			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
+		}
+
+		else
+		{
+			delete_option('setting_base_template_site');
 		}
 
 		if(IS_SUPER_ADMIN)

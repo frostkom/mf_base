@@ -442,7 +442,7 @@ class mf_base
 				echo "Running cron manually...";
 			}*/
 
-			update_option('option_cron_started', date("Y-m-d H:i:s"), 'no');
+			update_option('option_cron_started', date("Y-m-d H:i:s"), false);
 		}
 	}
 
@@ -556,7 +556,7 @@ class mf_base
 
 		if($has_changed == true)
 		{
-			update_option('option_base_time_limited', $option_base_time_limited, 'no');
+			update_option('option_base_time_limited', $option_base_time_limited, false);
 		}
 	}
 
@@ -654,7 +654,7 @@ class mf_base
 		list($upload_path, $upload_url) = get_uploads_folder();
 		get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
 
-		update_option('option_base_optimized', date("Y-m-d H:i:s"), 'no');
+		update_option('option_base_optimized', date("Y-m-d H:i:s"), false);
 
 		return __("I have optimized the site for you", 'lang_base');
 	}
@@ -725,13 +725,13 @@ class mf_base
 
 				get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
 
-				update_site_option('option_base_ftp_size', $this->ftp_size, 'no');
-				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders, 'no');
+				update_site_option('option_base_ftp_size', $this->ftp_size);
+				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
 
 				$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
 
-				update_site_option('option_base_db_size', $arr_db_info['db_size'], 'no');
-				update_site_option('option_base_large_tables', $arr_db_info['tables'], 'no');
+				update_site_option('option_base_db_size', $arr_db_info['db_size']);
+				update_site_option('option_base_large_tables', $arr_db_info['tables']);
 			}
 			############################
 
@@ -751,7 +751,7 @@ class mf_base
 
 	function run_cron_end()
 	{
-		update_option('option_cron_ended', date("Y-m-d H:i:s"), 'no');
+		update_option('option_cron_ended', date("Y-m-d H:i:s"), false);
 	}
 
 	function has_page_template($data = array())
@@ -1853,7 +1853,7 @@ class mf_base
 
 				if($updated == true)
 				{
-					update_option('option_sync_sites', $option_sync_sites, 'no');
+					update_option('option_sync_sites', $option_sync_sites, false);
 				}
 			}
 		}

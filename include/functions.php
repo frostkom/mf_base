@@ -98,7 +98,7 @@ function setting_time_limit($data)
 
 	if($has_changed == true)
 	{
-		update_option('option_base_time_limited', $option_base_time_limited, 'no');
+		update_option('option_base_time_limited', $option_base_time_limited, false);
 	}
 
 	switch($data['return'])
@@ -694,7 +694,7 @@ function replace_option($data)
 
 	if($option_old != '')
 	{
-		update_option($data['new'], $option_old);
+		update_option($data['new'], $option_old, false);
 		delete_option($data['old']);
 	}
 }

@@ -98,7 +98,7 @@ switch($type_action)
 				'ip' => get_current_visitor_ip(),
 			);
 
-			update_option('option_sync_sites', $option_sync_sites, 'no');
+			update_option('option_sync_sites', $option_sync_sites, false);
 		}
 
 		$json_output = apply_filters('api_sync', $json_output, array('remote_site_url' => $remote_site_url));

@@ -450,7 +450,7 @@ function get_toggler_container($data)
 				}
 
 			$out .= "</".$data['label_tag'].">
-			<".$data['container_tag']." class='toggle_container".($data['open'] ? "" : " hide")."' rel='".$data['rel']."'>";
+			<".$data['container_tag']." class='toggle_container' rel='".$data['rel']."'>"; //".($data['open'] ? "" : " hide")."
 
 			return $out;
 		break;

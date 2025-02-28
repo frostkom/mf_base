@@ -25,8 +25,9 @@ class mf_base
 	var $phpmailer_temp = array();
 	var $file_warning;
 	var $arr_uploads_ignore_folder;
-	//var $arr_uploads_ignore_folder_htaccess;
 	var $file_name = "";
+	var $arr_post_types = array();
+	var $arr_public_posts = array();
 
 	function __construct()
 	{
@@ -678,53 +679,6 @@ class mf_base
 		}
 	}
 
-	function publish_posts()
-	{
-		global $wpdb;
-
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID, meta_key, meta_value FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE (meta_key = %s OR meta_key = %s) AND meta_value > %s", $this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date', DEFAULT_DATE));
-
-		foreach($result as $r)
-		{
-			$post_id = $r->ID;
-			$post_meta_key = $r->meta_key;
-			$post_meta_value = $r->meta_value;
-
-			if($post_meta_value <= date("Y-m-d H:i:s"))
-			{
-				switch($post_meta_key)
-				{
-					case $this->meta_prefix.'publish_date':
-						$post_status = 'publish';
-					break;
-
-					case $this->meta_prefix.'unpublish_date':
-						$post_status = 'draft';
-					break;
-
-					default:
-						$post_status = '';
-
-						do_log(__FUNCTION__." error: ".$wpdb->last_query);
-					break;
-				}
-
-				if($post_status != '')
-				{
-					$post_data = array(
-						'ID' => $post_id,
-						'post_status' => $post_status,
-						'meta_input' => array(
-							$post_meta_key => '',
-						),
-					);
-
-					wp_update_post($post_data);
-				}
-			}
-		}
-	}
-
 	function cron_base()
 	{
 		global $wpdb;
@@ -734,8 +688,6 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
-			$this->publish_posts();
-
 			// Optimize
 			#########################
 			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-7 day")))
@@ -1175,20 +1127,7 @@ class mf_base
 				{
 					$this->file_warning[] = $data['file'];
 				}
-
-				/*else if($file_name == ".htaccess" && !preg_match("/\/".implode("|", $this->arr_uploads_ignore_folder_htaccess)."\//", $data['file']))
-				{
-					$this->file_warning[] = $data['file']; // There is usually an infected file in the same folder and they want to make sure that it is not denied
-				}*/
 			}
-
-			/*else
-			{
-				if($file_name == ".htaccess")
-				{
-					$this->file_warning[] = $data['file'];
-				}
-			}*/
 		}
 
 		function get_date_diff()
@@ -1512,7 +1451,6 @@ class mf_base
 
 						$this->file_warning = array();
 						$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder('php');
-						//$this->arr_uploads_ignore_folder_htaccess = $this->get_uploads_ignore_folder('htaccess');
 
 						get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
 
@@ -2137,25 +2075,72 @@ class mf_base
 
 	function column_header($cols)
 	{
+		unset($cols['date']);
+
 		if(apply_filters('has_comments', true) == false)
 		{
 			unset($cols['comments']);
 		}
 
+		if(check_var('post_status') != 'trash')
+		{
+			$cols['index'] = __("Index", 'lang_base');
+		}
+
 		return $cols;
 	}
 
-	/*function column_cell($col, $post_id)
+	function column_cell($col, $post_id)
 	{
 		global $wpdb, $post;
 
 		switch($col)
 		{
-			case 'seo':
-				// Add later?
+			case 'index':
+				$index_type = '';
+				$index_type = apply_filters('filter_theme_core_seo_type', $index_type);
+
+				if($index_type == '' && $post->post_status != 'publish')
+				{
+					$index_type = 'not_published';
+				}
+
+				if($index_type == '')
+				{
+					$page_index = get_post_meta($post_id, $this->meta_prefix.'page_index', true);
+
+					if(in_array($page_index, array('noindex', 'none')))
+					{
+						$index_type = 'not_indexed';
+					}
+				}
+
+				if($index_type == '' && $this->is_post_password_protected($post_id))
+				{
+					$index_type = 'password_protected';
+				}
+
+				switch($index_type)
+				{
+					case 'password_protected':
+						echo "<i class='fa fa-lock fa-lg grey' title='".__("The page is password protected", 'lang_base')."'></i>";
+					break;
+
+					case 'not_published':
+						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not published", 'lang_base')."'></i>";
+					break;
+
+					case 'not_indexed':
+						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not indexed", 'lang_base')."'></i>";
+					break;
+
+					default:
+						echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+					break;
+				}
 			break;
 		}
-	}*/
+	}
 
 	function rwmb_meta_boxes($meta_boxes)
 	{
@@ -2217,16 +2202,6 @@ class mf_base
 							'none' => __("Do not Index and do not follow links", 'lang_base'),
 						),
 					),
-					array(
-						'name' => __("Publish", 'lang_base'),
-						'id' => $this->meta_prefix.'publish_date',
-						'type' => 'datetime',
-					),
-					array(
-						'name' => __("Unpublish", 'lang_base'),
-						'id' => $this->meta_prefix.'unpublish_date',
-						'type' => 'datetime',
-					),
 				),
 			);
 		}
@@ -2278,6 +2253,125 @@ class mf_base
 		echo json_encode($result);
 		die();
 	}
+
+	function is_post_password_protected($post_id = 0)
+	{
+		$out = false;
+
+		if(!is_user_logged_in())
+		{
+			if($out == false)
+			{
+				if($post_id > 0)
+				{
+					$out = post_password_required($post_id);
+				}
+
+				else
+				{
+					$out = post_password_required();
+				}
+			}
+
+			if($out == false)
+			{
+				if($post_id == 0)
+				{
+					global $post;
+
+					if(isset($post->ID))
+					{
+						$post_id = $post->ID;
+					}
+				}
+
+				$out = apply_filters('filter_is_password_protected', $out, array('post_id' => $post_id, 'check_login' => true));
+			}
+		}
+
+		return $out;
+	}
+
+	function has_noindex($post_id)
+	{
+		$page_index = get_post_meta($post_id, $this->meta_prefix.'page_index', true);
+
+		return ($page_index != '' && in_array($page_index, array('noindex', 'none')));
+	}
+
+	function get_public_post_types($data = array())
+	{
+		if(!isset($data['allow_password_protected'])){	$data['allow_password_protected'] = false;}
+
+		$this->arr_post_types = array();
+
+		foreach(get_post_types(array('public' => true, 'exclude_from_search' => false), 'names') as $post_type)
+		{
+			if($post_type != 'attachment')
+			{
+				$data_temp = array(
+					'post_type' => $post_type,
+				);
+
+				if($data['allow_password_protected'] == false)
+				{
+					$data_temp['where'] = "post_password = ''";
+				}
+
+				get_post_children($data_temp, $this->arr_post_types);
+			}
+		}
+	}
+
+	function get_public_posts($data = array())
+	{
+		if(!isset($data['allow_noindex'])){				$data['allow_noindex'] = false;}
+		if(!isset($data['allow_password_protected'])){	$data['allow_password_protected'] = false;}
+
+		$this->arr_public_posts = array();
+
+		if(count($this->arr_post_types) == 0)
+		{
+			$this->get_public_post_types(array('allow_password_protected' => $data['allow_password_protected']));
+		}
+
+		foreach($this->arr_post_types as $post_id => $post_title)
+		{
+			if($data['allow_noindex'] == false && $this->has_noindex($post_id) || $data['allow_password_protected'] == false && $this->is_post_password_protected($post_id))
+			{
+				// Do nothing
+			}
+
+			else
+			{
+				$this->arr_public_posts[$post_id] = $post_title;
+			}
+		}
+	}
+
+	function wp_sitemaps_posts_query_args($args, $post_type)
+	{
+		if(!isset($args['post__not_in'])){	$args['post__not_in'] = array();}
+
+		$this->get_public_posts(array('allow_noindex' => true, 'allow_password_protected' => true));
+
+		foreach($this->arr_public_posts as $post_id => $post_title)
+		{
+			if($this->has_noindex($post_id) || $this->is_post_password_protected($post_id))
+			{
+				$args['post__not_in'][] = $post_id;
+			}
+		}
+
+		return $args;
+	}
+
+	function wp_sitemaps_taxonomies($taxonomies)
+	{
+		unset($taxonomies['category']);
+
+        return $taxonomies;
+    }
 
 	function login_init()
 	{

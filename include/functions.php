@@ -1457,6 +1457,18 @@ function get_file_suffix($file, $force_last = false)
 	return $suffix;
 }
 
+function filter_style_var($value)
+{
+	if(strpos($value, 'var:') !== false)
+	{
+		$value = str_replace("var:", "var(--wp--", $value);
+		$value = str_replace("|", "--", $value);
+		$value .= ")";
+	}
+
+	return $value;
+}
+
 function parse_block_attributes($data = array())
 {
 	if(!isset($data['class'])){			$data['class'] = "";}
@@ -1465,14 +1477,8 @@ function parse_block_attributes($data = array())
 
 	$out = "";
 
-	//$out .= var_export($data, true);
 	/*array (
 		'align' => 'full', // .alignfull
-		'style' => array (
-			'color' => array (
-				'background' => '#d5e0f0ad', // background: #d5e0f0ad
-			),
-		),
 	)*/
 
 	if(isset($data['attributes']['className']) && $data['attributes']['className'] != '')
@@ -1484,12 +1490,12 @@ function parse_block_attributes($data = array())
 
 	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
 	{
-		foreach($data['attributes']['style'] as $key_parent => $arr_value)
+		foreach($data['attributes']['style'] as $key_parent => $arr_value_parent)
 		{
 			switch($key_parent)
 			{
 				case 'border':
-					foreach($arr_value as $key_child => $value)
+					foreach($arr_value_parent as $key_child => $value)
 					{
 						switch($key_child)
 						{
@@ -1498,31 +1504,68 @@ function parse_block_attributes($data = array())
 							break;
 
 							default:
-								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value, true)."' has to be taken care of");
+								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 							break;
 						}
 					}
 				break;
 
 				case 'color':
-					if(isset($arr_value['text']) && $arr_value['text'] != '')
+					foreach($arr_value_parent as $key_child => $value)
 					{
-						$data['style'] .= "color: ".$arr_value['text'].";";
-					}
+						switch($key_child)
+						{
+							case 'background':
+								$data['style'] .= "background-color: ".$value.";";
+							break;
 
-					if(isset($arr_value['background']) && $arr_value['background'] != '')
-					{
-						$data['style'] .= "background-color: ".$arr_value['background'].";";
+							case 'text':
+								$data['style'] .= "color: ".$value.";";
+							break;
+
+							default:
+								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+							break;
+						}
 					}
 				break;
 
-				case 'elements':
+				/*case 'elements':
 					//array ( 'link' => array ( 'color' => array ( 'text' => 'var:preset|color|base', ), ), )
 					//array ( 'link' => array ( 'color' => array ( 'text' => '#ffffff', ), ), )
+				break;*/
+
+				case 'spacing':
+					foreach($arr_value_parent as $key_child => $arr_value_child)
+					{
+						switch($key_child)
+						{
+							case 'padding':
+								foreach($arr_value_child as $key_grandchild => $value)
+								{
+									switch($key_grandchild)
+									{
+										case 'top':
+										case 'bottom':
+											$data['style'] .= $key_child."-".$key_grandchild.": ".filter_style_var($value).";";
+										break;
+
+										default:
+											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of");
+										break;
+									}
+								}
+							break;
+
+							default:
+								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+							break;
+						}
+					}
 				break;
 
 				default:
-					do_log(__FUNCTION__.": The key parent '".$key_parent."' with value '".var_export($arr_value, true)."' has to be taken care of");
+					do_log(__FUNCTION__.": The key parent '".$key_parent."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 				break;
 			}
 		}

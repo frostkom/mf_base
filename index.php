@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.0
+Version: 1.2.5.2
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -124,6 +124,13 @@ add_filter('get_block_search', array($obj_base, 'get_block_search'));
 
 function activate_base()
 {
+	global $obj_base;
+
+	if(!isset($obj_base))
+	{
+		$obj_base = new mf_base();
+	}
+
 	if(is_admin())
 	{
 		set_cron('cron_base', 'setting_base_cron');
@@ -136,11 +143,6 @@ function activate_base()
 	if(is_plugin_active("mf_theme_core/index.php"))
 	{
 		global $obj_base, $obj_theme_core;
-
-		if(!isset($obj_base))
-		{
-			$obj_base = new mf_base();
-		}
 
 		if(!isset($obj_theme_core))
 		{

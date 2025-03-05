@@ -1196,7 +1196,19 @@ class mf_base
 
 							if(!in_array($collation_name, $arr_collation_name_recommended))
 							{
-								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".sprintf(__("This is currently set to %s but to get the correct order on Swedish characters you should change to one of these %s", 'lang_base'), $collation_name, implode(", ", $arr_collation_name_recommended))."</p>";
+								$arr_collation_name_parts = explode("_", $collation_name);
+								
+								$collation_name_recommended = implode(", ", $arr_collation_name_recommended);
+
+								foreach($arr_collation_name_recommended as $key => $value)
+								{
+									if(substr($value, 0, strlen($arr_collation_name_parts[0])) == $arr_collation_name_parts[0])
+									{
+										$collation_name_recommended = $value;
+									}
+								}
+
+								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".$collation_name." -> ".$collation_name_recommended."</p>";
 							}
 						break;
 					}
@@ -1431,27 +1443,30 @@ class mf_base
 							."</p>";
 						}
 
-						$this->file_warning = array();
-						$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder('php');
-
-						get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
-
-						if(IS_SUPER_ADMIN && count($this->file_warning) > 0)
+						/*if(IS_SUPER_ADMIN)
 						{
-							echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
-								<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-								.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
-							."</p>";
+							$this->file_warning = array();
+							$this->arr_uploads_ignore_folder = $this->get_uploads_ignore_folder('php');
 
-							echo "<ul>";
+							get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_suspicious_files')));
 
-								foreach($this->file_warning as $file_path)
-								{
-									echo "<li>".$file_path."</li>";
-								}
+							if(count($this->file_warning) > 0)
+							{
+								echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
+									<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+									.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
+								."</p>";
 
-							echo "</ul>";
-						}
+								echo "<ul>";
+
+									foreach($this->file_warning as $file_path)
+									{
+										echo "<li>".$file_path."</li>";
+									}
+
+								echo "</ul>";
+							}
+						}*/
 					}
 
 					$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());

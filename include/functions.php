@@ -1540,6 +1540,7 @@ function parse_block_attributes($data = array())
 					{
 						switch($key_child)
 						{
+							case 'margin':
 							case 'padding':
 								foreach($arr_value_child as $key_grandchild => $value)
 								{

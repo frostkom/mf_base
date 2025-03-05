@@ -1820,7 +1820,7 @@ function get_attachment_data_by_id($id)
 {
 	global $wpdb;
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->posts." WHERE post_type = 'attachment' AND ID = '%d' LIMIT 0, 1", $id));
+	$result = $wpdb->get_results($wpdb->prepare("SELECT post_title, guid FROM ".$wpdb->posts." WHERE post_type = %s AND ID = '%d' LIMIT 0, 1", 'attachment', $id));
 
 	if($wpdb->num_rows > 0)
 	{

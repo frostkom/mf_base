@@ -401,16 +401,6 @@ class mf_base
 		define('IS_EDITOR', $is_editor);
 		define('IS_AUTHOR', $is_author);
 
-		if(get_site_option('setting_base_use_timezone', 'yes') == 'yes')
-		{
-			$timezone_string = get_option('timezone_string');
-
-			if($timezone_string != '')
-			{
-				date_default_timezone_set($timezone_string);
-			}
-		}
-
 		$this->reschedule_base();
 
 		// Blocks
@@ -1009,16 +999,6 @@ class mf_base
 
 		if(IS_SUPER_ADMIN)
 		{
-			if(get_option('setting_base_use_timezone') == 'yes')
-			{
-				list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
-
-				if($date_diff > 10)
-				{
-					$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
-				}
-			}
-
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
@@ -1871,15 +1851,6 @@ class mf_base
 			}
 		}
 
-		function setting_base_use_timezone_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'yes'));
-
-			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-		}
-
 		function setting_base_optimize_callback()
 		{
 			$option_base_optimized = get_option('option_base_optimized');
@@ -1967,12 +1938,6 @@ class mf_base
 	function filter_sites_table_settings($arr_settings)
 	{
 		$arr_settings['settings_base'] = array(
-			/*'setting_base_use_timezone' => array(
-				'type' => 'bool',
-				'global' => true,
-				'icon' => "fas fa-clock",
-				'name' => __("Common", 'lang_base')." - ".__("Use Timezone to adjust time", 'lang_base'),
-			),*/
 			'setting_base_template_site' => array(
 				'type' => 'string',
 				'global' => false,

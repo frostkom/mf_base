@@ -1013,7 +1013,7 @@ class mf_base
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
 
-		function get_uploads_ignore_folder($type)
+		/*function get_uploads_ignore_folder($type)
 		{
 			$arr_data = array();
 
@@ -1110,7 +1110,7 @@ class mf_base
 					$this->file_warning[] = $data['file'];
 				}
 			}
-		}
+		}*/
 
 		function get_date_diff()
 		{

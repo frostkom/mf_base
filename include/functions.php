@@ -1459,7 +1459,12 @@ function get_file_suffix($file, $force_last = false)
 
 function filter_style_var($value)
 {
-	if(strpos($value, 'var:') !== false)
+	if(is_array($value))
+	{
+		do_log(__FUNCTION__." - Not a string: ".var_export($value, true));
+	}
+
+	else if(strpos($value, 'var:') !== false)
 	{
 		$value = str_replace("var:", "var(--wp--", $value);
 		$value = str_replace("|", "--", $value);
@@ -1530,16 +1535,40 @@ function parse_block_attributes($data = array())
 					}
 				break;
 
-				/*case 'elements':
-					//array ( 'link' => array ( 'color' => array ( 'text' => 'var:preset|color|base', ), ), )
-					//array ( 'link' => array ( 'color' => array ( 'text' => '#ffffff', ), ), )
-				break;*/
-
+				case 'elements':
 				case 'spacing':
 					foreach($arr_value_parent as $key_child => $arr_value_child)
 					{
 						switch($key_child)
 						{
+							case 'link':
+								foreach($arr_value_child as $key_grandchild => $arr_value_grandchild)
+								{
+									switch($key_grandchild)
+									{
+										case 'color':
+											foreach($arr_value_grandchild as $key_grandgrandchild => $arr_value_grandgrandchild)
+											{
+												switch($key_grandgrandchild)
+												{
+													case 'text':
+														$data['style'] .= "color: ".filter_style_var($arr_value_grandgrandchild).";";
+													break;
+
+													default:
+														do_log(__FUNCTION__.": The key grandgrandchild '".$key_grandgrandchild."' with value '".var_export($arr_value_grandchild, true)."' has to be taken care of");
+													break;
+												}
+											}
+										break;
+
+										default:
+											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of");
+										break;
+									}
+								}
+							break;
+
 							case 'margin':
 							case 'padding':
 								foreach($arr_value_child as $key_grandchild => $value)

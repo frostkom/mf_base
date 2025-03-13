@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.6
+Version: 1.2.5.7
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -82,17 +82,13 @@ else
 
 add_filter('has_comments', array($obj_base, 'has_comments'), 10);
 
+add_action('wp_ajax_get_base_info', array($obj_base, 'get_base_info'));
+add_action('wp_ajax_get_base_cron', array($obj_base, 'get_base_cron'));
+
 add_action('wp_ajax_optimize_theme', array($obj_base, 'optimize_theme'));
 add_action('wp_ajax_nopriv_optimize_theme', array($obj_base, 'optimize_theme'));
 
-// https://wordpress.org/support/article/configuring-automatic-background-updates/
-// https://developer.wordpress.org/reference/functions/core_auto_updates_settings/
-$setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
-
-/*if(!in_array('', $setting_base_automatic_updates) && !has_filter('automatic_updater_disabled', '__return_true'))
-{
-	add_filter('automatic_updater_disabled', '__return_true');
-}*/
+/*$setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
 
 if(!in_array('core', $setting_base_automatic_updates) && !has_filter('auto_update_core', '__return_false'))
 {
@@ -107,7 +103,7 @@ if(!in_array('theme', $setting_base_automatic_updates) && !has_filter('auto_upda
 if(!in_array('plugin', $setting_base_automatic_updates) && !has_filter('auto_update_plugin', '__return_false'))
 {
 	add_filter('auto_update_plugin', '__return_false');
-}
+}*/
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 
@@ -153,7 +149,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone'),
+		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone', 'setting_base_automatic_updates', 'setting_base_cron_debug'),
 		'meta' => array($obj_base->meta_prefix.'publish_date', $obj_base->meta_prefix.'unpublish_date'),
 	));
 }
@@ -175,7 +171,7 @@ function uninstall_base()
 
 	mf_uninstall_plugin(array(
 		'uploads' => $obj_base->post_type,
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_cron_debug', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_sync_sites', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized'),
 		'meta' => array($obj_base->meta_prefix.'page_index'),
 	));
 }

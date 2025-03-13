@@ -22,65 +22,12 @@ $json_output = array(
 $type = check_var('type', 'char');
 $arr_input = explode("/", $type);
 
-$type_action = $arr_input[0];
-$type_action_type = (isset($arr_input[1]) ? $arr_input[1] : '');
-$type_class = (isset($arr_input[2]) ? $arr_input[2] : '');
-
-switch($type_action)
+switch($arr_input[0])
 {
-	case 'get_base_info':
-		if(is_user_logged_in())
-		{
-			ob_start();
-
-			$obj_base->get_base_info();
-
-			$json_output['success'] = true;
-			$json_output['html'] = ob_get_clean();
-			$json_output['timestamp'] = date("Y-m-d H:i:s");
-		}
-
-		else
-		{
-			$json_output['message'] = __("You have to be logged in to access this", 'lang_base');
-		}
-	break;
-
-	case 'get_base_cron':
-		if(is_user_logged_in())
-		{
-			ob_start();
-
-			$obj_base->get_base_cron();
-
-			$json_output['success'] = true;
-			$json_output['html'] = ob_get_clean();
-			$json_output['timestamp'] = date("Y-m-d H:i:s");
-		}
-
-		else
-		{
-			$json_output['message'] = __("You have to be logged in to access this", 'lang_base');
-		}
-	break;
-
 	case 'my_ip':
 		$json_output['success'] = true;
 		$json_output['ip'] = get_current_visitor_ip();
 	break;
-
-	/*case 'import':
-		if($type_action_type == "check" && is_user_logged_in())
-		{
-			$plugin_name = substr($type_class, 0, -7);
-
-			include_once("../../".$plugin_name."/include/classes.php");
-			include_once("../../".$plugin_name."/include/functions.php");
-
-			$json_output['success'] = true;
-			$json_output['result'] = call_user_func(array($type_class, 'get_result'));
-		}
-	break;*/
 
 	case 'sync':
 		$json_output['success'] = true;

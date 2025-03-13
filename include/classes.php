@@ -953,7 +953,7 @@ class mf_base
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			'setting_base_cron_debug' => __("Debug Schedule", 'lang_base'),
+			//'setting_base_cron_debug' => __("Debug Schedule", 'lang_base'),
 		);
 
 		switch($this->get_server_type())
@@ -984,7 +984,7 @@ class mf_base
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
-			$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
+			//$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
 		if(wp_is_block_theme() == false && (is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php")) && get_option('setting_base_template_site') != '')
@@ -1126,6 +1126,12 @@ class mf_base
 		function get_base_info()
 		{
 			global $wpdb;
+
+			$json_output = array(
+				'success' => false,
+			);
+
+			ob_start();
 
 			$php_version = explode("-", phpversion());
 			$php_version = $php_version[0];
@@ -1545,7 +1551,7 @@ class mf_base
 
 					if(is_multisite())
 					{
-						$fileupload_maxk = (1024 * $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM ".$wpdb->sitemeta." WHERE meta_key = %s LIMIT 0, 1", 'fileupload_maxk')));
+						$fileupload_maxk = (KB_IN_BYTES * $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM ".$wpdb->sitemeta." WHERE meta_key = %s LIMIT 0, 1", 'fileupload_maxk')));
 
 						echo "<p>
 							<i class='fa ".($fileupload_maxk >= $this->upload_max_filesize ? "fa-check green" : "fa-times red display_warning")."'></i> "
@@ -1562,14 +1568,69 @@ class mf_base
 					if(function_exists('sys_getloadavg'))
 					{
 						$load = sys_getloadavg();
+						$load_limit = 1;
 
-						if(isset($load[0]))
+						if(isset($load[0]) && $load[0] >= $load_limit)
 						{
-							echo "<p><i class='fa ".($load[0] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>
-							<p><i class='fa ".($load[1] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>
-							<p><i class='fa ".($load[2] < 1 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
+							echo "<p><i class='fa ".($load[0] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>";
+						}
+
+						if(isset($load[1]) && $load[1] >= $load_limit)
+						{
+							echo "<p><i class='fa ".($load[1] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>";
+						}
+
+						if(isset($load[2]) && $load[2] >= $load_limit)
+						{
+							echo "<p><i class='fa ".($load[2] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
 						}
 					}
+
+					$arr_autoload_type = array(
+						'yes' => 0,
+						'on' => 0,
+						'auto' => 0,
+						'no' => 0,
+						'off' => 0
+					);
+					
+					$arr_limit = array(
+						'yes' => (MB_IN_BYTES / 2),
+						'auto' => (MB_IN_BYTES * 5),
+					);
+
+					foreach($arr_autoload_type as $key => $value)
+					{
+						$key_temp = $key;
+
+						switch($key)
+						{
+							case 'on':
+								$key_temp = 'yes';
+							break;
+
+							case 'off':
+								$key_temp = 'no';
+							break;
+						}
+
+						$arr_autoload_type[$key_temp] = $wpdb->get_var($wpdb->prepare("SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = %s", $key));
+					}
+
+					$out_temp = "";
+
+					foreach($arr_autoload_type as $key => $value)
+					{
+						if($value > 0)
+						{
+							$out_temp .= ($out_temp != '' ? ", " : "")."<span title='".show_final_size($value)."'".(isset($arr_limit[$key]) && $value > $arr_limit[$key] ? " class='color_red'" : "").">".$key."</span>";
+						}
+					}
+						
+					echo "<p>
+						<i class='fa ".(($arr_autoload_type['yes'] < $arr_limit['yes'] && $arr_autoload_type['auto'] < $arr_limit['auto']) ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						.__("Autoload", 'lang_base').": ".$out_temp
+					."</p>";
 
 					$current_visitor_ip = get_current_visitor_ip();
 
@@ -1579,6 +1640,14 @@ class mf_base
 					."</p>
 				</div>
 			</div>";
+
+			$json_output['success'] = true;
+			$json_output['html'] = ob_get_clean();
+			$json_output['timestamp'] = date("Y-m-d H:i:s");
+
+			header('Content-Type: application/json');
+			echo json_encode($json_output);
+			die();
 		}
 
 		function setting_base_info_callback()
@@ -1589,6 +1658,12 @@ class mf_base
 		function get_base_cron()
 		{
 			global $wpdb;
+
+			$json_output = array(
+				'success' => false,
+			);
+
+			ob_start();
 
 			$obj_cron = new mf_cron();
 
@@ -1657,6 +1732,14 @@ class mf_base
 					echo " ".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron);
 				}
 			}
+
+			$json_output['success'] = true;
+			$json_output['html'] = ob_get_clean();
+			$json_output['timestamp'] = date("Y-m-d H:i:s");
+
+			header('Content-Type: application/json');
+			echo json_encode($json_output);
+			die();
 		}
 
 		function setting_base_cron_callback()
@@ -1674,7 +1757,7 @@ class mf_base
 			echo "<div class='get_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
 		}
 
-		function setting_base_cron_debug_callback()
+		/*function setting_base_cron_debug_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
@@ -1720,7 +1803,7 @@ class mf_base
 					echo "</ul>";
 				}
 			}
-		}
+		}*/
 
 		function setting_base_update_htaccess_callback()
 		{
@@ -1794,7 +1877,7 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 		}
 
-		function get_automatic_updates_for_select()
+		/*function get_automatic_updates_for_select()
 		{
 			return array(
 				'core' => __("Core", 'lang_base'),
@@ -1810,7 +1893,7 @@ class mf_base
 			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, array()));
 
 			echo show_select(array('data' => $this->get_automatic_updates_for_select(), 'name' => $setting_key."[]", 'value' => $option));
-		}
+		}*/
 
 		function setting_base_template_site_callback()
 		{
@@ -1932,8 +2015,12 @@ class mf_base
 		if($pagenow == 'options-general.php' && check_var('page') == BASE_OPTIONS_PAGE)
 		{
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css");
-			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array('default_tab' => "settings_base", 'settings_page' => true, 'plugin_include_url' => $plugin_include_url));
-			mf_enqueue_script('script_base_optimize', $plugin_include_url."script_optimize.js", array('ajax_url' => admin_url('admin-ajax.php')));
+			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array(
+				'default_tab' => "settings_base",
+				'settings_page' => true,
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'plugin_include_url' => $plugin_include_url,
+			));
 		}
 
 		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
@@ -3044,10 +3131,10 @@ class mf_cron
 
 		$this->type = $type;
 
-		if(get_site_option('setting_base_cron_debug') == 'yes')
+		/*if(get_site_option('setting_base_cron_debug') == 'yes')
 		{
 			do_log("Cron: ".$this->type." started ".$this->date_start);
-		}
+		}*/
 
 		list($upload_path, $upload_url) = get_uploads_folder();
 
@@ -3100,7 +3187,7 @@ class mf_cron
 
 	function end()
 	{
-		if(get_site_option('setting_base_cron_debug') == 'yes')
+		/*if(get_site_option('setting_base_cron_debug') == 'yes')
 		{
 			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => date("Y-m-d H:i:s"), 'type' => 'ceil', 'return' => 'seconds'));
 
@@ -3110,7 +3197,7 @@ class mf_cron
 			{
 				do_log("Cron: ".$this->type." ended after ".$time_difference."s");
 			}
-		}
+		}*/
 
 		if(file_exists($this->file))
 		{

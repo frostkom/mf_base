@@ -119,6 +119,114 @@ jQuery(function($)
 				}
 			});
 		}
+
+		$(".get_base_info").each(function()
+		{
+			var self = $(this);
+
+			$.ajax(
+			{
+				url: script_base_settings.ajax_url,
+				type: 'post',
+				dataType: 'json',
+				data: {
+					action: 'get_base_info'
+				},
+				success: function(data)
+				{
+					if(data.success)
+					{
+						self.html(data.html);
+					}
+
+					else
+					{
+						console.log(data.message);
+					}
+				}
+			});
+		});
+
+		function get_base_cron(self)
+		{
+			$.ajax(
+			{
+				url: script_base_settings.ajax_url,
+				type: 'post',
+				dataType: 'json',
+				data: {
+					action: 'get_base_cron'
+				},
+				success: function(data)
+				{
+					if(data.success)
+					{
+						self.html(data.html);
+					}
+
+					else
+					{
+						console.log(data.message);
+					}
+				}
+			});
+		}
+
+		$(".get_base_cron").each(function()
+		{
+			var self = $(this);
+
+			get_base_cron(self);
+
+			setInterval(function()
+			{
+				get_base_cron(self);
+			}, 60000);
+		});
+
+		function run_ajax(obj)
+		{
+			obj.button.addClass('is_disabled');
+			obj.selector.html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+
+			$.ajax(
+			{
+				url: script_base_settings.ajax_url,
+				type: 'post',
+				dataType: 'json',
+				data: {
+					action: obj.action
+				},
+				success: function(data)
+				{
+					obj.selector.empty();
+
+					obj.button.removeClass('is_disabled');
+
+					if(data.success)
+					{
+						obj.selector.html(data.message);
+					}
+
+					else
+					{
+						obj.selector.html(data.error);
+					}
+				}
+			});
+
+			return false;
+		}
+
+		$(document).on('click', "button[name='btnBaseOptimize']:not(.is_disabled)", function(e)
+		{
+			run_ajax(
+			{
+				'button': $(e.currentTarget),
+				'action': 'optimize_theme',
+				'selector': $("#optimize_debug")
+			});
+		});
 	}
 
 	hash_action();
@@ -140,61 +248,5 @@ jQuery(function($)
 		$("html, body").scrollTop(0);
 
 		return false;
-	});
-
-	$(".get_base_info").each(function()
-	{
-		var self = $(this);
-
-		$.ajax(
-		{
-			url: script_base_settings.plugin_include_url + 'api/?type=get_base_info',
-			dataType: 'json',
-			success: function(data)
-			{
-				if(data.success)
-				{
-					self.html(data.html);
-				}
-
-				else
-				{
-					console.log(data.message);
-				}
-			}
-		});
-	});
-
-	function get_base_cron(self)
-	{
-		$.ajax(
-		{
-			url: script_base_settings.plugin_include_url + 'api/?type=get_base_cron',
-			dataType: 'json',
-			success: function(data)
-			{
-				if(data.success)
-				{
-					self.html(data.html);
-				}
-
-				else
-				{
-					console.log(data.message);
-				}
-			}
-		});
-	}
-
-	$(".get_base_cron").each(function()
-	{
-		var self = $(this);
-
-		get_base_cron(self);
-
-		setInterval(function()
-		{
-			get_base_cron(self);
-		}, 60000);
 	});
 });

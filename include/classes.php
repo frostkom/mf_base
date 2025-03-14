@@ -1603,7 +1603,7 @@ class mf_base
 
 					foreach($arr_autoload_type as $key => $value)
 					{
-						if($value['byte'] > 0)
+						if(isset($value['byte']) && $value['byte'] > 0)
 						{
 							$out_temp .= ($out_temp != '' ? ", " : "")."<span title='".show_final_size($value['byte'])."'".(isset($arr_autoload_type[$key]['limit']) && $value['byte'] > $arr_autoload_type[$key]['limit'] ? " class='color_red'" : "").">".$key."</span>";
 						}

@@ -1979,45 +1979,6 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version;
 }
 
-function point2int($in, $handle)
-{
-	$str_version = 0;
-	$multiplier = 1;
-
-	if($in != '')
-	{
-		if(strpos($in, "-"))
-		{
-			list($in, $rest) = explode("-", $in);
-		}
-
-		$arr_version = explode(".", $in);
-
-		$count_temp = count($arr_version);
-
-		while($count_temp < 3)
-		{
-			$arr_version[] = 0;
-
-			$count_temp++;
-		}
-
-		for($i = 1; $i <= $count_temp; $i++)
-		{
-			$str_version += ((int)$arr_version[$count_temp - $i] * $multiplier);
-
-			/*if((int)$arr_version[$count_temp - $i] != $arr_version[$count_temp - $i])
-			{
-				do_log(__FUNCTION__.": ".$handle.", ".$in." -> ".$count_temp." -> ".$arr_version[$count_temp - $i]." * ".$multiplier." -> ".$str_version);
-			}*/
-
-			$multiplier *= 100;
-		}
-	}
-
-	return $str_version;
-}
-
 function get_next_cron($data = array())
 {
 	global $obj_base;

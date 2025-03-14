@@ -1587,48 +1587,30 @@ class mf_base
 					}
 
 					$arr_autoload_type = array(
-						'yes' => 0,
-						'on' => 0,
-						'auto' => 0,
-						'no' => 0,
-						'off' => 0
-					);
-					
-					$arr_limit = array(
-						'yes' => (MB_IN_BYTES / 2),
-						'auto' => (MB_IN_BYTES * 5),
+						'yes' => array('byte' => 0, 'limit' => (MB_IN_BYTES / 2)),
+						'on' => array('alias' => 'yes'),
+						'auto' => array('byte' => 0, 'limit' => (MB_IN_BYTES * 5)),
+						'no' => array('byte' => 0),
+						'off' => array('alias' => 'no'),
 					);
 
 					foreach($arr_autoload_type as $key => $value)
 					{
-						$key_temp = $key;
-
-						switch($key)
-						{
-							case 'on':
-								$key_temp = 'yes';
-							break;
-
-							case 'off':
-								$key_temp = 'no';
-							break;
-						}
-
-						$arr_autoload_type[$key_temp] = $wpdb->get_var($wpdb->prepare("SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = %s", $key));
+						$arr_autoload_type[(isset($value['alias']) ? $value['alias'] : $key)]['byte'] += $wpdb->get_var($wpdb->prepare("SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = %s", $key));
 					}
 
 					$out_temp = "";
 
 					foreach($arr_autoload_type as $key => $value)
 					{
-						if($value > 0)
+						if($value['byte'] > 0)
 						{
-							$out_temp .= ($out_temp != '' ? ", " : "")."<span title='".show_final_size($value)."'".(isset($arr_limit[$key]) && $value > $arr_limit[$key] ? " class='color_red'" : "").">".$key."</span>";
+							$out_temp .= ($out_temp != '' ? ", " : "")."<span title='".show_final_size($value['byte'])."'".(isset($arr_autoload_type[$key]['limit']) && $value['byte'] > $arr_autoload_type[$key]['limit'] ? " class='color_red'" : "").">".$key."</span>";
 						}
 					}
 						
 					echo "<p>
-						<i class='fa ".(($arr_autoload_type['yes'] < $arr_limit['yes'] && $arr_autoload_type['auto'] < $arr_limit['auto']) ? "fa-check green" : "fa-times red display_warning")."'></i> "
+						<i class='fa ".(($arr_autoload_type['yes']['byte'] < $arr_autoload_type['yes']['limit'] && $arr_autoload_type['auto']['byte'] < $arr_autoload_type['auto']['limit']) ? "fa-check green" : "fa-times red display_warning")."'></i> "
 						.__("Autoload", 'lang_base').": ".$out_temp
 					."</p>";
 

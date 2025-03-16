@@ -695,9 +695,9 @@ function replace_option($data)
 	if($option_old != '')
 	{
 		update_option($data['new'], $option_old, false);
-		
+
 	}
-	
+
 	delete_option($data['old']);
 }
 
@@ -2077,7 +2077,7 @@ function show_settings_fields($data)
 
 		// This will be run on every registration
 		/*$this->handle_temp = $handle;
-		
+
 		register_setting(BASE_OPTIONS_PAGE, $this->handle_temp, array(
 			'type' => 'string',
 			'sanitize_callback' => array($this, 'register_setting_sanitize_callback')

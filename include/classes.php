@@ -557,18 +557,18 @@ class mf_base
 	{
 		global $wpdb;
 
-		//Remove old revisions and auto-drafts
-		$wpdb->query("DELETE FROM ".$wpdb->posts." WHERE post_type IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
+		// Old revisions and auto-drafts
+		$result = $wpdb->get_results("SELECT ID FROM ".$wpdb->posts." WHERE post_type IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
 
-		//Remove orphan postmeta
-		$wpdb->get_results("SELECT post_id FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL LIMIT 0, 1");
-
-		if($wpdb->num_rows > 0)
+		foreach($result as $r)
 		{
-			$wpdb->query("DELETE ".$wpdb->postmeta." FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL");
+			wp_delete_post($r->ID);
 		}
 
-		//Remove duplicate postmeta
+		// Orphan postmeta
+		$wpdb->query("DELETE ".$wpdb->postmeta." FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL");
+
+		// Duplicate postmeta
 		$result = $wpdb->get_results("SELECT meta_id, COUNT(meta_id) AS count FROM ".$wpdb->postmeta." GROUP BY post_id, meta_key, meta_value HAVING count > 1");
 
 		if($wpdb->num_rows > 0)
@@ -581,7 +581,7 @@ class mf_base
 			}
 		}
 
-		//Remove duplicate usermeta
+		// Duplicate usermeta
 		$result = $wpdb->get_results("SELECT umeta_id, COUNT(umeta_id) AS count FROM ".$wpdb->usermeta." GROUP BY user_id, meta_key, meta_value HAVING count > 1");
 
 		if($wpdb->num_rows > 0)
@@ -594,22 +594,7 @@ class mf_base
 			}
 		}
 
-		// Pingbacks / Trackbacks
-		/*$arr_comment_types = array('pingback', 'trackback');
-
-		foreach($arr_comment_types as $comment_type)
-		{
-			$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_type = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", $comment_type));
-
-			if($wpdb->num_rows > 0)
-			{
-				do_log("Remove ".$comment_type.": ".$wpdb->last_query);
-
-				//$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_type = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", $comment_type));
-			}
-		}*/
-
-		//Spam comments
+		// Spam comments
 		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
 
 		if($wpdb->num_rows > 0)
@@ -617,7 +602,7 @@ class mf_base
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
 		}
 
-		//Duplicate comments
+		// Duplicate comments
 		$wpdb->get_results($wpdb->prepare("SELECT *, COUNT(meta_id) AS count FROM ".$wpdb->commentmeta." GROUP BY comment_id, meta_key, meta_value HAVING count > %d", 1));
 
 		if($wpdb->num_rows > 0)
@@ -625,7 +610,7 @@ class mf_base
 			do_log("Remove duplicate comments: ".$wpdb->last_query);
 		}
 
-		//oEmbed caches
+		// oEmbed caches
 		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
 
 		if($wpdb->num_rows > 0)
@@ -633,7 +618,7 @@ class mf_base
 			$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
 		}
 
-		/* Optimize Tables */
+		// Optimize Tables
 		$result = $wpdb->get_results("SHOW TABLE STATUS");
 
 		foreach($result as $r)
@@ -643,7 +628,7 @@ class mf_base
 			$wpdb->query("OPTIMIZE TABLE ".$strTableName);
 		}
 
-		// Remove empty folders in uploads
+		// Empty folders in uploads
 		list($upload_path, $upload_url) = get_uploads_folder();
 		get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
 
@@ -935,7 +920,7 @@ class mf_base
 
 		$wp_admin_bar->remove_menu('wp-logo');
 		//$wp_admin_bar->remove_menu('view');
-		
+
 		if($this->has_comments() == false)
 		{
 			$wp_admin_bar->remove_menu('comments');
@@ -1203,7 +1188,7 @@ class mf_base
 							if(!in_array($collation_name, $arr_collation_name_recommended))
 							{
 								$arr_collation_name_parts = explode("_", $collation_name);
-								
+
 								$collation_name_recommended = implode(", ", $arr_collation_name_recommended);
 
 								foreach($arr_collation_name_recommended as $key => $value)
@@ -1596,7 +1581,7 @@ class mf_base
 
 					foreach($arr_autoload_type as $key => $value)
 					{
-						$arr_autoload_type[(isset($value['alias']) ? $value['alias'] : $key)]['byte'] += $wpdb->get_var($wpdb->prepare("SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = %s", $key));
+						$arr_autoload_type[(isset($value['alias']) ? $value['alias'] : $key)]['byte'] += $wpdb->get_var($wpdb->prepare("SELECT SUM(LENGTH(option_value)) FROM ".$wpdb->options." WHERE autoload = %s", $key));
 					}
 
 					$out_temp = "";
@@ -1608,7 +1593,7 @@ class mf_base
 							$out_temp .= ($out_temp != '' ? ", " : "")."<span title='".show_final_size($value['byte'])."'".(isset($arr_autoload_type[$key]['limit']) && $value['byte'] > $arr_autoload_type[$key]['limit'] ? " class='color_red'" : "").">".$key."</span>";
 						}
 					}
-						
+
 					echo "<p>
 						<i class='fa ".(($arr_autoload_type['yes']['byte'] < $arr_autoload_type['yes']['limit'] && $arr_autoload_type['auto']['byte'] < $arr_autoload_type['auto']['limit']) ? "fa-check green" : "fa-times red display_warning")."'></i> "
 						.__("Autoload", 'lang_base').": ".$out_temp

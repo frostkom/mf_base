@@ -558,17 +558,22 @@ class mf_base
 		global $wpdb;
 
 		// Old revisions and auto-drafts
+		####################
 		$result = $wpdb->get_results("SELECT ID FROM ".$wpdb->posts." WHERE post_type IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
 
 		foreach($result as $r)
 		{
 			wp_delete_post($r->ID);
 		}
+		####################
 
 		// Orphan postmeta
+		####################
 		$wpdb->query("DELETE ".$wpdb->postmeta." FROM ".$wpdb->postmeta." LEFT JOIN ".$wpdb->posts." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE ".$wpdb->posts.".ID IS NULL");
+		####################
 
 		// Duplicate postmeta
+		####################
 		$result = $wpdb->get_results("SELECT meta_id, COUNT(meta_id) AS count FROM ".$wpdb->postmeta." GROUP BY post_id, meta_key, meta_value HAVING count > 1");
 
 		if($wpdb->num_rows > 0)
@@ -580,8 +585,10 @@ class mf_base
 				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_id = '%d'", $intMetaID));
 			}
 		}
+		####################
 
 		// Duplicate usermeta
+		####################
 		$result = $wpdb->get_results("SELECT umeta_id, COUNT(umeta_id) AS count FROM ".$wpdb->usermeta." GROUP BY user_id, meta_key, meta_value HAVING count > 1");
 
 		if($wpdb->num_rows > 0)
@@ -593,44 +600,53 @@ class mf_base
 				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->usermeta." WHERE umeta_id = '%d'", $intMetaID));
 			}
 		}
+		####################
 
 		// Spam comments
+		####################
 		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
 
 		if($wpdb->num_rows > 0)
 		{
 			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
 		}
+		####################
 
 		// Duplicate comments
+		####################
 		$wpdb->get_results($wpdb->prepare("SELECT *, COUNT(meta_id) AS count FROM ".$wpdb->commentmeta." GROUP BY comment_id, meta_key, meta_value HAVING count > %d", 1));
 
 		if($wpdb->num_rows > 0)
 		{
 			do_log("Remove duplicate comments: ".$wpdb->last_query);
 		}
+		####################
 
 		// oEmbed caches
+		####################
 		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
 
 		if($wpdb->num_rows > 0)
 		{
 			$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
 		}
+		####################
 
 		// Optimize Tables
+		####################
 		$result = $wpdb->get_results("SHOW TABLE STATUS");
 
 		foreach($result as $r)
 		{
-			$strTableName = $r->Name;
-
-			$wpdb->query("OPTIMIZE TABLE ".$strTableName);
+			$wpdb->query("OPTIMIZE TABLE ".$r->Name);
 		}
+		####################
 
 		// Empty folders in uploads
+		####################
 		list($upload_path, $upload_url) = get_uploads_folder();
 		get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
+		####################
 
 		update_option('option_base_optimized', date("Y-m-d H:i:s"), false);
 
@@ -1936,7 +1952,7 @@ class mf_base
 				.show_button(array('type' => 'button', 'name' => 'btnBaseOptimize', 'text' => __("Optimize Now", 'lang_base'), 'class' => 'button-secondary'))
 				."<p class='italic'>".$description."</p>"
 			."</div>
-			<div id='optimize_debug'></div>";
+			<div class='base_optimize'></div>";
 		}
 
 		function setting_base_recommend_callback()
@@ -1986,7 +2002,8 @@ class mf_base
 				'default_tab' => "settings_base",
 				'settings_page' => true,
 				'ajax_url' => admin_url('admin-ajax.php'),
-				'plugin_include_url' => $plugin_include_url,
+				'user_id' => get_current_user_id(),
+				//'plugin_include_url' => $plugin_include_url,
 			));
 		}
 
@@ -2264,7 +2281,7 @@ class mf_base
 		die();
 	}
 
-	function optimize_theme()
+	function base_optimize()
 	{
 		global $done_text, $error_text;
 

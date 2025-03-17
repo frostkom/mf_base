@@ -130,7 +130,8 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: 'get_base_info'
+					action: 'get_base_info',
+					user_id: script_base_settings.user_id
 				},
 				success: function(data)
 				{
@@ -223,8 +224,8 @@ jQuery(function($)
 			run_ajax(
 			{
 				'button': $(e.currentTarget),
-				'action': 'optimize_theme',
-				'selector': $("#optimize_debug")
+				'action': 'base_optimize',
+				'selector': $(".base_optimize")
 			});
 		});
 	}

@@ -152,7 +152,7 @@ jQuery(function($)
 		}
 	}
 
-	function check_notifications()
+	function api_base_notifications()
 	{
 		$.ajax(
 		{
@@ -160,7 +160,7 @@ jQuery(function($)
 			type: 'post',
 			dataType: 'json',
 			data: {
-				action: "check_notifications"
+				action: "api_base_notifications"
 			},
 			success: function(data)
 			{
@@ -179,7 +179,7 @@ jQuery(function($)
 	{
 		setInterval(function()
 		{
-			check_notifications();
+			api_base_notifications();
 		}, 120000);
 	}
 });

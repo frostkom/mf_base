@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.11
+Version: 1.2.5.12
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -63,7 +63,7 @@ if(is_admin())
 	add_action('rwmb_meta_boxes', array($obj_base, 'rwmb_meta_boxes'));
 	add_action('rwmb_enqueue_scripts', array($obj_base, 'rwmb_enqueue_scripts'));
 
-	add_action('wp_ajax_check_notifications', array($obj_base, 'check_notifications'));
+	add_action('wp_ajax_api_base_notifications', array($obj_base, 'api_base_notifications'));
 }
 
 else
@@ -82,9 +82,9 @@ else
 
 add_filter('has_comments', array($obj_base, 'has_comments'), 10);
 
-add_action('wp_ajax_get_base_info', array($obj_base, 'get_base_info'));
-add_action('wp_ajax_get_base_cron', array($obj_base, 'get_base_cron'));
-add_action('wp_ajax_base_optimize', array($obj_base, 'base_optimize'));
+add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
+add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));
+add_action('wp_ajax_api_base_optimize', array($obj_base, 'api_base_optimize'));
 
 /*$setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
 

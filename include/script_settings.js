@@ -120,7 +120,7 @@ jQuery(function($)
 			});
 		}
 
-		$(".get_base_info").each(function()
+		$(".api_base_info").each(function()
 		{
 			var self = $(this);
 
@@ -130,7 +130,7 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: 'get_base_info',
+					action: 'api_base_info',
 					user_id: script_base_settings.user_id
 				},
 				success: function(data)
@@ -148,7 +148,7 @@ jQuery(function($)
 			});
 		});
 
-		function get_base_cron(self)
+		function api_base_cron(self)
 		{
 			$.ajax(
 			{
@@ -156,7 +156,7 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: 'get_base_cron'
+					action: 'api_base_cron'
 				},
 				success: function(data)
 				{
@@ -173,15 +173,15 @@ jQuery(function($)
 			});
 		}
 
-		$(".get_base_cron").each(function()
+		$(".api_base_cron").each(function()
 		{
 			var self = $(this);
 
-			get_base_cron(self);
+			api_base_cron(self);
 
 			setInterval(function()
 			{
-				get_base_cron(self);
+				api_base_cron(self);
 			}, 60000);
 		});
 
@@ -200,19 +200,9 @@ jQuery(function($)
 				},
 				success: function(data)
 				{
-					obj.selector.empty();
-
 					obj.button.removeClass('is_disabled');
 
-					if(data.success)
-					{
-						obj.selector.html(data.message);
-					}
-
-					else
-					{
-						obj.selector.html(data.error);
-					}
+					obj.selector.html(data.html);
 				}
 			});
 
@@ -224,8 +214,8 @@ jQuery(function($)
 			run_ajax(
 			{
 				'button': $(e.currentTarget),
-				'action': 'base_optimize',
-				'selector': $(".base_optimize")
+				'action': 'api_base_optimize',
+				'selector': $(".api_base_optimize")
 			});
 		});
 	}

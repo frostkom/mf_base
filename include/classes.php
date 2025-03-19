@@ -1124,7 +1124,7 @@ class mf_base
 			return array($date_diff, $ftp_date, $db_date);
 		}
 
-		function get_base_info()
+		function api_base_info()
 		{
 			global $wpdb;
 
@@ -1635,10 +1635,10 @@ class mf_base
 
 		function setting_base_info_callback()
 		{
-			echo "<div class='get_base_info'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
+			echo "<div class='api_base_info'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
 		}
 
-		function get_base_cron()
+		function api_base_cron()
 		{
 			global $wpdb;
 
@@ -1737,7 +1737,7 @@ class mf_base
 				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
 			}
 
-			echo "<div class='get_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
+			echo "<div class='api_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
 		}
 
 		/*function setting_base_cron_debug_callback()
@@ -1952,7 +1952,7 @@ class mf_base
 				.show_button(array('type' => 'button', 'name' => 'btnBaseOptimize', 'text' => __("Optimize Now", 'lang_base'), 'class' => 'button-secondary'))
 				."<p class='italic'>".$description."</p>"
 			."</div>
-			<div class='base_optimize'></div>";
+			<div class='api_base_optimize'></div>";
 		}
 
 		function setting_base_recommend_callback()
@@ -2267,43 +2267,39 @@ class mf_base
 		mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
 	}
 
-	function check_notifications()
+	function api_base_notifications()
 	{
 		$array = apply_filters('get_user_notifications', array());
 
-		$result = array(
+		$json_output = array(
 			'success' => true,
 			'notifications' => $array,
 		);
 
 		header("Content-Type: application/json");
-		echo json_encode($result);
+		echo json_encode($json_output);
 		die();
 	}
 
-	function base_optimize()
+	function api_base_optimize()
 	{
 		global $done_text, $error_text;
 
-		$result = array();
+		$json_output = array(
+			'success' => false,
+		);
 
 		$done_text = $this->do_optimize();
 
-		$out = get_notification();
-
-		if($out != '')
+		if($done_text != '')
 		{
-			$result['success'] = true;
-			$result['message'] = $out;
+			$json_output['success'] = true;
 		}
 
-		else
-		{
-			$result['error'] = $out;
-		}
+		$json_output['html'] = get_notification();
 
 		header('Content-Type: application/json');
-		echo json_encode($result);
+		echo json_encode($json_output);
 		die();
 	}
 

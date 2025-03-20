@@ -14,14 +14,6 @@ jQuery.fn.callAPI = function(o)
 		onAfterSend: function()
 		{
 			jQuery("#overlay_loading").addClass('hide');
-		},
-		onError: function(data)
-		{
-			/*setTimeout(function()
-			{
-				jQuery("#overlay_loading").addClass('hide');
-				jQuery("#overlay_lost_connection").removeClass('hide');
-			}, 2000);*/
 		}
 	}, o);
 
@@ -29,7 +21,6 @@ jQuery.fn.callAPI = function(o)
 	{
 		url: op.base_url + op.url,
 		type: op.send_type,
-		processData: false,
 		data: op.data,
 		dataType: 'json',
 		beforeSend: function()

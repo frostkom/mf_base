@@ -689,46 +689,6 @@ class mf_base
 			}
 			#########################
 
-			// Sync with template site
-			############################
-			$setting_base_template_site = get_option('setting_base_template_site');
-			$site_url = get_site_url();
-
-			if($setting_base_template_site != '' && $setting_base_template_site != $site_url && filter_var($setting_base_template_site, FILTER_VALIDATE_URL))
-			{
-				$url = $setting_base_template_site."/wp-content/plugins/mf_base/include/api/?type=sync";
-
-				list($content, $headers) = get_url_content(array(
-					'url' => $url,
-					'catch_head' => true,
-					'post_data' => array(
-						'site_name' => get_bloginfo('name'),
-						'site_url' => remove_protocol(array('url' => $site_url, 'clean' => true)),
-					),
-				));
-
-				$log_message = sprintf("Getting sync from %s returned an error", $url);
-
-				switch($headers['http_code'])
-				{
-					case 200:
-						$json = json_decode($content, true);
-
-						if(isset($json['success']) && $json['success'] == true)
-						{
-							do_action('cron_sync', $json);
-						}
-
-						do_log($log_message, 'trash');
-					break;
-
-					default:
-						do_log($log_message." (".$headers['http_code'].")");
-					break;
-				}
-			}
-			############################
-
 			// Save disc size and large table sizes
 			############################
 			if(is_main_site())
@@ -986,16 +946,6 @@ class mf_base
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
 			//$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
-		}
-
-		if(wp_is_block_theme() == false && (is_plugin_active("mf_media/index.php") || is_plugin_active("mf_site_manager/index.php") || is_plugin_active("mf_theme_core/index.php")) && get_option('setting_base_template_site') != '')
-		{
-			$arr_settings['setting_base_template_site'] = __("Template Site", 'lang_base');
-		}
-
-		else
-		{
-			delete_option('setting_base_template_site');
 		}
 
 		if(IS_SUPER_ADMIN)
@@ -1878,60 +1828,6 @@ class mf_base
 			echo show_select(array('data' => $this->get_automatic_updates_for_select(), 'name' => $setting_key."[]", 'value' => $option));
 		}*/
 
-		function setting_base_template_site_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			$option = get_option($setting_key);
-
-			$placeholder = get_site_url();
-
-			if($option != '')
-			{
-				if($option == $placeholder)
-				{
-					$option = "";
-				}
-
-				else
-				{
-					$option = trim($option, "/");
-				}
-			}
-
-			echo show_textfield(array('type' => 'url', 'name' => $setting_key, 'value' => $option, 'placeholder' => $placeholder));
-
-			$option_sync_sites = get_option('option_sync_sites', array());
-
-			if(count($option_sync_sites) > 0)
-			{
-				$updated = false;
-
-				echo "<h3>".__("Child Sites", 'lang_base')."</h3>
-				<ol class='text_columns columns_3'>";
-
-					$option_sync_sites = $this->array_sort(array('array' => $option_sync_sites, 'on' => 'datetime', 'order' => 'desc', 'keep_index' => true));
-
-					foreach($option_sync_sites as $url => $site)
-					{
-						echo "<li><a href='".validate_url($url)."' title='".$site['ip'].", ".format_date($site['datetime'])."'>".$site['name']."</a></li>";
-
-						if($site['datetime'] < date("Y-m-d H:i:s", strtotime("-1 week")))
-						{
-							unset($option_sync_sites[$url]);
-
-							$updated = true;
-						}
-					}
-
-				echo "</ol>";
-
-				if($updated == true)
-				{
-					update_option('option_sync_sites', $option_sync_sites, false);
-				}
-			}
-		}
-
 		function setting_base_optimize_callback()
 		{
 			$option_base_optimized = get_option('option_base_optimized');
@@ -2024,12 +1920,6 @@ class mf_base
 	function filter_sites_table_settings($arr_settings)
 	{
 		$arr_settings['settings_base'] = array(
-			'setting_base_template_site' => array(
-				'type' => 'string',
-				'global' => false,
-				'icon' => "fas fa-copy",
-				'name' => __("Common", 'lang_base')." - ".__("Template Site", 'lang_base'),
-			),
 			'setting_base_enable_wp_api' => array(
 				'type' => 'bool',
 				'global' => true,
@@ -2628,32 +2518,10 @@ class mf_base
 		return $template;
 	}
 
-	function filter_site_redirect($data) //$site_id = 0, $all_is_https = true
+	/*function filter_site_redirect($data)
 	{
 		$site_url = ($data['site_id'] > 0 ? get_home_url($data['site_id']) : get_home_url());
 		$is_https = (substr($site_url, 0, 5) == 'https');
-
-		/*$site_url_clean = remove_protocol(array('url' => $site_url, 'clean' => true));
-		$has_www = "www." == substr($site_url_clean, 0, 4);
-		$is_subdomain = substr_count($site_url_clean, '.') > ($has_www ? 2 : 1);
-		$is_subfolder = substr_count($site_url_clean, '/') > 0;
-
-		if(!is_multisite() || (!$is_subdomain && !$is_subfolder))
-		{
-			$site_url_clean_opposite = ($has_www ? substr($site_url_clean, 4) : "www.".$site_url_clean);
-
-			$data['update_with_temp'] .= "\r\n"
-			."RewriteCond	%{HTTP_HOST}		^".$site_url_clean_opposite."$		[NC]\r\n"
-			"RewriteRule	^(.*)$				".$site_url."/$1					[L,R=301]\r\n";
-
-			if($is_https)
-			{
-				$data['update_with_https_temp'] .= "\r\n"
-				."RewriteCond %{HTTP_HOST}	^".$site_url_clean."$				[NC]\r\n"
-				."RewriteCond	%{HTTPS}		off\r\n"
-				."RewriteRule	^(.*)$			".$site_url."/$1					[R=301,L]\r\n";
-			}
-		}*/
 
 		if(!$is_https)
 		{
@@ -2661,7 +2529,7 @@ class mf_base
 		}
 
 		return $data;
-	}
+	}*/
 
 	function recommend_config($data)
 	{
@@ -2677,9 +2545,7 @@ class mf_base
 			{
 				default:
 				case 'apache':
-					$all_is_https = true;
-					$update_with_temp = $update_with_https_temp = "";
-					$data_temp = array('site_id' => 0, 'all_is_https' => $all_is_https); //, 'update_with_temp' => $update_with_temp, 'update_with_https_temp' => $update_with_https_temp
+					/*$data_temp = array('site_id' => 0, 'all_is_https' => $all_is_https);
 
 					if(is_multisite())
 					{
@@ -2695,11 +2561,7 @@ class mf_base
 					else
 					{
 						$data_temp = $this->filter_site_redirect($data_temp);
-					}
-
-					$all_is_https = $data_temp['all_is_https'];
-					//$update_with_temp = $data_temp['update_with_temp'];
-					//$update_with_https_temp = $data_temp['update_with_https_temp'];
+					}*/
 
 					$update_with = "ServerSignature Off\r\n"
 					//."ServerTokens Prod\r\n" // Test before using
@@ -2709,26 +2571,11 @@ class mf_base
 					."\r\n"
 					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
 					."Header set X-Content-Type-Options nosniff\r\n"
-					."Header set X-Powered-By \"Me\"\r\n";
-
-					// If something in the code requests an internal http this will ruin the site by not loading the content
-					/*if($all_is_https)
-					{
-						$update_with .= "\r\n"
-						."<IfModule mod_headers.c>\r\n"
-						."	Header always set Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload' env=HTTPS\r\n"
-						."</IfModule>\r\n";
-					}*/
-
-					$update_with .= "\r\n"
+					."Header set X-Powered-By \"Me\"\r\n"
+					."\r\n"
 					."<IfModule mod_rewrite.c>\r\n"
 					."	RewriteEngine On\r\n"
 					."	RewriteBase /\r\n";
-
-					/*if($subfolder != "")
-					{
-						$update_with .= "	RewriteBase ".$subfolder."\r\n";
-					}*/
 
 					$update_with .= "\r\n"
 					."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
@@ -2777,25 +2624,6 @@ class mf_base
 					."\r\n"
 					."	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n" //|wp\-content/+debug\.log
 					."	RewriteRule .* /404/ [L,NC]\r\n";
-
-					/*if($update_with_temp != '')
-					{
-						$update_with .= $update_with_temp;
-					}*/
-
-					// Not needed when Strict-Transport-Security is used, and might cause trouble on some sites anyway
-					/*if($all_is_https == true)
-					{
-						$update_with .= "\r\n"
-						."	RewriteCond %{HTTPS} !=on\r\n"
-						."	RewriteCond %{ENV:HTTPS} !=on\r\n"
-						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]\r\n";
-					}*/
-
-					/*else
-					{
-						$update_with .= $update_with_https_temp;
-					}*/
 
 					$update_with .= "\r\n";
 

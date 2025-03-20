@@ -160,7 +160,7 @@ jQuery(function($)
 			type: 'post',
 			dataType: 'json',
 			data: {
-				action: "api_base_notifications"
+				action: 'api_base_notifications'
 			},
 			success: function(data)
 			{

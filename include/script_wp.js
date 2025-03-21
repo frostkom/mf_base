@@ -33,9 +33,9 @@ jQuery(function($)
 
 	/* Search */
 	var dom_form = $("form .search-box input[type='search']"),
-		plugin_name = dom_form.parents("form").attr('rel');
+		action = dom_form.parents("form").attr('rel');
 
-	if(plugin_name && plugin_name != '')
+	if(action && action != '')
 	{
 		dom_form.autocomplete(
 		{
@@ -43,9 +43,11 @@ jQuery(function($)
 			{
 				$.ajax(
 				{
-					url: script_base_wp.plugins_url + '/' + plugin_name + '/include/api/?type=table_search',
+					url: script_base_wp.ajax_url,
+					type: 'post',
 					dataType: 'json',
 					data: {
+						action: action,
 						s: request.term
 					},
 					success: function(data)
@@ -63,7 +65,7 @@ jQuery(function($)
 				search_width = $(e.target).outerWidth(),
 				result_width = dom_result.outerWidth(),
 				result_left = parseInt(dom_result.css('left')),
-				result_left_new = result_left - (result_width - search_width);
+				result_left_new = (result_left - (result_width - search_width));
 
 			dom_result.css({'left': result_left_new + 'px'});
 		});
@@ -138,8 +140,8 @@ jQuery(function($)
 		{
 			var notification = new Notification(value.title, {
 				tag: value.tag,
-				icon: value.icon ? value.icon : "",
-				body: value.text ? value.text : "",
+				icon: (value.icon ? value.icon : ""),
+				body: (value.text ? value.text : ""),
 			});
 
 			if(value.link && value.link != '')

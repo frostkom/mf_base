@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.15
+Version: 1.2.5.16
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -44,7 +44,7 @@ if(is_admin())
 	add_action('admin_init', array($obj_base, 'admin_init'), 0);
 	add_action('admin_menu', array($obj_base, 'admin_menu'));
 
-	add_filter('filter_sites_table_settings', array($obj_base, 'filter_sites_table_settings'));
+	//add_filter('filter_sites_table_settings', array($obj_base, 'filter_sites_table_settings'));
 
 	add_filter('plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
 	add_filter('network_admin_plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
@@ -68,10 +68,10 @@ if(is_admin())
 
 else
 {
-	if(get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes')
-	{
+	/*if(get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes')
+	{*/
 		add_filter('xmlrpc_enabled', '__return_false');
-	}
+	//}
 
 	add_filter('wp_sitemaps_posts_query_args', array($obj_base, 'wp_sitemaps_posts_query_args'), 10, 2);
 	add_filter('wp_sitemaps_taxonomies', array($obj_base, 'wp_sitemaps_taxonomies'));
@@ -147,7 +147,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone', 'setting_base_automatic_updates', 'setting_base_cron_debug'),
+		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'setting_base_enable_wp_api'),
 		'meta' => array($obj_base->meta_prefix.'publish_date', $obj_base->meta_prefix.'unpublish_date'),
 	));
 }

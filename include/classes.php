@@ -944,7 +944,7 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
-			$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
+			//$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
 			//$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
@@ -1801,14 +1801,14 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
 
-		function setting_base_enable_wp_api_callback()
+		/*function setting_base_enable_wp_api_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
 			$option = get_site_option($setting_key, 'no');
 
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-		}
+		}*/
 
 		/*function get_automatic_updates_for_select()
 		{
@@ -1921,7 +1921,7 @@ class mf_base
 		}
 	}
 
-	function filter_sites_table_settings($arr_settings)
+	/*function filter_sites_table_settings($arr_settings)
 	{
 		$arr_settings['settings_base'] = array(
 			'setting_base_enable_wp_api' => array(
@@ -1933,7 +1933,7 @@ class mf_base
 		);
 
 		return $arr_settings;
-	}
+	}*/
 
 	function plugin_action_links($actions, $plugin_file)
 	{
@@ -2602,7 +2602,7 @@ class mf_base
 						break;
 					}
 
-					if((!is_multisite() || is_main_site()) && get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes')
+					if((!is_multisite() || is_main_site())) // && get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes'
 					{
 						switch($this->get_server_type())
 						{

@@ -650,10 +650,10 @@ function shorten_text($data)
 
 	if(is_array($data['string']))
 	{
-		do_log("shorten_text() - String is array: ".var_export($data, true)." (".var_export(debug_backtrace(), true).")");
+		do_log(__FUNCTION__." - String is array: ".var_export($data, true)." (Backtrace: ".var_export(debug_backtrace(), true).")");
 	}
 
-	if(strlen($data['string']) > $data['limit'])
+	else if(strlen($data['string']) > $data['limit'])
 	{
 		if($data['add_title'])
 		{

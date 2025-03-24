@@ -681,6 +681,35 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
+			// Save GitHub Token and re-enter if it is removed
+			#########################
+			$git_updater = get_site_option('git_updater', array());
+
+			if(is_array($git_updater) && count($git_updater) > 0)
+			{
+				//do_log(__FUNCTION__.": ".var_export($git_updater, true));
+
+				$option_github_access_token = $git_updater['github_access_token'];
+
+				if($option_github_access_token != '')
+				{
+					update_site_option('option_github_access_token', $option_github_access_token);
+				}
+
+				else
+				{
+					$option_github_access_token = get_site_option('option_github_access_token');
+
+					if($option_github_access_token != '')
+					{
+						$git_updater['github_access_token'] = $option_github_access_token;
+
+						update_site_option('git_updater', $git_updater);
+					}
+				}
+			}
+			#########################
+
 			// Optimize
 			#########################
 			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-7 day")))
@@ -691,21 +720,18 @@ class mf_base
 
 			// Save disc size and large table sizes
 			############################
-			if(is_main_site())
-			{
-				$this->ftp_size = 0;
-				$this->ftp_size_folders = array();
+			$this->ftp_size = 0;
+			$this->ftp_size_folders = array();
 
-				get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
+			get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
 
-				update_site_option('option_base_ftp_size', $this->ftp_size);
-				update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
+			update_site_option('option_base_ftp_size', $this->ftp_size);
+			update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
 
-				$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
+			$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
 
-				update_site_option('option_base_db_size', $arr_db_info['db_size']);
-				update_site_option('option_base_large_tables', $arr_db_info['tables']);
-			}
+			update_site_option('option_base_db_size', $arr_db_info['db_size']);
+			update_site_option('option_base_large_tables', $arr_db_info['tables']);
 			############################
 
 			$this->reset_time_limited();

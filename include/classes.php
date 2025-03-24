@@ -2414,12 +2414,12 @@ class mf_base
 
 	function shortcode_file($atts)
 	{
-		extract(shortcode_atts(array(
+		$out = "";
+
+		/*extract(shortcode_atts(array(
 			'id' => 0,
 			'filetype' => '',
 		), $atts));
-
-		$out = "";
 
 		switch($filetype)
 		{
@@ -2436,7 +2436,9 @@ class mf_base
 
 				$out .= "<a href='".$file_url."' rel='external'>".$file_name."</a>";
 			break;
-		}
+		}*/
+
+		do_log(__FUNCTION__.": Add a block instead (".var_export($atts, true).")");
 
 		return $out;
 	}

@@ -2440,6 +2440,8 @@ class mf_base
 
 	function shortcode_file($atts)
 	{
+		global $post;
+
 		$out = "";
 
 		/*extract(shortcode_atts(array(
@@ -2464,7 +2466,7 @@ class mf_base
 			break;
 		}*/
 
-		do_log(__FUNCTION__.": Add a block instead (".var_export($atts, true).")");
+		do_log(__FUNCTION__.": Add a block instead (#".$post->ID.", ".var_export($atts, true).")");
 
 		return $out;
 	}

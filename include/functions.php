@@ -1491,7 +1491,10 @@ function parse_block_attributes($data = array())
 		$data['class'] .= ($data['class'] != '' ? " " : "").$data['attributes']['className'];
 	}
 
-	$out .= " class='".$data['class']."'";
+	if($data['class'] != '')
+	{
+		$out .= " class='".$data['class']."'";
+	}
 
 	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
 	{

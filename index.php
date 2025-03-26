@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.22
+Version: 1.2.5.23
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -116,7 +116,7 @@ add_filter('template_include', array($obj_base, 'template_include'));
 
 add_filter('recommend_config', array($obj_base, 'recommend_config'));
 
-add_filter('get_block_search', array($obj_base, 'get_block_search'));
+add_filter('get_block_search', array($obj_base, 'get_block_search'), 10, 2);
 
 function activate_base()
 {
@@ -149,7 +149,7 @@ function activate_base()
 	}
 
 	mf_uninstall_plugin(array(
-		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'setting_base_enable_wp_api', 'option_sync_sites'),
+		'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_use_timezone', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'setting_base_enable_wp_api', 'option_sync_sites', 'option_github_access_token'),
 		'meta' => array($obj_base->meta_prefix.'publish_date', $obj_base->meta_prefix.'unpublish_date'),
 	));
 }
@@ -171,7 +171,7 @@ function uninstall_base()
 
 	mf_uninstall_plugin(array(
 		'uploads' => $obj_base->post_type,
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized', 'option_github_access_token'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_ended', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized', 'option_git_updater'),
 		'meta' => array($obj_base->meta_prefix.'page_index'),
 	));
 }

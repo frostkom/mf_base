@@ -689,30 +689,28 @@ class mf_base
 			{
 				if(isset($git_updater['github_access_token']))
 				{
-					$option_github_access_token = $git_updater['github_access_token'];
+					$option_git_updater = $git_updater;
 				}
 
 				else
 				{
-					$option_github_access_token = '';
+					$option_git_updater = array();
 
 					do_log(__FUNCTION__.": index github_access_token does not exist in ".var_export($git_updater, true));
 				}
 
-				if($option_github_access_token != '')
+				if(isset($option_git_updater['github_access_token']))
 				{
-					update_site_option('option_github_access_token', $option_github_access_token);
+					update_site_option('option_git_updater', $option_git_updater);
 				}
 
 				else
 				{
-					$option_github_access_token = get_site_option('option_github_access_token');
+					$option_git_updater = get_site_option('option_git_updater');
 
-					if($option_github_access_token != '')
+					if(isset($option_git_updater['github_access_token']))
 					{
-						$git_updater['github_access_token'] = $option_github_access_token;
-
-						update_site_option('git_updater', $git_updater);
+						update_site_option('git_updater', $option_git_updater);
 					}
 				}
 			}
@@ -2754,13 +2752,27 @@ class mf_base
 		return $data;
 	}
 
-	function get_block_search($handle)
+	function get_block_search($post_id, $handle = '')
 	{
-		$post_id = 0;
-
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s ORDER BY post_modified DESC", 'page', 'publish'));
+		if($handle == '') // Previous version was get_block_search($handle)
+		{
+			$handle = $post_id;
+			$post_id = 0;
+		}
+
+		if($post_id > 0)
+		{
+			$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s AND ID = '%d'", 'page', 'publish', $post_id);
+		}
+
+		else
+		{
+			$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s ORDER BY post_modified DESC", 'page', 'publish');
+		}
+
+		$result = $wpdb->get_results($query);
 
 		foreach($result as $r)
 		{

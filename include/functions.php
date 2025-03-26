@@ -1,20 +1,16 @@
 <?php
 
-function get_current_visitor_ip()
+// Can be removed when not in use anywhere
+function get_current_visitor_ip($out = "")
 {
-	$out = $_SERVER['REMOTE_ADDR'];
+	global $obj_base;
 
-	if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '')
+	if($out == "")
 	{
-		$ip_adresses = array_values(array_filter(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
-
-		if(isset($ip_adresses[0]) && $ip_adresses[0] != '' && $ip_adresses[0] != $out)
-		{
-			$out = $ip_adresses[0];
-		}
+		$out = $_SERVER['REMOTE_ADDR'];
 	}
 
-	return $out;
+	return $obj_base->get_current_visitor_ip($out);
 }
 
 function get_placeholder_email()

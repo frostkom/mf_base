@@ -687,9 +687,17 @@ class mf_base
 
 			if(is_array($git_updater) && count($git_updater) > 0)
 			{
-				//do_log(__FUNCTION__.": ".var_export($git_updater, true));
+				if(isset($git_updater['github_access_token']))
+				{
+					$option_github_access_token = $git_updater['github_access_token'];
+				}
 
-				$option_github_access_token = $git_updater['github_access_token'];
+				else
+				{
+					$option_github_access_token = '';
+
+					do_log(__FUNCTION__.": index github_access_token does not exist in ".var_export($git_updater, true));
+				}
 
 				if($option_github_access_token != '')
 				{
@@ -898,6 +906,26 @@ class mf_base
 		}
 
 		return $this->server_type;
+	}
+
+	function get_current_visitor_ip($out)
+	{
+		if($out == "")
+		{
+			$out = $_SERVER['REMOTE_ADDR'];
+		}
+
+		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '')
+		{
+			$ip_adresses = array_values(array_filter(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])));
+
+			if(isset($ip_adresses[0]) && $ip_adresses[0] != '' && $ip_adresses[0] != $out)
+			{
+				$out = $ip_adresses[0];
+			}
+		}
+
+		return $out;
 	}
 
 	function has_comments()
@@ -1591,7 +1619,7 @@ class mf_base
 						.__("Autoload", 'lang_base').": ".$out_temp
 					."</p>";
 
-					$current_visitor_ip = get_current_visitor_ip();
+					$current_visitor_ip = apply_filters('get_current_visitor_ip', $_SERVER['REMOTE_ADDR']);
 
 					echo "<p>
 						<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "

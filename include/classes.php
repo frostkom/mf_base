@@ -401,6 +401,16 @@ class mf_base
 		define('IS_EDITOR', $is_editor);
 		define('IS_AUTHOR', $is_author);
 
+		if(get_site_option('setting_base_use_timezone') == 'yes')
+		{
+			$timezone_string = get_option('timezone_string');
+ 
+			if($timezone_string != '')
+			{
+				date_default_timezone_set($timezone_string);
+			}
+		}
+
 		$this->reschedule_base();
 
 		// Blocks
@@ -426,7 +436,7 @@ class mf_base
 	function run_cron_start()
 	{
 		$obj_cron = new mf_cron();
-		$obj_cron->start(__CLASS__);
+		$obj_cron->start(__CLASS__."_parent");
 
 		if($obj_cron->is_running == false)
 		{
@@ -687,16 +697,11 @@ class mf_base
 
 			if(is_array($git_updater) && count($git_updater) > 0)
 			{
+				$option_git_updater = array();
+
 				if(isset($git_updater['github_access_token']))
 				{
 					$option_git_updater = $git_updater;
-				}
-
-				else
-				{
-					$option_git_updater = array();
-
-					do_log(__FUNCTION__.": index github_access_token does not exist in ".var_export($git_updater, true));
 				}
 
 				if(isset($option_git_updater['github_access_token']))
@@ -751,11 +756,19 @@ class mf_base
 			#######################
 		}
 
+		/*else
+		{
+			do_log($obj_cron->file." exists");
+		}*/
+
 		$obj_cron->end();
 	}
 
 	function run_cron_end()
 	{
+		$obj_cron = new mf_cron();
+		$obj_cron->end(__CLASS__."_parent");
+
 		update_option('option_cron_ended', date("Y-m-d H:i:s"), false);
 	}
 
@@ -1002,6 +1015,13 @@ class mf_base
 
 		if(IS_SUPER_ADMIN)
 		{
+			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
+ 
+			if($date_diff > 10 || get_site_option('setting_base_use_timezone') == 'yes')
+			{
+				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
+			}
+
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
@@ -1879,6 +1899,15 @@ class mf_base
 
 			echo show_select(array('data' => $this->get_automatic_updates_for_select(), 'name' => $setting_key."[]", 'value' => $option));
 		}*/
+
+		function setting_base_use_timezone_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			settings_save_site_wide($setting_key);
+			$option = get_site_option_or_default($setting_key, 'no');
+ 
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+		}
 
 		function setting_base_optimize_callback()
 		{
@@ -3022,7 +3051,7 @@ class mf_cron
 
 		$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
 
-		$this->set_is_running();
+		$this->set_is_running(); //0
 
 		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'log' => false, 'content' => date("Y-m-d H:i:s")));
 
@@ -3039,7 +3068,7 @@ class mf_cron
 		return $this->schedules[$setting_base_cron]['interval'];
 	}
 
-	function set_is_running()
+	function set_is_running() //$times
 	{
 		$this->is_running = file_exists($this->file);
 
@@ -3053,6 +3082,14 @@ class mf_cron
 			{
 				do_log(sprintf("%s has been running since %s", $this->file, $file_time));
 			}
+
+			/*if($times < 10)
+			{
+				sleep(mt_rand(1, 20));
+				set_time_limit(60);
+
+				$this->set_is_running($times++);
+			}*/
 		}
 	}
 
@@ -3067,8 +3104,19 @@ class mf_cron
 		return ($time_difference >= ($this->get_interval() * $data['margin']));
 	}
 
-	function end()
+	function end($type = "")
 	{
+		if($type != "")
+		{
+			global $wpdb;
+
+			$this->type = $type;
+
+			list($upload_path, $upload_url) = get_uploads_folder();
+
+			$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
+		}
+
 		/*if(get_site_option('setting_base_cron_debug') == 'yes')
 		{
 			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => date("Y-m-d H:i:s"), 'type' => 'ceil', 'return' => 'seconds'));
@@ -3083,7 +3131,7 @@ class mf_cron
 
 		if(file_exists($this->file))
 		{
-			@unlink($this->file);
+			unlink($this->file);
 		}
 	}
 }

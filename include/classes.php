@@ -2430,16 +2430,6 @@ class mf_base
 		$data_temp['plugin_include_url'] = $plugin_include_url;
 		$this->load_font_awesome($data_temp);
 
-		if(wp_is_block_theme())
-		{
-			mf_enqueue_style('style_base_buttons', $plugin_include_url."style_buttons.css");
-		}
-
-		else
-		{
-			mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
-		}
-
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array(
 			'confirm_question' => __("Are you sure?", 'lang_base'),
 			'read_more' => __("Read More", 'lang_base'),
@@ -2449,6 +2439,18 @@ class mf_base
 		if($data['type'] == 'public')
 		{
 			global $post;
+
+			if(wp_is_block_theme())
+			{
+				//wp_enqueue_style('wp-block-library');
+				//wp_enqueue_style('wp-block-library-theme');
+				wp_enqueue_style('wp-block-button');
+			}
+
+			else
+			{
+				mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
+			}
 
 			if(isset($post) && $post->ID > 0)
 			{

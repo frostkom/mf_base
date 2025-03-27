@@ -21,7 +21,7 @@ $json_output = array(
 
 $type = check_var('type', 'char');
 
-switch($type[0])
+switch($type)
 {
 	case 'my_ip':
 		$json_output['success'] = true;

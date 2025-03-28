@@ -597,6 +597,11 @@ class mf_base
 		}
 		####################
 
+		// Empty postmeta
+		####################
+		$wpdb->query("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE 'mf_%' AND (meta_value = '' OR meta_value IS null)");
+		####################
+
 		// Duplicate usermeta
 		####################
 		$result = $wpdb->get_results("SELECT umeta_id, COUNT(umeta_id) AS count FROM ".$wpdb->usermeta." GROUP BY user_id, meta_key, meta_value HAVING count > 1");
@@ -953,6 +958,19 @@ class mf_base
 		}
 
 		return $out;
+	}
+
+	function filter_meta_input($array)
+	{
+		foreach($array as $key => $value)
+		{
+			if($value == '')
+			{
+				unset($array[$key]);
+			}
+		}
+
+		return $array;
 	}
 
 	function wp_before_admin_bar_render()
@@ -2026,7 +2044,7 @@ class mf_base
 		return $actions;
 	}
 
-	function media_buttons($button)
+	/*function media_buttons($button)
 	{
 		global $pagenow;
 
@@ -2046,7 +2064,7 @@ class mf_base
 		}
 
 		return $button.$out;
-	}
+	}*/
 
 	function get_page_from_block_code($arr_ids, $block_code)
 	{
@@ -2062,7 +2080,7 @@ class mf_base
 		return $arr_ids;
 	}
 
-	function admin_footer()
+	/*function admin_footer()
 	{
 		global $pagenow;
 
@@ -2076,9 +2094,9 @@ class mf_base
 				."</div>
 			</div>";
 		}
-	}
+	}*/
 
-	function meta_page_content()
+	/*function meta_page_content()
 	{
 		global $post;
 
@@ -2099,7 +2117,7 @@ class mf_base
 		}
 
 		return $out;
-	}
+	}*/
 
 	function column_header($cols)
 	{
@@ -2194,7 +2212,7 @@ class mf_base
 				);
 			}
 
-			else
+			/*else
 			{
 				$meta_boxes[] = array(
 					'id' => $this->meta_prefix.'content',
@@ -2210,7 +2228,7 @@ class mf_base
 						),
 					)
 				);
-			}
+			}*/
 
 			$meta_boxes[] = array(
 				'id' => $this->meta_prefix.'publish',
@@ -3825,14 +3843,14 @@ class mf_list_table extends WP_List_Table
 		{
 			if(is_array($data['order']))
 			{
-				do_log(__FUNCTION__." - Error in 'order': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)); //var_export($_SERVER, true)." || ".
+				do_log(__FUNCTION__." - Error in 'order': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)." (Backtrace: ".var_export(debug_backtrace(), true).")");
 
 				$data['order'] = "ASC";
 			}
 
 			if(is_array($data['order_by']))
 			{
-				do_log(__FUNCTION__." - Error in 'order_by': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)); //var_export($_SERVER, true)." || ".
+				do_log(__FUNCTION__." - Error in 'order_by': ".var_export($this->arr_settings, true)." || ".$this->post_type." -> ".var_export($data, true)." (Backtrace: ".var_export(debug_backtrace(), true).")");
 			}
 
 			else

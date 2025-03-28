@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.5.25
+Version: 1.2.5.27
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -49,11 +49,11 @@ if(is_admin())
 	add_filter('plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
 	add_filter('network_admin_plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
 
-	add_filter('media_buttons', array($obj_base, 'media_buttons')); //media_buttons_context
+	//add_filter('media_buttons', array($obj_base, 'media_buttons'));
 
 	add_filter('get_page_from_block_code', array($obj_base, 'get_page_from_block_code'), 10, 2);
 
-	add_action('admin_footer', array($obj_base, 'admin_footer'), 0);
+	//add_action('admin_footer', array($obj_base, 'admin_footer'), 0);
 
 	add_filter('manage_page_posts_columns', array($obj_base, 'column_header'), 5);
 	add_action('manage_page_posts_custom_column', array($obj_base, 'column_cell'), 5, 2);
@@ -81,8 +81,8 @@ else
 }
 
 add_filter('get_current_visitor_ip', array($obj_base, 'get_current_visitor_ip'), 10);
-
 add_filter('has_comments', array($obj_base, 'has_comments'), 10);
+add_filter('filter_meta_input', array($obj_base, 'filter_meta_input'), 10);
 
 add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
 add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));

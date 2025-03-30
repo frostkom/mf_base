@@ -2006,10 +2006,10 @@ class mf_base
 			));
 		}
 
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
+		/*if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
 		{
 			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js");
-		}
+		}*/
 	}
 
 	function admin_menu()
@@ -2460,14 +2460,7 @@ class mf_base
 
 			if(wp_is_block_theme())
 			{
-				//wp_enqueue_style('wp-block-library');
-				//wp_enqueue_style('wp-block-library-theme');
 				wp_enqueue_style('wp-block-button');
-			}
-
-			else
-			{
-				mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
 			}
 
 			if(isset($post) && $post->ID > 0)

@@ -2017,7 +2017,7 @@ function get_next_cron($data = array())
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');
 
-			if($option_cron_ended < date("Y-m-d H:i:s", strtotime("-1 minute")) && $option_cron_ended >= $option_cron_started)
+			if($option_cron_ended < date("Y-m-d H:i:s") && $option_cron_ended >= $option_cron_started)
 			{
 				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=".BASE_OPTIONS_PAGE."&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
 

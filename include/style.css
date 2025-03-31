@@ -396,6 +396,7 @@
 
 		.mf_form .wp-block-button .wp-block-button__link
 		{
+			height: auto; /* Has to be here since WP sets height to 100% */
 			width: auto;
 		}
 

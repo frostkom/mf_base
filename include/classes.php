@@ -703,52 +703,65 @@ class mf_base
 			case 'index.php':
 				$github_api_url = "https://raw.githubusercontent.com/".$github_repo."/master/index.php";
 
-				$response = wp_remote_get($github_api_url, array());
+				/*$response = wp_remote_get($github_api_url, array());
+				$content = wp_remote_retrieve_body($response);*/
+
+				list($content, $headers) = get_url_content(array(
+					'url' => $github_api_url,
+					'catch_head' => true,
+				));
 			break;
 
 			default:
 				$github_api_url = "https://api.github.com/repos/".$github_repo."/".$arr_value['type'];
+				$arr_headers = array(
+					'Authorization' => "Bearer ".$arr_value['github_access_token'],
+					'User-Agent' => "WordPress/".get_bloginfo('version'),
+					'X-GitHub-Api-Version' => '2022-11-28',
+					'Accept' => 'application/vnd.github+json',
+					//'If-Modified-Since: '.gmdate("D, d M Y H:i:s", strtotime($option_github_updater_last_success))." GMT",
+				);
 
-				$response = wp_remote_get($github_api_url, array(
-					'headers' => array(
-						'Authorization' => "Bearer ".$arr_value['github_access_token'],
-						'User-Agent' => "WordPress/".get_bloginfo('version'),
-						'X-GitHub-Api-Version' => '2022-11-28',
-						'Accept' => 'application/vnd.github+json',
-					),
+				/*$response = wp_remote_get($github_api_url, array(
+					'headers' => $arr_headers,
+				));
+				$content = wp_remote_retrieve_body($response);*/
+
+				list($content, $headers) = get_url_content(array(
+					'url' => $url_repos,
+					'catch_head' => true,
+					'headers' => $arr_headers,
 				));
 			break;
 		}
 
-		if(is_wp_error($response))
+		/*if(is_wp_error($content))
 		{
-			$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": - Error fetching data: ".$response->get_error_message();
+			$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": - Error fetching data: ".$content->get_error_message();
 
 			$success = false;
-		}
+		}*/
 
 		$latest_version = "";
-
-		$body = wp_remote_retrieve_body($response);
 
 		switch($arr_value['type'])
 		{
 			case 'index.php':
-				if(preg_match('/Version\s*:\s*([^\s]+)/i', $body, $matches))
+				if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
 				{
 					$latest_version = $matches[1];
 				}
 				
 				else
 				{
-					$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($body).")";
+					$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
 
 					$success = false;
 				}
 			break;
 
 			case 'releases/latest':
-				$arr_json = json_decode($body, true);
+				$arr_json = json_decode($content, true);
 
 				if(isset($arr_json['tag_name']))
 				{
@@ -764,7 +777,7 @@ class mf_base
 			break;
 
 			case 'tags':
-				$arr_json = json_decode($body, true);
+				$arr_json = json_decode($content, true);
 
 				if(isset($arr_json[0]) && isset($arr_json[0]['name']))
 				{
@@ -790,6 +803,7 @@ class mf_base
 				$this->option_github_updates[$key] = array(
 					'Name' => $arr_value['Name'],
 					'Version' => $latest_version,
+					'last_checked' => date("Y-m-d H:i:s"),
 					//'github_api_url' => $github_api_url,
 				);
 
@@ -818,59 +832,7 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
-			// Get current and latest version of a plugin
-			#########################
-			//$option_git_updater = get_site_option('option_git_updater');
-			//$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
-			$this->option_github_updates = array();
-
-			$arr_plugins = get_plugins();
-
-			//$arr_plugins_this_site = array();
-
-			foreach($arr_plugins as $key => $arr_value)
-			{
-				list($plugin_dir, $plugin_file) = explode("/", $key);
-
-				if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false && !isset($this->option_github_updates[$key]))
-				{
-					//$arr_plugins_this_site[$key] = $arr_value;
-
-					/*if(isset($option_git_updater['github_access_token']))
-					{
-						$arr_value['github_access_token'] = $option_git_updater['github_access_token'];*/
-
-						$success = false;
-
-						$this->github_debug = "";
-
-						$arr_value['type'] = 'index.php';
-						$success = $this->get_github_version($key, $arr_value);
-
-						/*if($success == false)
-						{
-							$arr_value['type'] = 'releases/latest';
-							$success = $this->get_github_version($key, $arr_value);
-						}
-
-						if($success == false)
-						{
-							$arr_value['type'] = 'tags';
-							$success = $this->get_github_version($key, $arr_value);
-						}*/
-
-						if($success == false && $this->github_debug != '')
-						{
-							do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
-						}
-					//}
-				}
-			}
-
-			update_site_option('option_github_updates', $this->option_github_updates);
-
-			//do_log(__FUNCTION__." - Plugins with URI: ".var_export($arr_plugins_this_site, true));
-			#########################
+			$this->pre_set_site_transient_update_plugins();
 
 			// Optimize
 			#########################
@@ -2242,6 +2204,78 @@ class mf_base
 				$menu[65][0] .= $count_message;
 			}
 		}
+	}
+
+	function pre_set_site_transient_update_plugins($transient)
+	{
+		/*if(empty($transient->checked))
+		{
+			return $transient;
+		}
+
+		$remote_version = '1.2.0'; // Example: Retrieve this dynamically from your server.
+		$plugin_dir = 'mf_base';
+		$plugin_slug = $plugin_dir.'/index.php';
+
+		if(version_compare($transient->checked[$plugin_slug], $remote_version, '<'))
+		{
+			$obj = new stdClass();
+			$obj->slug = $plugin_dir;
+			$obj->new_version = $remote_version;
+			$obj->url = 'https://example.com/plugin-info'; // Get from index.php -> Author URI
+			$obj->package = 'https://example.com/plugin-download.zip';
+			$transient->response[$plugin_slug] = $obj;
+		}
+
+		return $transient;*/
+
+		$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
+
+		foreach($this->option_github_updates as $key => $arr_value)
+		{
+			if(!isset($arr_value['last_checked']) || $arr_value['last_checked'] < date("Y-m-d H:i:s", strtotime("-30 minute")))
+			{
+				unset($this->option_github_updates[$key]);
+			}
+		}
+
+		$arr_plugins = get_plugins();
+
+		foreach($arr_plugins as $key => $arr_value)
+		{
+			list($plugin_dir, $plugin_file) = explode("/", $key);
+
+			if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false && !isset($this->option_github_updates[$key]))
+			{
+				$success = false;
+
+				$this->github_debug = "";
+
+				$arr_value['type'] = 'index.php';
+				$success = $this->get_github_version($key, $arr_value);
+
+				/*if($success == false)
+				{
+					$arr_value['type'] = 'releases/latest';
+					$success = $this->get_github_version($key, $arr_value);
+				}
+
+				if($success == false)
+				{
+					$arr_value['type'] = 'tags';
+					$success = $this->get_github_version($key, $arr_value);
+				}*/
+
+				if($success == false && $this->github_debug != '')
+				{
+					do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
+				}
+			}
+		}
+
+		update_site_option('option_github_updates', $this->option_github_updates);
+
+		//do_log(__FUNCTION__." - GitHub Updates: ".var_export($this->option_github_updates, true));
 	}
 
 	function plugin_action_links($actions, $plugin_file)

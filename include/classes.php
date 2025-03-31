@@ -688,12 +688,10 @@ class mf_base
 			update_post_meta($option, $this->meta_prefix.'page_index', 'noindex');
 		}
 	}
-	
+
 	function get_github_version($key, $arr_value)
 	{
 		$success = false;
-
-		//$arr_value['github_access_token'] = "";
 
 		$current_version = $arr_value['Version'];
 		$github_repo = trim(str_replace("https://github.com/", "", $arr_value['PluginURI']), "/");
@@ -702,9 +700,6 @@ class mf_base
 		{
 			case 'index.php':
 				$github_api_url = "https://raw.githubusercontent.com/".$github_repo."/master/index.php";
-
-				/*$response = wp_remote_get($github_api_url, array());
-				$content = wp_remote_retrieve_body($response);*/
 
 				list($content, $headers) = get_url_content(array(
 					'url' => $github_api_url,
@@ -722,11 +717,6 @@ class mf_base
 					//'If-Modified-Since: '.gmdate("D, d M Y H:i:s", strtotime($option_github_updater_last_success))." GMT",
 				);
 
-				/*$response = wp_remote_get($github_api_url, array(
-					'headers' => $arr_headers,
-				));
-				$content = wp_remote_retrieve_body($response);*/
-
 				list($content, $headers) = get_url_content(array(
 					'url' => $url_repos,
 					'catch_head' => true,
@@ -735,89 +725,93 @@ class mf_base
 			break;
 		}
 
-		/*if(is_wp_error($content))
+		switch($headers['http_code'])
 		{
-			$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": - Error fetching data: ".$content->get_error_message();
+			case 200:
+				$latest_version = "";
 
-			$success = false;
-		}*/
-
-		$latest_version = "";
-
-		switch($arr_value['type'])
-		{
-			case 'index.php':
-				if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
+				switch($arr_value['type'])
 				{
-					$latest_version = $matches[1];
+					case 'index.php':
+						if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
+						{
+							$latest_version = $matches[1];
+						}
+
+						else
+						{
+							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
+
+							$success = false;
+						}
+					break;
+
+					case 'releases/latest':
+						$arr_json = json_decode($content, true);
+
+						if(isset($arr_json['tag_name']))
+						{
+							$latest_version = $arr_json['tag_name'];
+						}
+
+						else
+						{
+							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
+
+							$success = false;
+						}
+					break;
+
+					case 'tags':
+						$arr_json = json_decode($content, true);
+
+						if(isset($arr_json[0]) && isset($arr_json[0]['name']))
+						{
+							$latest_version = $arr_json[0]['name'];
+						}
+
+						else
+						{
+							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
+
+							$success = false;
+						}
+					break;
 				}
-				
-				else
-				{
-					$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
 
-					$success = false;
+				if($latest_version != '')
+				{
+					if(version_compare($current_version, $latest_version, '<'))
+					{
+						//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version (".$github_api_url." -> ".$latest_version." > ".$current_version.")");
+
+						//$this->option_github_updates[$key] = $arr_value; // The old version will be saved then
+						$this->option_github_updates[$key] = array(
+							'Name' => $arr_value['Name'],
+							'Version' => $latest_version,
+							'last_checked' => date("Y-m-d H:i:s"),
+							//'github_api_url' => $github_api_url,
+						);
+
+						$success = true;
+					}
+
+					else
+					{
+						//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version", 'trash');
+
+						unset($this->option_github_updates[$key]);
+
+						$success = true;
+					}
 				}
 			break;
 
-			case 'releases/latest':
-				$arr_json = json_decode($content, true);
+			default:
+				$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__." - Error fetching data: ".$content;
 
-				if(isset($arr_json['tag_name']))
-				{
-					$latest_version = $arr_json['tag_name'];
-				}
-
-				else
-				{
-					$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-
-					$success = false;
-				}
+				$success = false;
 			break;
-
-			case 'tags':
-				$arr_json = json_decode($content, true);
-
-				if(isset($arr_json[0]) && isset($arr_json[0]['name']))
-				{
-					$latest_version = $arr_json[0]['name'];
-				}
-
-				else
-				{
-					$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-
-					$success = false;
-				}
-			break;
-		}
-
-		if($latest_version != '')
-		{
-			if(version_compare($current_version, $latest_version, '<'))
-			{
-				//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version (".$github_api_url." -> ".$latest_version." > ".$current_version.")");
-
-				//$this->option_github_updates[$key] = $arr_value; // The old version will be saved then
-				$this->option_github_updates[$key] = array(
-					'Name' => $arr_value['Name'],
-					'Version' => $latest_version,
-					'last_checked' => date("Y-m-d H:i:s"),
-					//'github_api_url' => $github_api_url,
-				);
-
-				$success = true;
-			}
-
-			else
-			{
-				//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version", 'trash');
-
-				unset($this->option_github_updates[$key]);
-
-				$success = true;
-			}
 		}
 
 		return $success;
@@ -2208,28 +2202,28 @@ class mf_base
 		}
 	}
 
-	function pre_set_site_transient_update_plugins($transient = array())
+	function pre_set_site_transient_update_plugins($arr_plugins = array())
 	{
-		/*if(empty($transient->checked))
+		/*if(empty($arr_plugins->checked))
 		{
-			return $transient;
+			return $arr_plugins;
 		}
 
 		$remote_version = '1.2.0'; // Example: Retrieve this dynamically from your server.
 		$plugin_dir = 'mf_base';
 		$plugin_slug = $plugin_dir.'/index.php';
 
-		if(version_compare($transient->checked[$plugin_slug], $remote_version, '<'))
+		if(version_compare($arr_plugins->checked[$plugin_slug], $remote_version, '<'))
 		{
 			$obj = new stdClass();
 			$obj->slug = $plugin_dir;
 			$obj->new_version = $remote_version;
 			$obj->url = 'https://example.com/plugin-info'; // Get from index.php -> Author URI
 			$obj->package = 'https://example.com/plugin-download.zip';
-			$transient->response[$plugin_slug] = $obj;
+			$arr_plugins->response[$plugin_slug] = $obj;
 		}
 
-		return $transient;*/
+		return $arr_plugins;*/
 
 		$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
 

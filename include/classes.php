@@ -832,7 +832,7 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
-			$this->pre_set_site_transient_update_plugins();
+			//$this->pre_set_site_transient_update_plugins();
 
 			// Optimize
 			#########################
@@ -2206,7 +2206,7 @@ class mf_base
 		}
 	}
 
-	function pre_set_site_transient_update_plugins($transient)
+	function pre_set_site_transient_update_plugins($transient = array())
 	{
 		/*if(empty($transient->checked))
 		{
@@ -2731,8 +2731,12 @@ class mf_base
 
 	function after_plugin_row($plugin_file, $plugin_data)
 	{
-		if(version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))
+		if(isset($this->option_github_updates[$plugin_file]) && version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))
 		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_script('script_import_wp', $plugin_include_url."script_github_updates.js");
+
 			echo "<tr class='plugin-update-tr active'>
 				<td colspan='4' class='plugin-update'>" //colspanchange
 					."<div class='update-message notice inline notice-warning notice-alt'>

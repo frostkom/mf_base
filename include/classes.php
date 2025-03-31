@@ -2157,6 +2157,8 @@ class mf_base
 			{
 				add_action('after_plugin_row_'.$key, array($this, 'after_plugin_row'), 10, 2);
 			}
+
+			update_site_option('option_github_updates', $this->option_github_updates);
 		}
 	}
 
@@ -2266,9 +2268,10 @@ class mf_base
 					$success = $this->get_github_version($key, $arr_value);
 				}*/
 
+				// Only log if debug is on
 				if($success == false && $this->github_debug != '')
 				{
-					do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
+					//do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
 				}
 			}
 		}
@@ -2744,6 +2747,11 @@ class mf_base
 					</div>
 				</td>
 			</tr>"; // (".var_export($this->option_github_updates[$plugin_file], true).", ".var_export($plugin_data, true).")
+		}
+
+		else
+		{
+			unset($this->option_github_updates[$plugin_file]);
 		}
 	}
 

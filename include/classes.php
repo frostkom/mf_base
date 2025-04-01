@@ -741,8 +741,6 @@ class mf_base
 						else
 						{
 							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
-
-							$success = false;
 						}
 					break;
 
@@ -757,8 +755,6 @@ class mf_base
 						else
 						{
 							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-
-							$success = false;
 						}
 					break;
 
@@ -773,8 +769,6 @@ class mf_base
 						else
 						{
 							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-
-							$success = false;
 						}
 					break;
 				}
@@ -783,14 +777,11 @@ class mf_base
 				{
 					if(version_compare($current_version, $latest_version, '<'))
 					{
-						//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version (".$github_api_url." -> ".$latest_version." > ".$current_version.")");
-
-						//$this->option_github_updates[$key] = $arr_value; // The old version will be saved then
 						$this->option_github_updates[$key] = array(
 							'Name' => $arr_value['Name'],
 							'Version' => $latest_version,
+							'status' => 'new',
 							'last_checked' => date("Y-m-d H:i:s"),
-							//'github_api_url' => $github_api_url,
 						);
 
 						$success = true;
@@ -798,19 +789,37 @@ class mf_base
 
 					else
 					{
-						//do_log(__FUNCTION__.": ".$arr_value['Name']." has a new version", 'trash');
-
-						unset($this->option_github_updates[$key]);
+						$this->option_github_updates[$key] = array(
+							'Name' => $arr_value['Name'],
+							'Version' => $latest_version,
+							'status' => 'current',
+							'last_checked' => date("Y-m-d H:i:s"),
+						);
 
 						$success = true;
 					}
 				}
+
+				else
+				{
+					$this->option_github_updates[$key] = array(
+						'Name' => $arr_value['Name'],
+						'Version' => '',
+						'status' => 'error',
+						'last_checked' => date("Y-m-d H:i:s"),
+					);
+				}
 			break;
 
 			default:
-				$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__." - Error fetching data: ".$content;
+				$this->option_github_updates[$key] = array(
+					'Name' => $arr_value['Name'],
+					'Version' => '',
+					'status' => 'error',
+					'last_checked' => date("Y-m-d H:i:s"),
+				);
 
-				$success = false;
+				$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__." - Error fetching data: ".$content;
 			break;
 		}
 
@@ -2158,11 +2167,20 @@ class mf_base
 
 	function get_count_message($id = 0)
 	{
+		$rows = 0;
 		$count_message = "";
 
 		$option_github_updates = get_site_option_or_default('option_github_updates', array());
 
-		$rows = count($option_github_updates);
+		foreach($option_github_updates as $key => $arr_value)
+		{
+			$status = (isset($arr_value['status']) ? $arr_value['status'] : '');
+
+			if($status == 'new')
+			{
+				$rows++;
+			}
+		}
 
 		if($rows > 0)
 		{
@@ -2229,7 +2247,28 @@ class mf_base
 
 		foreach($this->option_github_updates as $key => $arr_value)
 		{
-			if(!isset($arr_value['last_checked']) || $arr_value['last_checked'] < date("Y-m-d H:i:s", strtotime("-30 minute")))
+			$status = (isset($this->option_github_updates[$plugin_file]['status']) ? $this->option_github_updates[$plugin_file]['status'] : '');
+
+			switch($status)
+			{
+				case 'new':
+					$date_limit = date("Y-m-d H:i:s", strtotime("-1 day"));
+				break;
+
+				case 'current':
+					$date_limit = date("Y-m-d H:i:s", strtotime("-30 minute"));
+				break;
+
+				case 'error':
+					$date_limit = date("Y-m-d H:i:s", strtotime("-1 week"));
+				break;
+
+				default:
+					$date_limit = date("Y-m-d H:i:s", strtotime("-1 minute"));
+				break;
+			}
+
+			if(!isset($arr_value['last_checked']) || $arr_value['last_checked'] < $date_limit)
 			{
 				unset($this->option_github_updates[$key]);
 			}
@@ -2239,7 +2278,7 @@ class mf_base
 
 		foreach($arr_plugins as $key => $arr_value)
 		{
-			list($plugin_dir, $plugin_file) = explode("/", $key);
+			//list($plugin_dir, $plugin_file) = explode("/", $key);
 
 			if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false && !isset($this->option_github_updates[$key]))
 			{
@@ -2271,8 +2310,6 @@ class mf_base
 		}
 
 		update_site_option('option_github_updates', $this->option_github_updates);
-
-		//do_log(__FUNCTION__." - GitHub Updates: ".var_export($this->option_github_updates, true));
 	}
 
 	function plugin_action_links($actions, $plugin_file)
@@ -2728,7 +2765,7 @@ class mf_base
 
 	function after_plugin_row($plugin_file, $plugin_data)
 	{
-		if(isset($this->option_github_updates[$plugin_file]) && version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))
+		if(isset($this->option_github_updates[$plugin_file]) && isset($this->option_github_updates[$plugin_file]['status']) && $this->option_github_updates[$plugin_file]['status'] == 'new' && version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
@@ -2740,12 +2777,12 @@ class mf_base
 						<p>".sprintf(__("There is a new version (%s) available for %s.", 'lang_base'), $this->option_github_updates[$plugin_file]['Version'], $this->option_github_updates[$plugin_file]['Name'])."</p>
 					</div>
 				</td>
-			</tr>"; // (".var_export($this->option_github_updates[$plugin_file], true).", ".var_export($plugin_data, true).")
+			</tr>";
 		}
 
 		else
 		{
-			unset($this->option_github_updates[$plugin_file]);
+			$this->option_github_updates[$plugin_file]['status'] = 'current';
 		}
 	}
 

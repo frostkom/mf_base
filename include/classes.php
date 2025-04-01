@@ -2160,8 +2160,6 @@ class mf_base
 			{
 				add_action('after_plugin_row_'.$key, array($this, 'after_plugin_row'), 10, 2);
 			}
-
-			update_site_option('option_github_updates', $this->option_github_updates);
 		}
 	}
 
@@ -2247,7 +2245,7 @@ class mf_base
 
 		foreach($this->option_github_updates as $key => $arr_value)
 		{
-			$status = (isset($this->option_github_updates[$plugin_file]['status']) ? $this->option_github_updates[$plugin_file]['status'] : '');
+			$status = (isset($this->option_github_updates[$key]['status']) ? $this->option_github_updates[$key]['status'] : '');
 
 			switch($status)
 			{
@@ -2774,7 +2772,7 @@ class mf_base
 			echo "<tr class='plugin-update-tr active'>
 				<td colspan='4' class='plugin-update'>" //colspanchange
 					."<div class='update-message notice inline notice-warning notice-alt'>
-						<p>".sprintf(__("There is a new version (%s) available for %s.", 'lang_base'), $this->option_github_updates[$plugin_file]['Version'], $this->option_github_updates[$plugin_file]['Name'])."</p>
+						<p>".__("There is a new version of this plugin", 'lang_base')." (".$this->option_github_updates[$plugin_file]['Version'].")</p>
 					</div>
 				</td>
 			</tr>";
@@ -2782,7 +2780,14 @@ class mf_base
 
 		else
 		{
-			$this->option_github_updates[$plugin_file]['status'] = 'current';
+			$this->option_github_updates[$plugin_file] = array(
+				'Name' => $this->option_github_updates[$plugin_file]['Name'],
+				'Version' => $plugin_data['Version'],
+				'status' => 'current',
+				'last_checked' => date("Y-m-d H:i:s"),
+			);
+
+			update_site_option('option_github_updates', $this->option_github_updates);
 		}
 	}
 

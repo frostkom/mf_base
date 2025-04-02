@@ -2346,11 +2346,23 @@ class mf_base
 	{
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
 
 		foreach($result as $r)
 		{
-			$arr_ids[] = $r->ID;
+			$post_id = $r->ID;
+			$post_type = $r->post_type;
+
+			if($post_type == 'wp_block')
+			{
+				$block_code = '<!-- wp:block {"ref":'.$post_id.'} /-->';
+				$arr_ids = apply_filters('get_page_from_block_code', $arr_ids, $block_code);
+			}
+
+			else
+			{
+				$arr_ids[] = $post_id;
+			}
 		}
 
 		return $arr_ids;
@@ -3124,7 +3136,8 @@ class mf_base
 
 		foreach($result as $r)
 		{
-			if(has_block($handle, get_post($r->ID)))
+			//if(has_block($handle, get_post($r->ID)))
+			if(has_block($handle, $r->ID))
 			{
 				$post_id = $r->ID;
 				break;

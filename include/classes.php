@@ -2781,7 +2781,7 @@ class mf_base
 
 			mf_enqueue_script('script_import_wp', $plugin_include_url."script_github_updates.js");
 
-			echo "<tr class='plugin-update-tr active'>
+			echo "<tr class='plugin-update-tr".(is_plugin_active($plugin_file) ? " active" : "")."'>
 				<td colspan='4' class='plugin-update'>" //colspanchange
 					."<div class='update-message notice inline notice-warning notice-alt'>
 						<p>".__("There is a new version of this plugin", 'lang_base')." (".$this->option_github_updates[$plugin_file]['Version'].")</p>

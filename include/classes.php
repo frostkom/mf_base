@@ -438,7 +438,7 @@ class mf_base
 	function run_cron_start()
 	{
 		$obj_cron = new mf_cron();
-		$obj_cron->start(__CLASS__."_parent");
+		$obj_cron->start(__CLASS__.'_parent');
 
 		if($obj_cron->is_running == false)
 		{
@@ -835,6 +835,27 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
+			replace_option(array('old' => 'setting_theme_enable_wp_api', 'new' => 'setting_base_enable_wp_api'));
+			replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
+			replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
+
+			if(is_plugin_active("mf_theme_core/index.php"))
+			{
+				global $obj_theme_core;
+
+				if(!isset($obj_theme_core))
+				{
+					$obj_theme_core = new mf_theme_core();
+				}
+
+				replace_post_meta(array('old' => $obj_theme_core->meta_prefix.'page_index', 'new' => $this->meta_prefix.'page_index'));
+			}
+
+			mf_uninstall_plugin(array(
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'setting_base_enable_wp_api', 'option_sync_sites', 'option_github_access_token', 'option_git_updater'),
+				'meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
+			));
+
 			//$this->pre_set_site_transient_update_plugins();
 
 			// Optimize
@@ -1893,7 +1914,37 @@ class mf_base
 
 				if($next_cron != '')
 				{
-					echo " ".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron);
+					echo " <span>".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron)."</span>";
+				}
+			}
+
+			if(IS_SUPER_ADMIN)
+			{
+				$option_cron_progress = get_option('option_cron_progress');
+
+				if(is_array($option_cron_progress) && count($option_cron_progress) > 0)
+				{
+					echo "<br><ul>";
+
+						foreach($option_cron_progress as $key => $arr_value)
+						{
+							echo "<li>"
+								.$key.": ";
+								
+								if($arr_value['end'] >= $arr_value['start'])
+								{
+									echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end'], 'type' => 'round', 'return' => 'seconds'))."s";
+								}
+
+								else
+								{
+									echo $arr_value['start']."-...";
+								}
+									
+							echo "</li>";
+						}
+
+					echo "</ul>";
 				}
 			}
 
@@ -3136,8 +3187,7 @@ class mf_base
 
 		foreach($result as $r)
 		{
-			//if(has_block($handle, get_post($r->ID)))
-			if(has_block($handle, $r->ID))
+			if(has_block($handle, get_post($r->ID)))
 			{
 				$post_id = $r->ID;
 				break;
@@ -3355,9 +3405,10 @@ class mf_base
 
 class mf_cron
 {
-	var $schedules = array();
+	var $schedules;
 	var $type = "";
-	var $date_start = "";
+	var $date_start;
+	var $upload_path;
 	var $file = "";
 	var $is_running = "";
 
@@ -3366,6 +3417,8 @@ class mf_cron
 		$this->schedules = wp_get_schedules();
 
 		$this->date_start = date("Y-m-d H:i:s");
+
+		list($this->upload_path, $upload_url) = get_uploads_folder('mf_base');
 	}
 
 	function start($type)
@@ -3379,17 +3432,32 @@ class mf_cron
 			do_log("Cron: ".$this->type." started ".$this->date_start);
 		}*/
 
-		list($upload_path, $upload_url) = get_uploads_folder();
+		$this->file = $this->upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
 
-		$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
+		$this->set_is_running();
 
-		$this->set_is_running(); //0
+		if($this->is_running == false)
+		{
+			if($this->type == 'mf_base_parent')
+			{
+				$arr_progress = array();
+			}
+
+			else
+			{
+				$arr_progress = get_option('option_cron_progress');
+			}
+
+			$arr_progress[$this->type] = array('start' => date("Y-m-d H:i:s"), 'end' => "");
+			
+			update_option('option_cron_progress', $arr_progress, false);
+		}
 
 		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'log' => false, 'content' => date("Y-m-d H:i:s")));
 
 		if(!$success)
 		{
-			do_log(sprintf("I could not create the temporary file in %s, please make sure that I have access to create this file in order for schedules to work as intended", $upload_path));
+			do_log(sprintf("I could not create the temporary file in %s, please make sure that I have access to create this file in order for schedules to work as intended", $this->upload_path));
 		}
 	}
 
@@ -3400,7 +3468,7 @@ class mf_cron
 		return $this->schedules[$setting_base_cron]['interval'];
 	}
 
-	function set_is_running() //$times
+	function set_is_running()
 	{
 		$this->is_running = file_exists($this->file);
 
@@ -3414,14 +3482,6 @@ class mf_cron
 			{
 				do_log(sprintf("%s has been running since %s", $this->file, $file_time));
 			}
-
-			/*if($times < 10)
-			{
-				sleep(mt_rand(1, 20));
-				set_time_limit(60);
-
-				$this->set_is_running($times++);
-			}*/
 		}
 	}
 
@@ -3444,10 +3504,14 @@ class mf_cron
 
 			$this->type = $type;
 
-			list($upload_path, $upload_url) = get_uploads_folder();
-
-			$this->file = $upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
+			$this->file = $this->upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
 		}
+
+		$arr_progress = get_option('option_cron_progress');
+
+		$arr_progress[$this->type]['end'] = date("Y-m-d H:i:s");
+			
+		update_option('option_cron_progress', $arr_progress, false);
 
 		/*if(get_site_option('setting_base_cron_debug') == 'yes')
 		{

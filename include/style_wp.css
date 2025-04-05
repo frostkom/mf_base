@@ -140,26 +140,15 @@
 				column-count: 3;
 			}
 
-	.postbox .display_on_hover, .display_next_on_hover + div, .display_next_on_hover + ul
+	.display_parent .display_on_hover
 	{
 		display: none;
 	}
 
-		.postbox:hover .display_on_hover, .display_next_on_hover:hover + div, .display_next_on_hover:hover + ul
+		.display_parent:hover .display_on_hover
 		{
 			display: block;
 		}
-
-		.display_next_on_hover + ul li
-		{
-			list-style-type: disc;
-			list-style-position: inside;
-		}
-
-			.display_next_on_hover + ul ul
-			{
-				margin-left: .3em;
-			}
 
 	.postbox.active, .postbox.active h3
 	{

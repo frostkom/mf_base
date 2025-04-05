@@ -1537,15 +1537,18 @@ class mf_base
 							}
 						}
 
-						echo "<p".($ul_content != '' ? " class='display_next_on_hover'" : "").">
-							<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("Space Left", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
-						."</p>";
+						echo "<div class='display_parent'>
+							<p>
+								<i class='fa ".($free_percent > 10 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+								.__("Space Left", 'lang_base').": ".mf_format_number($free_percent, 0)."% (".show_final_size($free_space)." / ".show_final_size($total_space).")"
+							."</p>";
 
-						if($ul_content != '')
-						{
-							echo "<ul>".$ul_content."</ul>";
-						}
+							if($ul_content != '')
+							{
+								echo "<ul class='display_on_hover'>".$ul_content."</ul>";
+							}
+
+						echo "</div>";
 					}
 
 					else
@@ -1575,73 +1578,75 @@ class mf_base
 
 							$uploads_icon = ($filesystem_method == 'direct' ? "fa-check green" : "fa-times red display_warning");
 
-							echo "<p class='display_next_on_hover'>
-								<i class='fa ".$uploads_icon."'></i> ".__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
-							."</p>
-							<ul class='no_style'>
-								<li><i class='fa ".$uploads_icon."'></i> ".__("Method", 'lang_base').": ";
+							echo "<div class='display_parent'>
+								<p>
+									<i class='fa ".$uploads_icon."'></i> ".__("Upload Directory", 'lang_base').": <i class='fas fa-bezier-curve green' title='".$upload_dir."'></i>"
+								."</p>
+								<ul class='display_on_hover no_style'>
+									<li><i class='fa ".$uploads_icon."'></i> ".__("Method", 'lang_base').": ";
 
-									switch($filesystem_method)
+										switch($filesystem_method)
+										{
+											case 'direct':
+												echo __("Direct", 'lang_base');
+											break;
+
+											case 'ssh':
+												echo __("SSH", 'lang_base');
+											break;
+
+											case 'ftpext':
+												echo __("FTP", 'lang_base');
+											break;
+
+											case 'ftpsockets':
+												echo __("FTP Sockets", 'lang_base');
+											break;
+										}
+
+									echo "</li>";
+
+									$test_folder = ABSPATH;
+									$test_file = ABSPATH.'index.php';
+
+									if(!defined('FS_CHMOD_DIR'))
 									{
-										case 'direct':
-											echo __("Direct", 'lang_base');
-										break;
-
-										case 'ssh':
-											echo __("SSH", 'lang_base');
-										break;
-
-										case 'ftpext':
-											echo __("FTP", 'lang_base');
-										break;
-
-										case 'ftpsockets':
-											echo __("FTP Sockets", 'lang_base');
-										break;
+										define('FS_CHMOD_DIR', (fileperms($test_folder) & 0777 | 0755));
 									}
 
-								echo "</li>";
+									if(!defined('FS_CHMOD_FILE'))
+									{
+										define('FS_CHMOD_FILE', (fileperms($test_file) & 0777 | 0644));
+									}
 
-								$test_folder = ABSPATH;
-								$test_file = ABSPATH.'index.php';
+									if(defined('FS_CHMOD_DIR'))
+									{
+										echo "<li>
+											<i class='fa ".(FS_CHMOD_DIR >= $this->chmod_dir ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Directories", 'lang_base').": ".decoct(FS_CHMOD_DIR);
 
-								if(!defined('FS_CHMOD_DIR'))
-								{
-									define('FS_CHMOD_DIR', (fileperms($test_folder) & 0777 | 0755));
-								}
+											if(FS_CHMOD_DIR < $this->chmod_dir)
+											{
+												echo " < ".decoct($this->chmod_dir);
+											}
 
-								if(!defined('FS_CHMOD_FILE'))
-								{
-									define('FS_CHMOD_FILE', (fileperms($test_file) & 0777 | 0644));
-								}
+										echo "</li>";
+									}
 
-								if(defined('FS_CHMOD_DIR'))
-								{
-									echo "<li>
-										<i class='fa ".(FS_CHMOD_DIR >= $this->chmod_dir ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Directories", 'lang_base').": ".decoct(FS_CHMOD_DIR);
+									if(defined('FS_CHMOD_FILE'))
+									{
+										echo "<li>
+											<i class='fa ".(FS_CHMOD_FILE >= $this->chmod_file ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Files", 'lang_base').": ".decoct(FS_CHMOD_FILE);
 
-										if(FS_CHMOD_DIR < $this->chmod_dir)
-										{
-											echo " < ".decoct($this->chmod_dir);
-										}
+											if(FS_CHMOD_FILE < $this->chmod_file)
+											{
+												echo " < ".decoct($this->chmod_file);
+											}
 
-									echo "</li>";
-								}
+										echo "</li>";
+									}
 
-								if(defined('FS_CHMOD_FILE'))
-								{
-									echo "<li>
-										<i class='fa ".(FS_CHMOD_FILE >= $this->chmod_file ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Files", 'lang_base').": ".decoct(FS_CHMOD_FILE);
-
-										if(FS_CHMOD_FILE < $this->chmod_file)
-										{
-											echo " < ".decoct($this->chmod_file);
-										}
-
-									echo "</li>";
-								}
-
-							echo "</ul>";
+								echo "</ul>
+							</div>";
 						}
 
 						else
@@ -1661,19 +1666,25 @@ class mf_base
 
 							if(count($this->file_warning) > 0)
 							{
-								echo "<p".(count($this->file_warning) > 0 ? " class='display_next_on_hover'" : "").">
-									<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-									.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
-								."</p>";
+								echo "<div class='display_parent'>
+									<p>
+										<i class='fa ".(count($this->file_warning) == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+										.__("Security Scan", 'lang_base').": ".sprintf(__("%d suspicious files", 'lang_base'), count($this->file_warning))
+									."</p>";
 
-								echo "<ul>";
-
-									foreach($this->file_warning as $file_path)
+									if(count($this->file_warning) > 0)
 									{
-										echo "<li>".$file_path."</li>";
+										echo "<ul class='display_on_hover'>";
+
+											foreach($this->file_warning as $file_path)
+											{
+												echo "<li>".$file_path."</li>";
+											}
+
+										echo "</ul>";
 									}
 
-								echo "</ul>";
+								echo "</div>";
 							}
 						}*/
 					}
@@ -1683,26 +1694,29 @@ class mf_base
 
 					if($option_base_large_table_amount > 0)
 					{
-						echo "<p".(count($option_base_large_tables) > 0 ? " class='display_next_on_hover'" : "").">
-							<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("DB", 'lang_base').": "
-							."<span>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
-						."</p>";
+						echo "<div class='display_parent'>
+							<p>
+								<i class='fa ".($option_base_large_table_amount == 0 ? "fa-check green" : "fa-times red display_warning")."'></i> "
+								.__("DB", 'lang_base').": "
+								."<span>".sprintf(__("%d tables larger than %s", 'lang_base'), $option_base_large_table_amount, "10MB")."</span>"
+							."</p>";
 
-						if(IS_SUPER_ADMIN && count($option_base_large_tables) > 0)
-						{
-							echo "<ul>";
+							if(IS_SUPER_ADMIN && count($option_base_large_tables) > 0)
+							{
+								echo "<ul class='display_on_hover'>";
 
-								foreach($option_base_large_tables as $arr_table)
-								{
-									echo "<li>".str_replace($wpdb->prefix, "", $arr_table['name'])." ("
-										.$arr_table['size']
-										.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
-									.")</li>";
-								}
+									foreach($option_base_large_tables as $arr_table)
+									{
+										echo "<li>".str_replace($wpdb->prefix, "", $arr_table['name'])." ("
+											.$arr_table['size']
+											.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
+										.")</li>";
+									}
 
-							echo "</ul>";
-						}
+								echo "</ul>";
+							}
+
+						echo "</div>";
 					}
 
 					echo "<p>
@@ -1869,84 +1883,92 @@ class mf_base
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');
 
-			if($option_cron_started > $option_cron_ended)
-			{
-				echo "<em>".sprintf(__("Last started %s but has not finished.", 'lang_base'), format_date($option_cron_started))."</em>";
-			}
+			echo "<div class='display_parent'>";
 
-			else if($option_cron_ended != '')
-			{
-				if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_ended < $last_run_threshold)
+				if($option_cron_started > $option_cron_ended)
 				{
-					echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
+					echo "<em>".sprintf(__("Last started %s but has not finished.", 'lang_base'), format_date($option_cron_started))."</em>";
+				}
 
-					do_action('cron_base');
+				else if($option_cron_ended != '')
+				{
+					if(get_next_cron(array('raw' => true)) < $last_run_threshold && $option_cron_ended < $last_run_threshold)
+					{
+						echo "<span>".__("Running schedule...", 'lang_base')."</span> ";
+
+						do_action('cron_base');
+					}
+
+					else
+					{
+						$out_temp = format_date($option_cron_started);
+
+						if(format_date($option_cron_ended) != $out_temp)
+						{
+							$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_ended);
+						}
+
+						$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_ended, 'type' => 'ceil', 'return' => 'seconds'));
+
+						if($time_difference > 0 && $time_difference < 60)
+						{
+							$out_temp .= " (".$time_difference.__("s", 'lang_base').")";
+						}
+
+						echo "<em>".sprintf(__("Last run %s.", 'lang_base'), $out_temp)."</em>";
+					}
 				}
 
 				else
 				{
-					$out_temp = format_date($option_cron_started);
-
-					if(format_date($option_cron_ended) != $out_temp)
-					{
-						$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_ended);
-					}
-
-					$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_ended, 'type' => 'ceil', 'return' => 'seconds'));
-
-					if($time_difference > 0 && $time_difference < 60)
-					{
-						$out_temp .= " (".$time_difference.__("s", 'lang_base').")";
-					}
-
-					echo "<em>".sprintf(__("Last run %s.", 'lang_base'), $out_temp)."</em>";
+					echo "<em>".__("Has never been run.", 'lang_base')."</em>";
 				}
-			}
 
-			else
-			{
-				echo "<em>".__("Has never been run.", 'lang_base')."</em>";
-			}
-
-			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
-			{
-				$next_cron = get_next_cron();
-
-				if($next_cron != '')
+				if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
 				{
-					echo " <span>".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron)."</span>";
+					$next_cron = get_next_cron();
+
+					if($next_cron != '')
+					{
+						echo " <span>".sprintf(__("Next scheduled %s.", 'lang_base'), $next_cron)."</span>";
+					}
 				}
-			}
 
-			if(IS_SUPER_ADMIN)
-			{
-				$option_cron_progress = get_option('option_cron_progress');
-
-				if(is_array($option_cron_progress) && count($option_cron_progress) > 0)
+				if(IS_SUPER_ADMIN)
 				{
-					echo "<br><ul>";
+					$option_cron_progress = get_option('option_cron_progress');
 
-						foreach($option_cron_progress as $key => $arr_value)
-						{
-							echo "<li>"
-								.$key.": ";
-								
-								if($arr_value['end'] >= $arr_value['start'])
+					if(is_array($option_cron_progress) && count($option_cron_progress) > 0)
+					{
+						echo "<br>
+						<ul class='display_on_hover'>";
+
+							foreach($option_cron_progress as $key => $arr_value)
+							{
+								if($arr_value['end'] != $arr_value['start'])
 								{
-									echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end'], 'type' => 'round', 'return' => 'seconds'))."s";
-								}
+									echo "<li>"
+										.$key.": ";
+										
+										if($arr_value['end'] >= $arr_value['start'])
+										{
+											echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end'], 'type' => 'round', 'return' => 'seconds')).__("s", 'lang_base');
+										}
 
-								else
-								{
-									echo $arr_value['start']."-...";
+										else
+										{
+											echo format_date($arr_value['start'])." -> &hellip;";
+										}
+											
+									echo "</li>";
 								}
-									
-							echo "</li>";
-						}
+							}
 
-					echo "</ul>";
+						echo "</ul>";
+					}
 				}
-			}
+
+			echo "</div>";
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();

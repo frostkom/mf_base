@@ -3097,11 +3097,10 @@ class mf_base
 						{
 							default:
 							case 'apache':
-								$update_with .= "<IfModule mod_rewrite.c>\r\n"
+								$update_with .= "\r\n"
 								."	RewriteEngine On\r\n"
 								."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
-								."	RewriteRule .* /404/ [L,NC]\r\n"
-								."</IfModule>";
+								."	RewriteRule .* /404/ [L,NC]\r\n";
 							break;
 
 							case 'nginx':

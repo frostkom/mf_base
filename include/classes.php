@@ -3011,19 +3011,6 @@ class mf_base
 		return $template;
 	}
 
-	/*function filter_site_redirect($data)
-	{
-		$site_url = ($data['site_id'] > 0 ? get_home_url($data['site_id']) : get_home_url());
-		$is_https = (substr($site_url, 0, 5) == 'https');
-
-		if(!$is_https)
-		{
-			$data['all_is_https'] = false;
-		}
-
-		return $data;
-	}*/
-
 	function recommend_config($data)
 	{
 		if(!isset($data['file'])){		$data['file'] = '';}
@@ -3033,32 +3020,30 @@ class mf_base
 		if(!is_multisite() || is_main_site())
 		{
 			$subfolder = get_url_part(array('type' => 'path'));
+			
+			$ignore_files = "xmlrpc\.php|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|debug\.log";
 
 			switch($this->get_server_type())
 			{
 				default:
 				case 'apache':
-					/*$data_temp = array('site_id' => 0, 'all_is_https' => $all_is_https);
+					/*$update_with = "<Files xmlrpc.php>\r\n"
+					."	Order Allow,Deny\r\n"
+					."	Deny from all\r\n"
+					."</Files>";*/
 
-					if(is_multisite())
-					{
-						$result = get_sites(array('deleted' => 0));
-
-						foreach($result as $r)
-						{
-							$data_temp['site_id'] = $r->blog_id;
-							$data_temp = $this->filter_site_redirect($data_temp);
-						}
-					}
-
-					else
-					{
-						$data_temp = $this->filter_site_redirect($data_temp);
-					}*/
-
-					$update_with = "ServerSignature Off\r\n"
-					//."ServerTokens Prod\r\n" // Test before using
-					."\r\n"
+					$update_with = "<FilesMatch \"^(".$ignore_files.")$\">\r\n" //|wp\-content/uploads/[\d]+/.*\.php
+					."	Order Allow,Deny\r\n"
+					."	Deny from all\r\n"
+					."</FilesMatch>\r\n";
+					
+					/*$update_with .= "<IfModule mod_rewrite.c>\r\n"
+					."	RewriteEngine On\r\n"
+					."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
+					."	RewriteRule .* /404/ [L,NC]\r\n"
+					."</IfModule>\r\n";*/
+				
+					$update_with .= "ServerSignature Off\r\n"
 					."DirectoryIndex index.php\r\n"
 					."Options -Indexes\r\n"
 					."\r\n"
@@ -3091,33 +3076,13 @@ class mf_base
 						break;
 					}
 
-					if((!is_multisite() || is_main_site())) // && get_site_option('setting_base_enable_wp_api', get_option('setting_base_enable_wp_api')) != 'yes'
-					{
-						switch($this->get_server_type())
-						{
-							default:
-							case 'apache':
-								$update_with .= "\r\n"
-								."	RewriteEngine On\r\n"
-								."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
-								."	RewriteRule .* /404/ [L,NC]\r\n";
-							break;
-
-							case 'nginx':
-								$update_with .= "location /xmlrpc.php {\r\n"
-								."	deny all;\r\n"
-								."}";
-							break;
-						}
-					}
-
 					$update_with .= "\r\n"
 					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
-					."\r\n"
-					."	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n" //|wp\-content/+debug\.log
-					."	RewriteRule .* /404/ [L,NC]\r\n";
+					."\r\n";
 
-					$update_with .= "\r\n";
+					/*$update_with .= "	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n"
+					."	RewriteRule .* /404/ [L,NC]\r\n"
+					."\r\n";*/
 
 					// Disable execution of PHP files in wp-includes
 					if(!is_multisite())
@@ -3163,7 +3128,11 @@ class mf_base
 				break;
 
 				case 'nginx':
-					$update_with = "index \"index.php\";\r\n"
+					$update_with .= "location ~* ^/(".$ignore_files.")$ {\r\n"
+					."	deny all;\r\n"
+					."}\r\n"
+					."\r\n"
+					."index \"index.php\";\r\n"
 					."autoindex off;\r\n"
 					."server_tokens off;\r\n"
 					."\r\n"

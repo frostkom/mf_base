@@ -3028,13 +3028,11 @@ class mf_base
 				default:
 				case 'apache':
 					/*$update_with = "<Files xmlrpc.php>\r\n"
-					."	Order Allow,Deny\r\n"
-					."	Deny from all\r\n"
+					."	Require all denied\r\n"
 					."</Files>";*/
 
 					$update_with = "<FilesMatch \"^(".$ignore_files.")$\">\r\n" //|wp\-content/uploads/[\d]+/.*\.php
-					."	Order Allow,Deny\r\n"
-					."	Deny from all\r\n"
+					."	Require all denied\r\n"
 					."</FilesMatch>\r\n";
 					
 					/*$update_with .= "<IfModule mod_rewrite.c>\r\n"

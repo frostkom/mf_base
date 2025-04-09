@@ -1782,7 +1782,8 @@ class mf_base
 						echo "</p>";
 					}
 
-					if(function_exists('sys_getloadavg'))
+					// This doesn't say so much about the actual load or CPU usage
+					/*if(function_exists('sys_getloadavg'))
 					{
 						$load = sys_getloadavg();
 						$load_limit = 1;
@@ -1801,7 +1802,7 @@ class mf_base
 						{
 							echo "<p><i class='fa ".($load[2] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
 						}
-					}
+					}*/
 
 					$arr_autoload_type = array(
 						'yes' => array('byte' => 0, 'limit' => (MB_IN_BYTES / 2)),

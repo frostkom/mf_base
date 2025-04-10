@@ -1973,7 +1973,7 @@ class mf_base
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
-			$json_output['timestamp'] = date("Y-m-d H:i:s");
+			//$json_output['timestamp'] = date("Y-m-d H:i:s");
 
 			header('Content-Type: application/json');
 			echo json_encode($json_output);

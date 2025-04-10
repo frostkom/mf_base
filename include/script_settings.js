@@ -129,21 +129,14 @@ jQuery(function($)
 				url: script_base_settings.ajax_url,
 				type: 'post',
 				dataType: 'json',
-				data: {
+				data:
+				{
 					action: 'api_base_info',
 					user_id: script_base_settings.user_id
 				},
 				success: function(data)
 				{
-					if(data.success)
-					{
-						self.html(data.html);
-					}
-
-					else
-					{
-						console.log(data.message);
-					}
+					self.html(data.html);
 				}
 			});
 		});
@@ -155,20 +148,13 @@ jQuery(function($)
 				url: script_base_settings.ajax_url,
 				type: 'post',
 				dataType: 'json',
-				data: {
+				data:
+				{
 					action: 'api_base_cron'
 				},
 				success: function(data)
 				{
-					if(data.success)
-					{
-						self.html(data.html);
-					}
-
-					else
-					{
-						console.log(data.message);
-					}
+					self.html(data.html);
 				}
 			});
 		}
@@ -185,10 +171,13 @@ jQuery(function($)
 			}, 60000);
 		});
 
-		function run_ajax(obj)
+		$(document).on('click', "button[name='btnBaseOptimize']:not(.is_disabled)", function(e)
 		{
-			obj.button.addClass('is_disabled');
-			obj.selector.html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+			var dom_obj = $(e.currentTarget),
+				dom_container = $(".api_base_optimize");
+			
+			dom_obj.addClass('is_disabled');
+			dom_container.html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
 
 			$.ajax(
 			{
@@ -196,27 +185,16 @@ jQuery(function($)
 				type: 'post',
 				dataType: 'json',
 				data: {
-					action: obj.action
+					action: 'api_base_optimize'
 				},
 				success: function(data)
 				{
-					obj.button.removeClass('is_disabled');
-
-					obj.selector.html(data.html);
+					dom_obj.removeClass('is_disabled');
+					dom_container.html(data.html);
 				}
 			});
 
 			return false;
-		}
-
-		$(document).on('click', "button[name='btnBaseOptimize']:not(.is_disabled)", function(e)
-		{
-			run_ajax(
-			{
-				'button': $(e.currentTarget),
-				'action': 'api_base_optimize',
-				'selector': $(".api_base_optimize")
-			});
 		});
 	}
 

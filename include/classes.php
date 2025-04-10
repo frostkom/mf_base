@@ -1950,7 +1950,7 @@ class mf_base
 								{
 									echo "<li>"
 										.$key.": ";
-										
+
 										if($arr_value['end'] >= $arr_value['start'])
 										{
 											echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end'], 'type' => 'round', 'return' => 'seconds')).__("s", 'lang_base');
@@ -1960,7 +1960,7 @@ class mf_base
 										{
 											echo format_date($arr_value['start'])." -> &hellip;";
 										}
-											
+
 									echo "</li>";
 								}
 							}
@@ -3021,7 +3021,7 @@ class mf_base
 		if(!is_multisite() || is_main_site())
 		{
 			$subfolder = get_url_part(array('type' => 'path'));
-			
+
 			$ignore_files = "xmlrpc\.php|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|debug\.log";
 
 			switch($this->get_server_type())
@@ -3035,13 +3035,13 @@ class mf_base
 					$update_with = "<FilesMatch \"^(".$ignore_files.")$\">\r\n" //|wp\-content/uploads/[\d]+/.*\.php
 					."	Require all denied\r\n"
 					."</FilesMatch>\r\n";
-					
+
 					/*$update_with .= "<IfModule mod_rewrite.c>\r\n"
 					."	RewriteEngine On\r\n"
 					."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
 					."	RewriteRule .* /404/ [L,NC]\r\n"
 					."</IfModule>\r\n";*/
-				
+
 					$update_with .= "ServerSignature Off\r\n"
 					."DirectoryIndex index.php\r\n"
 					."Options -Indexes\r\n"
@@ -3438,7 +3438,7 @@ class mf_cron
 			}
 
 			$arr_progress[$this->type] = array('start' => date("Y-m-d H:i:s"), 'end' => "");
-			
+
 			update_option('option_cron_progress', $arr_progress, false);
 		}
 
@@ -3499,7 +3499,7 @@ class mf_cron
 		$arr_progress = get_option('option_cron_progress');
 
 		$arr_progress[$this->type]['end'] = date("Y-m-d H:i:s");
-			
+
 		update_option('option_cron_progress', $arr_progress, false);
 
 		/*if(get_site_option('setting_base_cron_debug') == 'yes')

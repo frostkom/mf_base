@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.6.19
+Version: 1.2.6.20
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -76,29 +76,7 @@ else
 }
 
 add_filter('xmlrpc_enabled', '__return_false');
-
-remove_action('wp_head', 'rsd_link');
-remove_action('wp_head', 'rest_output_link_wp_head'); // Disable REST API link tag
-
-remove_action('template_redirect', 'rest_output_link_header', 11, 0); // Disable REST API link in HTTP headers
-remove_action('wp_head', 'wlwmanifest_link');
-remove_action('wp_head', 'wp_shortlink_wp_head', 10, 0);
-
-remove_action('rest_api_init', 'wp_oembed_register_route');
-remove_filter('oembed_dataparse', 'wp_filter_oembed_result', 10);
-remove_action('wp_head', 'wp_oembed_add_discovery_links'); // Disable oEmbed Discovery Links
-remove_action('wp_head', 'wp_oembed_add_host_js');
-
 remove_action('wp_head', 'wp_generator'); // Remove WP versions
-
-remove_action('wp_head', 'feed_links', 2);
-remove_action('wp_head', 'feed_links_extra', 3);
-
-add_filter('emoji_svg_url', '__return_false');
-remove_action('wp_head', 'print_emoji_detection_script', 7);
-remove_action('wp_print_styles', 'print_emoji_styles');
-remove_action('admin_print_scripts', 'print_emoji_detection_script');
-remove_action('admin_print_styles', 'print_emoji_styles');
 
 add_filter('get_current_visitor_ip', array($obj_base, 'get_current_visitor_ip'), 10);
 add_filter('has_comments', array($obj_base, 'has_comments'), 10);

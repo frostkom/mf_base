@@ -2458,29 +2458,6 @@ class mf_base
 		}
 	}*/
 
-	/*function meta_page_content()
-	{
-		global $post;
-
-		$out = "";
-
-		$post_id = $post->ID;
-
-		if($post_id > 0)
-		{
-			list($post_id, $content_list) = apply_filters('get_shortcode_list', array($post_id, ''));
-
-			if($content_list != '')
-			{
-				$out .= "<ul class='meta_list'>"
-					.$content_list
-				."</ul>";
-			}
-		}
-
-		return $out;
-	}*/
-
 	function column_header($cols)
 	{
 		unset($cols['date']);
@@ -2556,41 +2533,20 @@ class mf_base
 		{
 			$arr_post_types_for_metabox = $this->get_post_types_for_metabox();
 
-			if(wp_is_block_theme())
-			{
-				$meta_boxes[] = array(
-					'id' => $this->meta_prefix.'settings',
-					'title' => __("Settings", 'lang_base'),
-					'post_types' => $arr_post_types_for_metabox,
-					'context' => 'side',
-					'priority' => 'low',
-					'fields' => array(
-						array(
-							'name' => __("Description", 'lang_base'),
-							'id' => 'post_excerpt',
-							'type' => 'textarea',
-						),
+			$meta_boxes[] = array(
+				'id' => $this->meta_prefix.'settings',
+				'title' => __("Settings", 'lang_base'),
+				'post_types' => $arr_post_types_for_metabox,
+				'context' => 'side',
+				'priority' => 'low',
+				'fields' => array(
+					array(
+						'name' => __("Description", 'lang_base'),
+						'id' => 'post_excerpt',
+						'type' => 'textarea',
 					),
-				);
-			}
-
-			/*else
-			{
-				$meta_boxes[] = array(
-					'id' => $this->meta_prefix.'content',
-					'title' => __("Added Content", 'lang_base'),
-					'post_types' => array('page'),
-					//'context' => 'side',
-					'priority' => 'low',
-					'fields' => array(
-						array(
-							'id' => $this->meta_prefix.'content',
-							'type' => 'custom_html',
-							'callback' => array($this, 'meta_page_content'),
-						),
-					)
-				);
-			}*/
+				),
+			);
 
 			$meta_boxes[] = array(
 				'id' => $this->meta_prefix.'publish',
@@ -2835,13 +2791,18 @@ class mf_base
 					{
 						case 'nofollow':
 						case 'noindex':
-							echo "<meta name='robots' content='".$page_index."'>";
+							echo "<meta name='robots' content='".$page_index."'/>";
 						break;
 
 						case 'none':
-							echo "<meta name='robots' content='noindex, nofollow'>";
+							echo "<meta name='robots' content='noindex, nofollow'/>";
 						break;
 					}
+				}
+
+				if(isset($post->excerpt) && $post->excerpt != '')
+				{
+					echo "<meta name='description' content='".esc_attr($post->excerpt)."'/>";
 				}
 			}
 		}

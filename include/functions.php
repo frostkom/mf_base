@@ -1188,6 +1188,8 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 {
 	global $obj_base, $error_text;
 
+	$subfolder = trim($subfolder, "/");
+
 	$upload_dir = wp_upload_dir();
 
 	if($force_main_uploads == true && is_multisite())
@@ -1224,7 +1226,6 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 		if($dir_exists == false)
 		{
 			$error_text = sprintf(__("Could not create %s in %s. Please add the correct rights for the script to create a new subfolder.", 'lang_base'), $subfolder, "uploads");
-			//$error_text .= " (".$upload_path.")";
 
 			$upload_path = $upload_url = "";
 		}

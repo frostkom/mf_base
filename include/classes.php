@@ -891,36 +891,6 @@ class mf_base
 			get_file_info(array('path' => $upload_path, 'callback' => 'delete_files_callback', 'time_limit' => WEEK_IN_SECONDS));
 			get_file_info(array('path' => $upload_path, 'folder_callback' => 'delete_empty_folder_callback'));
 			#######################
-
-			// Save GitHub Token and re-enter if it is removed
-			#########################
-			/*$git_updater = get_site_option('git_updater', array());
-
-			if(is_array($git_updater) && count($git_updater) > 0)
-			{
-				$option_git_updater = array();
-
-				if(isset($git_updater['github_access_token']))
-				{
-					$option_git_updater = $git_updater;
-				}
-
-				if(isset($option_git_updater['github_access_token']))
-				{
-					update_site_option('option_git_updater', $option_git_updater);
-				}
-
-				else
-				{
-					$option_git_updater = get_site_option('option_git_updater');
-
-					if(isset($option_git_updater['github_access_token']))
-					{
-						update_site_option('git_updater', $option_git_updater);
-					}
-				}
-			}*/
-			#########################
 		}
 
 		/*else
@@ -2469,7 +2439,7 @@ class mf_base
 
 		if(check_var('post_status') != 'trash')
 		{
-			$cols['index'] = __("Index", 'lang_base');
+			$cols['page_index'] = __("Index", 'lang_base');
 		}
 
 		return $cols;
@@ -2481,9 +2451,8 @@ class mf_base
 
 		switch($col)
 		{
-			case 'index':
-				$index_type = '';
-				$index_type = apply_filters('filter_theme_core_seo_type', $index_type);
+			case 'page_index':
+				$index_type = apply_filters('filter_theme_core_seo_type', '');
 
 				if($index_type == '' && $post->post_status != 'publish')
 				{
@@ -2492,7 +2461,7 @@ class mf_base
 
 				if($index_type == '')
 				{
-					$page_index = get_post_meta($post_id, $this->meta_prefix.'page_index', true);
+					$page_index = get_post_meta($post_id, $this->meta_prefix.$col, true);
 
 					if(in_array($page_index, array('noindex', 'none')))
 					{
@@ -2520,7 +2489,17 @@ class mf_base
 					break;
 
 					default:
-						echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+						$post_excerpt = get_the_excerpt();
+
+						if($post_excerpt != '')
+						{
+							echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+						}
+
+						else
+						{
+							echo "<i class='fa fa-check fa-lg blue' title='".__("The page has no description", 'lang_base')."'></i>";
+						}
 					break;
 				}
 			break;

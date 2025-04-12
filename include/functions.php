@@ -1184,6 +1184,17 @@ function format_date($in)
 	return $out;
 }
 
+function sanitize_folder_name($string)
+{
+	if($string != '' && strpos($string, "?") !== false)
+	{
+		$string = str_replace(array("%3a", "%2f", "."), "-", $string);
+		$string = sanitize_file_name($string);
+	}
+
+	return $string;
+}
+
 function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 {
 	global $obj_base, $error_text;
@@ -1202,6 +1213,8 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 			$upload_dir['baseurl'] = str_replace("/sites/".$sites_sub, "", $upload_dir['baseurl']);
 		}
 	}
+
+	//$subfolder = implode('/', array_map('sanitize_folder_name', explode('/', $subfolder))); // index.html is not saved in MF Cache when this is used. Why?
 
 	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
 	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");

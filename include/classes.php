@@ -2785,25 +2785,32 @@ class mf_base
 			{
 				$page_index = get_post_meta($post->ID, $this->meta_prefix.'page_index', true);
 
-				if($page_index != '')
+				switch($page_index)
 				{
-					switch($page_index)
-					{
-						case 'nofollow':
-						case 'noindex':
-							echo "<meta name='robots' content='".$page_index."'/>";
-						break;
+					case 'nofollow':
+					case 'noindex':
+						echo "<meta name='robots' content='".$page_index."'/>";
+					break;
 
-						case 'none':
-							echo "<meta name='robots' content='noindex, nofollow'/>";
-						break;
-					}
+					case 'none':
+						echo "<meta name='robots' content='noindex, nofollow'/>";
+					break;
 				}
 
-				if(isset($post->excerpt) && $post->excerpt != '')
+				/*if(isset($post->excerpt) && $post->excerpt != '')
 				{
 					echo "<meta name='description' content='".esc_attr($post->excerpt)."'/>";
 				}
+
+				else
+				{*/
+					$post_excerpt = get_the_excerpt();
+
+					if($post_excerpt != '')
+					{
+						echo "<meta name='description' content='".esc_attr($post_excerpt)."'/>";
+					}
+				//}
 			}
 		}
 	}

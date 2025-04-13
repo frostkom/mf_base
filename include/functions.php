@@ -726,7 +726,7 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 {
 	if($data['uploads'] != '')
 	{
-		list($upload_path, $upload_url) = get_uploads_folder($data['uploads'], $force_main_uploads);
+		list($upload_path, $upload_url) = get_uploads_folder($data['uploads'], $force_main_uploads, false);
 
 		if($upload_path != '' && file_exists($upload_path))
 		{
@@ -1195,7 +1195,7 @@ function sanitize_folder_name($string)
 	return $string;
 }
 
-function get_uploads_folder($subfolder = '', $force_main_uploads = true)
+function get_uploads_folder($subfolder = '', $force_main_uploads = true, $force_create = true)
 {
 	global $obj_base, $error_text;
 
@@ -1226,11 +1226,19 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true)
 
 	if($subfolder != '')
 	{
-		$dir_exists = true;
-
-		if(!is_dir($upload_path) && !is_file($upload_path))
+		if(is_dir($upload_path) || is_file($upload_path))
 		{
-			if(!@mkdir($upload_path, 0755, true))
+			$dir_exists = true;
+		}
+
+		else
+		{
+			if($force_create == true && @mkdir($upload_path, 0755, true))
+			{
+				$dir_exists = true;
+			}
+
+			else
 			{
 				$dir_exists = false;
 			}

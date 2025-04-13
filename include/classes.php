@@ -661,8 +661,12 @@ class mf_base
 
 		// Empty folders in uploads
 		####################
-		list($upload_path, $upload_url) = get_uploads_folder();
-		get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
+		list($upload_path, $upload_url) = get_uploads_folder('', true, false);
+
+		if($upload_path != '')
+		{
+			get_file_info(array('path' => $upload_path, 'folder_callback' => array($this, 'delete_empty_folder_callback')));
+		}
 		####################
 
 		update_option('option_base_optimized', date("Y-m-d H:i:s"), false);
@@ -1687,6 +1691,15 @@ class mf_base
 							}
 
 						echo "</div>";
+					}
+
+					if(!defined('NONCE_SALT'))
+					{
+						echo "<p>
+							<i class='fa ".(defined('NONCE_SALT') ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Configuration", 'lang_base').": "
+							."<span>".sprintf(__("%s has no value. Add it to %s", 'lang_base'), "NONCE_SALT", 'wp-config.php')."</span>"
+						."</p>";
 					}
 
 					echo "<p>
@@ -3354,7 +3367,7 @@ class mf_cron
 
 		$this->date_start = date("Y-m-d H:i:s");
 
-		list($this->upload_path, $upload_url) = get_uploads_folder('mf_base');
+		list($this->upload_path, $upload_url) = get_uploads_folder(__CLASS__);
 	}
 
 	function start($type)

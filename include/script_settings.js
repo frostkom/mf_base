@@ -175,7 +175,7 @@ jQuery(function($)
 		{
 			var dom_obj = $(e.currentTarget),
 				dom_container = $(".api_base_optimize");
-			
+
 			dom_obj.addClass('is_disabled');
 			dom_container.html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
 

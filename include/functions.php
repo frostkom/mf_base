@@ -2720,9 +2720,9 @@ function get_url_content($data = array())
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-	if($data['include_head_in_output'])
+	if($data['catch_cookie'] == true || $data['include_head_in_output'] == true)
 	{
-		curl_setopt($ch, CURLOPT_HEADER, $data['include_head_in_output']);
+		curl_setopt($ch, CURLOPT_HEADER, true);
 	}
 
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -2853,15 +2853,24 @@ function get_url_content($data = array())
 		);
 	}
 
+	$content = curl_exec($ch);
+	
 	if($data['catch_cookie'] == true)
 	{
-		$cookie_file = tempnam(sys_get_temp_dir(), 'cookies');
-		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
-		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	}
+		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		$header = substr($content, 0, $header_size);
+		$content = substr($content, $header_size);
 
-	$content = curl_exec($ch);
+		preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $header, $matches);
+
+		$arr_cookies = array();
+
+		foreach($matches[1] as $item)
+		{
+			parse_str($item, $cookie);
+			$arr_cookies = array_merge($arr_cookies, $cookie);
+		}
+	}
 
 	if($data['debug'] == true)
 	{
@@ -2890,7 +2899,7 @@ function get_url_content($data = array())
 					$data['catch_head'] = true;
 					$data['catch_cookie'] = true;
 
-					list($content, $headers, $cookie_file) = get_url_content($data);
+					list($content, $headers, $arr_cookies) = get_url_content($data);
 				}
 			break;
 		}
@@ -2903,7 +2912,7 @@ function get_url_content($data = array())
 			$headers['debug'] = ob_get_clean();
 		}
 
-		$out = array($content, array_merge($headers, $headers_raw), $cookie_file);
+		$out = array($content, array_merge($headers, $headers_raw), $arr_cookies);
 	}
 
 	else if($data['catch_head'] == true)

@@ -2700,6 +2700,7 @@ function get_url_content($data = array())
 {
 	if(!isset($data['follow_redirect'])){			$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){				$data['catch_head'] = false;}
+	if(!isset($data['catch_cookie'])){				$data['catch_cookie'] = false;}
 	if(!isset($data['include_head_in_output'])){	$data['include_head_in_output'] = false;}
 	if(!isset($data['debug'])){						$data['debug'] = false;}
 	if(!isset($data['headers'])){					$data['headers'] = array();}
@@ -2852,6 +2853,14 @@ function get_url_content($data = array())
 		);
 	}
 
+	if($data['catch_cookie'] == true)
+	{
+		$cookie_file = tempnam(sys_get_temp_dir(), 'cookies');
+		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	}
+
 	$content = curl_exec($ch);
 
 	if($data['debug'] == true)
@@ -2878,22 +2887,26 @@ function get_url_content($data = array())
 				{
 					$data['url'] = $headers['redirect_url'];
 					$data['follow_redirect'] = false;
+					$data['catch_head'] = true;
+					$data['catch_cookie'] = true;
 
-					if($data['catch_head'] == true)
-					{
-						list($content, $headers) = get_url_content($data);
-					}
-
-					else
-					{
-						$content = get_url_content($data);
-					}
+					list($content, $headers, $cookie_file) = get_url_content($data);
 				}
 			break;
 		}
 	}
 
-	if($data['catch_head'] == true)
+	if($data['catch_cookie'] == true)
+	{
+		if($data['debug'] == true)
+		{
+			$headers['debug'] = ob_get_clean();
+		}
+
+		$out = array($content, array_merge($headers, $headers_raw), $cookie_file);
+	}
+
+	else if($data['catch_head'] == true)
 	{
 		if($data['debug'] == true)
 		{

@@ -1048,48 +1048,53 @@ function get_post_meta_file_src($data)
 
 function time_between_dates($data)
 {
-	if(!isset($data['type'])){		$data['type'] = 'round';}
-	if(!isset($data['return'])){	$data['return'] = 'days';}
-	if(!isset($data['debug'])){		$data['debug'] = false;}
+	if(!isset($data['return'])){	$data['return'] = '';}
 
-	$log_message = $data['start']." -> ".$data['end'];
+	$startDate = new DateTime($data['start']);
+	$endDate = new DateTime($data['end']);
+	$interval = $startDate->diff($endDate);
 
-	$arr_return_types = array(
-		'years' => YEAR_IN_SECONDS,
-		'months' => MONTH_IN_SECONDS,
-		'weeks' => WEEK_IN_SECONDS,
-		'days' => DAY_IN_SECONDS,
-		'hours' => HOUR_IN_SECONDS,
-		'minutes' => MINUTE_IN_SECONDS,
-		'seconds' => 1,
-	);
-
-	$out = (strtotime($data['end']) - strtotime($data['start']));
-
-	$log_message .= ", ".$out;
-
-	if(isset($arr_return_types[$data['return']]))
+	switch($data['return'])
 	{
-		$out /= $arr_return_types[$data['return']];
+		/*case 'years': break;
+		case 'months': break;
+		case 'weeks': break;
+		case 'days': break;*/
 
-		$log_message .= ", ".$data['return']." -> ".$arr_return_types[$data['return']]." -> ".$out;
+		case 'hours':
+			return $interval->h + ($interval->days * 24);
+		break;
+
+		case 'minutes':
+			return $interval->i + ($interval->h * 60) + ($interval->days * 24);
+		break;
+
+		case 'seconds':
+			return $interval->s + ($interval->i * 60) + ($interval->h * 60) + ($interval->days * 24);
+		break;
+
+		default:
+			if($interval->days > 0)
+			{
+				return $interval->format("%days ".__("days", 'lang_base').", %h ".__("hours", 'lang_base').", %i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+			}
+
+			else if($interval->h > 0)
+			{
+				return $interval->format("%h ".__("hours", 'lang_base').", %i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+			}
+
+			else if($interval->i > 0)
+			{
+				return $interval->format("%i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+			}
+
+			else
+			{
+				return $interval->format("%s ".__("seconds", 'lang_base'));
+			}
+		break;
 	}
-
-	switch($data['type'])
-	{
-		case 'ceil':			$out = ceil($out);		break;
-		default: case 'round':	$out = round($out);		break;
-		case 'floor':			$out = floor($out);		break;
-	}
-
-	$log_message .= ", ".$data['type']." -> ".$out;
-
-	if($data['debug'] == true)
-	{
-		do_log($log_message);
-	}
-
-	return $out;
 }
 
 function delete_files($data)

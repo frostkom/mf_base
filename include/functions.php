@@ -1050,6 +1050,8 @@ function time_between_dates($data)
 {
 	if(!isset($data['return'])){	$data['return'] = '';}
 
+	$out = "";
+
 	$startDate = new DateTime($data['start']);
 	$endDate = new DateTime($data['end']);
 	$interval = $startDate->diff($endDate);
@@ -1062,39 +1064,41 @@ function time_between_dates($data)
 		case 'days': break;*/
 
 		case 'hours':
-			return $interval->h + ($interval->days * 24);
+			$out = $interval->h + ($interval->days * 24);
 		break;
 
 		case 'minutes':
-			return $interval->i + ($interval->h * 60) + ($interval->days * 24);
+			$out = $interval->i + ($interval->h * 60) + ($interval->days * 24);
 		break;
 
 		case 'seconds':
-			return $interval->s + ($interval->i * 60) + ($interval->h * 60) + ($interval->days * 24);
+			$out = $interval->s + ($interval->i * 60) + ($interval->h * 60) + ($interval->days * 24);
 		break;
 
 		default:
 			if($interval->days > 0)
 			{
-				return $interval->format("%days ".__("days", 'lang_base').", %h ".__("hours", 'lang_base').", %i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+				$out .= ($out != '' ? ", " : "").$interval->days."&nbsp;".($interval->days > 1 ? __("days", 'lang_base') : __("day", 'lang_base'));
 			}
 
-			else if($interval->h > 0)
+			if($interval->h > 0)
 			{
-				return $interval->format("%h ".__("hours", 'lang_base').", %i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+				$out .= ($out != '' ? ", " : "").$interval->h."&nbsp;".($interval->h > 1 ? __("hours", 'lang_base') : __("hour", 'lang_base'));
 			}
 
-			else if($interval->i > 0)
+			if($interval->i > 0)
 			{
-				return $interval->format("%i ".__("minutes", 'lang_base').", %s ".__("seconds", 'lang_base'));
+				$out .= ($out != '' ? ", " : "").$interval->i."&nbsp;".($interval->i > 1 ? __("minutes", 'lang_base') : __("minute", 'lang_base'));
 			}
 
-			else
+			if($out == "" || $interval->s > 0)
 			{
-				return $interval->format("%s ".__("seconds", 'lang_base'));
+				$out .= ($out != '' ? ", " : "").$interval->s."&nbsp;".($interval->s != 1 ? __("seconds", 'lang_base') : __("second", 'lang_base'));
 			}
 		break;
 	}
+
+	return $out;
 }
 
 function delete_files($data)

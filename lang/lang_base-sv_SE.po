@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-23 10:31+0100\n"
+"POT-Creation-Date: 2025-04-23 16:18+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -20,11 +20,11 @@ msgstr ""
 #: ../include/classes.php:4654
 #: ../include/classes.php:5697
 #: ../include/classes.php:5748
-#: ../include/functions.php:2388
+#: ../include/functions.php:2350
+#: ../include/functions.php:2381
 #: ../include/functions.php:2419
-#: ../include/functions.php:2457
-#: ../include/functions.php:2687
-#: ../include/functions.php:4757
+#: ../include/functions.php:2649
+#: ../include/functions.php:4719
 msgid "Choose Here"
 msgstr "Välj här"
 
@@ -217,10 +217,6 @@ msgstr "Startades senast %s men har inte avslutats."
 msgid "Running schedule..."
 msgstr "Kör schema..."
 
-#: ../include/classes.php:1899
-msgid "s"
-msgstr ""
-
 #: ../include/classes.php:1902
 #, php-format
 msgid "Last run %s."
@@ -336,7 +332,7 @@ msgid "Do not Index and do not follow links"
 msgstr "Indexera inte och följ inte länkar"
 
 #: ../include/classes.php:2762
-#: ../include/functions.php:1811
+#: ../include/functions.php:1773
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
@@ -404,7 +400,7 @@ msgstr "Töm papperskorgen"
 
 #: ../include/classes.php:4051
 #: ../include/classes.php:5712
-#: ../include/functions.php:2667
+#: ../include/functions.php:2629
 msgid "Search"
 msgstr "Sök"
 
@@ -564,7 +560,7 @@ msgid "%d hours left until it is reset"
 msgstr "%d timmar kvar tills det återställs"
 
 #: ../include/functions.php:514
-#: ../include/functions.php:2032
+#: ../include/functions.php:1994
 msgid "unknown"
 msgstr "okänt"
 
@@ -586,289 +582,299 @@ msgstr "Meddelandet skickades"
 msgid "Message NOT Sent"
 msgstr "Meddelandet skickades INTE"
 
-#: ../include/functions.php:1125
+#: ../include/functions.php:1082
 msgid "days"
 msgstr "dagar"
 
-#: ../include/functions.php:1125
-#: ../include/functions.php:1130
+#: ../include/functions.php:1082
+msgid "day"
+msgstr "dag"
+
+#: ../include/functions.php:1088
 msgid "hours"
 msgstr "timmar"
 
-#: ../include/functions.php:1125
-#: ../include/functions.php:1130
-#: ../include/functions.php:1135
+#: ../include/functions.php:1088
+msgid "hour"
+msgstr "timme"
+
+#: ../include/functions.php:1094
 msgid "minutes"
 msgstr "minuter"
 
-#: ../include/functions.php:1125
-#: ../include/functions.php:1130
-#: ../include/functions.php:1135
-#: ../include/functions.php:1140
+#: ../include/functions.php:1094
+msgid "minute"
+msgstr "minut"
+
+#: ../include/functions.php:1100
 msgid "seconds"
 msgstr "sekunder"
 
-#: ../include/functions.php:1215
+#: ../include/functions.php:1100
+msgid "second"
+msgstr "sekund"
+
+#: ../include/functions.php:1177
 msgid "Yesterday"
 msgstr "Igår"
 
-#: ../include/functions.php:1300
+#: ../include/functions.php:1262
 #, php-format
 msgid "Could not create %s in %s. Please add the correct rights for the script to create a new subfolder."
 msgstr "Det gick inte att skapa mappen %s i %s. Lägg till rätt behörigheter för att kunna skapa en ny undermapp."
 
-#: ../include/functions.php:1365
+#: ../include/functions.php:1327
 msgid "Well, we tried to save the file but something went wrong internally in Wordpress"
 msgstr "Hmmm, vi försökte spara filen men något gick snett internt i Wordpress"
 
-#: ../include/functions.php:1725
+#: ../include/functions.php:1687
 msgid "Add File"
 msgstr "Lägg till fil"
 
-#: ../include/functions.php:1726
+#: ../include/functions.php:1688
 msgid "Change File"
 msgstr "Byt fil"
 
-#: ../include/functions.php:1727
+#: ../include/functions.php:1689
 msgid "Insert File"
 msgstr "Lägg in fil"
 
-#: ../include/functions.php:1728
+#: ../include/functions.php:1690
 msgid "Insert"
 msgstr "Lägg till"
 
-#: ../include/functions.php:1787
+#: ../include/functions.php:1749
 msgid "Add Attachment"
 msgstr "Bifoga fil"
 
-#: ../include/functions.php:1809
+#: ../include/functions.php:1771
 msgid "The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File"
 msgstr "Mediabiblioteket skickade inte tillbaka en länk till filen som du la till. Var vänlig försök igen och se till så att Länk till är angett som Mediafil"
 
-#: ../include/functions.php:1810
+#: ../include/functions.php:1772
 msgid "Unknown title"
 msgstr "Okänt namn"
 
-#: ../include/functions.php:1914
+#: ../include/functions.php:1876
 #, php-format
 msgid "The file (%s) could not be found in the DB"
 msgstr "Filen (%s) kunde inte hittas i databasen"
 
-#: ../include/functions.php:2007
+#: ../include/functions.php:1969
 #, php-format
 msgid "You need to install the plugin %s first"
 msgstr "Du måste installera pluginet %s först"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2037
 #, php-format
 msgid "in %d minute"
 msgstr "om %d minut"
 
-#: ../include/functions.php:2075
+#: ../include/functions.php:2037
 #, php-format
 msgid "in %d minutes"
 msgstr "om %d minuter"
 
-#: ../include/functions.php:2080
+#: ../include/functions.php:2042
 msgid "at any moment"
 msgstr "alldeles strax"
 
-#: ../include/functions.php:2095
+#: ../include/functions.php:2057
 msgid "Run Now"
 msgstr "Kör nu"
 
-#: ../include/functions.php:2400
-#: ../include/functions.php:2406
+#: ../include/functions.php:2362
+#: ../include/functions.php:2368
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/functions.php:2401
-#: ../include/functions.php:2407
+#: ../include/functions.php:2363
+#: ../include/functions.php:2369
 msgid "No"
 msgstr "Nej"
 
-#: ../include/functions.php:2431
+#: ../include/functions.php:2393
 msgid "Super Admin"
 msgstr "Superadmin"
 
-#: ../include/functions.php:2536
+#: ../include/functions.php:2498
 msgid "Pages"
 msgstr "Sidor"
 
-#: ../include/functions.php:2568
+#: ../include/functions.php:2530
 msgid "Post Types"
 msgstr "Sidtyper"
 
-#: ../include/functions.php:2614
+#: ../include/functions.php:2576
 msgid "Category"
 msgstr "Kategori"
 
-#: ../include/functions.php:2620
+#: ../include/functions.php:2582
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../include/functions.php:2639
+#: ../include/functions.php:2601
 msgid "Front Page"
 msgstr "Startsida"
 
-#: ../include/functions.php:2640
+#: ../include/functions.php:2602
 msgid "Home"
 msgstr "Hem"
 
-#: ../include/functions.php:4886
+#: ../include/functions.php:4848
 msgid "no title"
 msgstr "ingen titel"
 
-#: ../include/functions.php:4891
+#: ../include/functions.php:4853
 msgid "Draft"
 msgstr "Utkast"
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Jan"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Feb"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Mar"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Apr"
 msgstr ""
 
-#: ../include/functions.php:4957
-#: ../include/functions.php:4962
+#: ../include/functions.php:4919
+#: ../include/functions.php:4924
 msgid "May"
 msgstr "Maj"
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Jun"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Jul"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Aug"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Sep"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Oct"
 msgstr "Okt"
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Nov"
 msgstr ""
 
-#: ../include/functions.php:4957
+#: ../include/functions.php:4919
 msgid "Dec"
 msgstr ""
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "January"
 msgstr "Januari"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "February"
 msgstr "Februari"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "March"
 msgstr "Mars"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "April"
 msgstr ""
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "June"
 msgstr "Juni"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "July"
 msgstr "Juli"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "August"
 msgstr "Augusti"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "September"
 msgstr ""
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "October"
 msgstr "Oktober"
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "November"
 msgstr ""
 
-#: ../include/functions.php:4962
+#: ../include/functions.php:4924
 msgid "December"
 msgstr ""
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Sun"
 msgstr "Sön"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Mon"
 msgstr "Mån"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Tue"
 msgstr "Tis"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Wed"
 msgstr "Ons"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Thu"
 msgstr "Tors"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Fri"
 msgstr "Fre"
 
-#: ../include/functions.php:4991
+#: ../include/functions.php:4953
 msgid "Sat"
 msgstr "Lör"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Sunday"
 msgstr "Söndag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../include/functions.php:4996
+#: ../include/functions.php:4958
 msgid "Saturday"
 msgstr "Lördag"
 

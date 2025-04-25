@@ -285,7 +285,7 @@ function get_pages_from_shortcode($shortcode)
 
 function get_url_part($data)
 {
-	if(!isset($data['url'])){			$data['url'] = get_site_url();}
+	if(!isset($data['url']) || $data['url'] == ''){			$data['url'] = get_site_url();}
 
 	$parsed_url = parse_url($data['url']);
 
@@ -310,7 +310,7 @@ function get_url_part($data)
 
 			else
 			{
-				do_log(__FUNCTION__.": No SLD (".$sld_index.") in ".var_export($arr_host, true));
+				do_log(__FUNCTION__.": No SLD (".$sld_index.") in ".$data['url']." -> ".var_export($parsed_url, true)." -> ".$host." -> ".var_export($arr_host, true));
 			}
 
 			if(isset($arr_host[$tld_index]))

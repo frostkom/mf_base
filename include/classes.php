@@ -2537,16 +2537,6 @@ class mf_base
 						'id' => 'post_excerpt',
 						'type' => 'textarea',
 					),
-				),
-			);
-
-			$meta_boxes[] = array(
-				'id' => $this->meta_prefix.'publish',
-				'title' => __("Publish Settings", 'lang_base'),
-				'post_types' => $arr_post_types_for_metabox,
-				'context' => 'side',
-				'priority' => 'low',
-				'fields' => array(
 					array(
 						'name' => __("Index", 'lang_base'),
 						'id' => $this->meta_prefix.'page_index',

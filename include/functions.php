@@ -2863,7 +2863,7 @@ function get_url_content($data = array())
 	}
 
 	$content = curl_exec($ch);
-	
+
 	if($data['catch_cookie'] == true)
 	{
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);

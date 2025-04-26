@@ -1084,16 +1084,14 @@ class mf_base
 	{
 		global $wpdb;
 
-		$out = false;
-
 		if(does_table_exist($wpdb->comments))
 		{
-			$wpdb->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash') AND comment_type = %s LIMIT 0, 1", 'comment'));
+			$wpdb->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
 
-			$out = ($wpdb->num_rows > 0);
+			return ($wpdb->num_rows > 0);
 		}
 
-		return $out;
+		return false;
 	}
 
 	function filter_meta_input($array)
@@ -1116,7 +1114,7 @@ class mf_base
 		$wp_admin_bar->remove_menu('wp-logo');
 		//$wp_admin_bar->remove_menu('view');
 
-		if($this->has_comments() == false)
+		if(apply_filters('has_comments', true) == false)
 		{
 			$wp_admin_bar->remove_menu('comments');
 		}
@@ -1826,7 +1824,7 @@ class mf_base
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
-			$json_output['timestamp'] = date("Y-m-d H:i:s");
+			//$json_output['timestamp'] = date("Y-m-d H:i:s");
 
 			header('Content-Type: application/json');
 			echo json_encode($json_output);
@@ -1956,7 +1954,6 @@ class mf_base
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
-			//$json_output['timestamp'] = date("Y-m-d H:i:s");
 
 			header('Content-Type: application/json');
 			echo json_encode($json_output);
@@ -2249,7 +2246,7 @@ class mf_base
 
 	function admin_menu()
 	{
-		if($this->has_comments() == false)
+		if(apply_filters('has_comments', true) == false)
 		{
 			remove_menu_page("edit-comments.php");
 		}

@@ -2422,22 +2422,6 @@ class mf_base
 		return $arr_ids;
 	}
 
-	/*function admin_footer()
-	{
-		global $pagenow;
-
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
-		{
-			echo "<div id='mf_shortcode_container' class='hide'>
-				<div class='mf_form mf_shortcode_wrapper'>"
-					.apply_filters('get_shortcode_output', '')
-					.show_button(array('text' => __("Insert", 'lang_base')))
-					.show_button(array('text' => __("Cancel", 'lang_base'), 'class' => "button-secondary"))
-				."</div>
-			</div>";
-		}
-	}*/
-
 	function column_header($cols)
 	{
 		unset($cols['date']);
@@ -2757,6 +2741,8 @@ class mf_base
 
 			if(wp_is_block_theme())
 			{
+				mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
+
 				wp_enqueue_style('wp-block-button');
 			}
 
@@ -2776,20 +2762,12 @@ class mf_base
 					break;
 				}
 
-				/*if(isset($post->excerpt) && $post->excerpt != '')
+				$post_excerpt = get_the_excerpt();
+
+				if($post_excerpt != '')
 				{
-					echo "<meta name='description' content='".esc_attr($post->excerpt)."'/>";
+					echo "<meta name='description' content='".esc_attr($post_excerpt)."'/>";
 				}
-
-				else
-				{*/
-					$post_excerpt = get_the_excerpt();
-
-					if($post_excerpt != '')
-					{
-						echo "<meta name='description' content='".esc_attr($post_excerpt)."'/>";
-					}
-				//}
 			}
 		}
 	}
@@ -2803,8 +2781,8 @@ class mf_base
 			mf_enqueue_script('script_import_wp', $plugin_include_url."script_github_updates.js");
 
 			echo "<tr class='plugin-update-tr".(is_plugin_active($plugin_file) ? " active" : "")."'>
-				<td colspan='4' class='plugin-update'>" //colspanchange
-					."<div class='update-message notice inline notice-warning notice-alt'>
+				<td colspan='4' class='plugin-update'>
+					<div class='update-message notice inline notice-warning notice-alt'>
 						<p>".__("There is a new version of this plugin", 'lang_base')." (".$this->option_github_updates[$plugin_file]['Version'].")</p>
 					</div>
 				</td>

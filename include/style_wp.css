@@ -36,7 +36,6 @@
 		{
 			cursor: no-drop;
 			opacity: .5;
-			/*pointer-events: none;*/ /* This will prevent title/hover to work */
 		}
 
 	#poststuff .mf_form h4

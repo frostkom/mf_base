@@ -2373,28 +2373,6 @@ class mf_base
 		return $actions;
 	}
 
-	/*function media_buttons($button)
-	{
-		global $pagenow;
-
-		$out = "";
-
-		if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
-		{
-			$count_shortcode_button = apply_filters('count_shortcode_button', 0);
-
-			if($count_shortcode_button > 0)
-			{
-				$out = "<a href='#TB_inline?width=640&inlineId=mf_shortcode_container' class='thickbox button'>
-					<span class='dashicons dashicons-plus-alt' style='vertical-align: text-top;'></span> "
-					.__("Add Content", 'lang_base')
-				."</a>";
-			}
-		}
-
-		return $button.$out;
-	}*/
-
 	function get_page_from_block_code($arr_ids, $block_code)
 	{
 		global $wpdb;

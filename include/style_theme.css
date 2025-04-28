@@ -52,6 +52,11 @@
 				background-color: #f9f9f9;
 			}
 
+				.widefat tr.active
+				{
+					background: #fff8df !important;
+				}
+
 				.widefat td
 				{
 					font-family: inherit;

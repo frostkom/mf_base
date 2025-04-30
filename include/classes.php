@@ -1926,23 +1926,32 @@ class mf_base
 
 							foreach($option_cron_progress as $key => $arr_value)
 							{
-								if($arr_value['end'] != $arr_value['start'])
+								$li_class = "";
+
+								if($key == 'mf_base_parent')
 								{
-									echo "<li".($key == 'mf_base_parent' ? " class='strong'" : "").">"
-										.$key.": ";
-
-										if($arr_value['end'] >= $arr_value['start'])
-										{
-											echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end']));
-										}
-
-										else
-										{
-											echo format_date($arr_value['start'])." -> &hellip;";
-										}
-
-									echo "</li>";
+									$li_class .= ($li_class != '' ? " " : "")."strong";
 								}
+
+								if($arr_value['end'] <= $arr_value['start'])
+								{
+									$li_class .= ($li_class != '' ? " " : "")."grey";
+								}
+
+								echo "<li".($li_class != "" ? " class='".$li_class."'" : "").">"
+									.$key.": ";
+
+									if($arr_value['end'] >= $arr_value['start'])
+									{
+										echo time_between_dates(array('start' => $arr_value['start'], 'end' => $arr_value['end']));
+									}
+
+									else
+									{
+										echo format_date($arr_value['start'])." -> &hellip;";
+									}
+
+								echo "</li>";
 							}
 
 						echo "</ul>";

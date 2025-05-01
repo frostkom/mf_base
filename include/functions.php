@@ -808,6 +808,15 @@ function does_table_exist($table)
 	return ($wpdb->num_rows > 0);
 }
 
+function does_column_exist($table, $column)
+{
+	global $wpdb;
+
+	$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = %s", $column));
+
+	return ($wpdb->num_rows > 0);
+}
+
 function mf_uninstall_tables($data)
 {
 	global $wpdb;
@@ -3004,15 +3013,14 @@ function add_columns($array, $debug = false)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = %s", $column));
-			$rows = $wpdb->num_rows;
+			$has_column = does_column_exist($table, $column);
 
 			if($debug == true)
 			{
 				do_log("add_columns - check: ".$wpdb->last_query);
 			}
 
-			if($rows == 0)
+			if($has_column == false)
 			{
 				$value = str_replace("[table]", $table, $value);
 				$value = str_replace("[column]", $column, $value);
@@ -3036,9 +3044,7 @@ function update_columns($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table)." WHERE Field = %s", $column));
-
-			if($wpdb->num_rows > 0)
+			if(does_column_exist($table, $column))
 			{
 				$value = str_replace("[table]", $table, $value);
 				$value = str_replace("[column]", $column, $value);

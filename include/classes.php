@@ -4099,9 +4099,7 @@ class mf_list_table extends WP_List_Table
 
 			foreach($arr_tables as $table_name)
 			{
-				$wpdb->get_results($wpdb->prepare("SHOW COLUMNS FROM ".esc_sql($table_name)." WHERE Field = %s", $data['order_by']));
-
-				if($wpdb->num_rows > 0)
+				if(does_column_exist($table_name, $data['order_by']))
 				{
 					$column_exists = true;
 

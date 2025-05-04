@@ -839,7 +839,6 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
-			replace_option(array('old' => 'setting_theme_enable_wp_api', 'new' => 'setting_base_enable_wp_api'));
 			replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
 			replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
 
@@ -856,7 +855,7 @@ class mf_base
 			}
 
 			mf_uninstall_plugin(array(
-				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'setting_base_enable_wp_api', 'option_sync_sites', 'option_github_access_token', 'option_git_updater'),
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_sync_sites', 'option_github_access_token', 'option_git_updater'),
 				'meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 
@@ -1161,7 +1160,6 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
-			//$arr_settings['setting_base_enable_wp_api'] = __("Enable XML-RPC", 'lang_base');
 			//$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
@@ -2093,15 +2091,6 @@ class mf_base
 
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
-
-		/*function setting_base_enable_wp_api_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option($setting_key, 'no');
-
-			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-		}*/
 
 		/*function get_automatic_updates_for_select()
 		{

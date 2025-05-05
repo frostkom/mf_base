@@ -1,22 +1,7 @@
 <?php
 
-// Can be removed when not in use anywhere
-function get_current_visitor_ip($out = "")
-{
-	global $obj_base;
-
-	if($out == "")
-	{
-		$out = $_SERVER['REMOTE_ADDR'];
-	}
-
-	return $obj_base->get_current_visitor_ip($out);
-}
-
 function get_placeholder_email()
 {
-	global $obj_base;
-
 	$site_url_clean = get_site_url_clean(array('trim' => "/"));
 
 	if(strpos($site_url_clean, "/"))
@@ -109,34 +94,6 @@ function setting_time_limit($data)
 	}
 }
 
-function get_or_set_transient($data)
-{
-	if(!isset($data['key'])){			$data['key'] = '';}
-	if(!isset($data['callback'])){		$data['callback'] = '';}
-
-	$out = "";
-
-	if($data['key'] != '')
-	{
-		$out = get_transient($data['key']);
-
-		if($out == "")
-		{
-			if(is_callable($data['callback']))
-			{
-				$out = call_user_func($data['callback']);
-
-				if($out != '')
-				{
-					set_transient($data['key'], $out, DAY_IN_SECONDS);
-				}
-			}
-		}
-	}
-
-	return $out;
-}
-
 function get_option_page_suffix($data)
 {
 	if(!isset($data['post_type'])){	$data['post_type'] = 'page';}
@@ -154,44 +111,6 @@ function get_option_page_suffix($data)
 	}
 
 	return $out;
-}
-
-function override_capability($data)
-{
-	$capability = $data['default'];
-
-	$option = get_option('setting_admin_menu_roles');
-
-	if(is_array($option) && count($option) > 0)
-	{
-		foreach($option as $key => $value)
-		{
-			$arr_item = explode('|', $key);
-
-			if(count($arr_item) == 2)
-			{
-				$item_parent = false;
-				$item_url = $arr_item[0];
-				$item_name = $arr_item[1];
-			}
-
-			else
-			{
-				$item_parent = $arr_item[0];
-				$item_url = $arr_item[1];
-				$item_name = $arr_item[2];
-			}
-
-			if($data['page'] == $item_url)
-			{
-				$capability = $value;
-
-				break;
-			}
-		}
-	}
-
-	return $capability;
 }
 
 function get_or_set_table_filter($data)
@@ -236,16 +155,6 @@ function get_or_set_table_filter($data)
 	return $meta_value;
 }
 
-function remove_table_filter($data)
-{
-	if(!isset($data['prefix'])){	$data['prefix'] = '';}
-
-	$user_id = get_current_user_id();
-	$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
-
-	delete_user_meta($user_id, $meta_key);
-}
-
 function show_final_size($in, $suffix = true)
 {
 	$arr_suffix = array("B", "kB", "MB", "GB", "TB");
@@ -265,22 +174,6 @@ function show_final_size($in, $suffix = true)
 	}
 
 	return $out;
-}
-
-function get_pages_from_shortcode($shortcode)
-{
-	global $wpdb;
-
-	$arr_ids = array();
-
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".addslashes($shortcode)."%"));
-
-	foreach($result as $r)
-	{
-		$arr_ids[] = $r->ID;
-	}
-
-	return $arr_ids;
 }
 
 function get_url_part($data)
@@ -512,14 +405,6 @@ function get_user_info($data = array())
 	else
 	{
 		return __("unknown", 'lang_base');
-	}
-}
-
-if(!function_exists('get_post_title'))
-{
-	function get_post_title($post)
-	{
-		return get_the_title($post);
 	}
 }
 
@@ -1210,17 +1095,6 @@ function format_date($in)
 	return $out;
 }
 
-function sanitize_folder_name($string)
-{
-	if($string != '' && strpos($string, "?") !== false)
-	{
-		$string = str_replace(array("%3a", "%2f", "."), "-", $string);
-		$string = sanitize_file_name($string);
-	}
-
-	return $string;
-}
-
 function get_uploads_folder($subfolder = '', $force_main_uploads = true, $force_create = true)
 {
 	global $obj_base, $error_text;
@@ -1239,8 +1113,6 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true, $force_
 			$upload_dir['baseurl'] = str_replace("/sites/".$sites_sub, "", $upload_dir['baseurl']);
 		}
 	}
-
-	//$subfolder = implode('/', array_map('sanitize_folder_name', explode('/', $subfolder))); // index.html is not saved in MF Cache when this is used. Why?
 
 	$upload_path = $upload_dir['basedir']."/".($subfolder != '' ? $subfolder."/" : "");
 	$upload_url = $upload_dir['baseurl']."/".($subfolder != '' ? $subfolder."/" : "");
@@ -1486,7 +1358,7 @@ function get_file_icon($data)
 	return "<i class='fa ".$class." ".$data['size']."'></i>";
 }
 
-// Use wp_check_filetype('image.jpg') instead?
+// Use wp_check_filetype($file) instead?
 function get_file_suffix($file, $force_last = false)
 {
 	if($force_last == false && preg_match("/\?/", $file))
@@ -1497,6 +1369,16 @@ function get_file_suffix($file, $force_last = false)
 	$arr_file_name = explode(".", $file);
 
 	$suffix = $arr_file_name[count($arr_file_name) - 1];
+
+	if($suffix == wp_check_filetype($file))
+	{
+		do_log(__FUNCTION__.": Replace with wp_check_filetype()");
+	}
+
+	else
+	{
+		do_log(__FUNCTION__.": Do NOT replace with wp_check_filetype()");
+	}
 
 	return $suffix;
 }

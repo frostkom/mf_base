@@ -3486,9 +3486,6 @@ if(!class_exists('WP_List_Table'))
 	$GLOBALS['hook_suffix'] = '';
 
 	require_once(ABSPATH.'wp-admin/includes/admin.php');
-
-	/*require_once(ABSPATH.'wp-admin/includes/template.php');
-	require_once(ABSPATH.'wp-admin/includes/class-wp-list-table.php');*/
 }
 
 class mf_list_table extends WP_List_Table

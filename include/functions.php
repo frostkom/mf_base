@@ -1358,7 +1358,6 @@ function get_file_icon($data)
 	return "<i class='fa ".$class." ".$data['size']."'></i>";
 }
 
-// Use wp_check_filetype($file) instead?
 function get_file_suffix($file, $force_last = false)
 {
 	if($force_last == false && preg_match("/\?/", $file))
@@ -1369,16 +1368,6 @@ function get_file_suffix($file, $force_last = false)
 	$arr_file_name = explode(".", $file);
 
 	$suffix = $arr_file_name[count($arr_file_name) - 1];
-
-	if($suffix == wp_check_filetype($file))
-	{
-		do_log(__FUNCTION__.": Replace with wp_check_filetype()");
-	}
-
-	else
-	{
-		do_log(__FUNCTION__.": Do NOT replace with wp_check_filetype()");
-	}
 
 	return $suffix;
 }

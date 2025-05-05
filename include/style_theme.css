@@ -96,6 +96,11 @@
 							text-decoration: none;
 						}
 
+							.widefat tr .row-actions a.trash
+							{
+								color: #b32d2e;
+							}
+
 			.widefat tfoot th
 			{
 				border-top: 1px solid #e1e1e1;

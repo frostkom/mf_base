@@ -859,7 +859,7 @@ class mf_base
 				'meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 
-			//$this->pre_set_site_transient_update_plugins();
+			$this->pre_set_site_transient_update_plugins();
 
 			// Optimize
 			#########################

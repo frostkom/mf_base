@@ -708,27 +708,7 @@ function mf_uninstall_tables($data)
 
 	foreach($data['tables'] as $table)
 	{
-		if(does_table_exist($wpdb->prefix.$table))
-		{
-			$wpdb->query("DELETE FROM ".$wpdb->prefix.$table." WHERE 1 = 1");
-			$wpdb->query("TRUNCATE TABLE ".$wpdb->prefix.$table);
-			$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
-
-			if(does_table_exist($wpdb->prefix.$table))
-			{
-				$wpdb->get_results("SELECT 1 FROM ".$wpdb->prefix.$table." LIMIT 0, 1");
-
-				if($wpdb->num_rows > 0)
-				{
-					do_log(sprintf("I was not allowed to drop %s and it still has data", $wpdb->prefix.$table));
-				}
-
-				/*else
-				{
-					do_log(sprintf("I was not allowed to drop %s but at least it is empty now", $wpdb->prefix.$table));
-				}*/
-			}
-		}
+		$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix.$table);
 	}
 }
 

@@ -1474,7 +1474,9 @@ function parse_block_attributes($data = array())
 									switch($key_grandchild)
 									{
 										case 'top':
+										case 'right':
 										case 'bottom':
+										case 'left':
 											$data['style'] .= $key_child."-".$key_grandchild.": ".filter_style_var($value).";";
 										break;
 

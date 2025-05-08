@@ -5791,3 +5791,88 @@ class mf_import
 		return $out;
 	}
 }
+
+class mf_encryption
+{
+	var $key;
+	var $encrypt_method;
+	var $iv;
+
+	function __construct($type)
+	{
+		$this->set_key($type);
+
+		if(function_exists('mcrypt_create_iv') && function_exists('mcrypt_get_iv_size'))
+		{
+			$this->iv = @mcrypt_create_iv(@mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
+		}
+
+		else
+		{
+			$this->encrypt_method = 'AES-256-CBC';
+
+			if(!in_array($this->encrypt_method, openssl_get_cipher_methods()) && !in_array(strtolower($this->encrypt_method), openssl_get_cipher_methods()))
+			{
+				do_log(__CLASS__.": ".$this->encrypt_method." does not exist in ".var_export(openssl_get_cipher_methods(), true));
+			}
+
+			$this->iv = substr(hash('sha256', $this->key), 0, 16);
+		}
+	}
+
+	function set_key($type)
+	{
+		if(function_exists('mcrypt_encrypt'))
+		{
+			$this->key = substr("mf_crypt".$type, 0, 32);
+		}
+
+		else
+		{
+			$this->key = hash('sha256', "mf_crypt".$type);
+		}
+	}
+
+	function encrypt($text, $key = '')
+	{
+		if($key != '')
+		{
+			$this->set_key($key);
+		}
+
+		if(function_exists('mcrypt_encrypt'))
+		{
+			$text = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $this->key, $text, MCRYPT_MODE_ECB, $this->iv));
+		}
+
+		else
+		{
+			$text = base64_encode(openssl_encrypt($text, $this->encrypt_method, $this->key, 0, $this->iv));
+		}
+
+		return $text;
+	}
+
+	function decrypt($text, $key = '')
+	{
+		if($text != '' && strlen($text) >= 24)
+		{
+			if($key != '')
+			{
+				$this->set_key($key);
+			}
+
+			if(function_exists('mcrypt_encrypt'))
+			{
+				$text = trim(@mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $this->key, base64_decode($text), MCRYPT_MODE_ECB, $this->iv));
+			}
+
+			else
+			{
+				$text = openssl_decrypt(base64_decode($text), $this->encrypt_method, $this->key, 0, $this->iv);
+			}
+		}
+
+		return $text;
+	}
+}

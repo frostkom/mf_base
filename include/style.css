@@ -276,15 +276,17 @@
 				opacity: .5;
 			}
 
-			.mf_form .has_suffix .mf_form_field
+			/*.mf_form .has_suffix .mf_form_field
 			{
 				width: auto;
 				max-width: 80%;
-			}
+			}*/
 
 				.mf_form .has_suffix span.description, .rwmb-field .has_suffix span.description
 				{
-					margin-left: 1em;
+					/*margin-left: 1em;*/
+					color: #999;
+					margin-left: -3.4em;
 				}
 
 			.mf_form .form_select select

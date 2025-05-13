@@ -569,13 +569,41 @@ class mf_base
 	{
 		global $wpdb;
 
-		// Old revisions and auto-drafts
+		$i = 0;
+
+		// Old trash
 		####################
-		$result = $wpdb->get_results("SELECT ID FROM ".$wpdb->posts." WHERE post_type IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
+		$result = $wpdb->get_results("SELECT ID FROM ".$wpdb->posts." WHERE post_status = 'trash' AND post_modified < DATE_SUB(NOW(), INTERVAL ".EMPTY_TRASH_DAYS." DAY)");
 
 		foreach($result as $r)
 		{
 			wp_delete_post($r->ID);
+
+			$i++;
+
+			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
+		}
+		####################
+
+		// Old revisions and auto-drafts
+		####################
+		$result = $wpdb->get_results("SELECT ID FROM ".$wpdb->posts." WHERE post_status IN ('revision', 'auto-draft') AND post_modified < DATE_SUB(NOW(), INTERVAL 12 MONTH)");
+
+		foreach($result as $r)
+		{
+			wp_delete_post($r->ID);
+
+			$i++;
+
+			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
 		}
 		####################
 
@@ -588,13 +616,18 @@ class mf_base
 		####################
 		$result = $wpdb->get_results("SELECT meta_id, COUNT(meta_id) AS count FROM ".$wpdb->postmeta." GROUP BY post_id, meta_key, meta_value HAVING count > 1");
 
-		if($wpdb->num_rows > 0)
+		foreach($result as $r)
 		{
-			foreach($result as $r)
-			{
-				$intMetaID = $r->meta_id;
+			$intMetaID = $r->meta_id;
 
-				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_id = '%d'", $intMetaID));
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_id = '%d'", $intMetaID));
+
+			$i++;
+
+			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
 			}
 		}
 		####################
@@ -608,25 +641,25 @@ class mf_base
 		####################
 		$result = $wpdb->get_results("SELECT umeta_id, COUNT(umeta_id) AS count FROM ".$wpdb->usermeta." GROUP BY user_id, meta_key, meta_value HAVING count > 1");
 
-		if($wpdb->num_rows > 0)
+		foreach($result as $r)
 		{
-			foreach($result as $r)
-			{
-				$intMetaID = $r->umeta_id;
+			$intMetaID = $r->umeta_id;
 
-				$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->usermeta." WHERE umeta_id = '%d'", $intMetaID));
+			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->usermeta." WHERE umeta_id = '%d'", $intMetaID));
+
+			$i++;
+
+			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
 			}
 		}
 		####################
 
 		// Spam comments
 		####################
-		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
-
-		if($wpdb->num_rows > 0)
-		{
-			$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
-		}
+		$wpdb->query($wpdb->prepare("DELETE FROM ".$wpdb->comments." WHERE comment_approved = %s AND comment_date < DATE_SUB(NOW(), INTERVAL 12 MONTH)", 'spam'));
 		####################
 
 		// Duplicate comments
@@ -641,12 +674,7 @@ class mf_base
 
 		// oEmbed caches
 		####################
-		$wpdb->get_results($wpdb->prepare("SELECT * FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
-
-		if($wpdb->num_rows > 0)
-		{
-			$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
-		}
+		$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key LIKE %s", "%_oembed_%"));
 		####################
 
 		// Optimize Tables
@@ -656,6 +684,14 @@ class mf_base
 		foreach($result as $r)
 		{
 			$wpdb->query("OPTIMIZE TABLE ".$r->Name);
+
+			$i++;
+
+			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
 		}
 		####################
 
@@ -863,7 +899,7 @@ class mf_base
 
 			// Optimize
 			#########################
-			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-7 day")))
+			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-4 hour")))
 			{
 				$this->do_optimize();
 			}

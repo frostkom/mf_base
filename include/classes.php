@@ -2435,6 +2435,131 @@ class mf_base
 		return $arr_ids;
 	}
 
+	function get_styles_content($out, $type)
+	{
+		global $wpdb;
+
+		$theme_slug = get_stylesheet();
+
+		$styles_content = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'));
+
+		$arr_json_styles = json_decode($styles_content, true);
+
+		switch($type)
+		{
+			case 'max_width':
+				if(isset($arr_json_styles['settings']['layout']['wideSize']))
+				{
+					$out = $arr_json_styles['settings']['layout']['wideSize'];
+				}
+			break;
+
+			default:
+				do_log(__FUNCTION__.": Type not targeted yet (".$type.")");
+			break;
+		}
+
+		return $out;
+
+		/*array ( 
+			'styles' => array ( 
+				'elements' => array ( 
+					'heading' => array ( 
+						'typography' => array ( 
+							'fontStyle' => 'normal', 
+							'fontWeight' => '400', 
+							'fontFamily' => 'var(--wp--preset--font-family--kalam)', 
+						), 
+						'color' => array ( 
+							'text' => '#1e73be', 
+						), 
+					), 
+					'button' => array ( 
+						'color' => array ( 
+							'text' => 'var(--wp--preset--color--base)', 
+							'background' => '#1e73be', 
+						), 
+					), 
+					'link' => array ( 
+						'typography' => array ( 'textDecoration' => 'none', ),
+						'color' => array ( 'text' => '#1e73be', ), 
+					), 
+				), 
+				'typography' => array ( 
+					'fontStyle' => 'normal', 
+					'fontWeight' => '300', 
+					'fontSize' => 'var(--wp--preset--font-size--medium)', 
+				), 
+				'blocks' => array ( 
+					'core/button' => array ( 
+						'border' => array ( 'radius' => '0.33em', ), 
+						'spacing' => array ( 
+							'padding' => array ( 
+								'left' => '1em', 
+								'right' => '1em', 
+								'top' => '0.6em', 
+								'bottom' => '0.6em', 
+							), 
+						), 
+					), 
+					'core/paragraph' => array ( 
+						'spacing' => array ( 
+							'padding' => array ( 'bottom' => 'var:preset|spacing|20', ), 
+						), 
+					), 
+				), 
+				'css' => [CSS], 
+				'spacing' => array ( 
+					'blockGap' => '0rem', 
+				), 
+			), 
+			'settings' => array ( 
+				'layout' => array ( 
+					'contentSize' => '1200px', 
+					'wideSize' => '1200px', 
+				), 
+				'typography' => array ( 
+					'fontFamilies' => array ( 
+						'theme' => array ( 
+							0 => array ( 
+								'name' => 'Manrope', 
+								'slug' => 'manrope', 
+								'fontFamily' => 'Manrope, sans-serif', 
+								'fontFace' => array ( 
+									0 => array ( 
+										'src' => array ( 
+											0 => 'file:./assets/fonts/manrope/Manrope-VariableFont_wght.woff2',
+										),
+										'fontWeight' => '200 800',
+										'fontStyle' => 'normal',
+										'fontFamily' => 'Manrope',
+									),
+								),
+							),
+						),
+						'custom' => array ( 
+							0 => array ( 
+								'name' => 'Kalam',
+								'slug' => 'kalam',
+								'fontFamily' => 'Kalam,
+								cursive', 'fontFace' => array (
+									0 => array (
+										'src' => [url],
+										'fontWeight' => '300',
+										'fontStyle' => 'normal',
+										'fontFamily' => 'Kalam',
+									),
+								),
+							),
+						),
+					),
+				),
+			),
+			'isGlobalStylesUserThemeJSON' => true,
+			'version' => 3,
+		)*/
+	}
+
 	function column_header($cols)
 	{
 		unset($cols['date']);

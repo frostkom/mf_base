@@ -906,12 +906,12 @@ function get_post_meta_file_src($data)
 				if($data['is_image'] == true)
 				{
 					$file_url_temp = wp_get_attachment_image_src($file_id, $data['image_size']);
-					$file_url[] = $file_url_temp[0];
+					$file_url[$file_id] = $file_url_temp[0];
 				}
 
 				else
 				{
-					$file_url[] = wp_get_attachment_url($file_id);
+					$file_url[$file_id] = wp_get_attachment_url($file_id);
 				}
 			}
 		}

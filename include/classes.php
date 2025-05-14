@@ -371,6 +371,8 @@ class mf_base
 	{
 		load_plugin_textdomain('lang_base', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
 
+		add_post_type_support('page', 'excerpt');
+
 		define('DEFAULT_DATE', "1982-08-04 23:15:00");
 		define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 
@@ -2524,11 +2526,11 @@ class mf_base
 				'context' => 'side',
 				'priority' => 'low',
 				'fields' => array(
-					array(
+					/*array(
 						'name' => __("Description", 'lang_base'),
 						'id' => 'post_excerpt',
 						'type' => 'textarea',
-					),
+					),*/
 					array(
 						'name' => __("Index", 'lang_base'),
 						'id' => $this->meta_prefix.'page_index',

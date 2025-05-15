@@ -132,8 +132,6 @@ jQuery(function($)
 
 						dom_parent.find(".media_container").removeClass('hide');
 						dom_parent.find("button").text(script_media_library.change_file_text);
-
-						/*wp.media.editor.insert('[myshortcode id="' + first.id + '"]');*/
 					}
 				}
 			});

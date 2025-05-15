@@ -2236,11 +2236,6 @@ class mf_base
 			));
 		}
 
-		/*if(in_array($pagenow, array('post.php', 'page.php', 'post-new.php', 'post-edit.php')) && wp_is_block_theme() == false)
-		{
-			mf_enqueue_script('script_base_shortcode', $plugin_include_url."script_shortcode.js");
-		}*/
-
 		if($pagenow == 'plugins.php')
 		{
 			$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
@@ -2962,39 +2957,6 @@ class mf_base
 				$phpmailer->AltBody = strip_tags($phpmailer->Body);
 			}
 		}
-	}
-
-	function shortcode_file($atts)
-	{
-		global $post;
-
-		$out = "";
-
-		/*extract(shortcode_atts(array(
-			'id' => 0,
-			'filetype' => '',
-		), $atts));
-
-		switch($filetype)
-		{
-			case 'gif':
-			case 'jpg':
-			case 'jpeg':
-			case 'png':
-				$out .= render_image_tag(array('id' => $id));
-			break;
-
-			default:
-				$file_name = basename(get_attached_file($id));
-				$file_url = wp_get_attachment_url($id);
-
-				$out .= "<a href='".$file_url."' rel='external'>".$file_name."</a>";
-			break;
-		}*/
-
-		do_log(__FUNCTION__.": Add a block instead (#".$post->ID.", ".var_export($atts, true).")", 'publish', false);
-
-		return $out;
 	}
 
 	function theme_page_templates($posts_templates)

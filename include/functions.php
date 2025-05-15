@@ -4270,7 +4270,7 @@ function show_button($data)
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")
-		." class='".($data['class'] != '' ? $data['class'] : "button-primary")." wp-block-button__link'"
+		." class='".($data['class'] != '' ? $data['class'] : "button-primary").(wp_is_block_theme() ? " wp-block-button__link" : "")."'"
 		.($data['xtra'] != '' ? " ".$data['xtra'] : "")
 	.">"
 		.$data['text']

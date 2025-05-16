@@ -2163,7 +2163,7 @@ class mf_base
 
 			if($option_base_optimized > DEFAULT_DATE)
 			{
-				$populate_next = format_date(date("Y-m-d H:i:s", strtotime($option_base_optimized." +7 day")));
+				$populate_next = format_date(date("Y-m-d H:i:s", strtotime($option_base_optimized." +4 hour")));
 
 				$description = sprintf(__("The optimization was last run %s and will be run again %s", 'lang_base'), format_date($option_base_optimized), $populate_next);
 			}

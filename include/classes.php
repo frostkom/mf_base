@@ -2907,6 +2907,18 @@ class mf_base
 		}
 	}
 
+	function block_title($title)
+	{
+		if($title != '' && strpos($title, "[name]") !== false && is_user_logged_in())
+		{
+			$user_data = get_userdata(get_current_user_id());
+
+			$title = str_replace("[name]", $user_data->first_name, $title);
+		}
+
+		return $title;
+	}
+
 	function after_plugin_row($plugin_file, $plugin_data)
 	{
 		if(isset($this->option_github_updates[$plugin_file]) && isset($this->option_github_updates[$plugin_file]['status']) && $this->option_github_updates[$plugin_file]['status'] == 'new' && version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))

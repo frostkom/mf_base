@@ -1044,11 +1044,13 @@ class mf_base
 
 				$out['tables'][] = array(
 					'name' => $table_name,
-					'size' => show_final_size($table_size),
+					'size' => $table_size,
 					'content' => $arr_content,
 				);
 			}
 		}
+
+		$out['tables'] = $this->array_sort(array('array' => $out['tables'], 'on' => 'size', 'order' => 'desc'));
 
 		return $out;
 	}
@@ -1715,8 +1717,8 @@ class mf_base
 
 									foreach($option_base_large_tables as $arr_table)
 									{
-										echo "<li>".str_replace($wpdb->prefix, "", $arr_table['name'])." ("
-											.$arr_table['size']
+										echo "<li>".$arr_table['name']." ("
+											.show_final_size($arr_table['size'])
 											.(IS_SUPER_ADMIN && isset($arr_table['content']) && count($arr_table['content']) > 0 ? ", ".str_replace("'", "", var_export($arr_table['content'], true)) : "")
 										.")</li>";
 									}

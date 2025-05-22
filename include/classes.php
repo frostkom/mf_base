@@ -1806,22 +1806,30 @@ class mf_base
 						$load = sys_getloadavg();
 						$load_limit = 1;
 
-						if(isset($load[0]) && $load[0] >= $load_limit)
-						{
-							echo "<p><i class='fa ".($load[0] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 1 ".__("min", 'lang_base').": ".mf_format_number($load[0])."</p>";
-						}
+						$arr_load_types = array(
+							0 => 1,
+							1 => 5,
+							2 => 15,
+						);
 
-						if(isset($load[1]) && $load[1] >= $load_limit)
+						foreach($arr_load_types as $key => $value)
 						{
-							echo "<p><i class='fa ".($load[1] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 5 ".__("min", 'lang_base').": ".mf_format_number($load[1])."</p>";
-						}
+							if(isset($load[$key]) && $load[$key] >= $load_limit)
+							{
+								$load_is_within_limit = ($load[$key] < $load_limit);
 
-						if(isset($load[2]) && $load[2] >= $load_limit)
-						{
-							echo "<p><i class='fa ".($load[2] < $load_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; 15 ".__("min", 'lang_base').": ".mf_format_number($load[2])."</p>";
+								echo "<p><i class='fa ".($load_is_within_limit ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Load", 'lang_base')." &lt; ".$value." ".__("min", 'lang_base').": ".mf_format_number($load[$key])."</p>";
+
+								if($load_is_within_limit == false)
+								{
+									break;
+								}
+							}
 						}
 					}
 
+					// Autoload
+					########################
 					$arr_autoload_type = array(
 						'yes' => array('byte' => 0, 'limit' => (MB_IN_BYTES / 2)),
 						'on' => array('alias' => 'yes'),
@@ -1845,10 +1853,16 @@ class mf_base
 						}
 					}
 
-					echo "<p>
-						<i class='fa ".(($arr_autoload_type['yes']['byte'] < $arr_autoload_type['yes']['limit'] && $arr_autoload_type['auto']['byte'] < $arr_autoload_type['auto']['limit']) ? "fa-check green" : "fa-times red display_warning")."'></i> "
-						.__("Autoload", 'lang_base').": ".$out_temp
-					."</p>";
+					$autoload_is_within_limits = ($arr_autoload_type['yes']['byte'] < $arr_autoload_type['yes']['limit'] && $arr_autoload_type['auto']['byte'] < $arr_autoload_type['auto']['limit']);
+
+					if($autoload_is_within_limits == false)
+					{
+						echo "<p>
+							<i class='fa ".($autoload_is_within_limits ? "fa-check green" : "fa-times red display_warning")."'></i> "
+							.__("Autoload", 'lang_base').": ".$out_temp
+						."</p>";
+					}
+					########################
 
 					$current_visitor_ip = apply_filters('get_current_visitor_ip', $_SERVER['REMOTE_ADDR']);
 
@@ -1861,7 +1875,6 @@ class mf_base
 
 			$json_output['success'] = true;
 			$json_output['html'] = ob_get_clean();
-			//$json_output['timestamp'] = date("Y-m-d H:i:s");
 
 			header('Content-Type: application/json');
 			echo json_encode($json_output);

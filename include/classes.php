@@ -3520,7 +3520,7 @@ class mf_cron
 
 		if($this->is_running)
 		{
-			$file_time = date("Y-m-d H:i:s", filemtime($this->file));
+			$file_time = date("Y-m-d H:i:s", @filemtime($this->file));
 
 			if($file_time > DEFAULT_DATE && $this->has_expired(array('start' => $file_time, 'margin' => 1.2)))
 			{

@@ -2844,6 +2844,21 @@ class mf_base
         return $taxonomies;
     }
 
+	function robots_txt()
+	{
+		if(get_option('blog_public'))
+		{
+			$file = ABSPATH.'robots.txt';
+
+			if(file_exists($file))
+			{
+				unlink($file);
+			}
+
+			echo "Sitemap: ".home_url('/wp-sitemap.xml');
+		}
+	}
+
 	function login_init()
 	{
 		$this->wp_head(array('type' => 'login'));

@@ -3356,17 +3356,8 @@ class mf_base
 
 			if($data['file'] != '' && $data['auto_update'] == true && get_option('setting_base_update_htaccess', 'no') == 'yes' && (!is_multisite() || is_main_site()))
 			{
-				// This has failed too many times, so until I've found a solution we'll just inactivate it
-				/*$success = set_file_content(array('file' => $data['file'], 'mode' => 'w', 'content' => $content));
-
-				if($success)
-				{
-					$done_text = sprintf(__("I successfully updated %s with %s", 'lang_base'), ".htaccess", $data['plugin_name']);
-
-					$out .= get_notification();
-				}*/
-
 				$file_temp = $data['file']."_temp";
+				$content = trim($content);
 
 				$success = file_put_contents($file_temp, $content);
 
@@ -3393,7 +3384,7 @@ class mf_base
 				else
 				{
 					$error_text = sprintf(__("I could not successfully update %s with %s", 'lang_base'), $data['file'], $data['plugin_name']);
-					$error_text .= " (".ABSPATH.")";
+					//$error_text .= " (".ABSPATH.")";
 					//$error_text .= " (".$success." != ".strlen($content).")";
 
 					$out .= get_notification();

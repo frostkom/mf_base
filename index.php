@@ -3,14 +3,12 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.7.23
+Version: 1.2.7.24
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
 Text Domain: lang_base
 Domain Path: /lang
-
-GitHub Plugin URI: frostkom/mf_base
 */
 
 if(!defined('DISALLOW_FILE_EDIT'))

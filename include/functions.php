@@ -593,16 +593,24 @@ function replace_user_meta($data)
 {
 	if(!isset($data['single'])){	$data['single'] = true;}
 
-	$users = get_users(array('fields' => array('ID')));
+	$arr_users = get_users(array('fields' => array('ID')));
 
-	foreach($users as $user)
+	foreach($arr_users as $user)
 	{
-		$meta_old = get_user_meta($user->ID, $data['old'], $data['single']);
-
-		if($meta_old != '')
+		if(isset($user->ID))
 		{
-			update_user_meta($user->ID, $data['new'], $meta_old);
-			delete_user_meta($user->ID, $data['old']);
+			$meta_old = get_user_meta($user->ID, $data['old'], $data['single']);
+
+			if($meta_old != '')
+			{
+				update_user_meta($user->ID, $data['new'], $meta_old);
+				delete_user_meta($user->ID, $data['old']);
+			}
+		}
+
+		else
+		{
+			do_log(__FUNCTION__.": ".var_export($arr_users, true)." -> ".var_export($user, true));
 		}
 	}
 }
@@ -625,9 +633,9 @@ function mf_uninstall_user_meta($data)
 {
 	if(count($data['user_meta']) > 0)
 	{
-		$users = get_users(array('fields' => array('ID')));
+		$arr_users = get_users(array('fields' => array('ID')));
 
-		foreach($users as $user)
+		foreach($arr_users as $user)
 		{
 			foreach($data['user_meta'] as $meta_key)
 			{
@@ -2298,7 +2306,7 @@ function get_users_for_select($data = array())
 		$data_temp['role__in'] = $data['include'];
 	}
 
-	$users = get_users($data_temp);
+	$arr_users = get_users($data_temp);
 
 	$arr_data = array();
 
@@ -2307,7 +2315,7 @@ function get_users_for_select($data = array())
 		$arr_data[''] = "-- ".$data['choose_here_text']." --";
 	}
 
-	foreach($users as $user)
+	foreach($arr_users as $user)
 	{
 		$user_data = get_userdata($user->ID);
 

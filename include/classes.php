@@ -2080,7 +2080,6 @@ class mf_base
 				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),
 				//array("Tuxedo Big File Uploads", 'tuxedo-big-file-uploads/tuxedo_big_file_uploads.php', __("to upload larger files than normally allowed", 'lang_base')),
 				//array("Username Changer", 'username-changer/username-changer.php', __("to change usernames", 'lang_base')),
-				//array("WP-Sweep", 'wp-sweep/wp-sweep.php', __("to remove revisions, deleted posts etc. to clean up the database", 'lang_base')),
 			);
 
 			foreach($arr_recommendations as $value)
@@ -2440,28 +2439,28 @@ class mf_base
 		)*/
 	}
 
-	function column_header($cols)
+	function column_header($columns)
 	{
-		unset($cols['date']);
+		unset($columns['date']);
 
 		if(apply_filters('has_comments', true) == false)
 		{
-			unset($cols['comments']);
+			unset($columns['comments']);
 		}
 
 		if(check_var('post_status') != 'trash')
 		{
-			$cols['page_index'] = __("Index", 'lang_base');
+			$columns['page_index'] = __("Index", 'lang_base');
 		}
 
-		return $cols;
+		return $columns;
 	}
 
-	function column_cell($col, $post_id)
+	function column_cell($column, $post_id)
 	{
 		global $wpdb, $post;
 
-		switch($col)
+		switch($column)
 		{
 			case 'page_index':
 				$index_type = apply_filters('filter_theme_core_seo_type', '');
@@ -2473,7 +2472,7 @@ class mf_base
 
 				if($index_type == '')
 				{
-					$page_index = get_post_meta($post_id, $this->meta_prefix.$col, true);
+					$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
 
 					if(in_array($page_index, array('noindex', 'none')))
 					{
@@ -2556,7 +2555,9 @@ class mf_base
 
 	function rwmb_enqueue_scripts()
 	{
-		mf_enqueue_script('script_base_meta', plugin_dir_url(__FILE__)."script_meta.js", get_plugin_version(__FILE__));
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js");
 	}
 
 	function api_base_notifications()
@@ -2989,6 +2990,10 @@ class mf_base
 					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
 					."Header set X-Content-Type-Options nosniff\r\n"
 					."Header set X-Powered-By \"Me\"\r\n"
+					."\r\n"
+					."<IfModule mod_headers.c>\r\n"
+					."	Header always set Referrer-Policy \"same-origin\"\r\n"
+					."</IfModule>\r\n"
 					."\r\n"
 					."<IfModule mod_rewrite.c>\r\n"
 					."	RewriteEngine On\r\n"

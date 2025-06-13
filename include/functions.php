@@ -597,20 +597,14 @@ function replace_user_meta($data)
 
 	foreach($arr_users as $user)
 	{
-		if(isset($user->ID))
-		{
-			$meta_old = get_user_meta($user->ID, $data['old'], $data['single']);
+		$user_id = (isset($user->ID) ? $user->ID : $user);
 
-			if($meta_old != '')
-			{
-				update_user_meta($user->ID, $data['new'], $meta_old);
-				delete_user_meta($user->ID, $data['old']);
-			}
-		}
+		$meta_old = get_user_meta($user_id, $data['old'], $data['single']);
 
-		else
+		if($meta_old != '')
 		{
-			do_log(__FUNCTION__.": ".var_export($arr_users, true)." -> ".var_export($user, true));
+			update_user_meta($user_id, $data['new'], $meta_old);
+			delete_user_meta($user_id, $data['old']);
 		}
 	}
 }

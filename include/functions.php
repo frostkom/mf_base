@@ -3262,7 +3262,7 @@ function show_textfield($data)
 	if(!isset($data['autocapitalize'])){	$data['autocapitalize'] = true;}
 	if(!isset($data['readonly'])){			$data['readonly'] = false;}
 	if(!isset($data['placeholder'])){		$data['placeholder'] = "";}
-	if(!isset($data['pattern'])){			$data['pattern'] = "";}
+	//if(!isset($data['pattern'])){			$data['pattern'] = "";}
 	if(!isset($data['title'])){				$data['title'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
 	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
@@ -3308,6 +3308,12 @@ function show_textfield($data)
 			$data['xtra'] .= " step='any'";
 		break;
 
+		case 'tel':
+		case 'telno':
+			$data['type'] = 'tel';
+			$data['xtra'] .= " inputmode='numeric'";
+		break;
+
 		case 'search':
 			$data['xtra'] .= " inputmode='".$data['type']."'";
 		break;
@@ -3338,6 +3344,11 @@ function show_textfield($data)
 		break;
 
 		default:
+			if($data['type'] != '')
+			{
+				do_log(__FUNCTION__." - Unknown type: ".$data['type']." (".var_export(debug_backtrace(), true).")");
+			}
+
 			$data['type'] = 'text';
 		break;
 	}
@@ -3421,10 +3432,10 @@ function show_textfield($data)
 				$out .= " placeholder='".$data['placeholder']."&hellip;'";
 			}
 
-			if($data['pattern'] != '')
+			/*if($data['pattern'] != '')
 			{
 				$out .= " pattern='".$data['pattern']."'";
-			}
+			}*/
 
 			if($data['title'] != '')
 			{

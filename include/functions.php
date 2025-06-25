@@ -4453,16 +4453,23 @@ function set_file_content($data)
 			break;
 		}
 
+		$folder = dirname($data['file']);
+
+		if(!is_dir($folder))
+		{
+			mkdir($folder, 0755, true);
+		}
+
 		if($fh = @fopen($data['file'], $data['mode']))
 		{
 			switch(get_file_suffix($data['file']))
 			{
 				case 'bz2':
-					$data['content'] = bzcompress($data['content']); //, 9
+					$data['content'] = bzcompress($data['content']);
 				break;
 
 				case 'gz':
-					$data['content'] = gzencode($data['content']); //, 9
+					$data['content'] = gzencode($data['content']);
 				break;
 			}
 

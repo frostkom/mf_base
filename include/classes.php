@@ -720,14 +720,14 @@ class mf_base
 			{
 				foreach($option as $option_value)
 				{
-					update_post_meta($option_value, $this->meta_prefix.'page_index', 'noindex');
+					update_post_meta($option_value, $this->meta_prefix.'page_index', 'no');
 				}
 			}
 		}
 
 		else if($option > 0)
 		{
-			update_post_meta($option, $this->meta_prefix.'page_index', 'noindex');
+			update_post_meta($option, $this->meta_prefix.'page_index', 'no');
 		}
 	}
 
@@ -890,6 +890,16 @@ class mf_base
 				}
 
 				replace_post_meta(array('old' => $obj_theme_core->meta_prefix.'page_index', 'new' => $this->meta_prefix.'page_index'));
+			}
+
+			$result = $wpdb->get_results($wpdb->prepare("SELECT ID, meta_value FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE meta_key = %s AND meta_value != ''", $this->meta_prefix.'page_index'));
+
+			foreach($result as $r)
+			{
+				if(in_array($r->meta_value, array('noindex', 'nofollow', 'none')))
+				{
+					update_post_meta($r->ID, $this->meta_prefix.'page_index', 'no');
+				}
 			}
 
 			mf_uninstall_plugin(array(
@@ -2474,7 +2484,7 @@ class mf_base
 				{
 					$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
 
-					if(in_array($page_index, array('noindex', 'none')))
+					if(in_array($page_index, array('noindex', 'none', 'no')))
 					{
 						$index_type = 'not_indexed';
 					}
@@ -2530,21 +2540,14 @@ class mf_base
 				'context' => 'side',
 				'priority' => 'low',
 				'fields' => array(
-					/*array(
-						'name' => __("Description", 'lang_base'),
-						'id' => 'post_excerpt',
-						'type' => 'textarea',
-					),*/
 					array(
 						'name' => __("Index", 'lang_base'),
 						'id' => $this->meta_prefix.'page_index',
 						'type' => 'select',
 						'options' => array(
-							'' => "-- ".__("Choose Here", 'lang_base')." --",
-							'noindex' => __("Do not Index", 'lang_base'),
-							'nofollow' => __("Do not Follow Links", 'lang_base'),
-							'none' => __("Do not Index and do not follow links", 'lang_base'),
-						),
+							'' => __("Yes", 'lang_base'),
+							'no' => __("No", 'lang_base'),
+						), //array('' => "-- ".__("Choose Here", 'lang_base')." --", 'noindex' => __("Do not Index", 'lang_base'), 'nofollow' => __("Do not Follow Links", 'lang_base'), 'none' => __("Do not Index and do not follow links", 'lang_base'))
 					),
 				),
 			);
@@ -2638,7 +2641,7 @@ class mf_base
 	{
 		$page_index = get_post_meta($post_id, $this->meta_prefix.'page_index', true);
 
-		return ($page_index != '' && in_array($page_index, array('noindex', 'none')));
+		return in_array($page_index, array('noindex', 'none', 'no'));
 	}
 
 	function get_public_post_types($data = array())
@@ -2788,10 +2791,8 @@ class mf_base
 				{
 					case 'nofollow':
 					case 'noindex':
-						echo "<meta name='robots' content='".$page_index."'/>";
-					break;
-
 					case 'none':
+					case 'no':
 						echo "<meta name='robots' content='noindex, nofollow'/>";
 					break;
 				}

@@ -3343,10 +3343,14 @@ function show_textfield($data)
 			// Do nothing
 		break;
 
+		case 'char':
+			$data['type'] = 'text';
+		break;
+
 		default:
 			if($data['type'] != '')
 			{
-				do_log(__FUNCTION__." - Unknown type: ".$data['type']." (".var_export(debug_backtrace(), true).")");
+				do_log(__FUNCTION__." - Unknown type: ".$data['type']);
 			}
 
 			$data['type'] = 'text';

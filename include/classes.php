@@ -1259,18 +1259,7 @@ class mf_base
 			$php_version = explode("-", phpversion());
 			$php_version = $php_version[0];
 
-			$mysql_version = '';
-
-			if(function_exists('mysql_get_server_info'))
-			{
-				$mysql_version = explode("-", @mysql_get_server_info());
-				$mysql_version = $mysql_version[0];
-			}
-
-			if($mysql_version == '')
-			{
-				$mysql_version = int2point(mysqli_get_client_version());
-			}
+			$mysql_version = $wpdb->db_version();
 
 			$php_required = "7.4";
 			$mysql_required = "5.0";
@@ -1308,7 +1297,7 @@ class mf_base
 					}
 
 					echo "<p title='".$mysql_title."'>
-						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version;
+						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version; //." (".$wpdb->db_server_info().")"
 
 						if(!$has_required_mysql_version)
 						{

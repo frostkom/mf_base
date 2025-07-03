@@ -35,7 +35,7 @@ function setting_time_limit($data)
 
 	if($data['value'] == 'yes' || is_array($data['value']) && count($data['value']) > 0)
 	{
-		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
+		$option_base_time_limited = get_option_or_default('option_base_time_limited', []);
 
 		if(isset($option_base_time_limited[$data['key']]))
 		{
@@ -57,7 +57,7 @@ function setting_time_limit($data)
 
 				if(is_array($data['value']))
 				{
-					$data['value'] = array();
+					$data['value'] = [];
 				}
 
 				else
@@ -238,7 +238,7 @@ function get_url_part($data)
 	}
 }
 
-function get_site_url_clean($data = array())
+function get_site_url_clean($data = [])
 {
 	global $wpdb;
 
@@ -350,7 +350,7 @@ function get_toggler_container($data)
 	}
 }
 
-function get_user_info($data = array())
+function get_user_info($data = [])
 {
 	global $obj_base;
 
@@ -422,7 +422,7 @@ function send_email($data)
 	if(!isset($data['from'])){			$data['from'] = get_bloginfo('admin_email');}
 	if(!isset($data['from_name'])){		$data['from_name'] = get_bloginfo('name');}
 	if(!isset($data['headers'])){		$data['headers'] = "From: ".$data['from_name']." <".$data['from'].">\r\n";}
-	if(!isset($data['attachment'])){	$data['attachment'] = array();}
+	if(!isset($data['attachment'])){	$data['attachment'] = [];}
 	if(!isset($data['save_log_type'])){	$data['save_log_type'] = 'plugin';}
 
 	if(!isset($data['save_log']))
@@ -455,7 +455,7 @@ function send_email($data)
 	{
 		if(contains_html($data['content']))
 		{
-			$arr_preferred_content_types = apply_filters('get_preferred_content_types', array(), $data['from']);
+			$arr_preferred_content_types = apply_filters('get_preferred_content_types', [], $data['from']);
 
 			if(!is_array($arr_preferred_content_types) || count($arr_preferred_content_types) == 0 || in_array('html', $arr_preferred_content_types))
 			{
@@ -717,11 +717,11 @@ function mf_uninstall_tables($data)
 function mf_uninstall_plugin($data)
 {
 	if(!isset($data['uploads'])){			$data['uploads'] = "";}
-	if(!isset($data['options'])){			$data['options'] = array();}
-	if(!isset($data['user_meta'])){			$data['user_meta'] = array();}
-	if(!isset($data['post_types'])){		$data['post_types'] = array();}
-	if(!isset($data['post_meta'])){			$data['post_meta'] = array();}
-	if(!isset($data['tables'])){			$data['tables'] = array();}
+	if(!isset($data['options'])){			$data['options'] = [];}
+	if(!isset($data['user_meta'])){			$data['user_meta'] = [];}
+	if(!isset($data['post_types'])){		$data['post_types'] = [];}
+	if(!isset($data['post_meta'])){			$data['post_meta'] = [];}
+	if(!isset($data['tables'])){			$data['tables'] = [];}
 
 	if(isset($data['meta']))
 	{
@@ -899,7 +899,7 @@ function get_post_meta_file_src($data)
 
 	else
 	{
-		$file_url = array();
+		$file_url = [];
 
 		if(is_array($file_ids))
 		{
@@ -1245,7 +1245,7 @@ function delete_base($data)
 	global $wpdb;
 
 	if(!isset($data['table_prefix'])){	$data['table_prefix'] = $wpdb->prefix;}
-	if(!isset($data['child_tables'])){	$data['child_tables'] = array();}
+	if(!isset($data['child_tables'])){	$data['child_tables'] = [];}
 
 	$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30);
 
@@ -1371,10 +1371,10 @@ function filter_style_var($value)
 	return $value;
 }
 
-function parse_block_attributes($data = array())
+function parse_block_attributes($data = [])
 {
 	if(!isset($data['class'])){			$data['class'] = "";}
-	if(!isset($data['attributes'])){	$data['attributes'] = array();}
+	if(!isset($data['attributes'])){	$data['attributes'] = [];}
 	if(!isset($data['style'])){			$data['style'] = "";}
 
 	$out = "";
@@ -1606,7 +1606,7 @@ function get_media_library($data)
 	return $out;
 }
 
-function get_media_button($data = array())
+function get_media_button($data = [])
 {
 	global $obj_base, $is_media_button_init;
 
@@ -1682,7 +1682,7 @@ function get_attachment_to_send($string)
 {
 	global $wpdb, $obj_base, $error_text;
 
-	$arr_ids = $arr_files = array();
+	$arr_ids = $arr_files = [];
 
 	if($string != '')
 	{
@@ -1881,7 +1881,7 @@ function int2point($in)
 	return $main_version.".".$minor_version.".".$sub_version;
 }
 
-function get_next_cron($data = array())
+function get_next_cron($data = [])
 {
 	global $obj_base;
 
@@ -1941,8 +1941,8 @@ function show_settings_fields($data)
 {
 	if(!isset($data['area'])){		$data['area'] = '';}
 	if(!isset($data['object'])){	$data['object'] = '';}
-	if(!isset($data['settings'])){	$data['settings'] = array();}
-	if(!isset($data['args'])){		$data['args'] = array();}
+	if(!isset($data['settings'])){	$data['settings'] = [];}
+	if(!isset($data['args'])){		$data['args'] = [];}
 	if(!isset($data['callback'])){	$data['callback'] = '';}
 
 	foreach($data['settings'] as $handle => $text)
@@ -1995,7 +1995,7 @@ function show_settings_fields($data)
 	}
 }
 
-function get_setting_key($function_name, $args = array())
+function get_setting_key($function_name, $args = [])
 {
 	if(isset($args['child']) && $args['child'] != '')
 	{
@@ -2069,12 +2069,12 @@ function get_source_version($file, $version)
 	return $version;
 }
 
-function mf_enqueue_style($handle, $file = "", $dep = array(), $version = "")
+function mf_enqueue_style($handle, $file = "", $dep = [], $version = "")
 {
 	if(!is_array($dep))
 	{
 		$version = $dep;
-		$dep = array();
+		$dep = [];
 	}
 
 	$version = get_source_version($file, $version);
@@ -2082,12 +2082,12 @@ function mf_enqueue_style($handle, $file = "", $dep = array(), $version = "")
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = array(), $version = "")
+function mf_enqueue_script($handle, $file = "", $translation = [], $version = "")
 {
 	if(!is_array($translation))
 	{
 		$version = $translation;
-		$translation = array();
+		$translation = [];
 	}
 
 	$version = get_source_version($file, $version);
@@ -2119,7 +2119,7 @@ function roles_option_to_array($option = '')
 		$option = get_option($wpdb->prefix.'user_roles');
 	}
 
-	$roles = array();
+	$roles = [];
 
 	foreach($option as $key => $value)
 	{
@@ -2129,7 +2129,7 @@ function roles_option_to_array($option = '')
 	return $roles;
 }
 
-function get_all_roles($data = array())
+function get_all_roles($data = [])
 {
 	global $wpdb, $wp_roles;
 
@@ -2212,13 +2212,13 @@ function get_role_first_capability($role)
 	}
 }
 
-function get_yes_no_for_select($data = array())
+function get_yes_no_for_select($data = [])
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['return_integer'])){	$data['return_integer'] = false;}
 
-	$arr_data = array();
+	$arr_data = [];
 
 	if($data['add_choose_here'] == true)
 	{
@@ -2240,16 +2240,16 @@ function get_yes_no_for_select($data = array())
 	return $arr_data;
 }
 
-function get_roles_for_select($data = array())
+function get_roles_for_select($data = [])
 {
 	global $obj_base;
 
-	if(!isset($data['array'])){				$data['array'] = array();}
+	if(!isset($data['array'])){				$data['array'] = [];}
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
 	if(!isset($data['use_capability'])){	$data['use_capability'] = true;}
-	if(!isset($data['exclude'])){			$data['exclude'] = array();}
+	if(!isset($data['exclude'])){			$data['exclude'] = [];}
 
 	if($data['add_choose_here'] == true)
 	{
@@ -2279,13 +2279,13 @@ function get_roles_for_select($data = array())
 	return $data['array'];
 }
 
-function get_users_for_select($data = array())
+function get_users_for_select($data = [])
 {
 	global $obj_base;
 
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = true;}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
-	if(!isset($data['include'])){			$data['include'] = array();}
+	if(!isset($data['include'])){			$data['include'] = [];}
 	if(!isset($data['exclude_inactive'])){	$data['exclude_inactive'] = true;}
 	if(!isset($data['callback'])){			$data['callback'] = '';}
 
@@ -2302,7 +2302,7 @@ function get_users_for_select($data = array())
 
 	$arr_users = get_users($data_temp);
 
-	$arr_data = array();
+	$arr_data = [];
 
 	if($data['add_choose_here'] == true)
 	{
@@ -2340,7 +2340,7 @@ function get_users_for_select($data = array())
 	return $arr_data;
 }
 
-function get_post_types_for_select($data = array())
+function get_post_types_for_select($data = [])
 {
 	global $obj_base;
 
@@ -2350,11 +2350,11 @@ function get_post_types_for_select($data = array())
 
 	$opt_groups = is_array($data['include']) && count($data['include']) > 1;
 
-	$arr_data = array();
+	$arr_data = [];
 
 	if(in_array('ids', $data['include']))
 	{
-		$arr_pages = array();
+		$arr_pages = [];
 		get_post_children(array('post_status' => $data['post_status']), $arr_pages);
 
 		if(count($arr_pages) > 0)
@@ -2502,7 +2502,7 @@ function get_post_types_for_select($data = array())
 	return $arr_data;
 }
 
-function get_categories_for_select($data = array())
+function get_categories_for_select($data = [])
 {
 	global $obj_base;
 
@@ -2510,7 +2510,7 @@ function get_categories_for_select($data = array())
 	if(!isset($data['hide_empty'])){		$data['hide_empty'] = true;}
 	if(!isset($data['hierarchical'])){		$data['hierarchical'] = true;}
 
-	$arr_data = array();
+	$arr_data = [];
 
 	if($data['add_choose_here'] == true)
 	{
@@ -2577,14 +2577,14 @@ function validate_url($value, $link = true, $http = true)
 }
 #################
 
-function get_url_content($data = array())
+function get_url_content($data = [])
 {
 	if(!isset($data['follow_redirect'])){			$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){				$data['catch_head'] = false;}
 	if(!isset($data['catch_cookie'])){				$data['catch_cookie'] = false;}
 	//if(!isset($data['include_head_in_output'])){	$data['include_head_in_output'] = false;}
 	if(!isset($data['debug'])){						$data['debug'] = false;}
-	if(!isset($data['headers'])){					$data['headers'] = array();}
+	if(!isset($data['headers'])){					$data['headers'] = [];}
 	if(!isset($data['request'])){					$data['request'] = 'get';}
 	if(!isset($data['content_type'])){				$data['content_type'] = '';}
 	if(!isset($data['password'])){					$data['password'] = '';}
@@ -2745,7 +2745,7 @@ function get_url_content($data = array())
 
 		preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $header, $matches);
 
-		$arr_cookies = array();
+		$arr_cookies = [];
 
 		foreach($matches[1] as $item)
 		{
@@ -2822,7 +2822,7 @@ function get_url_content($data = array())
 	return $out;
 }
 
-function get_notification($data = array())
+function get_notification($data = [])
 {
 	global $error_text, $notice_text, $done_text;
 
@@ -2919,7 +2919,7 @@ function add_index($array)
 	{
 		foreach($arr_col as $column => $value)
 		{
-			$arr_existing_indexes = array();
+			$arr_existing_indexes = [];
 
 			$result = $wpdb->get_results("SHOW INDEX FROM ".esc_sql($table));
 
@@ -2949,7 +2949,7 @@ function run_queries($array)
 	}
 }
 
-function mf_redirect($location, $arr_vars = array(), $method = 'post')
+function mf_redirect($location, $arr_vars = [], $method = 'post')
 {
 	$count_temp = count($arr_vars);
 
@@ -3192,7 +3192,7 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 
 		else if($temp == '')
 		{
-			$out = array();
+			$out = [];
 		}
 	}
 
@@ -3266,7 +3266,7 @@ function show_textfield($data)
 	if(!isset($data['title'])){				$data['title'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
 	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
-	if(!isset($data['datalist'])){			$data['datalist'] = array();}
+	if(!isset($data['datalist'])){			$data['datalist'] = [];}
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
 
@@ -3732,14 +3732,14 @@ function get_select_size($data)
 function show_select($data)
 {
 	if(!isset($data['class'])){				$data['class'] = "";}
-	if(!isset($data['data'])){				$data['data'] = array();}
+	if(!isset($data['data'])){				$data['data'] = [];}
 	if(!isset($data['name'])){				$data['name'] = "";}
 	if(!isset($data['text'])){				$data['text'] = "";}
 	if(!isset($data['value'])){				$data['value'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
 	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
 	if(!isset($data['required'])){			$data['required'] = false;}
-	if(!isset($data['attributes'])){		$data['attributes'] = array();}
+	if(!isset($data['attributes'])){		$data['attributes'] = [];}
 	if(!isset($data['suffix'])){			$data['suffix'] = "";}
 	if(!isset($data['description'])){		$data['description'] = "";}
 	if(!isset($data['allow_hidden_field'])){$data['allow_hidden_field'] = true;}
@@ -3872,7 +3872,7 @@ function show_select($data)
 
 							$option = array(
 								'name' => $option,
-								'attributes' => array(),
+								'attributes' => [],
 							);
 						}
 
@@ -3949,7 +3949,7 @@ function show_select($data)
 ############################
 function show_form_alternatives($data)
 {
-	if(!isset($data['data'])){			$data['data'] = array();}
+	if(!isset($data['data'])){			$data['data'] = [];}
 	if(!isset($data['name'])){			$data['name'] = '';}
 	if(!isset($data['text'])){			$data['text'] = '';}
 	if(!isset($data['value'])){			$data['value'] = '';}
@@ -4041,13 +4041,13 @@ function show_form_alternatives($data)
 
 							$option = array(
 								'name' => $option,
-								//'attributes' => array(),
+								//'attributes' => [],
 							);
 						}
 
 						if(!isset($option['attributes']))
 						{
-							$option['attributes'] = array();
+							$option['attributes'] = [];
 						}
 
 						if(substr($data_value, 0, 9) == "opt_start" && $data_value != $data_text)
@@ -4580,9 +4580,9 @@ function does_post_exists($data)
 {
 	if(!isset($data['post_type'])){		$data['post_type'] = 'page';}
 	if(!isset($data['post_status'])){	$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
-	if(!isset($data['meta'])){			$data['meta'] = array();}
+	if(!isset($data['meta'])){			$data['meta'] = [];}
 
-	$arr_data = array();
+	$arr_data = [];
 	get_post_children(array(
 		'post_type' => $data['post_type'],
 		'post_status' => $data['post_status'],
@@ -4595,7 +4595,7 @@ function does_post_exists($data)
 	return (count($arr_data) > 0);
 }
 
-function get_post_children($data, &$arr_data = array())
+function get_post_children($data, &$arr_data = [])
 {
 	global $wpdb, $obj_base;
 
@@ -4608,14 +4608,14 @@ function get_post_children($data, &$arr_data = array())
 	if(!isset($data['post_type'])){			$data['post_type'] = 'page';}
 	if(!isset($data['post_id'])){			$data['post_id'] = ($data['post_type'] == 'attachment' ? -1 : 0);}
 	if(!isset($data['post_status'])){		$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
-	if(!isset($data['include'])){			$data['include'] = array();}
-	if(!isset($data['exclude'])){			$data['exclude'] = array();}
+	if(!isset($data['include'])){			$data['include'] = [];}
+	if(!isset($data['exclude'])){			$data['exclude'] = [];}
 
 	if(!isset($data['join'])){				$data['join'] = '';}
 	if(!isset($data['where'])){				$data['where'] = '';}
 
 	if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
-	if(!isset($data['meta'])){				$data['meta'] = array();}
+	if(!isset($data['meta'])){				$data['meta'] = [];}
 
 	if(!isset($data['group_by'])){			$data['group_by'] = '';}
 	if(!isset($data['order_by'])){			$data['order_by'] = 'menu_order';}
@@ -4667,7 +4667,7 @@ function get_post_children($data, &$arr_data = array())
 
 	if(count($data['meta']) > 0)
 	{
-		$arr_keys_used = array();
+		$arr_keys_used = [];
 
 		foreach($data['meta'] as $key => $value)
 		{

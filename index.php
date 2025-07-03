@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.7.29
+Version: 1.2.7.30
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -85,23 +85,8 @@ add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
 add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));
 add_action('wp_ajax_api_base_optimize', array($obj_base, 'api_base_optimize'));
 
-/*$setting_base_automatic_updates = get_site_option_or_default('setting_base_automatic_updates', array());
-
-if(!in_array('core', $setting_base_automatic_updates) && !has_filter('auto_update_core', '__return_false'))
-{
-	add_filter('auto_update_core', '__return_false');
-}
-
-if(!in_array('theme', $setting_base_automatic_updates) && !has_filter('auto_update_theme', '__return_false'))
-{
-	add_filter('auto_update_theme', '__return_false');
-}
-
-if(!in_array('plugin', $setting_base_automatic_updates) && !has_filter('auto_update_plugin', '__return_false'))
-{
-	add_filter('auto_update_plugin', '__return_false');
-}*/
-
+add_filter('auto_update_core', '__return_false');
+add_filter('auto_update_theme', '__return_false');
 add_filter('auto_update_plugin', '__return_false');
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));

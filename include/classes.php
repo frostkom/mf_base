@@ -15,19 +15,19 @@ class mf_base
 	var $memory_limit_current = "";
 	var $post_max_size_current = "";
 	var $upload_max_filesize_current = "";
-	var $data = array();
-	var $templates = array();
+	var $data = [];
+	var $templates = [];
 	var $ftp_size = 0;
-	var $ftp_size_folders = array();
+	var $ftp_size_folders = [];
 	var $template_lost_connection = false;
 	var $template_loading = false;
 	var $server_type = "";
-	var $phpmailer_temp = array();
+	var $phpmailer_temp = [];
 	var $file_warning;
 	var $arr_uploads_ignore_folder;
 	var $file_name = "";
-	var $arr_post_types = array();
-	var $arr_public_posts = array();
+	var $arr_post_types = [];
+	var $arr_public_posts = [];
 	var $option_github_updates;
 	var $github_debug;
 
@@ -88,7 +88,7 @@ class mf_base
 			$obj_font_icons = new mf_font_icons();
 		}
 
-		$arr_data = array();
+		$arr_data = [];
 		$arr_data[''] = "-- ".__("Choose Here", 'lang_base')." --";
 
 		foreach($obj_font_icons->get_array(array('allow_optgroup' => false)) as $key => $value)
@@ -105,7 +105,7 @@ class mf_base
 
 		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port'
 
-		$this->phpmailer_temp = array();
+		$this->phpmailer_temp = [];
 
 		foreach($phpmailer as $key => $value)
 		{
@@ -157,11 +157,11 @@ class mf_base
 		}
 	}
 
-	function get_post_types_for_metabox($data = array())
+	function get_post_types_for_metabox($data = [])
 	{
 		if(!isset($data['public'])){		$data['public'] = true;}
 
-		$arr_data = array();
+		$arr_data = [];
 
 		$arr_post_types_ignore = apply_filters('get_post_types_for_metabox', array('attachment'));
 
@@ -278,8 +278,8 @@ class mf_base
 		if(!isset($data['order'])){			$data['order'] = "asc";}
 		if(!isset($data['keep_index'])){	$data['keep_index'] = false;}
 
-		$new_array = array();
-		$sortable_array = array();
+		$new_array = [];
+		$sortable_array = [];
 
 		if(count($data['array']) > 0)
 		{
@@ -422,7 +422,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		$plugin_version = get_plugin_version(__FILE__);
 
-		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", array(), $plugin_version);
+		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
 		#######################
 	}
 
@@ -477,7 +477,7 @@ class mf_base
 						{
 							$this->ftp_size_folders[$folder_depth_0] = array(
 								'size' => $ftp_size,
-								'children' => array(),
+								'children' => [],
 							);
 						}
 
@@ -494,7 +494,7 @@ class mf_base
 						{
 							$this->ftp_size_folders[$folder_depth_0]['children'][$folder_depth_1] = array(
 								'size' => $ftp_size,
-								'children' => array(),
+								'children' => [],
 							);
 						}
 
@@ -511,7 +511,7 @@ class mf_base
 						{
 							$this->ftp_size_folders[$folder_depth_0]['children'][$folder_depth_1]['children'][$folder_depth_2] = array(
 								'size' => $ftp_size,
-								'children' => array(),
+								'children' => [],
 							);
 						}
 
@@ -528,7 +528,7 @@ class mf_base
 						{
 							$this->ftp_size_folders[$folder_depth_0]['children'][$folder_depth_1]['children'][$folder_depth_2]['children'][$folder_depth_3] = array(
 								'size' => $ftp_size,
-								'children' => array(),
+								'children' => [],
 							);
 						}
 
@@ -544,7 +544,7 @@ class mf_base
 
 	function reset_time_limited()
 	{
-		$option_base_time_limited = get_option_or_default('option_base_time_limited', array());
+		$option_base_time_limited = get_option_or_default('option_base_time_limited', []);
 
 		$has_changed = false;
 
@@ -920,7 +920,7 @@ class mf_base
 			// Save disc size and large table sizes
 			############################
 			$this->ftp_size = 0;
-			$this->ftp_size_folders = array();
+			$this->ftp_size_folders = [];
 
 			get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
 
@@ -960,7 +960,7 @@ class mf_base
 		update_option('option_cron_ended', date("Y-m-d H:i:s"), false);
 	}
 
-	function has_page_template($data = array())
+	function has_page_template($data = [])
 	{
 		global $wpdb;
 
@@ -1007,7 +1007,7 @@ class mf_base
 		return $number;
 	}
 
-	function get_db_info($data = array())
+	function get_db_info($data = [])
 	{
 		global $wpdb;
 
@@ -1015,7 +1015,7 @@ class mf_base
 
 		$out = array(
 			'db_size' => 0,
-			'tables' => array(),
+			'tables' => [],
 		);
 
 		$result = $wpdb->get_results("SHOW TABLES", ARRAY_N);
@@ -1030,7 +1030,7 @@ class mf_base
 
 			if($table_size > $data['limit'])
 			{
-				$arr_content = array();
+				$arr_content = [];
 
 				if(preg_match('/_posts$/', $table_name))
 				{
@@ -1069,7 +1069,7 @@ class mf_base
 	{
 		$arr_schedules = wp_get_schedules();
 
-		$arr_data = array();
+		$arr_data = [];
 
 		foreach($arr_schedules as $key => $value)
 		{
@@ -1210,7 +1210,6 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
-			//$arr_settings['setting_base_automatic_updates'] = __("Automatic Updates", 'lang_base');
 		}
 
 		if(IS_SUPER_ADMIN)
@@ -1579,7 +1578,7 @@ class mf_base
 						}
 					}
 
-					$option_base_large_tables = get_site_option_or_default('option_base_large_tables', array());
+					$option_base_large_tables = get_site_option_or_default('option_base_large_tables', []);
 					$option_base_large_table_amount = count($option_base_large_tables);
 
 					if($option_base_large_table_amount > 0)
@@ -2025,24 +2024,6 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
 
-		/*function get_automatic_updates_for_select()
-		{
-			return array(
-				'core' => __("Core", 'lang_base'),
-				'theme' => __("Theme", 'lang_base'),
-				'plugin' => __("Plugin", 'lang_base'),
-			);
-		}
-
-		function setting_base_automatic_updates_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, array()));
-
-			echo show_select(array('data' => $this->get_automatic_updates_for_select(), 'name' => $setting_key."[]", 'value' => $option));
-		}*/
-
 		function setting_base_use_timezone_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
@@ -2132,7 +2113,7 @@ class mf_base
 
 		if($pagenow == 'plugins.php')
 		{
-			$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
+			$this->option_github_updates = get_site_option_or_default('option_github_updates', []);
 
 			foreach($this->option_github_updates as $key => $arr_value)
 			{
@@ -2146,7 +2127,7 @@ class mf_base
 		$rows = 0;
 		$count_message = "";
 
-		$option_github_updates = get_site_option_or_default('option_github_updates', array());
+		$option_github_updates = get_site_option_or_default('option_github_updates', []);
 
 		foreach($option_github_updates as $key => $arr_value)
 		{
@@ -2196,7 +2177,7 @@ class mf_base
 		}
 	}
 
-	function pre_set_site_transient_update_plugins($arr_plugins = array())
+	function pre_set_site_transient_update_plugins($arr_plugins = [])
 	{
 		/*if(empty($arr_plugins->checked))
 		{
@@ -2219,7 +2200,7 @@ class mf_base
 
 		return $arr_plugins;*/
 
-		$this->option_github_updates = get_site_option_or_default('option_github_updates', array());
+		$this->option_github_updates = get_site_option_or_default('option_github_updates', []);
 
 		foreach($this->option_github_updates as $key => $arr_value)
 		{
@@ -2565,7 +2546,7 @@ class mf_base
 
 	function api_base_notifications()
 	{
-		$array = apply_filters('get_user_notifications', array());
+		$array = apply_filters('get_user_notifications', []);
 
 		$json_output = array(
 			'success' => true,
@@ -2644,11 +2625,11 @@ class mf_base
 		return in_array($page_index, array('noindex', 'none', 'no'));
 	}
 
-	function get_public_post_types($data = array())
+	function get_public_post_types($data = [])
 	{
 		if(!isset($data['allow_password_protected'])){	$data['allow_password_protected'] = false;}
 
-		$this->arr_post_types = array();
+		$this->arr_post_types = [];
 
 		foreach(get_post_types(array('public' => true, 'exclude_from_search' => false), 'names') as $post_type)
 		{
@@ -2668,12 +2649,12 @@ class mf_base
 		}
 	}
 
-	function get_public_posts($data = array())
+	function get_public_posts($data = [])
 	{
 		if(!isset($data['allow_noindex'])){				$data['allow_noindex'] = false;}
 		if(!isset($data['allow_password_protected'])){	$data['allow_password_protected'] = false;}
 
-		$this->arr_public_posts = array();
+		$this->arr_public_posts = [];
 
 		if(count($this->arr_post_types) == 0)
 		{
@@ -2696,7 +2677,7 @@ class mf_base
 
 	function wp_sitemaps_posts_query_args($args, $post_type)
 	{
-		if(!isset($args['post__not_in'])){	$args['post__not_in'] = array();}
+		if(!isset($args['post__not_in'])){	$args['post__not_in'] = [];}
 
 		$this->get_public_posts(array('allow_noindex' => true, 'allow_password_protected' => true));
 
@@ -2753,9 +2734,9 @@ class mf_base
 		}
 	}
 
-	function wp_head($data = array())
+	function wp_head($data = [])
 	{
-		if(!is_array($data)){			$data = array();}
+		if(!is_array($data)){			$data = [];}
 		if(!isset($data['type'])){		$data['type'] = 'public';}
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
@@ -2864,7 +2845,7 @@ class mf_base
 		{
 			$phpmailer->IsHTML(true);
 
-			$arr_preferred_content_types = apply_filters('get_preferred_content_types', array(), $phpmailer->From);
+			$arr_preferred_content_types = apply_filters('get_preferred_content_types', [], $phpmailer->From);
 
 			if(!is_array($arr_preferred_content_types) || count($arr_preferred_content_types) == 0 || in_array('plain', $arr_preferred_content_types))
 			{
@@ -2877,7 +2858,7 @@ class mf_base
 	{
 		if(count($this->templates) == 0)
 		{
-			$this->templates = apply_filters('get_page_templates', array());
+			$this->templates = apply_filters('get_page_templates', []);
 		}
 
 		$posts_templates = array_merge($posts_templates, $this->templates);
@@ -2889,7 +2870,7 @@ class mf_base
 	{
 		if(count($this->templates) == 0)
 		{
-			$this->templates = apply_filters('get_page_templates', array());
+			$this->templates = apply_filters('get_page_templates', []);
 		}
 
 		// Create the key used for the themes cache
@@ -2900,7 +2881,7 @@ class mf_base
 
 		if(empty($templates))
 		{
-			$templates = array();
+			$templates = [];
 		}
 
 		// New cache, therefore remove the old one
@@ -2926,7 +2907,7 @@ class mf_base
 
 		if(count($this->templates) == 0)
 		{
-			$this->templates = apply_filters('get_page_templates', array());
+			$this->templates = apply_filters('get_page_templates', []);
 		}
 
 		$template_temp = get_post_meta($post->ID, '_wp_page_template', true);
@@ -3307,7 +3288,7 @@ class mf_base
 	}
 	############################
 
-	function get_templates($arr_type = array())
+	function get_templates($arr_type = [])
 	{
 		$out = "";
 
@@ -3366,7 +3347,7 @@ class mf_cron
 		{
 			if($this->type == 'mf_base_parent')
 			{
-				$arr_progress = array();
+				$arr_progress = [];
 			}
 
 			else
@@ -3411,7 +3392,7 @@ class mf_cron
 		}
 	}
 
-	function has_expired($data = array())
+	function has_expired($data = [])
 	{
 		if(!isset($data['start'])){			$data['start'] = $this->date_start;}
 		if(!isset($data['end'])){			$data['end'] = date("Y-m-d H:i:s");}
@@ -3533,9 +3514,9 @@ class mf_list_table extends WP_List_Table
 	var $orderby_default = "post_title";
 	var $orderby_default_order = "ASC";
 
-	var $views = array();
-	var $columns = array();
-	var $sortable_columns = array();
+	var $views = [];
+	var $columns = [];
+	var $sortable_columns = [];
 	var $data = "";
 	var $data_full = "";
 	var $num_rows = 0;
@@ -3549,7 +3530,7 @@ class mf_list_table extends WP_List_Table
 	var $total_pages = "";
 	var $debug = "";
 
-	function __construct($data = array())
+	function __construct($data = [])
 	{
 		global $wpdb;
 
@@ -3804,7 +3785,7 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function get_bulk_actions()
 	{
-		$actions = array();
+		$actions = [];
 
 		if(isset($this->columns['cb']))
 		{
@@ -3972,11 +3953,16 @@ class mf_list_table extends WP_List_Table
 	{
 		global $wpdb;
 
-		$hidden = array();
+		$hidden = [];
 
 		$this->_column_headers = array($this->columns, $hidden, $this->sortable_columns);
 
 		$current_page = $this->get_pagenum();
+
+		if(!is_array($this->data))
+		{
+			$this->data = [];
+		}
 
 		$this->items = $this->data = array_slice($this->data, (($current_page - 1) * $this->arr_settings['per_page']), $this->arr_settings['per_page']);
 
@@ -4057,7 +4043,7 @@ class mf_list_table extends WP_List_Table
 		return $string;
 	}
 
-	function select_data($data = array())
+	function select_data($data = [])
 	{
 		global $wpdb;
 
@@ -4263,7 +4249,7 @@ if(class_exists('RWMB_Field'))
 	{
 		static public function html($meta, $field)
 		{
-			$arr_data = array();
+			$arr_data = [];
 			get_post_children(array('add_choose_here' => true), $arr_data);
 
 			return show_select(array('data' => $arr_data, 'name' => $field['field_name'], 'value' => $meta, 'class' => "rwmb-select-wrapper", 'xtra' => self::render_attributes($field['attributes'])));
@@ -4389,7 +4375,7 @@ class mf_microtime
 	var $now;
 	var $time_orig;
 
-	function __construct($data = array())
+	function __construct($data = [])
 	{
 		if(!isset($data['limit'])){	$data['limit'] = 0;}
 
@@ -4437,7 +4423,7 @@ class mf_microtime
 class mf_font_icons
 {
 	var $id;
-	var $fonts = array();
+	var $fonts = [];
 
 	function __construct($id = "")
 	{
@@ -4471,11 +4457,11 @@ class mf_font_icons
 		}
 	}
 
-	function get_array($data = array())
+	function get_array($data = [])
 	{
 		if(!isset($data['allow_optgroup'])){ $data['allow_optgroup'] = true;}
 
-		$arr_out = array();
+		$arr_out = [];
 
 		if($this->id != "")
 		{
@@ -4596,7 +4582,7 @@ class mf_export
 	var $dir_exists = true;
 	var $plugin;
 	var $name;
-	var $arr_columns = array();
+	var $arr_columns = [];
 	var $order_by;
 	var $do_export;
 	var $type;
@@ -4605,11 +4591,11 @@ class mf_export
 	var $upload_path;
 	var $upload_url; 
 	var $type_name = '';
-	var $types = array();
+	var $types = [];
 	var $formats;
 	var $file_name;
 
-	function __construct($data = array())
+	function __construct($data = [])
 	{
 		$this->has_excel_support = is_plugin_active("mf_phpexcel/index.php");
 
@@ -4620,7 +4606,7 @@ class mf_export
 		$this->type = (isset($data['type']) ? $data['type'] : '');
 		$this->format = (isset($data['format']) ? $data['format'] : '');
 
-		$this->data = (isset($data['data']) ? $data['data'] : array());
+		$this->data = (isset($data['data']) ? $data['data'] : []);
 
 		$this->formats = array(
 			'' => "-- ".__("Choose Here", 'lang_base')." --",
@@ -4856,17 +4842,17 @@ class mf_import
 	var $prefix;
 	var $table = '';
 	var $post_type = '';
-	var $actions = array();
-	var $columns = array();
-	var $unique_columns = array();
-	var $validate_columns = array();
+	var $actions = [];
+	var $columns = [];
+	var $unique_columns = [];
+	var $validate_columns = [];
 	var $row_separator = "
 ";
 	var $is_run = false;
 	var $unique_check = "OR";
 	var $has_excel_support;
 	var $save_result;
-	var $result = array();
+	var $result = [];
 	var $rows_updated = 0;
 	var $rows_up_to_date = 0;
 	var $rows_inserted = 0;
@@ -4953,7 +4939,7 @@ class mf_import
 
 	function fetch_request()
 	{
-		$this->data = array();
+		$this->data = [];
 		$this->file_location = '';
 
 		$this->action = check_var('strTableAction');
@@ -5141,7 +5127,7 @@ class mf_import
 				for($i = $i_start; $i < $count_temp_rows; $i++)
 				{
 					$this->query_where = $query_where_fallback = $this->query_where_first = $this->query_set = "";
-					$this->query_option = array();
+					$this->query_option = [];
 
 					$arr_values = $this->data[$i];
 					$count_temp_values = count($arr_values);
@@ -5514,7 +5500,7 @@ class mf_import
 				{
 					if(count($this->result) > 0)
 					{
-						$arr_export_data = $arr_ids_temp = array();
+						$arr_export_data = $arr_ids_temp = [];
 
 						foreach($this->result as $key => $row)
 						{

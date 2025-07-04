@@ -2664,6 +2664,16 @@ class mf_base
 		}
 	}
 
+	function rest_authentication_errors($result)
+	{
+		if(!is_user_logged_in())
+		{
+			return new WP_Error('rest_forbidden', __("You cannot access the REST API without logging in.", 'lang_base'), array('status' => 401));
+		}
+
+		return $result;
+	}
+
 	function wp_sitemaps_posts_query_args($args, $post_type)
 	{
 		if(!isset($args['post__not_in'])){	$args['post__not_in'] = [];}

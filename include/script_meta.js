@@ -1,5 +1,7 @@
 jQuery(function($)
 {
+	/* condition_field */
+	/* ######################## */
 	function check_condition(dom_obj, parent_selector)
 	{
 		var dom_value = dom_obj.val(),
@@ -46,16 +48,19 @@ jQuery(function($)
 		}
 	}
 
-	$(".rwmb-field input[condition_field], .rwmb-field select[condition_field]").each(function()
+	$(".rwmb-field input[condition_field], .rwmb-field select[condition_field], .rwmb-field textarea[condition_field]").each(function()
 	{
 		check_condition($(this), ".rwmb-field");
 	});
 
-	$(document).on('blur change', ".rwmb-field input[condition_field], .rwmb-field select[condition_field]", function()
+	$(document).on('blur change', ".rwmb-field input[condition_field], .rwmb-field select[condition_field], .rwmb-field textarea[condition_field]", function()
 	{
 		check_condition($(this), ".rwmb-field");
 	});
+	/* ######################## */
 
+	/* condition_selector */
+	/* ######################## */
 	function check_required(dom_obj, display)
 	{
 		var dom_child = dom_obj.find("input, select, textarea"),
@@ -76,7 +81,7 @@ jQuery(function($)
 	function check_selector_condition(dom_obj_selector, condition_type, condition_value, dom_obj_action)
 	{
 		var dom_value = dom_obj_selector.val(),
-			arr_condition_value = condition_value.substr(0, 1) == '[' ? JSON.parse(condition_value) : [],
+			arr_condition_value = (condition_value.substr(0, 1) == '[' ? JSON.parse(condition_value) : []),
 			value_exists = false;
 
 		if($.isArray(dom_value))
@@ -148,12 +153,12 @@ jQuery(function($)
 	{
 		var dom_parent = dom_obj.parents(parent_selector),
 			condition_type = dom_obj.attr('condition_type'),
-			condition_selector = "#" + dom_obj.attr('condition_selector'),
-			condition_value = dom_obj.attr('condition_value') || '';
+			condition_selector = "#" + dom_obj.attr('condition_selector') + ":not(div)",
+			condition_value = (dom_obj.attr('condition_value') || '');
 
 		check_selector_condition($(condition_selector), condition_type, condition_value, dom_parent);
 
-		$(document).on('blur change', condition_selector, function()
+		$(document).on('blur change input', condition_selector, function()
 		{
 			check_selector_condition($(this), condition_type, condition_value, dom_parent);
 		});
@@ -163,6 +168,7 @@ jQuery(function($)
 	{
 		init_conditions($(this), ".rwmb-field");
 	});
+	/* ######################## */
 
 	$(".rwmb-custom_html-wrapper .rwmb-input:empty").each(function()
 	{

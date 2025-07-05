@@ -2258,14 +2258,14 @@ class mf_base
 		update_site_option('option_github_updates', $this->option_github_updates);
 	}
 
-	function plugin_action_links($actions, $plugin_file)
+	function plugin_action_links($arr_actions, $plugin_file)
 	{
-		if(!IS_SUPER_ADMIN && is_array($actions) && array_key_exists('deactivate', $actions) && in_array($plugin_file, array('mf_base/index.php')))
+		if(!IS_SUPER_ADMIN && is_array($arr_actions) && array_key_exists('deactivate', $arr_actions) && in_array($plugin_file, array('mf_base/index.php')))
 		{
-			unset($actions['deactivate']);
+			unset($arr_actions['deactivate']);
 		}
 
-		return $actions;
+		return $arr_actions;
 	}
 
 	function get_page_from_block_code($arr_ids, $block_code)
@@ -3784,7 +3784,7 @@ class mf_list_table extends WP_List_Table
 	 **************************************************************************/
 	function get_bulk_actions()
 	{
-		$actions = [];
+		$arr_actions = [];
 
 		if(isset($this->columns['cb']))
 		{
@@ -3792,17 +3792,17 @@ class mf_list_table extends WP_List_Table
 
 			if($post_status == 'trash')
 			{
-				$actions['restore'] = __("Restore", 'lang_base');
-				$actions['delete'] = __("Permanently Delete", 'lang_base');
+				$arr_actions['restore'] = __("Restore", 'lang_base');
+				$arr_actions['delete'] = __("Permanently Delete", 'lang_base');
 			}
 
 			else
 			{
-				$actions['trash'] = __("Delete", 'lang_base');
+				$arr_actions['trash'] = __("Delete", 'lang_base');
 			}
 		}
 
-		return $actions;
+		return $arr_actions;
 	}
 
 	/** ************************************************************************
@@ -4841,7 +4841,7 @@ class mf_import
 	var $prefix;
 	var $table = '';
 	var $post_type = '';
-	var $actions = [];
+	var $arr_actions = [];
 	var $columns = [];
 	var $unique_columns = [];
 	var $validate_columns = [];
@@ -5654,17 +5654,17 @@ class mf_import
 						'' => "-- ".__("Choose Here", 'lang_base')." --",
 					);
 
-					if(count($this->actions) == 0 || in_array('delete', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('delete', $this->actions))
 					{
 						$arr_data['delete'] = __("Delete", 'lang_base');
 					}
 
-					if(count($this->actions) == 0 || in_array('import', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('import', $this->actions))
 					{
 						$arr_data['import'] = __("Import", 'lang_base');
 					}
 
-					if(count($this->actions) == 0 || in_array('search', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('search', $this->actions))
 					{
 						$arr_data['search'] = __("Search", 'lang_base');
 					}

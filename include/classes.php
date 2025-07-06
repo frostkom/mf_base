@@ -3088,17 +3088,19 @@ class mf_base
 			$post_id = 0;
 		}
 
+		$query_where = $query_order = "";
+
 		if($post_id > 0)
 		{
-			$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s AND ID = '%d'", 'page', 'publish', $post_id);
+			$query_where .= " AND ID = '".esc_sql($post_id)."'";
 		}
 
 		else
 		{
-			$query = $wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE post_type = %s AND post_status = %s ORDER BY post_modified DESC", 'page', 'publish');
+			$query_order = " ORDER BY post_modified DESC";
 		}
 
-		$result = $wpdb->get_results($query);
+		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
 
 		foreach($result as $r)
 		{

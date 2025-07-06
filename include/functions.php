@@ -1409,7 +1409,7 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.": The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 							break;
 						}
 					}
@@ -1429,7 +1429,7 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.": The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 							break;
 						}
 					}
@@ -1490,7 +1490,23 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.": The key child '".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.": The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+							break;
+						}
+					}
+				break;
+
+				case 'typography':
+					foreach($arr_value_parent as $key_child => $value)
+					{
+						switch($key_child)
+						{
+							case 'fontSize':
+								$data['style'] .= "font-size: ".$value.";";
+							break;
+
+							default:
+								do_log(__FUNCTION__.": The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 							break;
 						}
 					}

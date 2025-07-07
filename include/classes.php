@@ -1751,7 +1751,7 @@ class mf_base
 
 		function setting_base_info_callback()
 		{
-			echo "<div class='api_base_info'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
+			echo "<div class='api_base_info'>".apply_filters('get_loading_animation', '')."</div>";
 		}
 
 		function api_base_cron()
@@ -1899,7 +1899,7 @@ class mf_base
 				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
 			}
 
-			echo "<div class='api_base_cron'><i class='fa fa-spinner fa-spin fa-2x'></i></div>";
+			echo "<div class='api_base_cron'>".apply_filters('get_loading_animation', '')."</div>";
 		}
 
 		/*function setting_base_cron_debug_callback()
@@ -2096,7 +2096,7 @@ class mf_base
 				'settings_page' => true,
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'user_id' => get_current_user_id(),
-				//'plugin_include_url' => $plugin_include_url,
+				'loading_animation' => apply_filters('get_loading_animation', ''),
 			));
 		}
 
@@ -2266,6 +2266,19 @@ class mf_base
 		}
 
 		return $arr_actions;
+	}
+
+	function get_loading_animation($html, $args = [])
+	{
+		if(!isset($args['class'])){		$args['class'] = "fa-2x";}
+		if(!isset($args['style'])){		$args['style'] = "";}
+
+		if($html == '')
+		{
+			$html = "<i class='fa fa-spinner fa-spin loading_animation".($args['class'] != '' ? " ".$args['class'] : "")."'".($args['style'] != '' ? " style='".$args['style']."'" : "")."></i>";
+		}
+
+		return $html;
 	}
 
 	function get_page_from_block_code($arr_ids, $block_code)
@@ -3302,7 +3315,7 @@ class mf_base
 
 		if(in_array('loading', $arr_type) && $this->template_loading == false)
 		{
-			$out .= "<div id='overlay_loading' class='overlay_container hide'><div><i class='fa fa-spinner fa-spin fa-2x'></i></div></div>";
+			$out .= "<div id='overlay_loading' class='overlay_container hide'><div>".apply_filters('get_loading_animation', '')."</div></div>";
 
 			$this->template_loading = true;
 		}

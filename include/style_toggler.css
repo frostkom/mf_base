@@ -1,6 +1,6 @@
 @media all
 {
-	.toggler.toggler
+	label.toggler
 	{
 		display: block;
 		margin-top: .5em;
@@ -8,7 +8,7 @@
 		padding: .5em 1em;
 	}
 
-		#wpwrap .toggler, #mf-content .toggler
+		/*#wpwrap label.toggler, #mf-content */label.toggler
 		{
 			background: rgba(255, 255, 255, .5);
 			border: 2px solid #eee;
@@ -16,12 +16,12 @@
 			display: block;
 		}
 
-		.toggler.is_open
+		label.toggler.is_open
 		{
 			margin-bottom: 0;
 		}
 
-			#wpwrap .toggler.is_open, #mf-content .toggler.is_open
+			/*#wpwrap .toggler.is_open, #mf-content */label.toggler.is_open
 			{
 				background: rgba(230, 230, 230, .5);
 				border-radius: .2em .2em 0 0;
@@ -34,7 +34,6 @@
 
 			.toggler.icon_last
 			{
-				/*padding-right: 1.5em !important;*/
 				position: relative;
 			}
 
@@ -42,19 +41,9 @@
 				{
 					position: absolute;
 					right: .4em;
-					top: .4em;
+					top: 50%;
+					transform: translateY(-50%);
 				}
-
-			/*.toggler .toggle_icon
-			{
-				transition: all .5s ease;
-				transform: rotate(0deg);
-			}
-
-				.toggler.is_open .toggle_icon
-				{
-					transform: rotate(90deg);
-				}*/
 
 			.toggle_icon
 			{
@@ -104,7 +93,7 @@
 		padding: .5em 1em;
 	}
 
-		#wpwrap .toggle_container, #mf-content .toggle_container
+		/*#wpwrap .toggle_container, #mf-content */.toggle_container
 		{
 			background: rgba(255, 255, 255, .5);
 			border-radius: 0 0 .2em .2em;

@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.7.38
+Version: 1.2.8.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -80,6 +80,9 @@ add_filter('get_current_visitor_ip', array($obj_base, 'get_current_visitor_ip'),
 add_filter('has_comments', array($obj_base, 'has_comments'), 10);
 add_filter('filter_meta_input', array($obj_base, 'filter_meta_input'), 10);
 
+add_filter('get_loading_animation', array($obj_base, 'get_loading_animation'), 10, 2);
+add_action('get_toggler_includes', array($obj_base, 'get_toggler_includes'), 10, 2);
+
 add_filter('get_page_from_block_code', array($obj_base, 'get_page_from_block_code'), 10, 2);
 add_filter('get_styles_content', array($obj_base, 'get_styles_content'), 10, 2);
 
@@ -94,7 +97,6 @@ add_filter('auto_update_plugin', '__return_false');
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 
 add_filter('theme_page_templates', array($obj_base, 'theme_page_templates'));
-//add_filter('page_attributes_dropdown_pages_args', array($obj_base, 'wp_insert_post_data')); // if(version_compare(floatval(get_bloginfo('version')), '4.7', '<'))
 add_filter('wp_insert_post_data', array($obj_base, 'wp_insert_post_data'));
 add_filter('template_include', array($obj_base, 'template_include'));
 

@@ -177,7 +177,7 @@ jQuery(function($)
 				dom_container = $(".api_base_optimize");
 
 			dom_obj.addClass('is_disabled');
-			dom_container.html("<i class='fa fa-spinner fa-spin fa-2x'></i>");
+			dom_container.html(script_base_settings.loading_animation);
 
 			$.ajax(
 			{

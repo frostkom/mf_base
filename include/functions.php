@@ -307,8 +307,6 @@ function get_plugin_version($file)
 
 function get_toggler_container($data)
 {
-	global $obj_base;
-
 	if(!isset($data['label_tag'])){					$data['label_tag'] = 'label';}
 	if(!isset($data['container_tag'])){				$data['container_tag'] = 'div';}
 	if(!isset($data['open'])){						$data['open'] = false;}
@@ -318,7 +316,7 @@ function get_toggler_container($data)
 	switch($data['type'])
 	{
 		case 'start':
-			$obj_base->get_toggler_includes();
+			do_action('get_toggler_includes');
 
 			$icon = "<div class='toggle_icon'>
 				<span class='line'></span>
@@ -4174,7 +4172,7 @@ function show_checkbox($data)
 		mf_enqueue_style('style_base_switch', $plugin_include_url."style_switch.css");
 
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i><i class='fa fa-spinner fa-spin fa-lg loading'></i></span>".$data['text'];
+		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i>".apply_filters('get_loading_animation', '')."</span>".$data['text'];
 	}
 
 	if($data['suffix'] != '')

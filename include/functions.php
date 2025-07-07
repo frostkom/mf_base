@@ -318,10 +318,7 @@ function get_toggler_container($data)
 		case 'start':
 			do_action('get_toggler_includes');
 
-			$icon = "<div class='toggle_icon'>
-				<span class='line'></span>
-				<span class='line'></span>
-			</div>";
+			$icon = "<div class='toggle_icon'><div></div><div></div></div>";
 			$text = "<span>".$data['text']."</span>";
 
 			$out = "<".$data['label_tag']." class='toggler".($data['open'] ? " open is_open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";

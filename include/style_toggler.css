@@ -47,44 +47,60 @@
 
 			.toggle_icon
 			{
-				width: 1em;
-				height: 1em;
+				background: none;
 				border: .1em solid #444;
 				border-radius: 50%;
-				position: relative;
 				cursor: pointer;
 				display: inline-block;
-				margin-bottom: -0.2em;
+				margin-bottom: -.2em;
+				position: relative;
+				height: 1em;
+				width: 1em;
+				transition: all .5s ease;
 			}
 
-				.toggle_icon .line
+				.toggle_icon:hover
 				{
+					background: #444;
+					border-color: #fff;
+				}
+
+				.toggle_icon > div
+				{
+					background: #444;
+					border-radius: .2em;
 					position: absolute;
 					left: 50%;
 					top: 50%;
-					background: #444;
-					border-radius: .2em;
-					transition: all .5s cubic-bezier(.4, 2, .6, 1);
+					height: .1em;
+					transition: all .5s ease;
+					width: .6em;
 				}
 
-					.toggle_icon .line:first-of-type
+					.toggle_icon:hover > div
 					{
-						width: .6em;
-						height: .1em;
-						transform: translate(-50%, -50%);
+						background: #fff;
 					}
 
-					.toggle_icon .line:last-of-type
+					.toggle_icon > div:first-of-type
 					{
-						width: .1em;
-						height: .6em;
-						transform: translate(-50%, -50%);
+						transform: translate(-.3em, -.05em);
 					}
 
-				.toggler.is_open .toggle_icon .line:last-of-type
-				{
-					opacity: 0;
-				}
+						.toggler.is_open .toggle_icon > div:first-of-type
+						{
+							transform: rotate(-180deg) translate(.3em, .05em);
+						}
+
+					.toggle_icon > div:last-of-type
+					{
+						transform: rotate(90deg) translate(-.05em, .3em);
+					}
+						
+						.toggler.is_open .toggle_icon > div:last-of-type
+						{
+							transform: rotate(0deg) translate(-.3em, -.05em);
+						}
 
 	.toggle_container
 	{

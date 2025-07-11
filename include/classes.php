@@ -4168,13 +4168,17 @@ class mf_list_table extends WP_List_Table
 		{
 			switch($data['debug_type'])
 			{
-				case 'echo':
-					echo "<br>".__CLASS__."->".__FUNCTION__.": ".$wpdb->last_query."<br>" // (Backtrace: ".var_export(debug_backtrace(), true).")
-					.__("Rows", 'lang_base').": ".$this->num_rows."<br>";
+				case 'log':
+					do_log(__CLASS__."->".__FUNCTION__.": ".$wpdb->last_query);
 				break;
 
 				case 'return':
 					$this->debug .= $wpdb->last_query;
+				break;
+
+				default:
+				case 'echo':
+					echo "<p>".__CLASS__."->".__FUNCTION__.": (".$this->num_rows."x) ".$wpdb->last_query."</p>";
 				break;
 			}
 		}

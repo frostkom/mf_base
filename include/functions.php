@@ -3348,6 +3348,7 @@ function show_textfield($data)
 		break;
 
 		case 'date':
+		case 'datetime-local':
 		case 'range':
 		case 'time':
 		case 'text':

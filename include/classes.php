@@ -64,20 +64,20 @@ class mf_base
 		}
 	}
 
-	function is_classic_editor_plugin_active()
+	/*function is_classic_editor_plugin_active()
 	{
 		if(!function_exists('is_plugin_active'))
 		{
 			require_once(ABSPATH."wp-admin/includes/plugin.php");
 		}
 
-		if(is_plugin_active('classic-editor/classic-editor.php'))
+		if(is_plugin_active("classic-editor/classic-editor.php"))
 		{
 			return true;
 		}
 
 		return false;
-	}
+	}*/
 
 	function get_icons_for_select()
 	{
@@ -4169,7 +4169,7 @@ class mf_list_table extends WP_List_Table
 			switch($data['debug_type'])
 			{
 				case 'echo':
-					echo "<br>mf_list_table->select_data() query: ".$wpdb->last_query."<br>"
+					echo "<br>".__CLASS__."->".__FUNCTION__.": ".$wpdb->last_query."<br>" // (Backtrace: ".var_export(debug_backtrace(), true).")
 					.__("Rows", 'lang_base').": ".$this->num_rows."<br>";
 				break;
 

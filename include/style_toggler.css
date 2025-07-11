@@ -96,7 +96,7 @@
 					{
 						transform: rotate(90deg) translate(-.05em, .3em);
 					}
-						
+
 						.toggler.is_open .toggle_icon > div:last-of-type
 						{
 							transform: rotate(0deg) translate(-.3em, -.05em);

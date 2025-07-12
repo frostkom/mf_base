@@ -4299,6 +4299,8 @@ if(class_exists('RWMB_Field'))
 
 			$attributes['class'] .= " multiselect";
 
+			do_action('init_multiselect');
+
 			$output = sprintf("<select %s>", self::render_attributes($attributes));
 
 				if(!$field['multiple'] && $field['placeholder'])

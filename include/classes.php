@@ -1113,7 +1113,7 @@ class mf_base
 	{
 		if($out == "")
 		{
-			$out = $_SERVER['REMOTE_ADDR'];
+			$out = (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : "");
 		}
 
 		if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '')
@@ -1732,7 +1732,7 @@ class mf_base
 					}
 					########################
 
-					$current_visitor_ip = apply_filters('get_current_visitor_ip', $_SERVER['REMOTE_ADDR']);
+					$current_visitor_ip = apply_filters('get_current_visitor_ip', "");
 
 					echo "<p>
 						<i class='fa ".($current_visitor_ip != '' ? "fa-check green" : "fa-times red display_warning")."'></i> "

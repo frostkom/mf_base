@@ -25,7 +25,7 @@ switch($type)
 {
 	case 'my_ip':
 		$json_output['success'] = true;
-		$json_output['ip'] = apply_filters('get_current_visitor_ip', $_SERVER['REMOTE_ADDR']);
+		$json_output['ip'] = apply_filters('get_current_visitor_ip', "");
 	break;
 }
 

@@ -731,23 +731,23 @@ class mf_base
 		}
 	}
 
-	function get_github_version($key, $arr_value)
+	function get_github_version($key, $arr_value, $transient)
 	{
 		$success = false;
 
 		$current_version = $arr_value['Version'];
 		$github_repo = trim(str_replace("https://github.com/", "", $arr_value['PluginURI']), "/");
 
-		switch($arr_value['type'])
+		/*switch($arr_value['type'])
 		{
-			case 'index.php':
+			case 'index.php':*/
 				$github_api_url = "https://raw.githubusercontent.com/".$github_repo."/master/index.php";
 
 				list($content, $headers) = get_url_content(array(
 					'url' => $github_api_url,
 					'catch_head' => true,
 				));
-			break;
+			/*break;
 
 			default:
 				$github_api_url = "https://api.github.com/repos/".$github_repo."/".$arr_value['type'];
@@ -765,16 +765,16 @@ class mf_base
 					'headers' => $arr_headers,
 				));
 			break;
-		}
+		}*/
 
 		switch($headers['http_code'])
 		{
 			case 200:
 				$latest_version = "";
 
-				switch($arr_value['type'])
+				/*switch($arr_value['type'])
 				{
-					case 'index.php':
+					case 'index.php':*/
 						if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
 						{
 							$latest_version = $matches[1];
@@ -784,7 +784,7 @@ class mf_base
 						{
 							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
 						}
-					break;
+					/*break;
 
 					case 'releases/latest':
 						$arr_json = json_decode($content, true);
@@ -813,7 +813,7 @@ class mf_base
 							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
 						}
 					break;
-				}
+				}*/
 
 				if($latest_version != '')
 				{
@@ -825,6 +825,25 @@ class mf_base
 							'status' => 'new',
 							'last_checked' => date("Y-m-d H:i:s"),
 						);
+
+						list($plugin_dir, $plugin_file) = explode("/", $key);
+
+						$plugin_data = array(
+							'slug' => $plugin_dir,
+							'plugin' => $key,
+							'new_version' => $latest_version,
+							'url' => $arr_value['PluginURI'],
+							'package' => "https://github.com/".$github_repo."/archive/refs/heads/master.zip",
+						);
+
+						//https://github.com/frostkom/mf_base/releases/download/v1.2.8.6/mf_base.zip => Not found
+						//https://github.com/frostkom/mf_base/archive/refs/tags/v1.2.8.6.zip => https://codeload.github.com/frostkom/mf_base/zip/refs/tags/v1.2.8.6 => 404: Not Found
+						//https://github.com/frostkom/mf_base/archive/refs/heads/master.zip => Success
+						//https://github.com/frostkom/mf_base/archive/COMMIT_SHA.zip => Not found, since I haven't added a sha
+
+						do_log(__FUNCTION__." - Added: ".$key." v".$latest_version." to transient since it was newer than v".$current_version." (".var_export($plugin_data, true).")");
+
+						$transient->response[$key] = (object)$plugin_data;
 
 						$success = true;
 					}
@@ -865,7 +884,7 @@ class mf_base
 			break;
 		}
 
-		return $success;
+		return array($success, $transient);
 	}
 
 	function cron_base()
@@ -2166,28 +2185,12 @@ class mf_base
 		}
 	}
 
-	function pre_set_site_transient_update_plugins($arr_plugins = [])
+	function pre_set_site_transient_update_plugins($transient = [])
 	{
-		/*if(empty($arr_plugins->checked))
+		if(empty($transient->checked))
 		{
-			return $arr_plugins;
+			return $transient;
 		}
-
-		$remote_version = '1.2.0'; // Example: Retrieve this dynamically from your server.
-		$plugin_dir = 'mf_base';
-		$plugin_slug = $plugin_dir.'/index.php';
-
-		if(version_compare($arr_plugins->checked[$plugin_slug], $remote_version, '<'))
-		{
-			$obj = new stdClass();
-			$obj->slug = $plugin_dir;
-			$obj->new_version = $remote_version;
-			$obj->url = 'https://example.com/plugin-info'; // Get from index.php -> Author URI
-			$obj->package = 'https://example.com/plugin-download.zip';
-			$arr_plugins->response[$plugin_slug] = $obj;
-		}
-
-		return $arr_plugins;*/
 
 		$this->option_github_updates = get_site_option_or_default('option_github_updates', []);
 
@@ -2220,12 +2223,8 @@ class mf_base
 			}
 		}
 
-		$arr_plugins = get_plugins();
-
-		foreach($arr_plugins as $key => $arr_value)
+		foreach(get_plugins() as $key => $arr_value)
 		{
-			//list($plugin_dir, $plugin_file) = explode("/", $key);
-
 			if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false && !isset($this->option_github_updates[$key]))
 			{
 				$success = false;
@@ -2233,21 +2232,20 @@ class mf_base
 				$this->github_debug = "";
 
 				$arr_value['type'] = 'index.php';
-				$success = $this->get_github_version($key, $arr_value);
+				list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
 
 				/*if($success == false)
 				{
 					$arr_value['type'] = 'releases/latest';
-					$success = $this->get_github_version($key, $arr_value);
+					list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
 				}
 
 				if($success == false)
 				{
 					$arr_value['type'] = 'tags';
-					$success = $this->get_github_version($key, $arr_value);
+					list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
 				}*/
 
-				// Only log if debug is on
 				if($success == false && $this->github_debug != '')
 				{
 					//do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
@@ -2256,6 +2254,10 @@ class mf_base
 		}
 
 		update_site_option('option_github_updates', $this->option_github_updates);
+
+		do_log(__FUNCTION__.": ".var_export($transient, true));
+
+		return $transient;
 	}
 
 	function plugin_action_links($arr_actions, $plugin_file)
@@ -2311,24 +2313,29 @@ class mf_base
 	{
 		global $wpdb;
 
+		$out = "";
+
 		$theme_slug = get_stylesheet();
 
 		$styles_content = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'));
 
-		$arr_json_styles = json_decode($styles_content, true);
-
-		switch($type)
+		if(is_string($styles_content))
 		{
-			case 'max_width':
-				if(isset($arr_json_styles['settings']['layout']['wideSize']))
-				{
-					$out = $arr_json_styles['settings']['layout']['wideSize'];
-				}
-			break;
+			$arr_json_styles = json_decode($styles_content, true);
 
-			default:
-				do_log(__FUNCTION__.": Type not targeted yet (".$type.")");
-			break;
+			switch($type)
+			{
+				case 'max_width':
+					if(isset($arr_json_styles['settings']['layout']['wideSize']))
+					{
+						$out = $arr_json_styles['settings']['layout']['wideSize'];
+					}
+				break;
+
+				default:
+					do_log(__FUNCTION__.": Type not targeted yet (".$type.")");
+				break;
+			}
 		}
 
 		return $out;

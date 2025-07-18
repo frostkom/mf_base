@@ -2044,7 +2044,7 @@ class mf_base
 			{
 				$plugin_folder = dirname($plugin_file);
 
-				foreach($arr_bracnhes as $branch)
+				foreach($arr_branches as $branch)
 				{
 					$old_path = $plugins_dir."/".$plugin_folder."-".$branch;
 					$new_path = $plugins_dir."/".$plugin_folder;

@@ -28,7 +28,6 @@ class mf_base
 	var $file_name = "";
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
-	var $option_github_updates;
 	var $github_debug;
 
 	function __construct()
@@ -63,21 +62,6 @@ class mf_base
 			ini_set('post_max_size', $this->post_max_size_base."M");
 		}
 	}
-
-	/*function is_classic_editor_plugin_active()
-	{
-		if(!function_exists('is_plugin_active'))
-		{
-			require_once(ABSPATH."wp-admin/includes/plugin.php");
-		}
-
-		if(is_plugin_active("classic-editor/classic-editor.php"))
-		{
-			return true;
-		}
-
-		return false;
-	}*/
 
 	function get_icons_for_select()
 	{
@@ -367,6 +351,14 @@ class mf_base
 		mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js");
 	}
 
+	function enqueue_block_editor_assets()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		$plugin_version = get_plugin_version(__FILE__);
+
+		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
+	}
+
 	function init()
 	{
 		load_plugin_textdomain('lang_base', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
@@ -416,14 +408,6 @@ class mf_base
 		}
 
 		$this->reschedule_base();
-
-		// Blocks
-		#######################
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
-		#######################
 	}
 
 	function cron_schedules($schedules)
@@ -731,162 +715,6 @@ class mf_base
 		}
 	}
 
-	function get_github_version($key, $arr_value, $transient)
-	{
-		$success = false;
-
-		$current_version = $arr_value['Version'];
-		$github_repo = trim(str_replace("https://github.com/", "", $arr_value['PluginURI']), "/");
-
-		/*switch($arr_value['type'])
-		{
-			case 'index.php':*/
-				$github_api_url = "https://raw.githubusercontent.com/".$github_repo."/master/index.php";
-
-				list($content, $headers) = get_url_content(array(
-					'url' => $github_api_url,
-					'catch_head' => true,
-				));
-			/*break;
-
-			default:
-				$github_api_url = "https://api.github.com/repos/".$github_repo."/".$arr_value['type'];
-				$arr_headers = array(
-					'Authorization' => "Bearer ".$arr_value['github_access_token'],
-					'User-Agent' => "WordPress/".get_bloginfo('version'),
-					'X-GitHub-Api-Version' => '2022-11-28',
-					'Accept' => 'application/vnd.github+json',
-					//'If-Modified-Since: '.gmdate("D, d M Y H:i:s", strtotime($option_github_updater_last_success))." GMT",
-				);
-
-				list($content, $headers) = get_url_content(array(
-					'url' => $url_repos,
-					'catch_head' => true,
-					'headers' => $arr_headers,
-				));
-			break;
-		}*/
-
-		switch($headers['http_code'])
-		{
-			case 200:
-				$latest_version = "";
-
-				/*switch($arr_value['type'])
-				{
-					case 'index.php':*/
-						if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
-						{
-							$latest_version = $matches[1];
-						}
-
-						else
-						{
-							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
-						}
-					/*break;
-
-					case 'releases/latest':
-						$arr_json = json_decode($content, true);
-
-						if(isset($arr_json['tag_name']))
-						{
-							$latest_version = $arr_json['tag_name'];
-						}
-
-						else
-						{
-							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-						}
-					break;
-
-					case 'tags':
-						$arr_json = json_decode($content, true);
-
-						if(isset($arr_json[0]) && isset($arr_json[0]['name']))
-						{
-							$latest_version = $arr_json[0]['name'];
-						}
-
-						else
-						{
-							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": tag_name does not exist (".$github_api_url." -> ".var_export($arr_json, true).")";
-						}
-					break;
-				}*/
-
-				if($latest_version != '')
-				{
-					if(version_compare($current_version, $latest_version, '<'))
-					{
-						$this->option_github_updates[$key] = array(
-							'Name' => $arr_value['Name'],
-							'Version' => $latest_version,
-							'status' => 'new',
-							'last_checked' => date("Y-m-d H:i:s"),
-						);
-
-						list($plugin_dir, $plugin_file) = explode("/", $key);
-
-						$plugin_data = array(
-							'slug' => $plugin_dir,
-							'plugin' => $key,
-							'new_version' => $latest_version,
-							'url' => $arr_value['PluginURI'],
-							'package' => "https://github.com/".$github_repo."/archive/refs/heads/master.zip",
-						);
-
-						//https://github.com/frostkom/mf_base/releases/download/v1.2.8.6/mf_base.zip => Not found
-						//https://github.com/frostkom/mf_base/archive/refs/tags/v1.2.8.6.zip => https://codeload.github.com/frostkom/mf_base/zip/refs/tags/v1.2.8.6 => 404: Not Found
-						//https://github.com/frostkom/mf_base/archive/refs/heads/master.zip => Success
-						//https://github.com/frostkom/mf_base/archive/COMMIT_SHA.zip => Not found, since I haven't added a sha
-
-						do_log(__FUNCTION__." - Added: ".$key." v".$latest_version." to transient since it was newer than v".$current_version." (".var_export($plugin_data, true).")");
-
-						$transient->response[$key] = (object)$plugin_data;
-
-						$success = true;
-					}
-
-					else
-					{
-						$this->option_github_updates[$key] = array(
-							'Name' => $arr_value['Name'],
-							'Version' => $latest_version,
-							'status' => 'current',
-							'last_checked' => date("Y-m-d H:i:s"),
-						);
-
-						$success = true;
-					}
-				}
-
-				else
-				{
-					$this->option_github_updates[$key] = array(
-						'Name' => $arr_value['Name'],
-						'Version' => '',
-						'status' => 'error',
-						'last_checked' => date("Y-m-d H:i:s"),
-					);
-				}
-			break;
-
-			default:
-				$this->option_github_updates[$key] = array(
-					'Name' => $arr_value['Name'],
-					'Version' => '',
-					'status' => 'error',
-					'last_checked' => date("Y-m-d H:i:s"),
-				);
-
-				$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__." - Error fetching data: ".$content;
-			break;
-		}
-
-		return array($success, $transient);
-	}
-
 	function cron_base()
 	{
 		global $wpdb;
@@ -922,11 +750,9 @@ class mf_base
 			}
 
 			mf_uninstall_plugin(array(
-				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_sync_sites', 'option_github_access_token', 'option_git_updater'),
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_sync_sites', 'option_github_access_token', 'option_git_updater', 'option_github_updates'),
 				'meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
-
-			$this->pre_set_site_transient_update_plugins();
 
 			// Optimize
 			#########################
@@ -2118,43 +1944,6 @@ class mf_base
 				'loading_animation' => apply_filters('get_loading_animation', ''),
 			));
 		}
-
-		if($pagenow == 'plugins.php')
-		{
-			$this->option_github_updates = get_site_option_or_default('option_github_updates', []);
-
-			foreach($this->option_github_updates as $key => $arr_value)
-			{
-				add_action('after_plugin_row_'.$key, array($this, 'after_plugin_row'), 10, 2);
-			}
-		}
-	}
-
-	function get_count_message($id = 0)
-	{
-		$rows = 0;
-		$count_message = "";
-
-		$option_github_updates = get_site_option_or_default('option_github_updates', []);
-
-		foreach($option_github_updates as $key => $arr_value)
-		{
-			$status = (isset($arr_value['status']) ? $arr_value['status'] : '');
-
-			if($status == 'new')
-			{
-				$rows++;
-			}
-		}
-
-		if($rows > 0)
-		{
-			$count_message = "&nbsp;<span class='update-plugins'>
-				<span>".$rows."</span>
-			</span>";
-		}
-
-		return array($rows, $count_message);
 	}
 
 	function admin_menu()
@@ -2162,26 +1951,6 @@ class mf_base
 		if(apply_filters('has_comments', true) == false)
 		{
 			remove_menu_page("edit-comments.php");
-		}
-
-		list($rows, $count_message) = $this->get_count_message();
-
-		if($rows > 0)
-		{
-			global $menu;
-
-			if(preg_match("/update-plugins/i", $menu[65][0])) // plugins.php
-			{
-				$update_count = (int)get_match("/\<span class\=\"plugin-count\"\>(.*?)\<\/span\>/is", $menu[65][0], false);
-
-				$menu[65][0] = str_replace("count-".$update_count, "count-".($update_count + $rows), $menu[65][0]);
-				$menu[65][0] = str_replace(">".$update_count."<", ">".($update_count + $rows)."<", $menu[65][0]);
-			}
-
-			else
-			{
-				$menu[65][0] .= $count_message;
-			}
 		}
 	}
 
@@ -2192,72 +1961,93 @@ class mf_base
 			return $transient;
 		}
 
-		$this->option_github_updates = get_site_option_or_default('option_github_updates', []);
-
-		foreach($this->option_github_updates as $key => $arr_value)
-		{
-			$status = (isset($this->option_github_updates[$key]['status']) ? $this->option_github_updates[$key]['status'] : '');
-
-			switch($status)
-			{
-				case 'new':
-					$date_limit = date("Y-m-d H:i:s", strtotime("-1 day"));
-				break;
-
-				case 'current':
-					$date_limit = date("Y-m-d H:i:s", strtotime("-30 minute"));
-				break;
-
-				case 'error':
-					$date_limit = date("Y-m-d H:i:s", strtotime("-1 week"));
-				break;
-
-				default:
-					$date_limit = date("Y-m-d H:i:s", strtotime("-1 minute"));
-				break;
-			}
-
-			if(!isset($arr_value['last_checked']) || $arr_value['last_checked'] < $date_limit)
-			{
-				unset($this->option_github_updates[$key]);
-			}
-		}
-
 		foreach(get_plugins() as $key => $arr_value)
 		{
-			if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false && !isset($this->option_github_updates[$key]))
+			if(isset($arr_value['PluginURI']) && $arr_value['PluginURI'] != '' && strpos($arr_value['PluginURI'], "https://github.com") !== false)
 			{
-				$success = false;
-
 				$this->github_debug = "";
 
-				$arr_value['type'] = 'index.php';
-				list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
+				$github_repo = trim(str_replace("https://github.com/", "", $arr_value['PluginURI']), "/");
+				$github_api_url = "https://raw.githubusercontent.com/".$github_repo."/master/index.php";
 
-				/*if($success == false)
+				list($content, $headers) = get_url_content(array(
+					'url' => $github_api_url,
+					'catch_head' => true,
+				));
+
+				switch($headers['http_code'])
 				{
-					$arr_value['type'] = 'releases/latest';
-					list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
+					case 200:
+						$latest_version = "";
+
+						if(preg_match('/Version\s*:\s*([^\s]+)/i', $content, $matches))
+						{
+							$latest_version = $matches[1];
+						}
+
+						else
+						{
+							$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__.": version does not exist (".$github_api_url." -> ".htmlspecialchars($content).")";
+						}
+
+						if($latest_version != '')
+						{
+							if(version_compare($arr_value['Version'], $latest_version, '<'))
+							{
+								list($plugin_dir, $plugin_file) = explode("/", $key);
+
+								$plugin_data = array(
+									'slug' => $plugin_dir,
+									'plugin' => $key,
+									'new_version' => $latest_version,
+									'url' => $arr_value['PluginURI'],
+									'package' => "https://github.com/".$github_repo."/archive/refs/heads/master.zip",
+								);
+
+								//do_log(__FUNCTION__." - Added: ".$key." v".$latest_version." to transient since it was newer than v".$arr_value['Version']." (".var_export($plugin_data, true).")");
+
+								$transient->response[$key] = (object)$plugin_data;
+							}
+						}
+					break;
+
+					default:
+						$this->github_debug .= ($this->github_debug != '' ? "," : "").__FUNCTION__." - Error fetching data: ".$content;
+					break;
 				}
 
-				if($success == false)
-				{
-					$arr_value['type'] = 'tags';
-					list($success, $transient) = $this->get_github_version($key, $arr_value, $transient);
-				}*/
-
-				if($success == false && $this->github_debug != '')
+				if($this->github_debug != '')
 				{
 					//do_log(__FUNCTION__.": ".$this->github_debug, 'publish', false);
 				}
 			}
 		}
 
-		update_site_option('option_github_updates', $this->option_github_updates);
-
-		do_log(__FUNCTION__.": ".var_export($transient, true));
+		//do_log(__FUNCTION__.": ".var_export($transient, true));
 
 		return $transient;
+	}
+
+	function upgrader_process_complete($upgrader_object, $hook_extra)
+	{
+		if(isset($hook_extra['action'], $hook_extra['type']) && $hook_extra['action'] === 'update' && $hook_extra['type'] === 'plugin' && !empty($hook_extra['plugins'])
+		)
+		{
+			$plugins_dir = WP_PLUGIN_DIR;
+
+			foreach($hook_extra['plugins'] as $plugin_file)
+			{
+				$plugin_folder = dirname($plugin_file);
+
+				$old_path = $plugins_dir."/".$plugin_folder."-master";
+				$new_path = $plugins_dir."/".$plugin_folder;
+
+				if(is_dir($old_path) && !is_dir($new_path))
+				{
+					rename($old_path, $new_path);
+				}
+			}
+		}
 	}
 
 	function plugin_action_links($arr_actions, $plugin_file)
@@ -2817,39 +2607,6 @@ class mf_base
 		}
 
 		return $title;
-	}
-
-	function after_plugin_row($plugin_file, $plugin_data)
-	{
-		if(isset($this->option_github_updates[$plugin_file]) && isset($this->option_github_updates[$plugin_file]['status']) && $this->option_github_updates[$plugin_file]['status'] == 'new' && version_compare($plugin_data['Version'], $this->option_github_updates[$plugin_file]['Version'], '<'))
-		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-
-			mf_enqueue_script('script_import_wp', $plugin_include_url."script_github_updates.js");
-
-			$plugin_data = get_plugin_data(WP_PLUGIN_DIR."/".$plugin_file);
-			$plugin_uri = (isset($plugin_data['PluginURI']) ? $plugin_data['PluginURI'] : "#");
-
-			echo "<tr class='plugin-update-tr".(is_plugin_active($plugin_file) ? " active" : "")."'>
-				<td colspan='4' class='plugin-update'>
-					<div class='update-message notice inline notice-warning notice-alt'>
-						<p>".__("There is a new version of this plugin", 'lang_base')." (<a href='".$plugin_uri."'>".$this->option_github_updates[$plugin_file]['Version']."</a>)</p>
-					</div>
-				</td>
-			</tr>";
-		}
-
-		else
-		{
-			$this->option_github_updates[$plugin_file] = array(
-				'Name' => $this->option_github_updates[$plugin_file]['Name'],
-				'Version' => $plugin_data['Version'],
-				'status' => 'current',
-				'last_checked' => date("Y-m-d H:i:s"),
-			);
-
-			update_site_option('option_github_updates', $this->option_github_updates);
-		}
 	}
 
 	function phpmailer_init($phpmailer)

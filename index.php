@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.8.7
+Version: 1.2.8.8
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -21,6 +21,7 @@ include_once("include/functions.php");
 
 $obj_base = new mf_base();
 
+add_action('enqueue_block_editor_assets', array($obj_base, 'enqueue_block_editor_assets'));
 add_action('init', array($obj_base, 'init'), 0);
 add_filter('cron_schedules', array($obj_base, 'cron_schedules'));
 add_action('cron_base', 'activate_base', mt_rand(1, 10));
@@ -43,6 +44,7 @@ if(is_admin())
 	add_action('admin_menu', array($obj_base, 'admin_menu'));
 
 	add_filter('pre_set_site_transient_update_plugins', array($obj_base, 'pre_set_site_transient_update_plugins'), 10, 1);
+	add_action('upgrader_process_complete', array($obj_base, 'upgrader_process_complete'), 10, 2);
 
 	add_filter('plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
 	add_filter('network_admin_plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
@@ -136,7 +138,7 @@ function uninstall_base()
 
 	mf_uninstall_plugin(array(
 		'uploads' => $obj_base->post_type,
-		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_theme_enable_wp_api', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_progress', 'option_cron_ended', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized', 'option_git_updater', 'setting_base_use_timezone', 'option_github_updates'),
+		'options' => array('setting_base_info', 'setting_base_cron', 'setting_base_update_htaccess', 'setting_base_prefer_www', 'setting_theme_enable_wp_api', 'setting_base_enable_wp_api', 'setting_base_automatic_updates', 'setting_base_template_site', 'setting_base_recommend', 'option_cron_started', 'option_cron_progress', 'option_cron_ended', 'option_base_ftp_size', 'option_base_ftp_size_folders', 'option_base_db_size', 'option_base_large_tables', 'setting_base_optimize', 'option_base_optimized', 'option_git_updater', 'setting_base_use_timezone'),
 		'meta' => array($obj_base->meta_prefix.'page_index'),
 	));
 }

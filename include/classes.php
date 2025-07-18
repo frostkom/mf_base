@@ -2002,6 +2002,9 @@ class mf_base
 									'new_version' => $latest_version,
 									'url' => $arr_value['PluginURI'],
 									'package' => "https://github.com/".$github_repo."/archive/refs/heads/master.zip",
+									'icons' => array(
+										'svg' => "https://raw.githubusercontent.com/".$github_repo."/master/assets/icon.svg",
+									),
 								);
 
 								//do_log(__FUNCTION__." - Added: ".$key." v".$latest_version." to transient since it was newer than v".$arr_value['Version']." (".var_export($plugin_data, true).")");

@@ -2033,6 +2033,8 @@ class mf_base
 
 	function upgrader_process_complete($upgrader_object, $hook_extra)
 	{
+		$arr_branches = array('master', 'main');
+
 		if(isset($hook_extra['action'], $hook_extra['type']) && $hook_extra['action'] === 'update' && $hook_extra['type'] === 'plugin' && !empty($hook_extra['plugins'])
 		)
 		{
@@ -2042,12 +2044,16 @@ class mf_base
 			{
 				$plugin_folder = dirname($plugin_file);
 
-				$old_path = $plugins_dir."/".$plugin_folder."-master";
-				$new_path = $plugins_dir."/".$plugin_folder;
-
-				if(is_dir($old_path) && !is_dir($new_path))
+				foreach($arr_bracnhes as $branch)
 				{
-					rename($old_path, $new_path);
+					$old_path = $plugins_dir."/".$plugin_folder."-".$branch;
+					$new_path = $plugins_dir."/".$plugin_folder;
+
+					if(is_dir($old_path) && !is_dir($new_path))
+					{
+						rename($old_path, $new_path);
+						break;
+					}
 				}
 			}
 		}

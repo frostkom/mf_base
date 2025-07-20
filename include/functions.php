@@ -1817,45 +1817,13 @@ function mf_get_post_content($id, $field = 'post_content')
 	return $wpdb->get_var($wpdb->prepare("SELECT ".$field." FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
 }
 
-function get_install_link_tags($require_url, $required_name)
-{
-	if($require_url == '')
-	{
-		$required_name = str_replace(array("& ", "&"), "", $required_name);
-
-		if(is_multisite())
-		{
-			$require_url = network_admin_url("plugin-install.php?tab=search&type=term&s=".$required_name);
-		}
-
-		else
-		{
-			$require_url = admin_url("plugin-install.php?tab=search&s=".$required_name);
-		}
-	}
-
-	return array("<a href='".$require_url."'>", "</a>");
-}
-
+// This was deprecated 250720
 function require_plugin($required_path, $required_name, $require_url = "")
 {
-	global $obj_base;
-
 	if(is_admin() && function_exists('is_plugin_active') && !is_plugin_active($required_path))
 	{
-		list($a_start, $a_end) = get_install_link_tags($require_url, $required_name);
-
-		$message = sprintf(__("You need to install the plugin %s first", 'lang_base'), $a_start.$required_name.$a_end);
-
-		if(isset($_GET['action']) && $_GET['action'] == 'error_scrape')
-		{
-			echo $message;
-		}
-
-		else
-		{
-			trigger_error($message, E_USER_ERROR);
-		}
+		//deactivate_plugins(plugin_basename(__FILE__));
+		wp_die(sprintf(__("You need to install the plugin %s first", 'lang_base'), $required_name));
 	}
 }
 

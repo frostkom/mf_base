@@ -1893,7 +1893,6 @@ class mf_base
 		function setting_base_recommend_callback()
 		{
 			$arr_recommendations = array(
-				//array("BackWPup", 'backwpup/backwpup.php', __("to backup all files and database to an external source", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				array("Modern Image Formats", 'webp-uploads/load.php', __("to convert images to modern formats when uploaded", 'lang_base')),
 				//array("Postie", 'postie/postie.php', __("to create posts by sending an e-mail", 'lang_base')),
@@ -3230,6 +3229,26 @@ class recommend_plugin
 {
 	var $message = "";
 
+	function get_install_link_tags($require_url, $required_name)
+	{
+		if($require_url == '')
+		{
+			$required_name = str_replace(array("& ", "&"), "", $required_name);
+
+			if(is_multisite())
+			{
+				$require_url = network_admin_url("plugin-install.php?tab=search&type=term&s=".$required_name);
+			}
+
+			else
+			{
+				$require_url = admin_url("plugin-install.php?tab=search&s=".$required_name);
+			}
+		}
+
+		return array("<a href='".$require_url."'>", "</a>");
+	}
+
 	function __construct($data)
 	{
 		global $pagenow;
@@ -3240,7 +3259,7 @@ class recommend_plugin
 
 		if(!is_plugin_active($data['path']))
 		{
-			list($a_start, $a_end) = get_install_link_tags($data['url'], $data['name']);
+			list($a_start, $a_end) = $this->get_install_link_tags($data['url'], $data['name']);
 
 			if($pagenow == 'plugins.php' && $data['show_notice'] == true && $data['name'] != '')
 			{

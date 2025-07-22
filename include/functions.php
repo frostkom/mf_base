@@ -1374,9 +1374,10 @@ function parse_block_attributes($data = [])
 
 	$out = "";
 
-	/*array (
-		'align' => 'full', // .alignfull
-	)*/
+	if(isset($data['attributes']['align']))
+	{
+		$data['class'] .= ($data['class'] != '' ? " " : "")."align".$data['attributes']['align'];
+	}
 
 	if(isset($data['attributes']['className']) && $data['attributes']['className'] != '')
 	{

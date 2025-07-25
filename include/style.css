@@ -96,8 +96,6 @@
 	tr.inactive
 	{
 		cursor: no-drop;
-		filter: gray;
-		filter: grayscale(1);
 		opacity: .3;
 	}
 
@@ -235,7 +233,7 @@
 			cursor: pointer;
 			display: block;
 			line-height: 1.8;
-			padding: 0 .4em;
+			/*padding: 0 .4em;*/
 		}
 
 		.mf_form .mf_form_field, .mf_form div.input, .mf_form p.input, #comments #comment
@@ -367,7 +365,7 @@
 
 		.mf_form .form_checkbox
 		{
-			margin: 0 0 .8em;
+			margin: 0 0 .4em;
 		}
 
 			.mf_form .form_checkbox_multiple > label, .mf_form .form_radio_multiple > label
@@ -378,7 +376,8 @@
 			.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
 			{
 				list-style: none;
-				margin-bottom: .5em;
+				margin: 0 0 .5em;
+				padding: 0;
 			}
 
 				.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio
@@ -394,8 +393,8 @@
 			.mf_form .form_checkbox input, .mf_form .form_radio input
 			{
 				display: inline-block;
-				margin-right: .2em;
-				margin-bottom: -.4em;
+				margin-right: .6em;
+				/*margin-bottom: -.4em;*/
 			}
 
 				.mf_form .input-buttons.input-button-size-2

@@ -307,34 +307,21 @@ function get_plugin_version($file)
 
 function get_toggler_container($data)
 {
-	if(!isset($data['label_tag'])){					$data['label_tag'] = 'label';}
-	if(!isset($data['container_tag'])){				$data['container_tag'] = 'div';}
-	if(!isset($data['open'])){						$data['open'] = false;}
-	if(!isset($data['rel']) || $data['rel'] == ''){	$data['rel'] = mt_rand(0, 1000);}
-	if(!isset($data['icon_first'])){				$data['icon_first'] = true;}
+	if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
+	if(!isset($data['container_tag'])){		$data['container_tag'] = 'div';}
+	if(!isset($data['is_open'])){			$data['is_open'] = false;}
+	if(!isset($data['rel'])){				$data['rel'] = mt_rand(0, 1000);}
 
 	switch($data['type'])
 	{
 		case 'start':
 			do_action('get_toggler_includes');
 
-			$icon = "<div class='toggle_icon'><div></div><div></div></div>";
-			$text = "<span>".$data['text']."</span>";
-
-			$out = "<".$data['label_tag']." class='toggler".($data['open'] ? " open is_open" : "").($data['icon_first'] ? " icon_first" : " icon_last")."' rel='".$data['rel']."'>";
-
-				if($data['icon_first'])
-				{
-					$out .= $icon.$text;
-				}
-
-				else
-				{
-					$out .= $text.$icon;
-				}
-
-			$out .= "</".$data['label_tag'].">
-			<".$data['container_tag']." class='toggle_container' rel='".$data['rel']."'>";
+			$out = "<".$data['label_tag']." class='toggler".($data['is_open'] ? " is_open" : "")."'>" // rel='".$data['rel']."'
+				."<span>".$data['text']."</span>"
+				."<div class='toggle_icon'><div></div><div></div></div>"
+			."</".$data['label_tag'].">
+			<".$data['container_tag']." class='toggle_container'>"; // rel='".$data['rel']."'
 
 			return $out;
 		break;

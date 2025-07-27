@@ -128,6 +128,11 @@
 					margin-top: 0;
 				}
 
+				.toggle_container p:last-child
+				{
+					margin-bottom: 0;
+				}
+
 				/*.toggle_container span.grey a
 				{
 					color: inherit;

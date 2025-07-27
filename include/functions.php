@@ -4420,7 +4420,10 @@ function set_file_content($data)
 
 		if(!is_dir($folder))
 		{
-			mkdir($folder, 0755, true);
+			if(!mkdir($folder, 0755, true))
+			{
+				do_log(__FUNCTION__.": I could not create the folder ".$folder);
+			}
 		}
 
 		if($fh = @fopen($data['file'], $data['mode']))

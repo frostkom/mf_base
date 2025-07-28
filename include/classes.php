@@ -3812,7 +3812,7 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true ? " rel='".$this->arr_settings['action']."'" : "").">";
+		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true && isset($this->arr_settings['action']) ? " rel='".$this->arr_settings['action']."'" : "").">";
 
 			$this->search_box(__("Search", 'lang_base'), $this->search_key);
 

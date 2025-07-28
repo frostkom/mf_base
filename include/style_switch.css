@@ -44,7 +44,7 @@
 			}
 
 			/* Loading */
-			.form_switch input[type=checkbox] + label .loading
+			.form_switch input[type=checkbox] + label .loading_animation
 			{
 				display: none;
 			}
@@ -54,7 +54,7 @@
 				display: none !important;
 			}
 
-			.form_switch.loading input[type=checkbox] + label .loading
+			.form_switch.loading input[type=checkbox] + label .loading_animation
 			{
 				display: inline-block;
 			}

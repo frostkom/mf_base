@@ -8,6 +8,11 @@ jQuery(function($)
 		{
 			dom_obj.removeClass('is_open');
 
+			if(dom_obj.attr('id') !== undefined)
+			{
+				$("." + dom_obj.attr('id')).addClass('hide');
+			}
+
 			if(dom_obj.siblings(".toggle_container").hasClass('is_open'))
 			{
 				dom_obj.siblings(".toggle_container").removeClass('is_open');
@@ -22,6 +27,11 @@ jQuery(function($)
 		else
 		{
 			dom_obj.addClass('is_open');
+
+			if(dom_obj.attr('id') !== undefined)
+			{
+				$("." + dom_obj.attr('id')).removeClass('hide');
+			}
 		}
 	});
 });

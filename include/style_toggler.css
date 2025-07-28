@@ -103,16 +103,6 @@
 			display: none;
 		}
 
-			/*.toggler.is_open.hide + .toggle_container, .toggler.is_open.hide > .toggle_container
-			{
-				display: none;
-			}
-
-			.toggler.is_open + .toggle_container, .toggler.is_open > .toggle_container
-			{
-				display: block;
-			}*/
-
 		.toggle_container, .toggle_container > ol, .toggle_container > ul
 		{
 			list-style: disc inside;

@@ -25,11 +25,8 @@
 
 			.toggler .toggle_icon
 			{
-				/*background: none;*/
 				border: .1em solid #444;
 				border-radius: 50%;
-				/*display: inline-block;
-				margin-bottom: -.2em;*/
 				height: 1em;
 				position: absolute;
 				right: .4em;
@@ -38,11 +35,6 @@
 				transition: all .5s ease;
 				width: 1em;
 			}
-
-				/*.toggler .toggle_icon + span, .toggler span + .toggle_icon
-				{
-					margin-left: .4em;
-				}*/
 
 				.toggle_icon:hover
 				{
@@ -122,10 +114,4 @@
 				{
 					margin-bottom: 0;
 				}
-
-				/*.toggle_container span.grey a
-				{
-					color: inherit;
-					display: inline !important;
-				}*/
 }

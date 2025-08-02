@@ -348,6 +348,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_style('style_base_toggler', $plugin_include_url."style_toggler.css");
+		mf_enqueue_script('script_storage', $plugin_include_url."jquery.Storage.js");
 		mf_enqueue_script('script_base_toggler', $plugin_include_url."script_toggler.js");
 	}
 
@@ -361,6 +362,15 @@ class mf_base
 
 	function init()
 	{
+		if($_SERVER['REQUEST_URI'] === '/.well-known/security.txt' || $_SERVER['REQUEST_URI'] === '/security.txt')
+		{
+			header('Content-Type: text/plain');
+
+			echo "Contact: mailto:security@martinfors.se\r\n"
+			."Expires: ".gmdate('Y-m-d\TH:i:s\Z', time() + WEEK_IN_SECONDS);
+			exit;
+		}
+
 		load_plugin_textdomain('lang_base', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
 
 		add_post_type_support('page', 'excerpt');

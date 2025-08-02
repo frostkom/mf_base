@@ -310,18 +310,23 @@ function get_toggler_container($data)
 	if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
 	if(!isset($data['container_tag'])){		$data['container_tag'] = 'div';}
 	if(!isset($data['is_open'])){			$data['is_open'] = false;}
-	if(!isset($data['rel'])){				$data['rel'] = mt_rand(0, 1000);}
+	if(!isset($data['id'])){				$data['id'] = "";}
 
 	switch($data['type'])
 	{
 		case 'start':
 			do_action('get_toggler_includes');
 
-			$out = "<".$data['label_tag']." class='toggler".($data['is_open'] ? " is_open" : "")."'>" // rel='".$data['rel']."'
+			if($data['text'] != '')
+			{
+				$data['id'] = sanitize_title_with_dashes(sanitize_title($data['text']));
+			}
+
+			$out = "<".$data['label_tag'].($data['id'] != '' ? " id='toggle_".$data['id']."'" : "")." class='toggler".($data['is_open'] ? " is_open" : "")."'>"
 				."<span>".$data['text']."</span>"
 				."<div class='toggle_icon'><div></div><div></div></div>"
 			."</".$data['label_tag'].">
-			<".$data['container_tag']." class='toggle_container'>"; // rel='".$data['rel']."'
+			<".$data['container_tag']." class='toggle_container".($data['id'] != '' ? " toggle_".$data['id'] : "")."'>";
 
 			return $out;
 		break;

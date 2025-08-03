@@ -4,20 +4,25 @@ jQuery(function($)
 
 	function set_open(dom_obj, is_open)
 	{
-		var index = togglers_open.indexOf(dom_obj.attr('id'));
+		var dom_obj_id = dom_obj.attr('id');
+
+		if(dom_obj_id !== undefined)
+		{
+			var index = togglers_open.indexOf(dom_obj_id);
+		}
 
 		if(is_open)
 		{
 			dom_obj.addClass('is_open');
 
-			if(dom_obj.attr('id') !== undefined)
+			if(dom_obj_id !== undefined)
 			{
-				$("." + dom_obj.attr('id')).removeClass('hide');
-			}
+				$("." + dom_obj_id).removeClass('hide');
 
-			if(index === -1)
-			{
-				togglers_open.push(dom_obj.attr('id'));
+				if(index === -1)
+				{
+					togglers_open.push(dom_obj_id);
+				}
 			}
 		}
 
@@ -25,12 +30,15 @@ jQuery(function($)
 		{
 			dom_obj.removeClass('is_open');
 
-			if(dom_obj.attr('id') !== undefined)
+			if(dom_obj_id !== undefined)
 			{
-				$("." + dom_obj.attr('id')).addClass('hide');
-			}
+				$("." + dom_obj_id).addClass('hide');
 
-			togglers_open.splice(index, 1);
+				if(index !== -1)
+				{
+					togglers_open.splice(index, 1);
+				}
+			}
 		}
 	}
 
@@ -69,15 +77,21 @@ jQuery(function($)
 		{
 			set_open(dom_obj, false);
 
-			if(dom_obj.siblings(".toggle_container").hasClass('is_open'))
+			dom_obj.siblings(".toggle_container").each(function()
 			{
-				set_open(dom_obj.siblings(".toggle_container"), false);
-			}
+				if($(this).hasClass('is_open'))
+				{
+					set_open($(this), false);
+				}
+			});
 
-			if(dom_obj.children(".toggle_container").hasClass('is_open'))
+			dom_obj.children(".toggle_container").each(function()
 			{
-				set_open(dom_obj.children(".toggle_container"), false);
-			}
+				if($(this).hasClass('is_open'))
+				{
+					set_open($(this), false);
+				}
+			});
 		}
 
 		else

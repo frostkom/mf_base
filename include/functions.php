@@ -1658,10 +1658,9 @@ function get_media_button($data = [])
 
 			if(IS_AUTHOR && $data['show_add_button'] == true)
 			{
-				$out .= "<div".get_form_button_classes("wp-media-buttons").">
-					<div class='button insert-media'>
-						<span>".$data['text']."</span>"
-					."</div>
+				//"wp-media-buttons"
+				$out .= "<div".get_form_button_classes().">
+					<div class='button insert-media wp-block-button__link'>".$data['text']."</div>
 					<span></span>
 				</div>";
 			}

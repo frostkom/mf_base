@@ -4,6 +4,9 @@ function init_media_library()
 	{
 		var dom_parent = jQuery(this),
 			dom_media_container = dom_parent.find(".media_container"),
+			dom_button = dom_parent.find("button"),
+			dom_img = dom_media_container.children("img"),
+			dom_span = dom_media_container.children("span"),
 			dom_value = jQuery(this).find("input[type='hidden']").val();
 
 		if(typeof dom_value !== 'undefined' && dom_value != '')
@@ -11,28 +14,28 @@ function init_media_library()
 			var arr_value = dom_value.split("/"),
 				arr_file = arr_value[arr_value.length - 1].split("."),
 				file_suffix = arr_file[arr_file.length - 1],
-				is_image = (file_suffix == 'gif' || file_suffix == 'jpg' || file_suffix == 'jpeg' || file_suffix == 'png');
+				is_image = ['avif', 'gif', 'jpg', 'jpeg', 'png', 'webp'].includes(file_suffix.toLowerCase());
 
 			if(is_image)
 			{
-				dom_media_container.children("img").removeClass('hide');
-				dom_media_container.children("span").addClass('hide');
+				dom_img.removeClass('hide');
+				dom_span.addClass('hide');
 			}
 
 			else
 			{
-				dom_media_container.children("img").addClass('hide');
-				dom_media_container.children("span").removeClass('hide');
+				dom_img.addClass('hide');
+				dom_span.removeClass('hide');
 			}
 
 			dom_media_container.removeClass('hide');
-			dom_parent.find("button").text(script_media_library.change_file_text);
+			dom_button.text(script_media_library.change_file_text);
 		}
 
 		else
 		{
 			dom_media_container.addClass('hide');
-			dom_parent.find("button").text(script_media_library.add_file_text);
+			dom_button.text(script_media_library.add_file_text);
 		}
 	});
 }

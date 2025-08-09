@@ -4522,9 +4522,9 @@ function show_table_header($arr_header, $shorten_text = true)
 
 			for($i = 0; $i < $count_temp; $i++)
 			{
-				$arr_header[$i] = stripslashes(strip_tags($arr_header[$i]));
+				//$arr_header[$i] = stripslashes(strip_tags($arr_header[$i]));
 
-				if(strlen($arr_header[$i]) > 15 && $shorten_text == true)
+				if($shorten_text == true && strlen($arr_header[$i]) > 15 && strpos($arr_header[$i], "<") !== false)
 				{
 					$title = $arr_header[$i];
 					$content = shorten_text(array('string' => $arr_header[$i], 'limit' => 12));
@@ -4548,6 +4548,8 @@ function show_table_header($arr_header, $shorten_text = true)
 
 function does_post_exists($data)
 {
+	global $wpdb;
+
 	if(!isset($data['post_type'])){		$data['post_type'] = 'page';}
 	if(!isset($data['post_status'])){	$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
 	if(!isset($data['meta'])){			$data['meta'] = [];}
@@ -4559,8 +4561,9 @@ function does_post_exists($data)
 		'is_trusted' => true,
 		'meta' => $data['meta'],
 		'limit' => 1,
-		//'debug' => true,
 	), $arr_data);
+
+	do_log(__FUNCTION__.": Replace with native query (".$wpdb->last_query.")");
 
 	return (count($arr_data) > 0);
 }

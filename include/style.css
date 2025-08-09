@@ -165,6 +165,7 @@
 	.flex_flow
 	{
 		display: flex;
+		gap: 1em;
 		flex-wrap: wrap;
 	}
 
@@ -182,7 +183,7 @@
 		{
 			display: block;
 			flex: 1 1 0;
-			margin-right: 1em;
+			/*margin-right: 1em;*/
 		}
 
 			.is_mobile .flex_flow > *
@@ -349,7 +350,8 @@
 
 		.mf_form .form_textfield .description, .mf_form .form_select .description, .mf_form .form_textarea .description, .mf_form .form_password .description
 		{
-			margin: -.3em 0 .6em;
+			font-size: .7em;
+			margin: -.6em 0 1em;
 		}
 
 			.mf_form .form_textfield > i
@@ -530,7 +532,7 @@
 
 @media print
 {
-	header, footer
+	header, .hide_on_print, .mf_search, footer
 	{
 		display: none;
 	}

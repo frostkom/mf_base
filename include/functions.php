@@ -4546,6 +4546,7 @@ function show_table_header($arr_header, $shorten_text = true)
 }
 ########################################
 
+// Stopped using 250810
 function does_post_exists($data)
 {
 	global $wpdb;
@@ -4563,7 +4564,7 @@ function does_post_exists($data)
 		'limit' => 1,
 	), $arr_data);
 
-	do_log(__FUNCTION__.": Replace with native query (".$wpdb->last_query.")");
+	do_log(__FUNCTION__.": Replace with native query (".var_export($data, true)." -> ".$wpdb->last_query.")");
 
 	return (count($arr_data) > 0);
 }

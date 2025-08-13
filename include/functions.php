@@ -238,6 +238,23 @@ function get_url_part($data)
 	}
 }
 
+function remove_protocol($data)
+{
+	if(!is_array($data)){			$data = array('url' => $data);}
+
+	if(!isset($data['clean'])){		$data['clean'] = false;}
+	if(!isset($data['trim'])){		$data['trim'] = false;}
+
+	$data['url'] = str_replace(array("http://", "https://"), ($data['clean'] == true ? "" : "//"), $data['url']);
+
+	if($data['trim'] == true)
+	{
+		$data['url'] = trim($data['url'], "/");
+	}
+
+	return $data['url'];
+}
+
 function get_site_url_clean($data = [])
 {
 	global $wpdb;
@@ -1996,23 +2013,6 @@ function settings_save_site_wide($setting_key)
 function settings_header($id, $title)
 {
 	return "<div id='".$id."' class='hide'><a href='#".$id."'><h3>".$title."</h3></a></div>";
-}
-
-function remove_protocol($data)
-{
-	if(!is_array($data)){			$data = array('url' => $data);}
-
-	if(!isset($data['clean'])){		$data['clean'] = false;}
-	if(!isset($data['trim'])){		$data['trim'] = false;}
-
-	$data['url'] = str_replace(array("http://", "https://"), ($data['clean'] == true ? "" : "//"), $data['url']);
-
-	if($data['trim'] == true)
-	{
-		$data['url'] = trim($data['url'], "/");
-	}
-
-	return $data['url'];
 }
 
 function get_source_version($file, $version)

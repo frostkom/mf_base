@@ -2,6 +2,7 @@
 {
 	.toggler
 	{
+		cursor: pointer;
 		position: relative;
 	}
 
@@ -79,7 +80,7 @@
 							transform: rotate(0deg) translate(-.3em, -.05em);
 						}
 
-	div.toggle_container, ul.toggle_container
+	label.toggler + div.toggle_container, label.toggler + ul.toggle_container
 	{
 		background: rgba(255, 255, 255, .5);
 		border-radius: 0 0 .2em .2em;

@@ -1663,13 +1663,6 @@ class mf_base
 							$out_temp .= ($out_temp != '' ? " - " : "").format_date($option_cron_ended);
 						}
 
-						/*$time_difference = time_between_dates(array('start' => $option_cron_started, 'end' => $option_cron_ended, 'type' => 'ceil', 'return' => 'seconds'));
-
-						if($time_difference > 0 && $time_difference < 60)
-						{
-							$out_temp .= " (".$time_difference.__("s", 'lang_base').")";
-						}*/
-
 						echo "<em>".sprintf(__("Last run %s.", 'lang_base'), $out_temp)."</em>";
 					}
 				}
@@ -1705,6 +1698,11 @@ class mf_base
 								if($key == 'mf_base_parent')
 								{
 									$li_class .= ($li_class != '' ? " " : "")."strong";
+								}
+
+								if(!isset($arr_value['start']))
+								{
+									do_log(__FUNCTION__.": No start time (".var_export($arr_value, true).")");
 								}
 
 								if($arr_value['end'] <= $arr_value['start'])

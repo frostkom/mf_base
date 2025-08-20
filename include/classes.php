@@ -2586,8 +2586,6 @@ class mf_base
 
 			if(wp_is_block_theme())
 			{
-				mf_enqueue_style('style_base_theme', $plugin_include_url."style_theme.css");
-
 				wp_enqueue_style('wp-block-button');
 			}
 

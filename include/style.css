@@ -114,6 +114,21 @@
 		font-style: italic;
 	}
 
+	.aligncenter
+	{
+		text-align: center;
+	}
+
+	.alignleft
+	{
+		text-align: left;
+	}
+
+	.alignright
+	{
+		text-align: right;
+	}
+
 	.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address
 	{
 		width: 100%;
@@ -183,7 +198,6 @@
 		{
 			display: block;
 			flex: 1 1 0;
-			/*margin-right: 1em;*/
 		}
 
 			.is_mobile .flex_flow > *
@@ -234,7 +248,6 @@
 			cursor: pointer;
 			display: block;
 			line-height: 1.8;
-			/*padding: 0 .4em;*/
 		}
 
 		.mf_form .mf_form_field, .mf_form div.input, .mf_form p.input, #comments #comment
@@ -287,12 +300,6 @@
 				{
 					margin-left: 1em;
 				}
-
-				/*.mf_form .form_textfield.has_suffix span.description
-				{
-					color: #999;
-					margin-left: -3.4em;
-				}*/
 
 			.mf_form .form_select select
 			{
@@ -396,7 +403,6 @@
 			{
 				display: inline-block;
 				margin-right: .6em;
-				/*margin-bottom: -.4em;*/
 			}
 
 				.mf_form .input-buttons.input-button-size-2
@@ -417,7 +423,6 @@
 			display: inline-block;
 			font: inherit;
 			margin: 0 .5em .5em 0;
-			/*padding: .5em 1.5em;*/ /* Do not override default set in blocks theme */
 			white-space: nowrap;
 		}
 
@@ -481,6 +486,110 @@
 			}
 	/* ####################### */
 
+	/* Tables */
+	/* ####################### */
+	.widefat
+	{
+		border: 1px solid #e5e5e5;
+		border-spacing: 0;
+		table-layout: fixed;
+		width: 100%;
+	}
+
+		.widefat *
+		{
+			word-wrap: break-word;
+		}
+
+			.widefat thead tr
+			{
+				background: #fff;
+			}
+
+			.widefat td, .widefat th
+			{
+				color: #555;
+				padding: .8em 1em;
+				vertical-align: top;
+			}
+
+			.widefat th
+			{
+				border-bottom: 1px solid #e1e1e1;
+				color: #32373c;
+				cursor: pointer;
+				font-size: .9em;
+				overflow: hidden;
+				text-align: left;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+
+				.widefat th:hover
+				{
+					white-space: normal;
+				}
+
+			.widefat.striped > tbody > *:nth-child(2n+1)
+			{
+				background-color: #f9f9f9;
+			}
+
+				.widefat tr.active
+				{
+					background: #fff8df !important;
+				}
+
+				.widefat td
+				{
+					font-family: inherit;
+					font-size: inherit;
+					font-weight: inherit;
+					line-height: inherit;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+
+					.widefat td, .widefat td ol, .widefat td p, .widefat td ul
+					{
+						font-size: .8em;
+					}
+
+					.widefat tr .row-actions
+					{
+						color: #999;
+						left: -9999em;
+						padding: 2px 0 0;
+						position: relative;
+						white-space: nowrap;
+					}
+
+						.widefat tr:hover .row-actions
+						{
+							position: static;
+						}
+
+						.widefat tr .row-actions > * + *:before
+						{
+							content: ' | ';
+						}
+
+						.widefat tr .row-actions a
+						{
+							text-decoration: none;
+						}
+
+							.widefat tr .row-actions a.trash
+							{
+								color: #b32d2e;
+							}
+
+			.widefat tfoot th
+			{
+				border-top: 1px solid #e1e1e1;
+			}
+	/* ####################### */
+
 	/* Overlay */
 	/* ####################### */
 	.overlay_container
@@ -532,8 +641,19 @@
 
 @media print
 {
-	header, .hide_on_print, .mf_search, footer
+	body
 	{
-		display: none;
+		background: none !important;
 	}
+
+		#wpadminbar, header, .hide_on_print, .mf_search, footer
+		{
+			display: none;
+		}
+
+		.wp-block-group, .wp-block-column
+		{
+			background: none !important;
+			padding: 0 !important;		
+		}
 }

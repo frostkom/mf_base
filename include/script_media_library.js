@@ -7,7 +7,7 @@ function init_media_library()
 			dom_button = dom_parent.find("button"),
 			dom_img = dom_media_container.children("img"),
 			dom_span = dom_media_container.children("span"),
-			dom_value = jQuery(this).find("input[type='hidden']").val();
+			dom_value = dom_media_container.children("input[type='hidden']").val();
 
 		if(typeof dom_value !== 'undefined' && dom_value != '')
 		{

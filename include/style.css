@@ -421,7 +421,7 @@
 			border: 0;
 			cursor: pointer;
 			display: inline-block;
-			font: inherit;
+			/*font: inherit;*/ /* This will override the value set by theme */
 			margin: 0 .5em .5em 0;
 			white-space: nowrap;
 		}
@@ -496,6 +496,11 @@
 		width: 100%;
 	}
 
+		.widefat.layout_fixed
+		{
+			table-layout: fixed;
+		}
+
 		/*body:not(.wp-admin) .widefat *
 		{
 			word-wrap: break-word;
@@ -535,20 +540,20 @@
 				background-color: #f9f9f9;
 			}
 
-				body:not(.wp-admin) .widefat tr.active
+				.widefat tr.active
 				{
 					background: #fff8df !important;
 				}
 
-				/*body:not(.wp-admin) .widefat td
+				.widefat td
 				{
-					font-family: inherit;
+					/*font-family: inherit;
 					font-size: inherit;
 					font-weight: inherit;
-					line-height: inherit;
+					line-height: inherit;*/
 					overflow: hidden;
-					text-overflow: ellipsis;
-				}*/
+					/*text-overflow: ellipsis;*/
+				}
 
 					/*body:not(.wp-admin) .widefat td, body:not(.wp-admin) .widefat td ol, body:not(.wp-admin) .widefat td p, body:not(.wp-admin) .widefat td ul
 					{
@@ -578,12 +583,12 @@
 							content: ' | ';
 						}
 
-						body:not(.wp-admin) .widefat tr .row-actions a
+						.widefat tr .row-actions a
 						{
 							text-decoration: none;
 						}
 
-							body:not(.wp-admin) .widefat tr .row-actions a.trash
+							.widefat tr .row-actions .trash, .widefat tr .row-actions .delete
 							{
 								color: #b32d2e;
 							}

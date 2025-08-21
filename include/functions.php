@@ -1602,20 +1602,23 @@ function get_media_library($data)
 				$out .= "<label>".$data['label']."</label>";
 			}
 
-			if($data['name'] != '')
-			{
-				$out .= "<div class='media_container'>"
-					."<img src='".$data['value']."'>"
-					."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>"
-					."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>"
-				."</div>"
-				.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true));
-			}
+			$out .= "<div class='flex_flow tight'>";
 
-			$out .= "<div".get_form_button_classes().">"
-				.show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))
-			."</div>"
-		."</div>";
+				if($data['name'] != '')
+				{
+					$out .= "<div class='media_container'>"
+						."<img src='".$data['value']."'>"
+						."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>"
+						."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>"
+						.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true))
+					."</div>";
+				}
+
+				$out .= "<div".get_form_button_classes().">"
+					.show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))
+				."</div>
+			</div>
+		</div>";
 
 		if($data['description'] != '')
 		{

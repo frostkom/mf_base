@@ -2574,7 +2574,6 @@ class mf_base
 
 		mf_enqueue_script('script_base', $plugin_include_url."script.js", array(
 			'confirm_question' => __("Are you sure?", 'lang_base'),
-			'read_more' => __("Read More", 'lang_base'),
 			'characters_left_text' => __("characters left", 'lang_base'),
 		));
 

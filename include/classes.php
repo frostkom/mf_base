@@ -2583,6 +2583,7 @@ class mf_base
 
 			if(wp_is_block_theme())
 			{
+				wp_enqueue_style('wp-block-buttons');
 				wp_enqueue_style('wp-block-button');
 			}
 

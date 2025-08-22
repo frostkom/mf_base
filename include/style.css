@@ -418,7 +418,7 @@
 
 		.form_button button, .form_button .button, .wp-block-button button, .wp-block-button .button
 		{
-			border: 0;
+			/*border: 0;*/
 			cursor: pointer;
 			display: inline-block;
 			/*font: inherit;*/ /* This will override the value set by theme */
@@ -483,6 +483,15 @@
 			.mf_settings #postbox-container-1 button
 			{
 				margin: .6em .6em 0 0;
+			}
+
+			:root :where(.wp-block-button.is-style-outline--1 .wp-block-button__link)
+			{
+				background: transparent none !important;
+				border-color: var(--wp--preset--color--contrast);
+				border-width: 1px !important;
+				border-style: solid;
+				color: var(--wp--preset--color--contrast) !important;
 			}
 	/* ####################### */
 

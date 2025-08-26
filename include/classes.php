@@ -799,11 +799,6 @@ class mf_base
 			#######################
 		}
 
-		/*else
-		{
-			do_log($obj_cron->file." exists");
-		}*/
-
 		$obj_cron->end();
 	}
 

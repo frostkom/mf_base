@@ -658,7 +658,7 @@ function mf_uninstall_post_types($data)
 
 		foreach($result as $r)
 		{
-			wp_trash_post($r->ID);
+			wp_delete_post($r->ID);
 
 			$i++;
 
@@ -668,16 +668,6 @@ function mf_uninstall_post_types($data)
 				set_time_limit(60);
 			}
 		}
-	}
-}
-
-function mf_uninstall_post_meta($data)
-{
-	global $wpdb;
-
-	foreach($data['post_meta'] as $post_meta)
-	{
-		$wpdb->get_results($wpdb->prepare("DELETE FROM ".$wpdb->postmeta." WHERE meta_key = %s", $post_meta));
 	}
 }
 
@@ -724,7 +714,6 @@ function mf_uninstall_plugin($data)
 	if(!isset($data['options'])){			$data['options'] = [];}
 	if(!isset($data['user_meta'])){			$data['user_meta'] = [];}
 	if(!isset($data['post_types'])){		$data['post_types'] = [];}
-	if(!isset($data['post_meta'])){			$data['post_meta'] = [];}
 	if(!isset($data['tables'])){			$data['tables'] = [];}
 
 	if(isset($data['meta']))
@@ -743,7 +732,6 @@ function mf_uninstall_plugin($data)
 			mf_uninstall_uploads($data, false);
 			mf_uninstall_options($data);
 			mf_uninstall_post_types($data);
-			mf_uninstall_post_meta($data);
 			mf_uninstall_tables($data);
 
 			restore_current_blog();
@@ -754,7 +742,6 @@ function mf_uninstall_plugin($data)
 	{
 		mf_uninstall_options($data);
 		mf_uninstall_post_types($data);
-		mf_uninstall_post_meta($data);
 		mf_uninstall_tables($data);
 	}
 

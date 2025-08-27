@@ -1160,7 +1160,7 @@ class mf_base
 					{
 						case 'sv-SE':
 							$collation_name = $wpdb->get_var($wpdb->prepare("SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = %s LIMIT 1", DB_NAME));
-							$arr_collation_name_recommended = array('utf8mb4_swedish_ci', 'latin1_swedish_ci', 'utf8mb3_swedish_ci');
+							$arr_collation_name_recommended = array('utf8mb4_swedish_ci', 'utf8mb3_swedish_ci'); //, 'latin1_swedish_ci'
 
 							if(!in_array($collation_name, $arr_collation_name_recommended))
 							{

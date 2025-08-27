@@ -993,12 +993,17 @@ class mf_base
 		return false;
 	}
 
-	function filter_meta_input($array)
+	function filter_meta_input($array, $post_id = 0)
 	{
 		foreach($array as $key => $value)
 		{
 			if($value == '')
 			{
+				if($post_id > 0)
+				{
+					delete_post_meta($post_id, $key);
+				}
+
 				unset($array[$key]);
 			}
 		}
@@ -1160,7 +1165,7 @@ class mf_base
 					{
 						case 'sv-SE':
 							$collation_name = $wpdb->get_var($wpdb->prepare("SELECT DEFAULT_COLLATION_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = %s LIMIT 1", DB_NAME));
-							$arr_collation_name_recommended = array('utf8mb4_swedish_ci', 'utf8mb3_swedish_ci'); //, 'latin1_swedish_ci'
+							$arr_collation_name_recommended = array('utf8mb4_swedish_ci', 'utf8mb3_swedish_ci', 'latin1_swedish_ci');
 
 							if(!in_array($collation_name, $arr_collation_name_recommended))
 							{

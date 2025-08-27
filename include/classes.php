@@ -1176,7 +1176,7 @@ class mf_base
 									}
 								}
 
-								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".$collation_name." -> ".$collation_name_recommended."</p>";
+								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".$collation_name." -> ".$collation_name_recommended." (DB_CHARSET: ".DB_CHARSET.", DB_COLLATE: ".DB_COLLATE.")</p>";
 							}
 						break;
 					}

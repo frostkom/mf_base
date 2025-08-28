@@ -2089,6 +2089,13 @@ class mf_base
 		return $html;
 	}
 
+	function get_image_fallback()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		return "<img src='".$plugin_include_url."images/blank.svg' class='image_fallback' alt='".__("Generic image as a placeholder", 'lang_base')."'>";
+	}
+
 	function get_page_from_block_code($arr_ids, $block_code)
 	{
 		global $wpdb;

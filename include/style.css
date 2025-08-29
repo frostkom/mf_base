@@ -259,7 +259,7 @@
 		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
-			border: 1px solid #e1e1e1;
+			border: .1em solid #e1e1e1;
 			box-sizing: border-box;
 			display: inline-block;
 			font: inherit;
@@ -474,9 +474,9 @@
 			{
 				background: #ba0000;
 				border-color: #a00 #900 #900;
-				box-shadow: 0 1px 0 #900;
+				box-shadow: 0 .1em 0 #900;
 				color: #fff;
-				text-shadow: 0 -1px 1px #900, 1px 0 1px #900, 0 1px 1px #900, -1px 0 1px #900;
+				text-shadow: 0 -.1em .1em #900, .1em 0 .1em #900, 0 .1em .1em #900, -.1em 0 .1em #900;
 			}
 
 				.mf_form .button.delete:hover
@@ -494,7 +494,7 @@
 			{
 				background: transparent none !important;
 				border-color: var(--wp--preset--color--contrast);
-				border-width: 1px !important;
+				border-width: .1em !important;
 				border-style: solid;
 				color: var(--wp--preset--color--contrast) !important;
 			}
@@ -504,7 +504,7 @@
 	/* ####################### */
 	body:not(.wp-admin) .widefat
 	{
-		border: 1px solid #e5e5e5;
+		border: .1em solid #e5e5e5;
 		border-spacing: 0;
 		/*table-layout: fixed;*/
 		width: 100%;
@@ -534,7 +534,7 @@
 
 			body:not(.wp-admin) .widefat th
 			{
-				border-bottom: 1px solid #e1e1e1;
+				border-bottom: .1em solid #e1e1e1;
 				/*color: #32373c;
 				cursor: pointer;
 				font-size: .9em;*/
@@ -552,6 +552,11 @@
 			body:not(.wp-admin) .widefat.striped > tbody > *:nth-child(2n+1)
 			{
 				background-color: #f9f9f9;
+			}
+
+			body:not(.wp-admin) .widefat.striped > tbody > *:nth-child(2n)
+			{
+				background-color: #fff;
 			}
 
 				.widefat tr.active
@@ -607,9 +612,9 @@
 								color: #b32d2e;
 							}
 
-			body:not(.wp-admin) .widefat tfoot th
+			body:not(.wp-admin) .widefat tfoot th, body:not(.wp-admin) .widefat tbody + thead th
 			{
-				border-top: 1px solid #e1e1e1;
+				border-top: .1em solid #e1e1e1;
 			}
 	/* ####################### */
 

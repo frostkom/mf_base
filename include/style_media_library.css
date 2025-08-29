@@ -7,8 +7,10 @@
 
 		.mf_media_library .media_container
 		{
+			border-radius: .5em;
 			display: block;
 			margin-bottom: .5em;
+			overflow: hidden;
 			position: relative;
 			width: 150px;
 		}
@@ -23,7 +25,7 @@
 			{
 				background: rgba(0, 0, 0, .3);
 				border-radius: .4em;
-				bottom: .8em;
+				bottom: .4em;
 				right: .4em;
 				padding: .4em .6em;
 				position: absolute;

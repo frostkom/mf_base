@@ -2433,7 +2433,7 @@ class mf_base
 					}
 				}
 
-				$out = apply_filters('filter_is_password_protected', $out, array('post_id' => $post_id, 'check_login' => true));
+				$out = apply_filters('filter_is_password_protected', $out, array('post_id' => $post_id, 'check_login' => true, 'type' => 'bool'));
 			}
 		}
 

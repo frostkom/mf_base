@@ -1596,7 +1596,7 @@ function get_media_library($data)
 					$out .= "<div class='media_container'>"
 						."<img src='".$data['value']."'>"
 						."<span><i class='fa fa-file fa-5x' title='".$data['value']."'></i></span>"
-						."<a href='#'><i class='fa fa-trash red fa-lg'></i></a>"
+						."<a href='#' title='".__("Delete", 'lang_base')."'><i class='fa fa-trash red fa-lg'></i></a>"
 						.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true))
 					."</div>";
 				}

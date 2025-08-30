@@ -2653,10 +2653,10 @@ class mf_base
 
 	function theme_page_templates($posts_templates)
 	{
-		if(count($this->templates) == 0)
+		/*if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', []);
-		}
+		}*/
 
 		$posts_templates = array_merge($posts_templates, $this->templates);
 
@@ -2665,10 +2665,10 @@ class mf_base
 
 	function wp_insert_post_data($data)
 	{
-		if(count($this->templates) == 0)
+		/*if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', []);
-		}
+		}*/
 
 		// Create the key used for the themes cache
 		$cache_key = "page_templates-".md5(get_theme_root()."/".get_stylesheet());
@@ -2702,10 +2702,10 @@ class mf_base
 			return $template;
 		}
 
-		if(count($this->templates) == 0)
+		/*if(count($this->templates) == 0)
 		{
 			$this->templates = apply_filters('get_page_templates', []);
-		}
+		}*/
 
 		$template_temp = get_post_meta($post->ID, '_wp_page_template', true);
 

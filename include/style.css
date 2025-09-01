@@ -129,56 +129,16 @@
 		text-align: right;
 	}
 
-	.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address
+	/*.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address
 	{
 		width: 100%;
-	}
+	}*/
 
 	.image_fallback
 	{
 		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHhtbG5zOnhsaW5rPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rJyB2aWV3Qm94PScwIDAge3t3fX0ge3tofX0nPjxkZWZzPjxzeW1ib2wgaWQ9J2EnIHZpZXdCb3g9JzAgMCA5MCA2Nicgb3BhY2l0eT0nMC4zJz48cGF0aCBkPSdNODUgNXY1Nkg1VjVoODBtNS01SDB2NjZoOTBWMHonLz48Y2lyY2xlIGN4PScxOCcgY3k9JzIwJyByPSc2Jy8+PHBhdGggZD0nTTU2IDE0TDM3IDM5bC04LTYtMTcgMjNoNjd6Jy8+PC9zeW1ib2w+PC9kZWZzPjx1c2UgeGxpbms6aHJlZj0nI2EnIHdpZHRoPScyMCUnIHg9JzQwJScvPjwvc3ZnPg==');
 		padding: 3em 0;
 	}
-	
-	/* ####################### */
-	.notification > div
-	{
-		border-width: .1em;
-		border-style: solid;
-		border-radius: .5em;
-		margin-bottom: 1em;
-		padding: 1em 1.5em;
-	}
-
-		.notification .error
-		{
-			background: #ecc8c5;
-			border-color: #b32f2d;
-			color: #b32f2d;
-		}
-
-		.notification .update-nag
-		{
-			background: #cde8f5;
-			border-color: #4480ae;
-			color: #4480ae;
-		}
-
-		.notification .updated
-		{
-			background: #def2d6;
-			border-color: #5a7052;
-			color: #5a7052;
-		}
-
-			.notification > div > p
-			{
-				margin-top: 0;
-				margin-bottom: 0;
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-	/* ####################### */
 
 	/* Flexbox */
 	/* ####################### */
@@ -616,54 +576,6 @@
 			{
 				border-top: .1em solid #e1e1e1;
 			}
-	/* ####################### */
-
-	/* Overlay */
-	/* ####################### */
-	.overlay_container
-	{
-		background: #000;
-		background: rgba(0, 0, 0, .5);
-		bottom: 0;
-		left: 0;
-		position: fixed;
-		right: 0;
-		top: 0;
-		z-index: 100000;
-	}
-
-		.overlay_container > div
-		{
-			left: 50%;
-			position: absolute;
-			top: 50vh;
-			transform: translate(-50%, -50%);
-			max-width: 90%;
-		}
-
-			.overlay_container.modal > div
-			{
-				background: #fff;
-				border-radius: .5em;
-				font-size: 1.5em;
-				padding: 1em;
-			}
-
-				.overlay_container.modal p + p
-				{
-					margin-top: .5em;
-				}
-
-				.overlay_container.modal .fa-times
-				{
-					background: #fff;
-					border-radius: .4em;
-					display: block;
-					padding: .1em .25em;
-					position: absolute;
-					right: -.2em;
-					top: -.2em;
-				}
 	/* ####################### */
 }
 

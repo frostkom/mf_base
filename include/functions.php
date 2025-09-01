@@ -2787,6 +2787,10 @@ function get_notification($data = [])
 {
 	global $error_text, $notice_text, $done_text;
 
+	$plugin_include_url = plugin_dir_url(__FILE__);
+
+	mf_enqueue_style('style_base_notification', $plugin_include_url."style_notification.css");
+
 	if(!isset($data['add_container'])){		$data['add_container'] = false;}
 
 	$out = "";
@@ -3238,7 +3242,7 @@ function show_textfield($data)
 		case 'month':
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
-			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css"); //, '1.8.2'
+			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css");
 			wp_enqueue_script('jquery-ui-datepicker');
 			mf_enqueue_script('script_base_datepicker', $plugin_include_url."script_datepicker.js");
 

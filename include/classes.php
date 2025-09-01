@@ -3093,6 +3093,11 @@ class mf_base
 
 		if(in_array('lost_connection', $arr_type) && $this->template_lost_connection == false)
 		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
+			mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+
 			$out .= "<div id='overlay_lost_connection' class='overlay_container hide'><div>".__("Lost Connection", 'lang_base')."</div></div>";
 
 			$this->template_lost_connection = true;
@@ -3100,6 +3105,11 @@ class mf_base
 
 		if(in_array('loading', $arr_type) && $this->template_loading == false)
 		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
+			mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+
 			$out .= "<div id='overlay_loading' class='overlay_container hide'><div>".apply_filters('get_loading_animation', '')."</div></div>";
 
 			$this->template_loading = true;

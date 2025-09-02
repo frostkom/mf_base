@@ -2252,6 +2252,28 @@ class mf_base
 		)*/
 	}
 
+	function get_layout_breakpoints()
+	{
+		$arr_out = [
+			'tablet' => 1200,
+			'suffix' => "px",
+		];
+
+		$max_width = apply_filters('get_styles_content', '', 'max_width');
+
+		if($max_width != '')
+		{
+			preg_match('/^([0-9]*\.?[0-9]+)([a-zA-Z%]+)$/', $max_width, $matches);
+
+			$arr_out['tablet'] = $matches[1];
+			$arr_out['suffix'] = $matches[2];
+		}
+
+		$arr_out['mobile'] = ($arr_out['tablet'] * .775);
+
+		return $arr_out;
+	}
+
 	function column_header($columns)
 	{
 		unset($columns['date']);

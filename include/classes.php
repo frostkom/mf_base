@@ -2595,7 +2595,7 @@ class mf_base
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
-		mf_enqueue_style('style_base', $plugin_include_url."style.css");
+		mf_enqueue_style('style_base', $plugin_include_url."style.php");
 
 		$data_temp = $data;
 		$data_temp['plugin_include_url'] = $plugin_include_url;

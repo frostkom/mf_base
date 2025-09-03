@@ -31,7 +31,6 @@ echo "@media all
 {
 	.widget ul.grid_columns
 	{
-		gap: 1%;
 		list-style: none;
 		padding: 0;
 	}
@@ -45,6 +44,7 @@ echo "@media all
 		{
 			display: flex;
 			flex-wrap: wrap;
+			gap: 1%;
 		}
 
 		.widget ul.grid_columns li

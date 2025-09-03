@@ -1,4 +1,17 @@
-@media all
+<?php
+
+if(!defined('ABSPATH'))
+{
+	header("Content-Type: text/css; charset=utf-8");
+
+	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
+
+	require_once($folder."wp-load.php");
+}
+
+$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
+
+echo "@media all
 {
 	html
 	{
@@ -10,10 +23,10 @@
 		display: none !important;
 	}
 
-	.display_inline
+	/*.display_inline
 	{
 		display: inline !important;
-	}
+	}*/
 
 	.nowrap
 	{
@@ -145,19 +158,9 @@
 	.flex_flow
 	{
 		display: flex;
-		gap: 1em;
 		flex-wrap: wrap;
+		gap: 1em;
 	}
-
-		.is_mobile .flex_flow
-		{
-			display: block;
-		}
-
-			.is_mobile span.flex_flow
-			{
-				display: inline;
-			}
 
 		.flex_flow > *
 		{
@@ -165,16 +168,10 @@
 			flex: 1 1 0;
 		}
 
-			.is_mobile .flex_flow > *
-			{
-				margin-right: 0;
-				margin-bottom: 1em;
-			}
-
-			.flex_flow > h3
+			/*.flex_flow > h3
 			{
 				line-height: 2.1;
-			}
+			}*/
 
 			.flex_flow > *:last-child
 			{
@@ -575,9 +572,25 @@
 				border-top: .1em solid #e1e1e1;
 			}
 	/* ####################### */
+}";
+
+if($arr_breakpoints['mobile'] > 0)
+{
+	echo "@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+	{
+		.flex_flow
+		{
+			display: block;
+		}
+
+		/*.flex_flow > *
+		{
+			margin-bottom: 1em;
+		}*/
+	}";
 }
 
-@media print
+echo "@media print
 {
 	body
 	{
@@ -594,4 +607,4 @@
 			background: none !important;
 			padding: 0 !important;
 		}
-}
+}";

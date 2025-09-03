@@ -50,6 +50,7 @@ echo "@media all
 		.widget ul.grid_columns li
 		{
 			background: #fff;
+			border-radius: .5em;
 			box-shadow: 0 .2em .4em rgba(0, 0, 0, .15);
 			flex: 0 1 auto;
 			margin: 0 0 .6em;
@@ -91,13 +92,25 @@ echo "@media all
 			.widget ul.grid_columns .content
 			{
 				padding: 1em;
+				position: relative;
 			}
 
 				.widget ul.grid_columns .meta
 				{
+					background: #fff;
+					border-radius: .5em;
 					font-size: .7em;
-					margin: .5em 0;
+					opacity: 1;
+					padding: .5em 1em;
+					position: absolute;
+					top: -4em;
+					transition: all 1s ease;
 				}
+
+					.widget ul.grid_columns li:hover .meta
+					{
+						opacity: 0;
+					}
 
 					.widget ul.grid_columns .date
 					{
@@ -110,10 +123,15 @@ echo "@media all
 					text-decoration: none;
 				}
 
-				.widget ul.grid_columns .content p
+				.widget ul.grid_columns .content > a
+				{
+					font-weight: bold;
+				}
+
+				/*.widget ul.grid_columns .content p
 				{
 					margin: 0;
-				}
+				}*/
 
 				.widget ul.grid_columns .content .wp-block-button
 				{

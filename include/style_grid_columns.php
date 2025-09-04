@@ -39,7 +39,7 @@ echo "@media all
 		{
 			column-count: ".$setting_desktop_columns.";
 		}
-			
+
 		.widget.square ul.grid_columns
 		{
 			display: flex;
@@ -63,7 +63,7 @@ echo "@media all
 				page-break-inside: avoid;
 				break-inside: avoid;
 			}
-			
+
 			.widget.square ul.grid_columns li
 			{
 				flex: 0 1 auto;
@@ -97,11 +97,8 @@ echo "@media all
 
 				.widget ul.grid_columns .meta
 				{
-					background: #fff;
-					border-radius: .5em;
 					font-size: .7em;
 					opacity: 1;
-					padding: .5em 1em;
 					position: absolute;
 					top: -4em;
 					transition: all 1s ease;
@@ -112,9 +109,16 @@ echo "@media all
 						opacity: 0;
 					}
 
+					.widget ul.grid_columns .meta > span, .widget ul.grid_columns .meta > a
+					{
+						background: #fff;
+						border-radius: .5em;
+						padding: .5em 1em;
+					}
+
 					.widget ul.grid_columns .date
 					{
-						color: #ccc;
+						color: #999;
 						font-size: .9em;
 					}
 

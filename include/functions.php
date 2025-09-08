@@ -4416,11 +4416,23 @@ function set_file_content($data)
 
 		$folder = dirname($data['file']);
 
-		if(!is_dir($folder))
+		$log_message = __FUNCTION__.": I could not create the folder ".$folder;
+
+		if(is_dir($folder))
 		{
-			if(!mkdir($folder, 0755, true))
+			do_log($log_message, 'trash');
+		}
+
+		else
+		{
+			if(@mkdir($folder, 0755, true))
 			{
-				do_log(__FUNCTION__.": I could not create the folder ".$folder);
+				do_log($log_message, 'trash');
+			}
+
+			else
+			{
+				do_log($log_message);
 			}
 		}
 
@@ -4541,7 +4553,7 @@ function show_table_header($arr_header, $shorten_text = true)
 ########################################
 
 // Stopped using 250810
-function does_post_exists($data)
+/*function does_post_exists($data)
 {
 	global $wpdb;
 
@@ -4553,7 +4565,7 @@ function does_post_exists($data)
 	get_post_children(array(
 		'post_type' => $data['post_type'],
 		'post_status' => $data['post_status'],
-		'is_trusted' => true,
+		//'is_trusted' => true,
 		'meta' => $data['meta'],
 		'limit' => 1,
 	), $arr_data);
@@ -4561,7 +4573,7 @@ function does_post_exists($data)
 	do_log(__FUNCTION__.": Replace with native query (".var_export($data, true)." -> ".$wpdb->last_query.")");
 
 	return (count($arr_data) > 0);
-}
+}*/
 
 function get_post_children($data, &$arr_data = [])
 {
@@ -4582,7 +4594,7 @@ function get_post_children($data, &$arr_data = [])
 	if(!isset($data['join'])){				$data['join'] = '';}
 	if(!isset($data['where'])){				$data['where'] = '';}
 
-	if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
+	//if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
 	if(!isset($data['meta'])){				$data['meta'] = [];}
 
 	if(!isset($data['group_by'])){			$data['group_by'] = '';}
@@ -4646,15 +4658,16 @@ function get_post_children($data, &$arr_data = [])
 				$arr_keys_used[$key] = $key;
 			}
 
-			if($data['is_trusted'])
+			/*if($data['is_trusted'])
 			{
 				$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".$key."' AND table_".$key.".meta_value = '".$value."'";
 			}
 
 			else
-			{
-				$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
-			}
+			{*/
+				$query_join .= ($query_join != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
+				//$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
+			//}
 		}
 
 		unset($arr_keys_used);

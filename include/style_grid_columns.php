@@ -100,8 +100,9 @@ echo "@media all
 					font-size: .7em;
 					opacity: 1;
 					position: absolute;
-					top: -4em;
+					top: -2.5em;
 					transition: all 1s ease;
+					left: .7em;
 				}
 
 					.widget ul.grid_columns li:hover .meta
@@ -113,13 +114,8 @@ echo "@media all
 					{
 						background: #fff;
 						border-radius: .5em;
+						margin-right: .5em;
 						padding: .5em 1em;
-					}
-
-					.widget ul.grid_columns .date
-					{
-						color: #999;
-						font-size: .9em;
 					}
 
 				.widget ul.grid_columns .content a
@@ -131,11 +127,6 @@ echo "@media all
 				{
 					font-weight: bold;
 				}
-
-				/*.widget ul.grid_columns .content p
-				{
-					margin: 0;
-				}*/
 
 				.widget ul.grid_columns .content .wp-block-button
 				{

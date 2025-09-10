@@ -212,7 +212,7 @@ echo "@media all
 			line-height: 1.8;
 		}
 
-		.mf_form .mf_form_field, .mf_form div.input, .mf_form p.input, #comments #comment
+		.mf_form .mf_form_field/*, .mf_form div.input, .mf_form p.input, #comments #comment*/
 		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
@@ -236,10 +236,10 @@ echo "@media all
 				border-color: #e47676;
 			}
 
-			.mf_form div.input, .mf_form p.input
+			/*.mf_form div.input, .mf_form p.input
 			{
 				border-radius: .4em;
-			}
+			}*/
 
 			.mf_form label .maxlength_counter
 			{
@@ -250,8 +250,6 @@ echo "@media all
 				opacity: .5;
 			}
 
-			/* Has to be tested with all possible types */
-			/* .form_password, .form_select, .form_checkbox .form_checkbox_multiple, .form_radio_multiple */
 			.mf_form .has_suffix .mf_form_field
 			{
 				width: auto;

@@ -327,6 +327,7 @@ function get_toggler_container($data)
 	if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
 	if(!isset($data['container_tag'])){		$data['container_tag'] = 'div';}
 	if(!isset($data['is_open'])){			$data['is_open'] = false;}
+	if(!isset($data['is_toggleable'])){		$data['is_toggleable'] = true;}
 	if(!isset($data['id'])){				$data['id'] = "";}
 
 	switch($data['type'])
@@ -339,10 +340,15 @@ function get_toggler_container($data)
 				$data['id'] = sanitize_title_with_dashes(sanitize_title($data['text']));
 			}
 
-			$out = "<".$data['label_tag'].($data['id'] != '' ? " id='toggle_".$data['id']."'" : "")." class='toggler".($data['is_open'] ? " is_open" : "")."'>"
-				."<span>".$data['text']."</span>"
-				."<div class='toggle_icon'><div></div><div></div></div>"
-			."</".$data['label_tag'].">
+			$out = "<".$data['label_tag'].($data['id'] != '' ? " id='toggle_".$data['id']."'" : "")." class='toggler".($data['is_open'] ? " is_open" : "").($data['is_toggleable'] ? "" : " is_not_toggleable")."'>"
+				."<span>".$data['text']."</span>";
+
+				if($data['is_toggleable'] == true)
+				{
+					$out .= "<div class='toggle_icon'><div></div><div></div></div>";
+				}
+
+			$out .= "</".$data['label_tag'].">
 			<".$data['container_tag']." class='toggle_container".($data['id'] != '' ? " toggle_".$data['id'] : "")."'>";
 
 			return $out;
@@ -1627,33 +1633,16 @@ function get_media_button($data = [])
 	if(!isset($data['label'])){				$data['label'] = "";}
 	if(!isset($data['text'])){				$data['text'] = __("Add Attachment", 'lang_base');}
 	if(!isset($data['value'])){				$data['value'] = "";}
-	if(!isset($data['show_add_button'])){	$data['show_add_button'] = true;}
+	if(!isset($data['show_add_button'])){	$data['show_add_button'] = IS_AUTHOR;}
 	if(!isset($data['multiple'])){			$data['multiple'] = true;}
 	if(!isset($data['max_file_uploads'])){	$data['max_file_uploads'] = 0;}
 	if(!isset($data['description'])){		$data['description'] = '';}
 
-	if(IS_AUTHOR && $data['show_add_button'] == true || $data['value'] != '')
+	if($data['show_add_button'] == true || $data['value'] != '')
 	{
 		if($data['multiple'] == false)
 		{
 			$data['max_file_uploads'] = 1;
-		}
-
-		if(!isset($is_media_button_init))
-		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-
-			wp_enqueue_media();
-			mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css");
-			mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
-				//'multiple' => $data['multiple'],
-				'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
-				'unknown_title' => __("Unknown title", 'lang_base'),
-				'confirm_question' => __("Are you sure?", 'lang_base'),
-				//'max_file_uploads' => $data['max_file_uploads'],
-			));
-
-			$is_media_button_init = true;
 		}
 
 		$out .= "<div class='mf_media_button' data-max_file_uploads='".$data['max_file_uploads']."'>";
@@ -1663,9 +1652,25 @@ function get_media_button($data = [])
 				$out .= "<label>".$data['label']."</label>";
 			}
 
-			if(IS_AUTHOR && $data['show_add_button'] == true)
+			if($data['show_add_button'] == true)
 			{
-				//"wp-media-buttons"
+				if(!isset($is_media_button_init))
+				{
+					$plugin_include_url = plugin_dir_url(__FILE__);
+
+					wp_enqueue_media();
+					mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css");
+					mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
+						//'multiple' => $data['multiple'],
+						'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
+						'unknown_title' => __("Unknown title", 'lang_base'),
+						'confirm_question' => __("Are you sure?", 'lang_base'),
+						//'max_file_uploads' => $data['max_file_uploads'],
+					));
+
+					$is_media_button_init = true;
+				}
+
 				$out .= "<div".get_form_button_classes().">
 					<div class='button insert-media wp-block-button__link'>".$data['text']."</div>
 					<span></span>
@@ -4038,7 +4043,8 @@ function show_form_alternatives($data)
 
 								else
 								{
-									$compare = (is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : -$data_value;
+									//$compare = ((is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : -$data_value);
+									$compare = ((is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : 0);
 								}
 
 								if($data['multiple'])

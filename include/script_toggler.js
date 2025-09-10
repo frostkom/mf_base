@@ -69,7 +69,7 @@ jQuery(function($)
 		}
 	}
 
-	$(document).on('click', ".toggler", function()
+	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
 	{
 		var dom_obj = $(this);
 

@@ -2943,7 +2943,7 @@ class mf_base
 
 	function is_multiple()
 	{
-		return substr($this->data['name'], -2) == "[]";
+		return (substr($this->data['name'], -2) == "[]");
 	}
 
 	function get_hidden_field()

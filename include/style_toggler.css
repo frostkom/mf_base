@@ -96,9 +96,16 @@
 			display: none;
 		}
 
-		.toggle_container, .toggle_container > ol, .toggle_container > ul
+		ol.toggle_container, ul.toggle_container
 		{
 			list-style: disc inside;
+		}
+
+		.toggle_container > ol, .toggle_container > ul
+		{
+			list-style: disc outside;
+			padding: .5em 0 0 1em;
+			margin: 0 0 .5em;
 		}
 
 			.toggle_container li + li

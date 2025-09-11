@@ -18,6 +18,17 @@ echo "@media all
 		overflow-y: scroll;
 	}
 
+	:focus-visible
+	{
+		outline: .1em solid rgba(0, 0, 0, .3);
+		outline-offset: 0 !important;
+	}
+
+	:focus:not(:focus-visible)
+	{
+		outline: none;
+	}
+
 	.hide, [hidden]
 	{
 		display: none !important;

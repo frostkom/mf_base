@@ -20,7 +20,7 @@ echo "@media all
 
 	:focus-visible
 	{
-		outline: .1em solid rgba(0, 0, 0, .3);
+		outline-width: .1em;
 		outline-offset: 0 !important;
 	}
 

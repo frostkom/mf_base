@@ -64,7 +64,7 @@
 		margin-top: .8em;
 	}
 
-	.mf_search
+	/*.mf_search
 	{
 		float: right;
 		margin: .5em 0;
@@ -74,7 +74,7 @@
 		{
 			margin-bottom: 0;
 			padding-bottom: .5em;
-		}
+		}*/
 
 	.tablenav .actions select
 	{
@@ -188,7 +188,7 @@
 
 @media print
 {
-	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .mf_search, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated
+	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated
 	{
 		display: none;
 	}

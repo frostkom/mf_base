@@ -470,7 +470,6 @@ echo "@media all
 	{
 		border: .1em solid #e5e5e5;
 		border-spacing: 0;
-		/*table-layout: fixed;*/
 		width: 100%;
 	}
 
@@ -479,11 +478,6 @@ echo "@media all
 			table-layout: fixed;
 		}
 
-		/*body:not(.wp-admin) .widefat *
-		{
-			word-wrap: break-word;
-		}*/
-
 			body:not(.wp-admin) .widefat thead tr
 			{
 				background: #fff;
@@ -491,7 +485,6 @@ echo "@media all
 
 			body:not(.wp-admin) .widefat td, body:not(.wp-admin) .widefat th
 			{
-				/*color: #555;*/
 				padding: .8em 1em;
 				vertical-align: top;
 			}
@@ -499,19 +492,11 @@ echo "@media all
 			body:not(.wp-admin) .widefat th
 			{
 				border-bottom: .1em solid #e1e1e1;
-				/*color: #32373c;
-				cursor: pointer;
-				font-size: .9em;*/
 				overflow: hidden;
 				text-align: left;
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			}
-
-				/*body:not(.wp-admin) .widefat th:hover
-				{
-					white-space: normal;
-				}*/
 
 			body:not(.wp-admin) .widefat.striped > tbody > *:nth-child(2n+1)
 			{
@@ -530,35 +515,21 @@ echo "@media all
 
 				.widefat td
 				{
-					/*font-family: inherit;
-					font-size: inherit;
-					font-weight: inherit;
-					line-height: inherit;*/
 					overflow: hidden;
-					/*text-overflow: ellipsis;*/
 				}
-
-					/*body:not(.wp-admin) .widefat td, body:not(.wp-admin) .widefat td ol, body:not(.wp-admin) .widefat td p, body:not(.wp-admin) .widefat td ul
-					{
-						font-size: .8em;
-					}*/
 
 					body:not(.wp-admin) .widefat tr .row-actions
 					{
-						/*color: #999;
-						left: -9999em;*/
 						opacity: 0;
 						padding: .1em 0 0;
-						pointer-events: none;
+						/*pointer-events: none;*/
 						position: relative;
-						white-space: nowrap;
 					}
 
 						body:not(.wp-admin) .widefat tr:hover .row-actions
 						{
 							opacity: 1;
-							pointer-events: all;
-							/*position: static;*/
+							/*pointer-events: all;*/
 						}
 
 						body:not(.wp-admin) .widefat tr .row-actions > * + *:before
@@ -606,7 +577,7 @@ echo "@media print
 		background: none !important;
 	}
 
-		#wpadminbar, header, .hide_on_print, .mf_search, footer
+		#wpadminbar, header, footer
 		{
 			display: none;
 		}

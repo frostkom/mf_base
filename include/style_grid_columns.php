@@ -47,7 +47,7 @@ echo "@media all
 			gap: 1%;
 		}
 
-		.widget ul.grid_columns li
+		.widget ul.grid_columns > li
 		{
 			background: #fff;
 			border-radius: .5em;
@@ -58,25 +58,25 @@ echo "@media all
 			position: relative;
 		}
 
-			.widget.masonry ul.grid_columns li
+			.widget.masonry ul.grid_columns > li
 			{
 				page-break-inside: avoid;
 				break-inside: avoid;
 			}
 
-			.widget.square ul.grid_columns li
+			.widget.square ul.grid_columns > li
 			{
 				flex: 0 1 auto;
 				width: ".$column_width_desktop."%;
 			}
 
-			.widget ul.grid_columns li .image
+			.widget ul.grid_columns > li .image
 			{
 				background: rgba(0, 0, 0, .03);
 				overflow: hidden;
 			}
 
-				.widget ul.grid_columns li .image img
+				.widget ul.grid_columns > li .image img
 				{
 					display: block;
 					object-fit: cover;
@@ -84,7 +84,7 @@ echo "@media all
 					width: 100%;
 				}
 
-					.widget ul.grid_columns li:hover .image img
+					.widget ul.grid_columns > li:hover .image img
 					{
 						transform: scale(1.1);
 					}
@@ -105,7 +105,7 @@ echo "@media all
 					left: .7em;
 				}
 
-					.widget ul.grid_columns li:hover .meta
+					.widget ul.grid_columns > li:hover .meta
 					{
 						opacity: 0;
 					}
@@ -150,7 +150,7 @@ if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoin
 			column-count: ".$setting_tablet_columns.";
 		}
 
-		.widget.square ul.grid_columns li
+		.widget.square ul.grid_columns > li
 		{
 			width: ".$column_width_tablet."%;
 		}
@@ -166,7 +166,7 @@ if($arr_breakpoints['mobile'] > 0)
 			column-count: ".$setting_mobile_columns.";
 		}
 
-		.widget.square ul.grid_columns li
+		.widget.square ul.grid_columns > li
 		{
 			width: ".$column_width_mobile."%;
 		}

@@ -205,15 +205,15 @@ echo "@media all
 
 	/* Forms */
 	/* ####################### */
-	.mf_form
+	/*.mf_form
 	{
 		overflow: hidden;
-	}
+	}*/
 
-		.mf_form > div
+		/*.mf_form > div
 		{
 			clear: both;
-		}
+		}*/
 
 		.mf_form label
 		{

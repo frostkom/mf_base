@@ -449,10 +449,10 @@ echo "@media all
 					border-color: #900;
 				}
 
-			.mf_settings #postbox-container-1 button
+			/*.mf_settings #postbox-container-1 button
 			{
 				margin: .6em .6em 0 0;
-			}
+			}*/
 
 			:root :where(.wp-block-button.is-style-outline--1 .wp-block-button__link)
 			{

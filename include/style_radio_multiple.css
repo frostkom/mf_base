@@ -1,0 +1,40 @@
+@media all
+{
+	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
+	{
+		background: #fff;
+		background: rgba(255, 255, 255, .8);
+		border: 1px solid #e1e1e1;
+		margin-top: 0;
+		margin-bottom: .5em;
+		overflow: hidden;
+		padding: .7em 1.1em 0 .7em;
+	}
+
+	.mf_form .form_checkbox_multiple > label, .mf_form .form_radio_multiple > label
+	{
+		font-weight: bold;
+	}
+
+	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
+	{
+		list-style: none;
+		margin: 0 0 .5em;
+		padding: 0;
+	}
+
+		.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio
+		{
+			white-space: nowrap;
+		}
+
+	.mf_form .form_radio_multiple.inactive
+	{
+		opacity: .5;
+	}
+
+		.mf_form .form_radio_multiple.inactive:hover
+		{
+			opacity: 1;
+		}
+}

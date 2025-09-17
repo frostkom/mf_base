@@ -348,23 +348,6 @@ echo "@media all
 			margin: 0 0 .4em;
 		}
 
-			.mf_form .form_checkbox_multiple > label, .mf_form .form_radio_multiple > label
-			{
-				font-weight: bold;
-			}
-
-			.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
-			{
-				list-style: none;
-				margin: 0 0 .5em;
-				padding: 0;
-			}
-
-				.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio
-				{
-					white-space: nowrap;
-				}
-
 			.mf_form .form_checkbox label, .mf_form .form_radio label
 			{
 				display: inline;

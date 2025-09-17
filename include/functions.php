@@ -324,21 +324,25 @@ function get_plugin_version($file)
 
 function get_toggler_container($data)
 {
-	if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
 	if(!isset($data['container_tag'])){		$data['container_tag'] = 'div';}
-	if(!isset($data['is_open'])){			$data['is_open'] = false;}
-	if(!isset($data['is_toggleable'])){		$data['is_toggleable'] = true;}
-	if(!isset($data['id'])){				$data['id'] = "";}
 
 	switch($data['type'])
 	{
 		case 'start':
 			do_action('get_toggler_includes');
 
-			if($data['text'] != '')
+			if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
+			if(!isset($data['is_open'])){			$data['is_open'] = false;}
+			if(!isset($data['is_toggleable'])){		$data['is_toggleable'] = true;}
+			if(!isset($data['id_prefix'])){			$data['id_prefix'] = '';}
+			if(!isset($data['id'])){				$data['id'] = '';}
+
+			if($data['id'] == '' && $data['text'] != '')
 			{
 				$data['id'] = sanitize_title_with_dashes(sanitize_title($data['text']));
 			}
+
+			$data['id'] = $data['id_prefix'].$data['id'];
 
 			$out = "<".$data['label_tag'].($data['id'] != '' ? " id='toggle_".$data['id']."'" : "")." class='toggler".($data['is_open'] ? " is_open" : "").($data['is_toggleable'] ? "" : " is_not_toggleable")."'>"
 				."<span>".$data['text']."</span>";
@@ -3232,7 +3236,6 @@ function show_textfield($data)
 	if(!isset($data['autocapitalize'])){	$data['autocapitalize'] = true;}
 	if(!isset($data['readonly'])){			$data['readonly'] = false;}
 	if(!isset($data['placeholder'])){		$data['placeholder'] = "";}
-	//if(!isset($data['pattern'])){			$data['pattern'] = "";}
 	if(!isset($data['title'])){				$data['title'] = "";}
 	if(!isset($data['xtra'])){				$data['xtra'] = "";}
 	if(!isset($data['field_class'])){		$data['field_class'] = "mf_form_field";}
@@ -3397,11 +3400,6 @@ function show_textfield($data)
 			{
 				$out .= " placeholder='".$data['placeholder']."&hellip;'";
 			}
-
-			/*if($data['pattern'] != '')
-			{
-				$out .= " pattern='".$data['pattern']."'";
-			}*/
 
 			if($data['title'] != '')
 			{
@@ -3943,6 +3941,12 @@ function show_form_alternatives($data)
 
 		else
 		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
+			mf_enqueue_script('script_base_radio_multiple', $plugin_include_url."script_radio_multiple.js", array(
+				'plugins_url' => plugins_url(),
+			));
+
 			$container_class = "form_radio_multiple";
 		}
 

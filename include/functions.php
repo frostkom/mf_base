@@ -3943,9 +3943,9 @@ function show_form_alternatives($data)
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
 			mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
-			mf_enqueue_script('script_base_radio_multiple', $plugin_include_url."script_radio_multiple.js", array(
+			/*mf_enqueue_script('script_base_radio_multiple', $plugin_include_url."script_radio_multiple.js", array(
 				'plugins_url' => plugins_url(),
-			));
+			));*/
 
 			$container_class = "form_radio_multiple";
 		}

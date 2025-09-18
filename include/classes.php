@@ -4134,7 +4134,7 @@ if(class_exists('RWMB_Field'))
 			$attributes['data-selected'] = $meta;
 			$walker = new RWMB_Walker_Select($field, $meta);
 
-			$attributes['class'] .= " multiselect";
+			$attributes['class'] .= " mf_form_field multiselect";
 
 			do_action('init_multiselect');
 

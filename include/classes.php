@@ -417,6 +417,14 @@ class mf_base
 			}
 		}
 
+		register_block_style(
+			'core/button',
+			[
+				'name' => 'button_alternative',
+				'label' => __("Alternative", 'lang_base'),
+			]
+		);
+
 		$this->reschedule_base();
 	}
 

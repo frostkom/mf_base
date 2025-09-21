@@ -3934,6 +3934,9 @@ function show_form_alternatives($data)
 
 	if($count_datalist > 0)
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
+
 		if($data['multiple'])
 		{
 			$container_class = "form_checkbox_multiple";
@@ -3941,12 +3944,6 @@ function show_form_alternatives($data)
 
 		else
 		{
-			$plugin_include_url = plugin_dir_url(__FILE__);
-			mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
-			/*mf_enqueue_script('script_base_radio_multiple', $plugin_include_url."script_radio_multiple.js", array(
-				'plugins_url' => plugins_url(),
-			));*/
-
 			$container_class = "form_radio_multiple";
 		}
 

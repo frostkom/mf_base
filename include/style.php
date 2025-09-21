@@ -9,6 +9,8 @@ if(!defined('ABSPATH'))
 	require_once($folder."wp-load.php");
 }
 
+global $wpdb;
+
 $arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
 $theme_slug = get_stylesheet();

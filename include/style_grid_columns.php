@@ -9,23 +9,21 @@ if(!defined('ABSPATH'))
 	require_once($folder."wp-load.php");
 }
 
+function calc_width($columns, $gap)
+{
+    return ((100 - ($columns - 1) * $gap) / $columns);
+}
+
 $arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
 $setting_desktop_columns = 3;
 $setting_tablet_columns = 2;
 $setting_mobile_columns = 1;
+$setting_column_gap = 1;
 
-if(!function_exists('calc_width'))
-{
-	function calc_width($columns)
-	{
-		return (100 / $columns) - ($columns > 1 ? 1 : 0);
-	}
-}
-
-$column_width_desktop = calc_width($setting_desktop_columns);
-$column_width_tablet = calc_width($setting_tablet_columns);
-$column_width_mobile = calc_width($setting_mobile_columns);
+$column_width_desktop = calc_width($setting_desktop_columns, $setting_column_gap);
+$column_width_tablet = calc_width($setting_tablet_columns, $setting_column_gap);
+$column_width_mobile = calc_width($setting_mobile_columns, $setting_column_gap);
 
 echo "@media all
 {
@@ -44,7 +42,7 @@ echo "@media all
 		{
 			display: flex;
 			flex-wrap: wrap;
-			gap: 1%;
+			gap: ".$setting_column_gap."%;
 		}
 
 		.widget ul.grid_columns > li

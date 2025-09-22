@@ -2012,8 +2012,10 @@ function settings_header($id, $title)
 	return "<div id='".$id."' class='hide'><a href='#".$id."'><h3>".$title."</h3></a></div>";
 }
 
-function get_source_version($file, $version)
+function get_source_version($file)
 {
+	$version = '';
+
 	if($version == '' && strpos($file, WP_CONTENT_URL))
 	{
 		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
@@ -2054,7 +2056,7 @@ function mf_enqueue_style($handle, $file = "", $dep = [])
 		}
 	}
 
-	$version = get_source_version($file, $version);
+	$version = get_source_version($file);
 
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
@@ -2076,7 +2078,7 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 		}
 	}
 
-	$version = get_source_version($file, $version);
+	$version = get_source_version($file);
 
 	if(is_array($translation) && count($translation) > 0)
 	{

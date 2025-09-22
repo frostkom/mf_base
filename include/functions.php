@@ -1665,11 +1665,9 @@ function get_media_button($data = [])
 					wp_enqueue_media();
 					mf_enqueue_style('style_media_button', $plugin_include_url."style_media_button.css");
 					mf_enqueue_script('script_media_button', $plugin_include_url."script_media_button.js", array(
-						//'multiple' => $data['multiple'],
 						'no_attachment_link' => __("The Media Library did not return a link to the file you added. Please try again and make sure that Link To is set to Media File", 'lang_base'),
 						'unknown_title' => __("Unknown title", 'lang_base'),
 						'confirm_question' => __("Are you sure?", 'lang_base'),
-						//'max_file_uploads' => $data['max_file_uploads'],
 					));
 
 					$is_media_button_init = true;
@@ -2039,12 +2037,21 @@ function get_source_version($file, $version)
 	return $version;
 }
 
-function mf_enqueue_style($handle, $file = "", $dep = [], $version = "")
+function mf_enqueue_style($handle, $file = "", $dep = [])
 {
-	if(!is_array($dep))
+	if($file != '' && is_user_logged_in())
 	{
-		$version = $dep;
-		$dep = [];
+		global $wp_styles;
+
+		if(isset($wp_styles->registered[$handle]))
+		{
+			$existing_src = $wp_styles->registered[$handle]->src;
+
+			if($existing_src !== $file)
+			{
+				do_log(__FUNCTION__.": The handle ".$handle." has already been enqueued with another file (".$existing_src." !== ".$file.")");
+			}
+		}
 	}
 
 	$version = get_source_version($file, $version);
@@ -2052,12 +2059,21 @@ function mf_enqueue_style($handle, $file = "", $dep = [], $version = "")
 	wp_enqueue_style($handle, $file, $dep, $version);
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = [], $version = "")
+function mf_enqueue_script($handle, $file = "", $translation = [])
 {
-	if(!is_array($translation))
+	if($file != '' && is_user_logged_in())
 	{
-		$version = $translation;
-		$translation = [];
+		global $wp_scripts;
+
+		if(isset($wp_scripts->registered[$handle]))
+		{
+			$existing_src = $wp_scripts->registered[$handle]->src;
+
+			if($existing_src !== $file)
+			{
+				do_log(__FUNCTION__.": The handle ".$handle." has already been enqueued with another file (".$existing_src." !== ".$file.")");
+			}
+		}
 	}
 
 	$version = get_source_version($file, $version);

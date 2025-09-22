@@ -1943,7 +1943,6 @@ class mf_base
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css");
 		wp_enqueue_script('jquery-ui-autocomplete');
 		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array(
-			//'plugins_url' => plugins_url(),
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'toggle_all_data_text' => __("Toggle All Data", 'lang_base'),
 		));
@@ -2592,7 +2591,7 @@ class mf_base
 			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
 			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";*/
 
-			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php"); //, $data['plugin_version']
+			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php");
 		}
 	}
 

@@ -2041,11 +2041,11 @@ function get_source_version($file)
 
 function mf_enqueue_style($handle, $file = "", $dep = [])
 {
-	if($file != '' && is_user_logged_in())
-	{
-		global $wp_styles;
+	global $wp_styles;
 
-		if(isset($wp_styles->registered[$handle]))
+	if(isset($wp_styles->registered[$handle]))
+	{
+		if($file != '' && is_user_logged_in())
 		{
 			$existing_src = $wp_styles->registered[$handle]->src;
 
@@ -2056,18 +2056,21 @@ function mf_enqueue_style($handle, $file = "", $dep = [])
 		}
 	}
 
-	$version = get_source_version($file);
+	else
+	{
+		$version = get_source_version($file);
 
-	wp_enqueue_style($handle, $file, $dep, $version);
+		wp_enqueue_style($handle, $file, $dep, $version);
+	}
 }
 
 function mf_enqueue_script($handle, $file = "", $translation = [])
 {
-	if($file != '' && is_user_logged_in())
-	{
-		global $wp_scripts;
+	global $wp_scripts;
 
-		if(isset($wp_scripts->registered[$handle]))
+	if(isset($wp_scripts->registered[$handle]))
+	{
+		if($file != '')
 		{
 			$existing_src = $wp_scripts->registered[$handle]->src;
 
@@ -2078,23 +2081,31 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 		}
 	}
 
-	$version = get_source_version($file);
-
-	if(is_array($translation) && count($translation) > 0)
-	{
-		wp_register_script($handle, $file, array('jquery'), $version, true);
-		wp_localize_script($handle, $handle, $translation);
-		wp_enqueue_script($handle);
-	}
-
-	else if($file != '')
-	{
-		wp_enqueue_script($handle, $file, array('jquery'), $version, true);
-	}
-
 	else
 	{
-		wp_enqueue_script($handle);
+		$version = get_source_version($file);
+
+		if(is_array($translation) && count($translation) > 0)
+		{
+			wp_register_script($handle, $file, array('jquery'), $version, true);
+
+			if(!wp_script_is($handle, 'done'))
+			{
+				wp_localize_script($handle, $handle, $translation);
+			}
+
+			wp_enqueue_script($handle);
+		}
+
+		else if($file != '')
+		{
+			wp_enqueue_script($handle, $file, array('jquery'), $version, true);
+		}
+
+		else
+		{
+			wp_enqueue_script($handle);
+		}
 	}
 }
 

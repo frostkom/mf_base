@@ -2045,14 +2045,11 @@ function mf_enqueue_style($handle, $file = "", $dep = [])
 
 	if(isset($wp_styles->registered[$handle]))
 	{
-		if($file != '' && is_user_logged_in())
-		{
-			$existing_src = $wp_styles->registered[$handle]->src;
+		$existing_src = $wp_styles->registered[$handle]->src;
 
-			if($existing_src !== $file)
-			{
-				do_log(__FUNCTION__.": The handle ".$handle." has already been enqueued with another file (".$existing_src." !== ".$file.")");
-			}
+		if($existing_src !== $file)
+		{
+			do_log(__FUNCTION__.": The handle ".$handle." has already been enqueued with another file (".$existing_src." !== ".$file.")");
 		}
 	}
 
@@ -2068,9 +2065,11 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 {
 	global $wp_scripts;
 
-	if(isset($wp_scripts->registered[$handle]))
+	if($file != '')
 	{
-		if($file != '')
+		$version = get_source_version($file);
+
+		if(isset($wp_scripts->registered[$handle]))
 		{
 			$existing_src = $wp_scripts->registered[$handle]->src;
 
@@ -2079,13 +2078,8 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 				do_log(__FUNCTION__.": The handle ".$handle." has already been enqueued with another file (".$existing_src." !== ".$file.")");
 			}
 		}
-	}
 
-	else
-	{
-		$version = get_source_version($file);
-
-		if(is_array($translation) && count($translation) > 0)
+		else if(is_array($translation) && count($translation) > 0)
 		{
 			wp_register_script($handle, $file, array('jquery'), $version, true);
 
@@ -2097,15 +2091,15 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 			wp_enqueue_script($handle);
 		}
 
-		else if($file != '')
+		else
 		{
 			wp_enqueue_script($handle, $file, array('jquery'), $version, true);
 		}
+	}
 
-		else
-		{
-			wp_enqueue_script($handle);
-		}
+	else
+	{
+		wp_enqueue_script($handle);
 	}
 }
 

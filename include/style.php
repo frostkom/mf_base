@@ -461,7 +461,7 @@ echo "@media all
 		echo ".wp-block-button.is-style-outline .wp-block-button__link
 		{
 			background: none;
-			border-color: var(--wp--preset--color--contrast);
+			border: .1em solid var(--wp--preset--color--contrast);
 			color: var(--wp--preset--color--contrast);
 		}
 

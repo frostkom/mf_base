@@ -75,7 +75,7 @@ jQuery(function($)
 
 	var dom_obj = $("input[maxlength], textarea[maxlength]");
 
-	dom_obj.on("keyup", function()
+	dom_obj.on("input", function()
 	{
 		display_characters_left($(this));
 	});

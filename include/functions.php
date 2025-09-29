@@ -637,6 +637,15 @@ function mf_uninstall_uploads($data, $force_main_uploads)
 	}
 }
 
+function mf_uninstall_options($data)
+{
+	foreach($data['options'] as $option)
+	{
+		delete_site_option($option);
+		delete_option($option);
+	}
+}
+
 function mf_uninstall_user_meta($data)
 {
 	if(count($data['user_meta']) > 0)
@@ -681,12 +690,29 @@ function mf_uninstall_post_types($data)
 	}
 }
 
-function mf_uninstall_options($data)
+function mf_uninstall_post_meta($data)
 {
-	foreach($data['options'] as $option)
+	global $wpdb;
+
+	foreach($data['post_meta'] as $meta_key)
 	{
-		delete_site_option($option);
-		delete_option($option);
+		$i = 0;
+
+		$result = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_key FROM ".$wpdb->postmeta." WHERE meta_key = %s", $meta_key));
+
+		foreach($result as $r)
+		{
+			//delete_post_meta($r->post_id, $r->meta_key);
+			do_log(__FUNCTION__.": Delete post_meta: ".$post_id." -> ".$meta_key);
+
+			$i++;
+
+			if($i % 100 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
+		}
 	}
 }
 
@@ -724,11 +750,14 @@ function mf_uninstall_plugin($data)
 	if(!isset($data['options'])){			$data['options'] = [];}
 	if(!isset($data['user_meta'])){			$data['user_meta'] = [];}
 	if(!isset($data['post_types'])){		$data['post_types'] = [];}
+	if(!isset($data['post_meta'])){			$data['post_meta'] = [];}
 	if(!isset($data['tables'])){			$data['tables'] = [];}
 
 	if(isset($data['meta']))
 	{
-		$data['user_meta'] = $data['meta'];
+		do_log(__FUNCTION__.": 'meta' still exists in a plugin (".var_export($data, true).")");
+
+		//$data['user_meta'] = $data['meta'];
 	}
 
 	if(is_multisite())
@@ -742,6 +771,7 @@ function mf_uninstall_plugin($data)
 			mf_uninstall_uploads($data, false);
 			mf_uninstall_options($data);
 			mf_uninstall_post_types($data);
+			mf_uninstall_post_meta($data);
 			mf_uninstall_tables($data);
 
 			restore_current_blog();
@@ -752,6 +782,7 @@ function mf_uninstall_plugin($data)
 	{
 		mf_uninstall_options($data);
 		mf_uninstall_post_types($data);
+		mf_uninstall_post_meta($data);
 		mf_uninstall_tables($data);
 	}
 

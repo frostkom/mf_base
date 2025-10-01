@@ -1642,7 +1642,7 @@ function get_media_library($data)
 					."</div>";
 				}
 
-				$out .= "<div".get_form_button_classes().">"
+				$out .= "<div".get_form_button_classes("is-style-outline").">"
 					.show_button(array('type' => 'button', 'text' => $add_file_text, 'class' => "button"))
 				."</div>
 			</div>
@@ -2603,18 +2603,17 @@ function validate_url($value, $link = true, $http = true)
 
 function get_url_content($data = [])
 {
+	if(!isset($data['timeout'])){					$data['timeout'] = 10;}
 	if(!isset($data['follow_redirect'])){			$data['follow_redirect'] = false;}
 	if(!isset($data['catch_head'])){				$data['catch_head'] = false;}
 	if(!isset($data['catch_cookie'])){				$data['catch_cookie'] = false;}
-	//if(!isset($data['include_head_in_output'])){	$data['include_head_in_output'] = false;}
 	if(!isset($data['debug'])){						$data['debug'] = false;}
 	if(!isset($data['headers'])){					$data['headers'] = [];}
 	if(!isset($data['request'])){					$data['request'] = 'get';}
 	if(!isset($data['content_type'])){				$data['content_type'] = '';}
 	if(!isset($data['password'])){					$data['password'] = '';}
 	if(!isset($data['post_data'])){					$data['post_data'] = '';}
-	if(!isset($data['cert_path'])){					$data['cert_path'] = '';} // Deprecated
-	if(!isset($data['ca_path'])){					$data['ca_path'] = $data['cert_path'];}
+	if(!isset($data['ca_path'])){					$data['ca_path'] = '';}
 	if(!isset($data['ssl_cert_path'])){				$data['ssl_cert_path'] = '';}
 	if(!isset($data['ssl_key_path'])){				$data['ssl_key_path'] = '';}
 
@@ -2625,13 +2624,13 @@ function get_url_content($data = [])
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
-	if($data['catch_cookie'] == true) // || $data['include_head_in_output'] == true
+	if($data['catch_cookie'] == true)
 	{
 		curl_setopt($ch, CURLOPT_HEADER, true);
 	}
 
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-	//curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; sv-SE; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.10");
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, ($data['timeout'] / 2));
+	curl_setopt($ch, CURLOPT_TIMEOUT, $data['timeout']);
 	curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0 Safari/537.36");
 
 	if($data['debug'] == true)
@@ -2640,7 +2639,7 @@ function get_url_content($data = [])
 		$verbose_output = fopen('php://output', 'w');
 
 		curl_setopt($curl, CURLOPT_VERBOSE, true);
-		curl_setopt($curl, CURLOPT_STDERR, $verbose_output); //fopen('php://stderr', 'w') //fopen(dirname(__FILE__).'/errorlog.txt', 'w')
+		curl_setopt($curl, CURLOPT_STDERR, $verbose_output);
 	}
 
 	if(ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off')
@@ -2785,10 +2784,10 @@ function get_url_content($data = [])
 		fclose($verbose_output);
 	}
 
-	/*if(curl_errno($handle))
+	if($data['catch_head'] == true && curl_errno($ch))
 	{
-		do_log("cURL Error: ".curl_error($ch));
-	}*/
+		$headers_raw['curl_error'] = curl_error($ch);
+	}
 
 	$headers = curl_getinfo($ch);
 
@@ -2837,11 +2836,6 @@ function get_url_content($data = [])
 	}
 
 	curl_close($ch);
-
-	/*if(get_option('setting_log_curl_debug') == 'yes')
-	{
-		do_log("cURL: ".var_export($data, true)." -> ".var_export($out, true)); //, 'notification' // If forgotten, this will make wp_posts explode in size
-	}*/
 
 	return $out;
 }

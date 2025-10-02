@@ -1044,7 +1044,7 @@ function delete_empty_folder_callback($data)
 
 		else if(is_dir($folder))
 		{
-			rmdir($folder);
+			@rmdir($folder);
 		}
 	}
 }

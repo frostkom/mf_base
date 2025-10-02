@@ -2281,6 +2281,11 @@ class mf_base
 		return $arr_out;
 	}
 
+	function disable_months_dropdown($disable, $post_type)
+	{
+		return true;
+	}
+
 	function column_header($columns)
 	{
 		unset($columns['date']);

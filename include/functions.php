@@ -1355,18 +1355,61 @@ function get_file_icon($data)
 
 	switch($suffix)
 	{
-		default:														$class = "fa-file";					break;
+		case 'pdf':
+			$class = "fa-file-pdf";
+		break;
 
-		case 'pdf':														$class = "fa-file-pdf";				break;
-		case 'mp3': case 'ogg':											$class = "fa-file-audio";			break;
-		case 'xls': case 'xlsx':										$class = "fa-file-excel";			break;
-		case 'css':														$class = "fa-file-code";			break;
-		case 'jpg': case 'jpeg': case 'png': case 'gif': case 'tif':	$class = "fa-file-image";			break;
-		case 'ppt': case 'pptx':										$class = "fa-file-powerpoint";		break;
-		case 'wmv': case 'avi':	case 'mpg':								$class = "fa-file-video";			break;
-		case 'doc': case 'docx':										$class = "fa-file-word";			break;
-		case 'zip': case 'tar':											$class = "fa-file-archive";			break;
-		case 'txt':														$class = "fa-file-alt";				break;
+		case 'mp3':
+		case 'ogg':
+			$class = "fa-file-audio";
+		break;
+
+		case 'xls':
+		case 'xlsx':
+			$class = "fa-file-excel";
+		break;
+
+		case 'css':
+			$class = "fa-file-code";
+		break;
+
+		case 'avif':
+		case 'gif':
+		case 'jpg':
+		case 'jpeg':
+		case 'png':
+		case 'tif':
+			$class = "fa-file-image";
+		break;
+
+		case 'ppt':
+		case 'pptx':
+			$class = "fa-file-powerpoint";
+		break;
+
+		case 'wmv':
+		case 'avi':
+		case 'mpg':
+			$class = "fa-file-video";
+		break;
+
+		case 'doc':
+		case 'docx':
+			$class = "fa-file-word";
+		break;
+
+		case 'zip':
+		case 'tar':
+			$class = "fa-file-archive";
+		break;
+
+		case 'txt':
+			$class = "fa-file-alt";
+		break;
+
+		default:
+			$class = "fa-file";
+		break;
 	}
 
 	return "<i class='fa ".$class." ".$data['size']."'></i>";

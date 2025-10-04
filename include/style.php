@@ -447,14 +447,14 @@ echo "@media all
 		{
 			echo ".wp-block-button .wp-block-button__link
 			{
-				background-color: var(--wp--preset--color--accent-1);
+				background-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 				color: var(--wp--preset--color--accent-2);
 			}
 
 				.wp-block-button .wp-block-button__link:hover
 				{
 					background-color: var(--wp--preset--color--accent-2);
-					color: var(--wp--preset--color--accent-1);
+					color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 				}";
 		}
 
@@ -474,12 +474,12 @@ echo "@media all
 		.wp-block-button.is-style-button_alternative .wp-block-button__link
 		{
 			background-color: var(--wp--preset--color--accent-2);
-			color: var(--wp--preset--color--accent-1);
+			color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 		}
 
 			.wp-block-button.is-style-button_alternative .wp-block-button__link:hover
 			{
-				background-color: var(--wp--preset--color--accent-1);
+				background-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 				color: var(--wp--preset--color--accent-2);
 			}
 	/* ####################### */

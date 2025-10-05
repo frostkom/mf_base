@@ -38,16 +38,16 @@ echo "@media all
 	.hide, [hidden]
 	{
 		display: none !important;
-	}";
+	}
 
-	/*.display_inline
-	{
-		display: inline !important;
-	}*/
-
-	echo ".nowrap
+	.nowrap
 	{
 		white-space: nowrap;
+	}
+
+	.overflow
+	{
+		overflow: hidden;
 	}
 
 	.row-actions
@@ -157,14 +157,9 @@ echo "@media all
 	.alignright
 	{
 		text-align: right;
-	}";
+	}
 
-	/*.rwmb-text, .rwmb-email, .rwmb-date, .rwmb-url, .rwmb-date, .rwmb-address
-	{
-		width: 100%;
-	}*/
-
-	echo ".image_fallback
+	.image_fallback
 	{
 		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHhtbG5zOnhsaW5rPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rJyB2aWV3Qm94PScwIDAge3t3fX0ge3tofX0nPjxkZWZzPjxzeW1ib2wgaWQ9J2EnIHZpZXdCb3g9JzAgMCA5MCA2Nicgb3BhY2l0eT0nMC4zJz48cGF0aCBkPSdNODUgNXY1Nkg1VjVoODBtNS01SDB2NjZoOTBWMHonLz48Y2lyY2xlIGN4PScxOCcgY3k9JzIwJyByPSc2Jy8+PHBhdGggZD0nTTU2IDE0TDM3IDM5bC04LTYtMTcgMjNoNjd6Jy8+PC9zeW1ib2w+PC9kZWZzPjx1c2UgeGxpbms6aHJlZj0nI2EnIHdpZHRoPScyMCUnIHg9JzQwJScvPjwvc3ZnPg==');
 		padding: 3em 0;
@@ -210,26 +205,16 @@ echo "@media all
 	/* ####################### */
 
 	/* Forms */
-	/* ####################### */";
-	/*.mf_form
+	/* ####################### */
+	.mf_form label
 	{
-		overflow: hidden;
-	}*/
+		color: inherit;
+		cursor: pointer;
+		display: block;
+		line-height: 1.8;
+	}
 
-		/*.mf_form > div
-		{
-			clear: both;
-		}*/
-
-		echo ".mf_form label
-		{
-			color: inherit;
-			cursor: pointer;
-			display: block;
-			line-height: 1.8;
-		}
-
-		.mf_form .mf_form_field/*, .mf_form div.input, .mf_form p.input, #comments #comment*/
+		.mf_form .mf_form_field
 		{
 			background: #fff;
 			background: rgba(255, 255, 255, .9);
@@ -332,7 +317,7 @@ echo "@media all
 				outline: none;
 			}
 
-		.mf_form .form_textfield .description, .mf_form .form_select .description, .mf_form .form_textarea .description, .mf_form .form_password .description
+		.mf_form .form_textfield p.description, .mf_form .form_select p.description, .mf_form .form_textarea p.description, .mf_form .form_password p.description
 		{
 			font-size: .7em;
 			margin: -.6em 0 1em;

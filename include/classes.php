@@ -362,70 +362,102 @@ class mf_base
 
 	function init()
 	{
-		if($_SERVER['REQUEST_URI'] === '/.well-known/security.txt' || $_SERVER['REQUEST_URI'] === '/security.txt')
+		global $wpdb;
+
+		switch($_SERVER['REQUEST_URI'])
 		{
-			header('Content-Type: text/plain');
+			case '/llm.txt':
+			case '/llms.txt':
+				header('Content-Type: text/plain');
 
-			echo "Contact: mailto:security@martinfors.se\r\n"
-			."Expires: ".gmdate('Y-m-d\TH:i:s\Z', time() + WEEK_IN_SECONDS);
-			exit;
+				echo "# AI Reference List\r\n";
+
+				$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND (meta_value != %s OR meta_value IS null) ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'no'));
+
+				if($wpdb->num_rows > 0)
+				{
+					echo "\r\n"
+					."## Essential Pages\r\n";
+
+					foreach($result as $r)
+					{
+						echo "- [".$r->post_title."](".get_permalink($r->ID).")\r\n";
+					}
+				}
+
+				echo "\r\n"
+				."## Sitemap\r\n"
+				."- ".home_url('/wp-sitemap.xml');
+				exit;
+			break;
+
+			case '/.well-known/security.txt':
+			case '/security.txt':
+				header('Content-Type: text/plain');
+
+				echo "Contact: mailto:security@martinfors.se\r\n"
+				."Expires: ".gmdate('Y-m-d\TH:i:s\Z', time() + WEEK_IN_SECONDS);
+				exit;
+			break;
+
+			default:
+				load_plugin_textdomain('lang_base', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
+
+				add_post_type_support('page', 'excerpt');
+
+				define('DEFAULT_DATE', "1982-08-04 23:15:00");
+				define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
+
+				$is_super_admin = $is_admin = $is_editor = $is_author = false;
+
+				if(current_user_can('update_core'))
+				{
+					$is_super_admin = $is_admin = $is_editor = $is_author = true;
+
+					define('ALLOW_UNFILTERED_UPLOADS', true);
+				}
+
+				else if(current_user_can('manage_options'))
+				{
+					$is_admin = $is_editor = $is_author = true;
+				}
+
+				else if(current_user_can('edit_pages'))
+				{
+					$is_editor = $is_author = true;
+				}
+
+				else if(current_user_can('upload_files'))
+				{
+					$is_author = true;
+				}
+
+				define('IS_SUPER_ADMIN', $is_super_admin);
+				define('IS_ADMINISTRATOR', $is_admin);
+				define('IS_EDITOR', $is_editor);
+				define('IS_AUTHOR', $is_author);
+
+				if(get_site_option('setting_base_use_timezone') == 'yes')
+				{
+					$timezone_string = get_option('timezone_string');
+
+					if($timezone_string != '')
+					{
+						date_default_timezone_set($timezone_string);
+					}
+				}
+
+				register_block_style(
+					'core/button',
+					[
+						'name' => 'button_alternative',
+						'label' => __("Alternative", 'lang_base'),
+					]
+				);
+
+				$this->reschedule_base();
+			break;
 		}
-
-		load_plugin_textdomain('lang_base', false, str_replace("/include", "", dirname(plugin_basename(__FILE__)))."/lang/");
-
-		add_post_type_support('page', 'excerpt');
-
-		define('DEFAULT_DATE', "1982-08-04 23:15:00");
-		define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
-
-		$is_super_admin = $is_admin = $is_editor = $is_author = false;
-
-		if(current_user_can('update_core'))
-		{
-			$is_super_admin = $is_admin = $is_editor = $is_author = true;
-
-			define('ALLOW_UNFILTERED_UPLOADS', true);
-		}
-
-		else if(current_user_can('manage_options'))
-		{
-			$is_admin = $is_editor = $is_author = true;
-		}
-
-		else if(current_user_can('edit_pages'))
-		{
-			$is_editor = $is_author = true;
-		}
-
-		else if(current_user_can('upload_files'))
-		{
-			$is_author = true;
-		}
-
-		define('IS_SUPER_ADMIN', $is_super_admin);
-		define('IS_ADMINISTRATOR', $is_admin);
-		define('IS_EDITOR', $is_editor);
-		define('IS_AUTHOR', $is_author);
-
-		if(get_site_option('setting_base_use_timezone') == 'yes')
-		{
-			$timezone_string = get_option('timezone_string');
- 
-			if($timezone_string != '')
-			{
-				date_default_timezone_set($timezone_string);
-			}
-		}
-
-		register_block_style(
-			'core/button',
-			[
-				'name' => 'button_alternative',
-				'label' => __("Alternative", 'lang_base'),
-			]
-		);
-
-		$this->reschedule_base();
 	}
 
 	function cron_schedules($schedules)
@@ -757,7 +789,7 @@ class mf_base
 				replace_post_meta(array('old' => $obj_theme_core->meta_prefix.'page_index', 'new' => $this->meta_prefix.'page_index'));
 			}
 
-			$result = $wpdb->get_results($wpdb->prepare("SELECT ID, meta_value FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE meta_key = %s AND meta_value != '' GROUP BY ID", $this->meta_prefix.'page_index'));
+			$result = $wpdb->get_results($wpdb->prepare("SELECT ID, meta_value FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE meta_value != '' GROUP BY ID", $this->meta_prefix.'page_index'));
 
 			foreach($result as $r)
 			{

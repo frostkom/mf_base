@@ -1222,6 +1222,9 @@ class mf_base
 								}
 
 								echo "<p><i class='fa fa-times red display_warning'></i> ".__("Language", 'lang_base').": ".$collation_name." -> ".$collation_name_recommended." (DB_CHARSET: ".DB_CHARSET.", DB_COLLATE: ".DB_COLLATE.")</p>";
+
+								//define('DB_CHARSET', 'utf8mb4');
+								//define('DB_COLLATE', 'utf8mb4_swedish_ci');
 							}
 						break;
 					}
@@ -2862,18 +2865,24 @@ class mf_base
 					."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
 					."	RewriteRule .* - [F]\r\n";
 
+					// Always force HTTPS
+					$update_with .= "\r\n"
+					."	RewriteCond %{HTTPS} off\r\n"
+					."	RewriteCond %{HTTP:X-Forwarded-Proto} !https\r\n"
+					."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n";
+
 					switch(get_site_option('setting_base_prefer_www'))
 					{
 						case 'yes':
 							$update_with .= "\r\n"
-							."	RewriteCond %{HTTPS} on\r\n"
+							//."	RewriteCond %{HTTPS} on\r\n"
 							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
 							."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n";
 						break;
 
 						case 'no':
 							$update_with .= "\r\n"
-							."	RewriteCond %{HTTPS} on\r\n"
+							//."	RewriteCond %{HTTPS} on\r\n"
 							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
 							."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n";
 						break;

@@ -2573,6 +2573,20 @@ class mf_base
 		return $result;
 	}
 
+	function wp_sitemaps_add_provider($provider, $name)
+	{
+		return ('users' === $name ? false : $provider);
+	}
+
+	function template_redirect()
+	{
+		if(is_author())
+		{
+			wp_redirect(get_option('home'), 301);
+			exit;
+		}
+	}
+
 	function wp_sitemaps_posts_query_args($args, $post_type)
 	{
 		if(!isset($args['post__not_in'])){	$args['post__not_in'] = [];}

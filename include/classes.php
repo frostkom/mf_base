@@ -2625,7 +2625,11 @@ class mf_base
 				unlink($file);
 			}
 
-			echo "Sitemap: ".home_url('/wp-sitemap.xml');
+			echo "User-agent: *\r\n";
+
+			echo "Sitemap: ".home_url('/wp-sitemap.xml')."\r\n";
+
+			//echo "LLMS: ".home_url('/llms.txt'); // This gets lower rank on Page Speed
 		}
 	}
 

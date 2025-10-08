@@ -3374,6 +3374,10 @@ function show_textfield($data)
 
 		case 'tel':
 		case 'telno':
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_script('script_base_tel', $plugin_include_url."script_tel.js");
+
 			$data['type'] = 'tel';
 			$data['xtra'] .= " inputmode='numeric'";
 		break;
@@ -3383,6 +3387,10 @@ function show_textfield($data)
 		break;
 
 		case 'url':
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_script('script_base_url', $plugin_include_url."script_url.js");
+
 			$data['autocapitalize'] = $data['autocorrect'] = false;
 			$data['xtra'] .= " inputmode='".$data['type']."'";
 
@@ -3459,6 +3467,10 @@ function show_textfield($data)
 
 			if($data['required'])
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 				$out .= " required";
 			}
 
@@ -3594,6 +3606,10 @@ function show_password_field($data)
 
 			if($data['required'])
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 				$out .= " required";
 			}
 
@@ -3658,8 +3674,12 @@ function show_textarea($data)
 			$out .= "<textarea name='".$data['name']."' id='".$data['name']."'"
 				.$data['xtra'];
 
-				if($data['required'] == true)
+				if($data['required'])
 				{
+					$plugin_include_url = plugin_dir_url(__FILE__);
+
+					mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 					$out .= " required";
 				}
 
@@ -3890,6 +3910,13 @@ function show_select($data)
 
 					if($obj_base->data['xtra'] != '')
 					{
+						if(strpos($obj_base->data['xtra'], "rel='submit_change'") !== false)
+						{
+							$plugin_include_url = plugin_dir_url(__FILE__);
+
+							mf_enqueue_script('script_base_submit_change', $plugin_include_url."script_submit_change.js");
+						}
+
 						$out .= " ".$obj_base->data['xtra'];
 					}
 
@@ -4055,6 +4082,10 @@ function show_form_alternatives($data)
 		{
 			if($obj_base->data['required'])
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 				$obj_base->data['xtra'] .= " required";
 			}
 
@@ -4220,6 +4251,10 @@ function show_checkbox($data)
 
 	if($data['required'])
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 		$data['xtra'] .= " required";
 	}
 
@@ -4324,6 +4359,10 @@ function show_file_field($data)
 
 	if($data['required'])
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 		$data['xtra'] .= " required";
 	}
 

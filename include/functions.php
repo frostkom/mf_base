@@ -1,5 +1,23 @@
 <?php
 
+function make_link_confirm()
+{
+	$plugin_include_url = plugin_dir_url(__FILE__);
+
+	mf_enqueue_script('script_base_confirm', $plugin_include_url."script_confirm.js");
+
+	return " rel='confirm'";
+}
+
+function make_link_external()
+{
+	$plugin_include_url = plugin_dir_url(__FILE__);
+
+	mf_enqueue_script('script_base_external', $plugin_include_url."script_external.js");
+
+	return " target='_blank' rel='noopener noreferrer'";
+}
+
 function get_placeholder_email()
 {
 	$site_url_clean = get_site_url_clean(array('trim' => "/"));
@@ -3498,6 +3516,7 @@ function show_textfield($data)
 			{
 				$plugin_include_url = plugin_dir_url(__FILE__);
 
+				mf_enqueue_style('style_base_maxlength', $plugin_include_url."style_maxlength.css");
 				mf_enqueue_script('script_base_maxlength', $plugin_include_url."script_maxlength.js", array('characters_left_text' => __("characters left", 'lang_base')));
 
 				$out .= " maxlength='".$data['maxlength']."'";
@@ -3599,6 +3618,7 @@ function show_password_field($data)
 			{
 				$plugin_include_url = plugin_dir_url(__FILE__);
 
+				mf_enqueue_style('style_base_maxlength', $plugin_include_url."style_maxlength.css");
 				mf_enqueue_script('script_base_maxlength', $plugin_include_url."script_maxlength.js", array('characters_left_text' => __("characters left", 'lang_base')));
 
 				$out .= " maxlength='".$data['maxlength']."'";
@@ -4387,6 +4407,13 @@ function show_button($data)
 	if(!isset($data['name'])){	$data['name'] = "";}
 	if(!isset($data['class'])){	$data['class'] = "";}
 	if(!isset($data['xtra'])){	$data['xtra'] = "";}
+
+	if(strpos($data['xtra'], "rel='confirm'") !== false)
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_script('script_base_confirm', $plugin_include_url."script_confirm.js");
+	}
 
 	return "<button type='".$data['type']."'"
 		.($data['name'] != '' ? " name='".$data['name']."'" : "")

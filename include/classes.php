@@ -2135,6 +2135,8 @@ class mf_base
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
+		mf_enqueue_style('style_base_image_fallback', $plugin_include_url."style_image_fallback.css");
+
 		return "<img src='".$plugin_include_url."images/blank.svg' class='image_fallback' alt='".__("Generic image as a placeholder", 'lang_base')."'>";
 	}
 
@@ -2665,10 +2667,6 @@ class mf_base
 		$data_temp = $data;
 		$data_temp['plugin_include_url'] = $plugin_include_url;
 		$this->load_font_awesome($data_temp);
-
-		mf_enqueue_script('script_base', $plugin_include_url."script.js", array(
-			'confirm_question' => __("Are you sure?", 'lang_base'),
-		));
 
 		if($data['type'] == 'public')
 		{

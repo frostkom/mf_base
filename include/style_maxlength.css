@@ -1,0 +1,11 @@
+@media all
+{
+	.maxlength_counter
+	{
+		display: inline-block;
+		font-size: .8em;
+		font-style: italic;
+		margin-left: .5em;
+		opacity: .5;
+	}
+}

@@ -159,12 +159,6 @@ echo "@media all
 		text-align: right;
 	}
 
-	.image_fallback
-	{
-		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHhtbG5zOnhsaW5rPSdodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rJyB2aWV3Qm94PScwIDAge3t3fX0ge3tofX0nPjxkZWZzPjxzeW1ib2wgaWQ9J2EnIHZpZXdCb3g9JzAgMCA5MCA2Nicgb3BhY2l0eT0nMC4zJz48cGF0aCBkPSdNODUgNXY1Nkg1VjVoODBtNS01SDB2NjZoOTBWMHonLz48Y2lyY2xlIGN4PScxOCcgY3k9JzIwJyByPSc2Jy8+PHBhdGggZD0nTTU2IDE0TDM3IDM5bC04LTYtMTcgMjNoNjd6Jy8+PC9zeW1ib2w+PC9kZWZzPjx1c2UgeGxpbms6aHJlZj0nI2EnIHdpZHRoPScyMCUnIHg9JzQwJScvPjwvc3ZnPg==');
-		padding: 3em 0;
-	}
-
 	/* Flexbox */
 	/* ####################### */
 	.flex_flow
@@ -178,14 +172,9 @@ echo "@media all
 		{
 			display: block;
 			flex: 1 1 0;
-		}";
+		}
 
-			/*.flex_flow > h3
-			{
-				line-height: 2.1;
-			}*/
-
-			echo ".flex_flow > *:last-child
+			.flex_flow > *:last-child
 			{
 				margin-right: 0;
 			}
@@ -236,20 +225,6 @@ echo "@media all
 			.mf_form .mf_form_field.red
 			{
 				border-color: #e47676;
-			}";
-
-			/*.mf_form div.input, .mf_form p.input
-			{
-				border-radius: .4em;
-			}*/
-
-			echo ".mf_form label .maxlength_counter
-			{
-				display: inline-block;
-				font-size: .8em;
-				font-style: italic;
-				margin-left: .5em;
-				opacity: .5;
 			}
 
 			.mf_form .has_suffix .mf_form_field
@@ -384,20 +359,9 @@ echo "@media all
 			{
 				cursor: wait;
 				opacity: .5;
-			}";
-
-			/*.mf_form .button-primary, .mf_form .button-secondary, .mf_form .button
-			{
-				margin-right: .5em;
-				margin-bottom: .5em;
 			}
 
-				.mf_form .button-primary:last-of-type, .mf_form .button-secondary:last-of-type, .mf_form .button:last-of-type
-				{
-					margin-right: 0 !important;
-				}*/
-
-				echo ".mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
+				.mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
 				{
 					filter: grayscale(1);
 					opacity: .3;
@@ -422,11 +386,6 @@ echo "@media all
 					background: #c20000;
 					border-color: #900;
 				}";
-
-			/*.mf_settings #postbox-container-1 button
-			{
-				margin: .6em .6em 0 0;
-			}*/
 
 		if($styles_modified > "2025-09-19 09:00:00")
 		{

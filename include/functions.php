@@ -3394,7 +3394,7 @@ function show_textfield($data)
 
 		case 'color':
 			/*$plugin_include_url = plugin_dir_url(__FILE__);
-
+		
 			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js");
 
 			$data['suffix'] .= " <div".get_form_button_classes("display_inline")."><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
@@ -3484,6 +3484,10 @@ function show_textfield($data)
 
 			if($data['maxlength'] > 0)
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_maxlength', $plugin_include_url."script_maxlength.js", array('characters_left_text' => __("characters left", 'lang_base')));
+
 				$out .= " maxlength='".$data['maxlength']."'";
 			}
 
@@ -3579,8 +3583,12 @@ function show_password_field($data)
 		$out .= "<input type='password' name='".$data['name']."' value='".$data['value']."' id='".$data['name']."'"
 			.$data['xtra'];
 
-			if($data['maxlength'] != '')
+			if($data['maxlength'] > 0)
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_maxlength', $plugin_include_url."script_maxlength.js", array('characters_left_text' => __("characters left", 'lang_base')));
+
 				$out .= " maxlength='".$data['maxlength']."'";
 			}
 

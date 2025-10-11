@@ -391,6 +391,9 @@ echo "@media all
 		{
 			echo ".wp-block-button .wp-block-button__link
 			{
+				border-width: .1em;
+				border-style: solid;
+				border-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 				background-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 				color: var(--wp--preset--color--accent-2);
 			}

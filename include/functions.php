@@ -1908,6 +1908,7 @@ function mf_format_number($in, $dec = 2)
 	return number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
 }
 
+// Can be removed when not used anymore
 function mf_get_post_content($id, $field = 'post_content')
 {
 	global $wpdb;

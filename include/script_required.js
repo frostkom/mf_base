@@ -1,6 +1,6 @@
 function render_required()
 {
-	jQuery(".mf_form .required").each(function()
+	jQuery(".mf_form [required]").each(function()
 	{
 		if(jQuery(this).siblings("label").length > 0)
 		{
@@ -14,7 +14,7 @@ function render_required()
 	});
 }
 
-jQuery(function($)
+jQuery(function()
 {
 	render_required();
 });

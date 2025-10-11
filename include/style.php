@@ -201,6 +201,7 @@ echo "@media all
 		cursor: pointer;
 		display: block;
 		line-height: 1.8;
+		white-space: nowrap;
 	}
 
 		.mf_form .mf_form_field

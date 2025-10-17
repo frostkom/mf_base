@@ -3421,7 +3421,7 @@ function show_textfield($data)
 
 		case 'color':
 			/*$plugin_include_url = plugin_dir_url(__FILE__);
-		
+
 			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js");
 
 			$data['suffix'] .= " <div".get_form_button_classes("display_inline")."><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
@@ -4107,7 +4107,8 @@ function show_form_alternatives($data)
 
 				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
-				$obj_base->data['xtra'] .= " required";
+				//$obj_base->data['xtra'] .= " required";
+				$container_class .= " required";
 			}
 
 			if($obj_base->data['suffix'] != '')
@@ -4119,7 +4120,7 @@ function show_form_alternatives($data)
 
 				if($obj_base->data['text'] != '')
 				{
-					$out .= "<label>".$obj_base->data['text']."</label>";
+					$out .= "<label".($obj_base->data['required'] ? " required" : "").">".$obj_base->data['text']."</label>";
 				}
 
 				$out .= "<ul>";
@@ -4195,7 +4196,6 @@ function show_form_alternatives($data)
 
 								else
 								{
-									//$compare = ((is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : -$data_value);
 									$compare = ((is_array($obj_base->data['value']) && in_array($data_value, $obj_base->data['value']) || $obj_base->data['value'] == $data_value) ? $data_value : 0);
 								}
 

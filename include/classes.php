@@ -372,7 +372,12 @@ class mf_base
 
 				echo "# AI Reference List\r\n";
 
-				$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND (meta_value != %s OR meta_value IS null) ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'no'));
+				$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND meta_value = %s ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'promote'));
+
+				if($wpdb->num_rows == 0)
+				{
+					$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND (meta_value != %s OR meta_value IS null) ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'no'));
+				}
 
 				if($wpdb->num_rows > 0)
 				{
@@ -746,25 +751,6 @@ class mf_base
 		return __("I have optimized the site for you", 'lang_base');
 	}
 
-	function set_noindex_on_page($option)
-	{
-		if(is_array($option))
-		{
-			if(count($option) > 0)
-			{
-				foreach($option as $option_value)
-				{
-					update_post_meta($option_value, $this->meta_prefix.'page_index', 'no');
-				}
-			}
-		}
-
-		else if($option > 0)
-		{
-			update_post_meta($option, $this->meta_prefix.'page_index', 'no');
-		}
-	}
-
 	function cron_base()
 	{
 		global $wpdb;
@@ -777,26 +763,11 @@ class mf_base
 			replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
 			replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
 
-			if(is_plugin_active("mf_theme_core/index.php"))
-			{
-				global $obj_theme_core;
-
-				if(!isset($obj_theme_core))
-				{
-					$obj_theme_core = new mf_theme_core();
-				}
-
-				replace_post_meta(array('old' => $obj_theme_core->meta_prefix.'page_index', 'new' => $this->meta_prefix.'page_index'));
-			}
-
-			$result = $wpdb->get_results($wpdb->prepare("SELECT ID, meta_value FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE meta_value != '' GROUP BY ID", $this->meta_prefix.'page_index'));
+			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE meta_value IN ('noindex', 'nofollow', 'none') GROUP BY ID", $this->meta_prefix.'page_index'));
 
 			foreach($result as $r)
 			{
-				if(in_array($r->meta_value, array('noindex', 'nofollow', 'none')))
-				{
-					update_post_meta($r->ID, $this->meta_prefix.'page_index', 'no');
-				}
+				update_post_meta($r->ID, $this->meta_prefix.'page_index', 'no');
 			}
 
 			mf_uninstall_plugin(array(
@@ -2426,7 +2397,8 @@ class mf_base
 						'options' => array(
 							'' => __("Yes", 'lang_base'),
 							'no' => __("No", 'lang_base'),
-						), //array('' => "-- ".__("Choose Here", 'lang_base')." --", 'noindex' => __("Do not Index", 'lang_base'), 'nofollow' => __("Do not Follow Links", 'lang_base'), 'none' => __("Do not Index and do not follow links", 'lang_base'))
+							'promote' => __("Promote", 'lang_base'),
+						),
 					),
 				),
 			);
@@ -2633,9 +2605,7 @@ class mf_base
 			}
 
 			echo "User-agent: *\r\n";
-
 			echo "Sitemap: ".home_url('/wp-sitemap.xml')."\r\n";
-
 			//echo "LLMS: ".home_url('/llms.txt'); // This gets lower rank on Page Speed
 		}
 	}
@@ -2689,11 +2659,14 @@ class mf_base
 
 				switch($page_index)
 				{
-					case 'nofollow':
 					case 'noindex':
 					case 'none':
 					case 'no':
 						echo "<meta name='robots' content='noindex, nofollow'/>";
+					break;
+
+					case 'nofollow':
+						echo "<meta name='robots' content='nofollow'/>";
 					break;
 				}
 

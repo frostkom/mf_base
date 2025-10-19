@@ -71,6 +71,8 @@ echo "@media all
 			.widget ul.grid_columns > li .image
 			{
 				background: rgba(0, 0, 0, .03);
+				border-radius: .3em;
+				margin: .2em .2em 0;
 				overflow: hidden;
 			}
 
@@ -89,18 +91,28 @@ echo "@media all
 
 			.widget ul.grid_columns .content
 			{
-				padding: 1em;
+				padding: .6em .8em .8em;
 				position: relative;
 			}
+
+				.widget ul.grid_columns .content .text
+				{
+					font-size: .9em;
+				}
+
+					.widget ul.grid_columns .content .text > p
+					{
+						margin-top: 0;
+					}
 
 				.widget ul.grid_columns .meta
 				{
 					font-size: .7em;
 					opacity: 1;
 					position: absolute;
-					top: -2.5em;
+					top: -2.4em;
 					transition: all 1s ease;
-					left: .7em;
+					left: .6em;
 				}
 
 					.widget ul.grid_columns > li:hover .meta
@@ -111,8 +123,8 @@ echo "@media all
 					.widget ul.grid_columns .meta > span, .widget ul.grid_columns .meta > a
 					{
 						background: #fff;
-						border-radius: .5em;
-						margin-right: .5em;
+						border-radius: .2em;
+						margin-right: .3em;
 						padding: .5em 1em;
 					}
 
@@ -134,7 +146,7 @@ echo "@media all
 
 					.widget ul.grid_columns .content .wp-block-button__link
 					{
-						font-size: .9em;
+						/*font-size: .9em;*/
 						padding: .5em 1em;
 					}
 }";

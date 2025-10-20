@@ -1,41 +1,38 @@
-@media all
+.mf_image_button > div:first-of-type
 {
-	.mf_image_button > div:first-of-type
+	display: inline-block;
+	position: relative;
+	width: 150px;
+}
+
+.mf_image_button a
+{
+	background: rgba(0, 0, 0, .3);
+	border-radius: .4em;
+	bottom: .8em;
+	right: .4em;
+	padding: .4em .6em;
+	position: absolute;
+}
+
+.mf_media_button .mf_media_list
+{
+	margin: .5em 0;
+}
+
+	.mf_media_button .mf_media_list td img
 	{
-		display: inline-block;
-		position: relative;
-		width: 150px;
+		height: 80px;
+		object-fit: cover;
 	}
 
-	.mf_image_button a
+	.mf_image_button img
 	{
-		background: rgba(0, 0, 0, .3);
-		border-radius: .4em;
-		bottom: .8em;
-		right: .4em;
-		padding: .4em .6em;
-		position: absolute;
+		display: block;
+		max-width: 150px;
 	}
 
-	.mf_media_button .mf_media_list
-	{
-		margin: .5em 0;
-	}
-
-		.mf_media_button .mf_media_list td img
-		{
-			height: 80px;
-			object-fit: cover;
-		}
-
-		.mf_image_button img
-		{
-			display: block;
-			max-width: 150px;
-		}
-
-	.mf_media_button .mf_media_raw, .mf_image_button .mf_file_raw
-	{
-		display: none;
-	}
+.mf_media_button .mf_media_raw, .mf_image_button .mf_file_raw
+{
+	display: none;
 }

@@ -1,125 +1,122 @@
-@media all
+.toggler
 {
-	.toggler
-	{
-		cursor: pointer;
-		position: relative;
-	}
-
-	label.toggler
-	{
-		background: rgba(255, 255, 255, .5);
-		border: .1em solid #eee;
-		border-radius: .5em;
-		display: block;
-		margin-top: .5em;
-		margin-bottom: .5em;
-		padding: .5em 1em;
-	}
-
-		label.toggler.is_open
-		{
-			background: rgba(230, 230, 230, .5);
-			border-radius: .5em .5em 0 0;
-			margin-bottom: 0;
-		}
-
-			.toggler .toggle_icon
-			{
-				border: .1em solid #444;
-				border-radius: 50%;
-				height: 1em;
-				position: absolute;
-				right: .7em;
-				top: 50%;
-				transform: translateY(-50%);
-				transition: all .5s ease;
-				width: 1em;
-			}
-
-				.toggle_icon:hover
-				{
-					background: #444;
-					border-color: #fff;
-				}
-
-				.toggle_icon > div
-				{
-					background: #444;
-					border-radius: .5em;
-					height: .1em;
-					position: absolute;
-					left: 50%;
-					top: 50%;
-					transition: all .5s ease;
-					width: .6em;
-				}
-
-					.toggle_icon:hover > div
-					{
-						background: #fff;
-					}
-
-					.toggle_icon > div:first-of-type
-					{
-						transform: translate(-.3em, -.05em);
-					}
-
-						.toggler.is_open .toggle_icon > div:first-of-type
-						{
-							transform: rotate(-180deg) translate(.3em, .05em);
-						}
-
-					.toggle_icon > div:last-of-type
-					{
-						transform: rotate(90deg) translate(-.05em, .3em);
-					}
-
-						.toggler.is_open .toggle_icon > div:last-of-type
-						{
-							transform: rotate(0deg) translate(-.3em, -.05em);
-						}
-
-	label.toggler + div.toggle_container, label.toggler + ul.toggle_container
-	{
-		background: rgba(255, 255, 255, .5);
-		border-radius: 0 0 .5em .5em;
-		border: .1em solid #eee;
-		border-top-width: 0;
-		margin: 0 0 .5em 0;
-		overflow: hidden;
-		padding: 1em;
-	}
-
-		.toggler:not(.is_open) + .toggle_container, .toggler:not(.is_open) > .toggle_container
-		{
-			display: none;
-		}
-
-		ol.toggle_container, ul.toggle_container
-		{
-			list-style: disc inside;
-		}
-
-		.toggle_container > ol, .toggle_container > ul
-		{
-			list-style: disc outside;
-			padding: .5em 0 0 1em;
-			margin: 0 0 .5em;
-		}
-
-			.toggle_container li + li
-			{
-				margin-top: 1em;
-			}
-
-				.toggle_container p:first-child
-				{
-					margin-top: 0;
-				}
-
-				.toggle_container p:last-child
-				{
-					margin-bottom: 0;
-				}
+	cursor: pointer;
+	position: relative;
 }
+
+label.toggler
+{
+	background: rgba(255, 255, 255, .5);
+	border: .1em solid #eee;
+	border-radius: .5em;
+	display: block;
+	margin-top: .5em;
+	margin-bottom: .5em;
+	padding: .5em 1em;
+}
+
+	label.toggler.is_open
+	{
+		background: rgba(230, 230, 230, .5);
+		border-radius: .5em .5em 0 0;
+		margin-bottom: 0;
+	}
+
+		.toggler .toggle_icon
+		{
+			border: .1em solid #444;
+			border-radius: 50%;
+			height: 1em;
+			position: absolute;
+			right: .7em;
+			top: 50%;
+			transform: translateY(-50%);
+			transition: all .5s ease;
+			width: 1em;
+		}
+
+			.toggle_icon:hover
+			{
+				background: #444;
+				border-color: #fff;
+			}
+
+			.toggle_icon > div
+			{
+				background: #444;
+				border-radius: .5em;
+				height: .1em;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transition: all .5s ease;
+				width: .6em;
+			}
+
+				.toggle_icon:hover > div
+				{
+					background: #fff;
+				}
+
+				.toggle_icon > div:first-of-type
+				{
+					transform: translate(-.3em, -.05em);
+				}
+
+					.toggler.is_open .toggle_icon > div:first-of-type
+					{
+						transform: rotate(-180deg) translate(.3em, .05em);
+					}
+
+				.toggle_icon > div:last-of-type
+				{
+					transform: rotate(90deg) translate(-.05em, .3em);
+				}
+
+					.toggler.is_open .toggle_icon > div:last-of-type
+					{
+						transform: rotate(0deg) translate(-.3em, -.05em);
+					}
+
+label.toggler + div.toggle_container, label.toggler + ul.toggle_container
+{
+	background: rgba(255, 255, 255, .5);
+	border-radius: 0 0 .5em .5em;
+	border: .1em solid #eee;
+	border-top-width: 0;
+	margin: 0 0 .5em 0;
+	overflow: hidden;
+	padding: 1em;
+}
+
+	.toggler:not(.is_open) + .toggle_container, .toggler:not(.is_open) > .toggle_container
+	{
+		display: none;
+	}
+
+	ol.toggle_container, ul.toggle_container
+	{
+		list-style: disc inside;
+	}
+
+	.toggle_container > ol, .toggle_container > ul
+	{
+		list-style: disc outside;
+		padding: .5em 0 0 1em;
+		margin: 0 0 .5em;
+	}
+
+		.toggle_container li + li
+		{
+			margin-top: 1em;
+		}
+
+			.toggle_container p:first-child
+			{
+				margin-top: 0;
+			}
+
+			.toggle_container p:last-child
+			{
+				margin-bottom: 0;
+			}

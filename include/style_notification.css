@@ -1,40 +1,37 @@
-@media all
+.notification > div
 {
-	.notification > div
+	border-width: .1em;
+	border-style: solid;
+	border-radius: .5em;
+	margin-bottom: 1em;
+	padding: 1em 1.5em;
+}
+
+	.notification .error
 	{
-		border-width: .1em;
-		border-style: solid;
-		border-radius: .5em;
-		margin-bottom: 1em;
-		padding: 1em 1.5em;
+		background: #ecc8c5;
+		border-color: #b32f2d;
+		color: #b32f2d;
 	}
 
-		.notification .error
-		{
-			background: #ecc8c5;
-			border-color: #b32f2d;
-			color: #b32f2d;
-		}
+	.notification .update-nag
+	{
+		background: #cde8f5;
+		border-color: #4480ae;
+		color: #4480ae;
+	}
 
-		.notification .update-nag
-		{
-			background: #cde8f5;
-			border-color: #4480ae;
-			color: #4480ae;
-		}
+	.notification .updated
+	{
+		background: #def2d6;
+		border-color: #5a7052;
+		color: #5a7052;
+	}
 
-		.notification .updated
+		.notification > div > p
 		{
-			background: #def2d6;
-			border-color: #5a7052;
-			color: #5a7052;
+			margin-top: 0;
+			margin-bottom: 0;
+			padding-top: 0;
+			padding-bottom: 0;
 		}
-
-			.notification > div > p
-			{
-				margin-top: 0;
-				margin-bottom: 0;
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-}

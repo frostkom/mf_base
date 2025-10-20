@@ -1,116 +1,113 @@
-@media all
+.settings-wrap
 {
-	.settings-wrap
+	border: 1px solid #ccc;
+	display: flex;
+	margin-top: 15px;
+	min-height: 80vh;
+}
+
+	.settings-wrap.loading .settings-nav
 	{
-		border: 1px solid #ccc;
-		display: flex;
-		margin-top: 15px;
-		min-height: 80vh;
+		display: none;
 	}
 
-		.settings-wrap.loading .settings-nav
+	.settings-wrap.loading .settings-tabs:before
+	{
+		content: '...';
+		font-size: 5em;
+		left: 50%;
+		opacity: .2;
+		position: absolute;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+		.settings-wrap.loading .settings-tabs > div, .settings-wrap.loading .settings-tabs > table, .settings-wrap.loading .settings-tabs > p
 		{
-			display: none;
+			display: none !important;
 		}
 
-		.settings-wrap.loading .settings-tabs:before
+	.is_site .settings-wrap .contextual-help-tabs
+	{
+		background: #f1f1f1;
+		float: left;
+		margin: 0;
+		width: 150px;
+	}
+
+		.is_site .settings-wrap .contextual-help-tabs ul
 		{
-			content: '...';
-			font-size: 5em;
-			left: 50%;
-			opacity: .2;
-			position: absolute;
-			top: 50%;
-			transform: translate(-50%, -50%);
+			list-style: none;
+			margin: 1em 0;
 		}
 
-			.settings-wrap.loading .settings-tabs > div, .settings-wrap.loading .settings-tabs > table, .settings-wrap.loading .settings-tabs > p
+			.is_site .settings-wrap .contextual-help-tabs li
 			{
-				display: none !important;
-			}
-
-		.is_site .settings-wrap .contextual-help-tabs
-		{
-			background: #f1f1f1;
-			float: left;
-			margin: 0;
-			width: 150px;
-		}
-
-			.is_site .settings-wrap .contextual-help-tabs ul
-			{
-				list-style: none;
-				margin: 1em 0;
-			}
-
-				.is_site .settings-wrap .contextual-help-tabs li
-				{
-					border: 0 solid transparent;
-					border-left-width: 2px;
-					margin: 0;
-				}
-
-					.settings-wrap .contextual-help-tabs .active
-					{
-						margin-left: -2px;
-					}
-
-						.is_site .settings-wrap .contextual-help-tabs .active
-						{
-							background: #f6fbfd;
-							border-left: 2px solid #00a0d2;
-							box-shadow: 0 2px 0 rgba(0, 0, 0, .02),0 1px 0 rgba(0, 0, 0, .02);
-							margin: 0 -1px;
-							padding: 0;
-						}
-
-					.is_site .settings-wrap .contextual-help-tabs a
-					{
-						border: 1px solid transparent;
-						border-right: none;
-						border-left: none;
-						display: block;
-						line-height: 18px;
-						padding: 5px 5px 5px 12px;
-						text-decoration: none;
-					}
-
-		.settings-wrap .settings-tabs
-		{
-			background: #fff;
-			border-left: 1px solid #ccc;
-			flex: 1 1 0;
-			margin-bottom: 0;
-			overflow: hidden;
-			padding: .5em 2em;
-			position: relative;
-		}
-
-		.settings-wrap .display_warning:first-child
-		{
-			margin-top: 0;
-		}
-
-			.is_site .settings-wrap .settings-tabs h3
-			{
-				margin: 1em 0;
-			}
-
-			.settings-wrap .settings-tabs ul.no_style
-			{
-				margin-top: 0;
-				margin-left: 1em;
-				padding-top: 1em;
-			}
-
-				.settings-wrap .settings-tabs ul.no_style li
-				{
-					list-style: none;
-				}
-
-			.settings-wrap .settings-tabs ol
-			{
-				list-style-position: inside;
+				border: 0 solid transparent;
+				border-left-width: 2px;
 				margin: 0;
 			}
-}
+
+				.settings-wrap .contextual-help-tabs .active
+				{
+					margin-left: -2px;
+				}
+
+					.is_site .settings-wrap .contextual-help-tabs .active
+					{
+						background: #f6fbfd;
+						border-left: 2px solid #00a0d2;
+						box-shadow: 0 2px 0 rgba(0, 0, 0, .02),0 1px 0 rgba(0, 0, 0, .02);
+						margin: 0 -1px;
+						padding: 0;
+					}
+
+				.is_site .settings-wrap .contextual-help-tabs a
+				{
+					border: 1px solid transparent;
+					border-right: none;
+					border-left: none;
+					display: block;
+					line-height: 18px;
+					padding: 5px 5px 5px 12px;
+					text-decoration: none;
+				}
+
+	.settings-wrap .settings-tabs
+	{
+		background: #fff;
+		border-left: 1px solid #ccc;
+		flex: 1 1 0;
+		margin-bottom: 0;
+		overflow: hidden;
+		padding: .5em 2em;
+		position: relative;
+	}
+
+	.settings-wrap .display_warning:first-child
+	{
+		margin-top: 0;
+	}
+
+		.is_site .settings-wrap .settings-tabs h3
+		{
+			margin: 1em 0;
+		}
+
+		.settings-wrap .settings-tabs ul.no_style
+		{
+			margin-top: 0;
+			margin-left: 1em;
+			padding-top: 1em;
+		}
+
+			.settings-wrap .settings-tabs ul.no_style li
+			{
+				list-style: none;
+			}
+
+		.settings-wrap .settings-tabs ol
+		{
+			list-style-position: inside;
+			margin: 0;
+		}

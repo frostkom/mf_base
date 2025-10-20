@@ -25,131 +25,127 @@ $column_width_desktop = calc_width($setting_desktop_columns, $setting_column_gap
 $column_width_tablet = calc_width($setting_tablet_columns, $setting_column_gap);
 $column_width_mobile = calc_width($setting_mobile_columns, $setting_column_gap);
 
-echo "@media all
+echo ".widget ul.grid_columns
 {
-	.widget ul.grid_columns
+	list-style: none;
+	padding: 0;
+}
+
+	.widget.masonry ul.grid_columns
 	{
-		list-style: none;
-		padding: 0;
+		column-count: ".$setting_desktop_columns.";
 	}
 
-		.widget.masonry ul.grid_columns
+	.widget.square ul.grid_columns
+	{
+		display: flex;
+		flex-wrap: wrap;
+		gap: ".$setting_column_gap."%;
+	}
+
+	.widget ul.grid_columns > li
+	{
+		background: #fff;
+		border-radius: .5em;
+		box-shadow: 0 .2em .4em rgba(0, 0, 0, .15);
+		flex: 0 1 auto;
+		margin: 0 0 .6em;
+		overflow: hidden;
+		position: relative;
+	}
+
+		.widget.masonry ul.grid_columns > li
 		{
-			column-count: ".$setting_desktop_columns.";
+			page-break-inside: avoid;
+			break-inside: avoid;
 		}
 
-		.widget.square ul.grid_columns
+		.widget.square ul.grid_columns > li
 		{
-			display: flex;
-			flex-wrap: wrap;
-			gap: ".$setting_column_gap."%;
-		}
-
-		.widget ul.grid_columns > li
-		{
-			background: #fff;
-			border-radius: .5em;
-			box-shadow: 0 .2em .4em rgba(0, 0, 0, .15);
 			flex: 0 1 auto;
-			margin: 0 0 .6em;
+			width: ".$column_width_desktop."%;
+		}
+
+		.widget ul.grid_columns > li .image
+		{
+			background: rgba(0, 0, 0, .03);
+			border-radius: .3em;
+			margin: .2em .2em 0;
 			overflow: hidden;
+		}
+
+			.widget ul.grid_columns > li .image img
+			{
+				display: block;
+				object-fit: cover;
+				transition: all 1s ease;
+				width: 100%;
+			}
+
+				.widget ul.grid_columns > li:hover .image img
+				{
+					transform: scale(1.1);
+				}
+
+		.widget ul.grid_columns .content
+		{
+			padding: .6em .8em .8em;
 			position: relative;
 		}
 
-			.widget.masonry ul.grid_columns > li
+			.widget ul.grid_columns .content .text
 			{
-				page-break-inside: avoid;
-				break-inside: avoid;
+				font-size: .9em;
 			}
 
-			.widget.square ul.grid_columns > li
+				.widget ul.grid_columns .content .text > p
+				{
+					margin-top: 0;
+				}
+
+			.widget ul.grid_columns .meta
 			{
-				flex: 0 1 auto;
-				width: ".$column_width_desktop."%;
+				font-size: .7em;
+				opacity: 1;
+				position: absolute;
+				top: -2.4em;
+				transition: all 1s ease;
+				left: .6em;
 			}
 
-			.widget ul.grid_columns > li .image
+				.widget ul.grid_columns > li:hover .meta
+				{
+					opacity: 0;
+				}
+
+				.widget ul.grid_columns .meta > span, .widget ul.grid_columns .meta > a
+				{
+					background: #fff;
+					border-radius: .2em;
+					margin-right: .3em;
+					padding: .5em 1em;
+				}
+
+			.widget ul.grid_columns .content a
 			{
-				background: rgba(0, 0, 0, .03);
-				border-radius: .3em;
-				margin: .2em .2em 0;
-				overflow: hidden;
+				text-decoration: none;
 			}
 
-				.widget ul.grid_columns > li .image img
-				{
-					display: block;
-					object-fit: cover;
-					transition: all 1s ease;
-					width: 100%;
-				}
-
-					.widget ul.grid_columns > li:hover .image img
-					{
-						transform: scale(1.1);
-					}
-
-			.widget ul.grid_columns .content
+			.widget ul.grid_columns .content > a
 			{
-				padding: .6em .8em .8em;
-				position: relative;
+				font-weight: bold;
 			}
 
-				.widget ul.grid_columns .content .text
+			.widget ul.grid_columns .content .wp-block-button
+			{
+				margin-top: .5em;
+				text-align: right;
+			}
+
+				.widget ul.grid_columns .content .wp-block-button__link
 				{
-					font-size: .9em;
-				}
-
-					.widget ul.grid_columns .content .text > p
-					{
-						margin-top: 0;
-					}
-
-				.widget ul.grid_columns .meta
-				{
-					font-size: .7em;
-					opacity: 1;
-					position: absolute;
-					top: -2.4em;
-					transition: all 1s ease;
-					left: .6em;
-				}
-
-					.widget ul.grid_columns > li:hover .meta
-					{
-						opacity: 0;
-					}
-
-					.widget ul.grid_columns .meta > span, .widget ul.grid_columns .meta > a
-					{
-						background: #fff;
-						border-radius: .2em;
-						margin-right: .3em;
-						padding: .5em 1em;
-					}
-
-				.widget ul.grid_columns .content a
-				{
-					text-decoration: none;
-				}
-
-				.widget ul.grid_columns .content > a
-				{
-					font-weight: bold;
-				}
-
-				.widget ul.grid_columns .content .wp-block-button
-				{
-					margin-top: .5em;
-					text-align: right;
-				}
-
-					.widget ul.grid_columns .content .wp-block-button__link
-					{
-						/*font-size: .9em;*/
-						padding: .5em 1em;
-					}
-}";
+					padding: .5em 1em;
+				}";
 
 if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoints['mobile'])
 {

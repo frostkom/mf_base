@@ -1,17 +1,14 @@
-@media all
+.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
 {
-	.mf_form .form_checkbox_multiple > ul, .mf_form .form_radio_multiple > ul
-	{
-		list-style: none;
-		margin-top: 0;
-		overflow: hidden;
-		padding: 0;
-	}
-
-		.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio
-		{
-			overflow: hidden;
-		    text-overflow: ellipsis;
-			white-space: nowrap;
-		}
+	list-style: none;
+	margin-top: 0;
+	overflow: hidden;
+	padding: 0;
 }
+
+	.mf_form .form_checkbox_multiple .form_checkbox, .mf_form .form_radio_multiple .form_radio
+	{
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}

@@ -1,15 +1,12 @@
-@media all
+/* Has to be here if theme is not active */
+.hide
 {
-	/* Has to be here if theme is not active */
-	.hide
-	{
-		display: none !important;
-	}
+	display: none !important;
+}
 
-	#overlay_lost_connection, #overlay_loading
-	{
-		color: #ccc;
-		font-size: 4em;
-		text-align: center;
-	}
+#overlay_lost_connection, #overlay_loading
+{
+	color: #ccc;
+	font-size: 4em;
+	text-align: center;
 }

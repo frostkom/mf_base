@@ -1,55 +1,52 @@
-@media all
+.overlay_container
 {
-	.overlay_container
+	background: #000;
+	background: rgba(0, 0, 0, .5);
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 100000;
+}
+
+	.overlay_container > div
 	{
-		background: #000;
-		background: rgba(0, 0, 0, .5);
-		bottom: 0;
-		left: 0;
-		position: fixed;
-		right: 0;
-		top: 0;
-		z-index: 100000;
+		position: absolute;
+		left: 50%;
+		top: 50vh;
+		transform: translate(-50%, -50%);
+		max-height: 85vh;
+		max-width: 90vw;
 	}
 
-		.overlay_container > div
+		.overlay_container.modal > div
 		{
-			position: absolute;
-			left: 50%;
-			top: 50vh;
-			transform: translate(-50%, -50%);
-			max-height: 85vh;
-			max-width: 90vw;
+			background: #fff;
+			border-radius: .5em;
+			font-size: 1.5em;
+			overflow: hidden;
+			padding: 1em;
 		}
 
-			.overlay_container.modal > div
+			.overlay_container.modal > div img
 			{
-				background: #fff;
-				border-radius: .5em;
-				font-size: 1.5em;
-				overflow: hidden;
-				padding: 1em;
+				object-fit: cover;
+				max-width: 100%;
 			}
 
-				.overlay_container.modal > div img
-				{
-					object-fit: cover;
-					max-width: 100%;
-				}
+			.overlay_container.modal p + p
+			{
+				margin-top: .5em;
+			}
 
-				.overlay_container.modal p + p
-				{
-					margin-top: .5em;
-				}
-
-				.overlay_container.modal .fa-times
-				{
-					background: #fff;
-					border-radius: .4em;
-					display: block;
-					padding: .1em .25em;
-					position: absolute;
-					right: 0;
-					top: 0;
-				}
-}
+			.overlay_container.modal .fa-times
+			{
+				background: #fff;
+				border-radius: .4em;
+				display: block;
+				padding: .1em .25em;
+				position: absolute;
+				right: 0;
+				top: 0;
+			}

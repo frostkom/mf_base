@@ -1765,7 +1765,7 @@ function get_media_button($data = [])
 					$is_media_button_init = true;
 				}
 
-				$out .= "<div".get_form_button_classes().">
+				$out .= "<div".get_form_button_classes("is-style-outline").">
 					<div class='button insert-media wp-block-button__link'>".$data['text']."</div>
 					<span></span>
 				</div>";

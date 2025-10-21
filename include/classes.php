@@ -1021,6 +1021,16 @@ class mf_base
 
 		return $array;
 	}
+	
+	function filter_is_indexed($follow_link, $post_id)
+	{
+		if($this->has_noindex($post_id))
+		{
+			$follow_link = false;
+		}
+
+		return $follow_link;
+	}
 
 	function wp_before_admin_bar_render()
 	{

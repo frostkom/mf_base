@@ -905,7 +905,7 @@ function render_image_tag($data)
 
 	if($data['id'] > 0)
 	{
-		$out .= wp_get_attachment_image($data['id'], $data['size']);
+		$out .= str_replace(array(' height="1"', ' width="1"'), "", wp_get_attachment_image($data['id'], $data['size']));
 	}
 
 	else if($data['src'] != '')

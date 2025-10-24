@@ -2110,6 +2110,8 @@ class mf_base
 
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
 
+		if(!isset($data['class'])){		$data['class'] = [];}
+
 		if(strpos($html, "method=") === false)
 		{
 			$html .= " method='post'";
@@ -2122,7 +2124,7 @@ class mf_base
 
 		$data['class'][] = "mf_form";
 
-		if(isset($data['class']))
+		if(count($data['class']) > 0)
 		{
 			$html .= "class='";
 
@@ -4312,7 +4314,7 @@ class settings_page
 				<div class='settings-nav contextual-help-tabs'>
 					<ul></ul>
 				</div>
-				<form".apply_filters('get_form_attr', " action='options.php'", ["settings-tabs"]).">";
+				<form".apply_filters('get_form_attr', " action='options.php'", ['class' => ["settings-tabs"]]).">";
 
 					settings_fields(BASE_OPTIONS_PAGE);
 					$this->do_settings_sections(BASE_OPTIONS_PAGE);
@@ -4766,7 +4768,7 @@ class mf_export
 		global $error_text;
 
 		$out = get_notification()
-		."<form".apply_filters('get_form_attr', " action='#'", ["mf_settings"]).">"
+		."<form".apply_filters('get_form_attr', " action='#'", ['class' => ["mf_settings"]]).">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
 				<div class='inside'>";
@@ -5601,7 +5603,7 @@ class mf_import
 
 	function get_form()
 	{
-		$out = "<form".apply_filters('get_form_attr', " id='mf_import' action='#' enctype='multipart/form-data'", ["mf_settings"]).">"
+		$out = "<form".apply_filters('get_form_attr', " id='mf_import' action='#' enctype='multipart/form-data'", ['class' => ["mf_settings"]]).">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";

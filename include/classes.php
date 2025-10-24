@@ -2104,6 +2104,48 @@ class mf_base
 		return $arr_actions;
 	}
 
+	function get_form_attr($html = "", $data = [])
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
+
+		if(strpos($html, "method=") === false)
+		{
+			$html .= " method='post'";
+		}
+
+		if(strpos($html, "action=") === false)
+		{
+			$html .= " action=''";
+		}
+
+		$data['class'][] = "mf_form";
+
+		if(isset($data['class']))
+		{
+			$html .= "class='";
+
+				$i = 0;
+
+				foreach($data['class'] as $class_name)
+				{
+					if($i > 0)
+					{
+						$html .= " ";
+					}
+
+					$html .= $class_name;
+
+					$i++;
+				}
+			
+			$html .= "'";
+		}
+
+		return $html;
+	}
+
 	function get_loading_animation($html, $args = [])
 	{
 		if(!isset($args['class'])){		$args['class'] = "fa-2x";}
@@ -4270,7 +4312,7 @@ class settings_page
 				<div class='settings-nav contextual-help-tabs'>
 					<ul></ul>
 				</div>
-				<form method='post' action='options.php' class='settings-tabs mf_form'>";
+				<form".apply_filters('get_form_attr', " action='options.php'", ["settings-tabs"]).">";
 
 					settings_fields(BASE_OPTIONS_PAGE);
 					$this->do_settings_sections(BASE_OPTIONS_PAGE);
@@ -4724,7 +4766,7 @@ class mf_export
 		global $error_text;
 
 		$out = get_notification()
-		."<form action='#' method='post' class='mf_form mf_settings'>"
+		."<form".apply_filters('get_form_attr', " action='#'", ["mf_settings"]).">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
 				<div class='inside'>";
@@ -5559,7 +5601,7 @@ class mf_import
 
 	function get_form()
 	{
-		$out = "<form action='#' method='post' class='mf_form mf_settings' enctype='multipart/form-data' id='mf_import'>" // rel='import/check/".get_class($this)."'
+		$out = "<form".apply_filters('get_form_attr', " id='mf_import' action='#' enctype='multipart/form-data'", ["mf_settings"]).">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";

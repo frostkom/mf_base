@@ -2104,13 +2104,14 @@ class mf_base
 		return $arr_actions;
 	}
 
-	function get_form_attr($html = "", $data = [])
+	function get_form_attr($html, $data = [])
 	{
+		if(!isset($data['class'])){		$data['class'] = [];}
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
+		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
-
-		if(!isset($data['class'])){		$data['class'] = [];}
 
 		if(strpos($html, "method=") === false)
 		{
@@ -2126,7 +2127,49 @@ class mf_base
 
 		if(count($data['class']) > 0)
 		{
-			$html .= "class='";
+			$html .= " class='";
+
+				$i = 0;
+
+				foreach($data['class'] as $class_name)
+				{
+					if($i > 0)
+					{
+						$html .= " ";
+					}
+
+					$html .= $class_name;
+
+					$i++;
+				}
+			
+			$html .= "'";
+		}
+
+		return $html;
+	}
+
+	function get_table_attr($html, $data = [])
+	{
+		if(!isset($data['class'])){		$data['class'] = [];}
+
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_tables', $plugin_include_url."style_tables.css");
+
+		if(in_array('mf_form', $data['class']))
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+
+			mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
+		}
+
+		$data['class'][] = "widefat";
+		$data['class'][] = "striped";
+
+		if(count($data['class']) > 0)
+		{
+			$html .= " class='";
 
 				$i = 0;
 
@@ -3928,6 +3971,10 @@ class mf_list_table extends WP_List_Table
 
 	protected function get_table_classes()
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_tables', $plugin_include_url."style_tables.css");
+
 		return array('widefat', 'striped');
 	}
 
@@ -5737,7 +5784,7 @@ class mf_import
 			<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Example", 'lang_base')."</h3>
 				<div class='inside'>
-					<table class='widefat striped'>";
+					<table".apply_filters('get_table_attr', "").">";
 
 						for($i = 0; $i < $count_temp_rows && $i < 5; $i++)
 						{

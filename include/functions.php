@@ -1774,7 +1774,7 @@ function get_media_button($data = [])
 			}
 
 			$out .= "<div class='mf_media_raw'></div>
-			<table class='mf_media_list widefat striped'></table>"
+			<table".apply_filters('get_table_attr', "", ['class' => ["mf_media_list"]])."></table>"
 			//."<textarea name='".$data['name']."' class='mf_media_urls'>".$data['value']."</textarea>"
 			.input_hidden(array('name' => $data['name'], 'value' => $data['value'], 'allow_empty' => true, 'xtra' => "class='mf_media_urls'"));
 

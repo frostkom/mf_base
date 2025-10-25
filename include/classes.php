@@ -2659,10 +2659,12 @@ class mf_base
 
 	function template_redirect()
 	{
+		global $wp_query;
+
 		if(is_author())
 		{
-			wp_redirect(get_option('home'), 301);
-			exit;
+			$wp_query->set_404();
+			status_header(404);
 		}
 	}
 

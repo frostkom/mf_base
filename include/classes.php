@@ -970,6 +970,16 @@ class mf_base
 		return $this->server_type;
 	}
 
+	function rest_authentication_errors($result)
+	{
+		if(!is_user_logged_in())
+		{
+			return new WP_Error('rest_forbidden', __("You cannot access the REST API without logging in.", 'lang_base'), array('status' => 401));
+		}
+
+		return $result;
+	}
+
 	function get_current_visitor_ip($out)
 	{
 		if($out == "")
@@ -1021,7 +1031,7 @@ class mf_base
 
 		return $array;
 	}
-	
+
 	function filter_is_indexed($follow_link, $post_id)
 	{
 		if($this->has_noindex($post_id))
@@ -2142,7 +2152,7 @@ class mf_base
 
 					$i++;
 				}
-			
+
 			$html .= "'";
 		}
 
@@ -2184,7 +2194,7 @@ class mf_base
 
 					$i++;
 				}
-			
+
 			$html .= "'";
 		}
 
@@ -2640,16 +2650,6 @@ class mf_base
 				$this->arr_public_posts[$post_id] = $post_title;
 			}
 		}
-	}
-
-	function rest_authentication_errors($result)
-	{
-		if(!is_user_logged_in())
-		{
-			return new WP_Error('rest_forbidden', __("You cannot access the REST API without logging in.", 'lang_base'), array('status' => 401));
-		}
-
-		return $result;
 	}
 
 	function wp_sitemaps_add_provider($provider, $name)

@@ -4815,7 +4815,7 @@ class mf_export
 		global $error_text;
 
 		$out = get_notification()
-		."<form".apply_filters('get_form_attr', " action='#'", ['class' => ["mf_settings"]]).">"
+		."<form".apply_filters('get_form_attr', " action='#'").">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Settings", 'lang_base')."</h3>
 				<div class='inside'>";
@@ -5650,7 +5650,7 @@ class mf_import
 
 	function get_form()
 	{
-		$out = "<form".apply_filters('get_form_attr', " id='mf_import' action='#' enctype='multipart/form-data'", ['class' => ["mf_settings"]]).">"
+		$out = "<form".apply_filters('get_form_attr', " id='mf_import' action='#' enctype='multipart/form-data'").">"
 			."<div id='poststuff' class='postbox'>
 				<h3 class='hndle'>".__("Check", 'lang_base')."</h3>
 				<div class='inside'>";

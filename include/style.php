@@ -125,7 +125,7 @@ tr.inactive
 		opacity: 1;
 	}
 
-.strong, .bold
+.strong
 {
 	font-weight: bold !important;
 }

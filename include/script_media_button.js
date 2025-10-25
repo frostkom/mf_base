@@ -42,7 +42,7 @@ function render_attachment_list()
 						output_list += "<span>" + file_name + "</span><br>";
 					}
 
-					output_list += "<i class='fa fa-trash red fa-2x' data-id='" + index + "'></i>"
+					output_list += "<i class='fa fa-trash red fa-lg' data-id='" + index + "'></i>"
 				+ "</td>"
 			+ "</tr>";
 
@@ -52,7 +52,16 @@ function render_attachment_list()
 		}
 	});
 
-	dom_list.html(output_list);
+	if(output_list != '')
+	{
+		dom_list.removeClass('hide').children("tbody").html(output_list);
+	}
+
+	else
+	{
+		dom_list.addClass('hide').children("tbody").empty();
+	}
+
 	dom_urls.val(output_urls);
 
 	if(dom_max_file_uploads > 0)

@@ -131,48 +131,6 @@ function get_option_page_suffix($data)
 	return $out;
 }
 
-function get_or_set_table_filter($data)
-{
-	if(!isset($data['prefix'])){	$data['prefix'] = '';}
-	if(!isset($data['save'])){		$data['save'] = false;}
-	if(!isset($data['default'])){	$data['default'] = '';}
-
-	$meta_value = '';
-
-	$user_id = get_current_user_id();
-	$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
-
-	if(isset($_GET['filter_action']) || isset($_REQUEST[$data['key']]))
-	{
-		$meta_value = check_var($data['key']);
-
-		if($data['save'] == true)
-		{
-			if($meta_value != '')
-			{
-				update_user_meta($user_id, $meta_key, $meta_value);
-			}
-
-			else
-			{
-				delete_user_meta($user_id, $meta_key, $meta_value);
-			}
-		}
-	}
-
-	else
-	{
-		$meta_value = get_the_author_meta($meta_key, $user_id);
-	}
-
-	if($meta_value == '')
-	{
-		$meta_value = $data['default'];
-	}
-
-	return $meta_value;
-}
-
 function show_final_size($in, $suffix = true)
 {
 	$arr_suffix = array("B", "kB", "MB", "GB", "TB");
@@ -4326,6 +4284,38 @@ function show_checkbox($data)
 	return $out;
 }
 #################
+
+function get_form_accents($data)
+{
+	$out = "";
+
+	if(strlen($data['value']) == 7)
+	{
+		$out .= show_textfield(array('type' => 'color', 'name' => $data['name'].'_old', 'value' => $data['value']));
+	}
+
+	$arr_colors = apply_filters('get_styles_content', '', 'colors');
+
+	if(count($arr_colors) > 0)
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_accents', $plugin_include_url."style_accents.css");
+
+		$out .= "<ul class='display_theme_colors flex_flow tight'>";
+
+			foreach($arr_colors as $arr_color)
+			{
+				$out .= show_radio_input(array('name' => $data['name'], 'text' => "<span style='background: ".$arr_color['color']."' title='".$arr_color['name']."'></span>", 'value' => "var(--wp--preset--color--".$arr_color['slug'].")", 'compare' => $data['value'], 'tag' => 'li'));
+			}
+
+			$out .= "<li><a href='".admin_url("site-editor.php?p=/styles&section=/colors/palette")."'>".__("Edit", 'lang_navigation')."</a></li>";
+
+		$out .= "</ul>";
+	}
+
+	return $out;
+}
 
 ################################
 function show_radio_input($data)

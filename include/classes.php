@@ -2274,6 +2274,20 @@ class mf_base
 					}
 				break;
 
+				case 'colors':
+					$out = [];
+
+					if(isset($arr_json_styles['settings']['color']['palette']['theme']))
+					{
+						$out = array_merge($out, $arr_json_styles['settings']['color']['palette']['theme']);
+					}
+
+					if(isset($arr_json_styles['settings']['color']['palette']['custom']))
+					{
+						$out = array_merge($out, $arr_json_styles['settings']['color']['palette']['custom']);
+					}
+				break;
+
 				default:
 					do_log(__FUNCTION__.": Type not targeted yet (".$type.")");
 				break;
@@ -2375,6 +2389,32 @@ class mf_base
 						),
 					),
 				),
+				"color": {
+					"palette": {
+						"theme": [
+							{
+								"color": "#FFFFFF",
+								"name": "Bas",
+								"slug": "base"
+							},
+							{
+								"color": "#111111",
+								"name": "Kontrast",
+								"slug": "contrast"
+							},
+							{
+								"color": "#112a42",
+								"name": "Accent 1",
+								"slug": "accent-1"
+							},
+							{
+								"color": "color-mix(in srgb, currentColor 20%, transparent)",
+								"name": "Accent 6",
+								"slug": "accent-6"
+							}
+						]
+					}
+				}
 			),
 			'isGlobalStylesUserThemeJSON' => true,
 			'version' => 3,
@@ -2691,8 +2731,8 @@ class mf_base
 	{
 		unset($taxonomies['category']);
 
-        return $taxonomies;
-    }
+		return $taxonomies;
+	}
 
 	function robots_txt()
 	{
@@ -2816,13 +2856,8 @@ class mf_base
 		}
 	}
 
-	function theme_page_templates($posts_templates)
+	/*function theme_page_templates($posts_templates)
 	{
-		/*if(count($this->templates) == 0)
-		{
-			$this->templates = apply_filters('get_page_templates', []);
-		}*/
-
 		$posts_templates = array_merge($posts_templates, $this->templates);
 
 		return $posts_templates;
@@ -2830,11 +2865,6 @@ class mf_base
 
 	function wp_insert_post_data($data)
 	{
-		/*if(count($this->templates) == 0)
-		{
-			$this->templates = apply_filters('get_page_templates', []);
-		}*/
-
 		// Create the key used for the themes cache
 		$cache_key = "page_templates-".md5(get_theme_root()."/".get_stylesheet());
 
@@ -2867,11 +2897,6 @@ class mf_base
 			return $template;
 		}
 
-		/*if(count($this->templates) == 0)
-		{
-			$this->templates = apply_filters('get_page_templates', []);
-		}*/
-
 		$template_temp = get_post_meta($post->ID, '_wp_page_template', true);
 
 		// Return default template if we don't have a custom one defined
@@ -2895,7 +2920,7 @@ class mf_base
 		}
 
 		return $template;
-	}
+	}*/
 
 	function recommend_config($data)
 	{
@@ -3546,8 +3571,6 @@ class mf_list_table extends WP_List_Table
 		if(!isset($data['query_all_id'])){		$data['query_all_id'] = 'all';}
 		if(!isset($data['query_trash_id'])){	$data['query_trash_id'] = array('trash', 'ignore');}
 		if(!isset($data['display_search'])){	$data['display_search'] = true;}
-		if(!isset($data['has_autocomplete'])){	$data['has_autocomplete'] = false;}
-		if(!isset($data['remember_search'])){	$data['remember_search'] = false;}
 
 		$this->arr_settings = $data;
 
@@ -3555,15 +3578,7 @@ class mf_list_table extends WP_List_Table
 
 		$this->set_default();
 
-		if($data['remember_search'] == true)
-		{
-			$this->search = get_or_set_table_filter(array('prefix' => ($this->post_type != '' ? $this->post_type : $this->table)."_", 'key' => $this->search_key, 'save' => true, 'default' => (isset($data['search']) ? $data['search'] : '')));
-		}
-
-		else
-		{
-			$this->search = check_var($this->search_key, 'char', true, (isset($data['search']) ? $data['search'] : ''));
-		}
+		$this->search = check_var($this->search_key, 'char', true, (isset($data['search']) ? $data['search'] : ''));
 
 		// Has to be here too
 		if($this->post_type != '')
@@ -4010,7 +4025,7 @@ class mf_list_table extends WP_List_Table
 
 	function show_search_form()
 	{
-		echo "<form method='get'".(is_admin() ? "" : " class='mf_form'").($this->arr_settings['has_autocomplete'] == true && isset($this->arr_settings['action']) ? " rel='".$this->arr_settings['action']."'" : "").">";
+		echo "<form".apply_filters('get_form_attr', " method='get'").">";
 
 			$this->search_box(__("Search", 'lang_base'), $this->search_key);
 

@@ -11,6 +11,8 @@ function make_link_confirm()
 
 function make_link_external()
 {
+	do_action('load_font_awesome');
+
 	$plugin_include_url = plugin_dir_url(__FILE__);
 
 	mf_enqueue_script('script_base_external', $plugin_include_url."script_external.js");
@@ -117,6 +119,8 @@ function get_option_page_suffix($data)
 	if(!isset($data['post_type'])){	$data['post_type'] = 'page';}
 	if(!isset($data['title'])){		$data['title'] = '';}
 	if(!isset($data['content'])){	$data['content'] = '';}
+
+	do_action('load_font_awesome');
 
 	if($data['value'] > 0)
 	{
@@ -1329,6 +1333,8 @@ function get_file_icon($data)
 
 	if(!isset($data['size'])){		$data['size'] = "fa-lg";}
 
+	do_action('load_font_awesome');
+
 	$suffix = get_file_suffix($data['file']);
 
 	switch($suffix)
@@ -1629,6 +1635,8 @@ function get_media_library($data)
 	if(!isset($data['value'])){			$data['value'] = '';}
 	if(!isset($data['description'])){	$data['description'] = '';}
 
+	do_action('load_font_awesome');
+
 	$add_file_text = __("Add File", 'lang_base');
 	$change_file_text = __("Change File", 'lang_base');
 	$insert_file_text = __("Insert File", 'lang_base');
@@ -1719,6 +1727,8 @@ function get_media_button($data = [])
 			{
 				if(!isset($is_media_button_init))
 				{
+					do_action('load_font_awesome');
+
 					$plugin_include_url = plugin_dir_url(__FILE__);
 
 					wp_enqueue_media();

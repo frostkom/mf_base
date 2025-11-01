@@ -1983,6 +1983,8 @@ class mf_base
 
 		if($pagenow == 'options-general.php' && check_var('page') == BASE_OPTIONS_PAGE)
 		{
+			do_action('load_font_awesome');
+
 			mf_enqueue_style('style_base_settings', $plugin_include_url."style_settings.css");
 			mf_enqueue_script('script_base_settings', $plugin_include_url."script_settings.js", array(
 				'default_tab' => "settings_base",
@@ -2511,6 +2513,8 @@ class mf_base
 	{
 		global $wpdb, $post;
 
+		do_action('load_font_awesome');
+
 		switch($column)
 		{
 			case 'page_index':
@@ -2816,8 +2820,6 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_style('style_base', $plugin_include_url."style.css");
-
-		$this->load_font_awesome();
 
 		if($data['type'] == 'public')
 		{
@@ -3324,6 +3326,8 @@ class mf_base
 
 		if(in_array('lost_connection', $arr_type) && $this->template_lost_connection == false)
 		{
+			do_action('load_font_awesome');
+
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
 			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
@@ -3336,6 +3340,8 @@ class mf_base
 
 		if(in_array('loading', $arr_type) && $this->template_loading == false)
 		{
+			do_action('load_font_awesome');
+
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
 			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");

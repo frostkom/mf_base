@@ -22,7 +22,7 @@
 
 	.wp-block-button.is-style-outline .wp-block-button__link:hover
 	{
-		background: var(--wp--preset--color--contrast);
+		background: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 		color: var(--wp--preset--color--base);
 	}
 

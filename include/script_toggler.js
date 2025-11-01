@@ -69,10 +69,8 @@ jQuery(function($)
 		}
 	}
 
-	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
+	function do_toggle(dom_obj)
 	{
-		var dom_obj = $(this);
-
 		if(dom_obj.hasClass('is_open'))
 		{
 			set_open(dom_obj, false);
@@ -100,5 +98,22 @@ jQuery(function($)
 		}
 
 		save_open();
+	}
+
+	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
+	{
+		var dom_obj = $(this);
+
+		do_toggle(dom_obj);
+	});
+
+	$(document).on('click', ".toggle_all", function()
+	{
+		$(".toggler:not(.is_not_toggleable)").each(function()
+		{
+			var dom_obj = $(this);
+
+			do_toggle(dom_obj);
+		});
 	});
 });

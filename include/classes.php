@@ -2,7 +2,7 @@
 
 class mf_base
 {
-	var $post_type = 'mf_base';
+	var $post_type = __CLASS__;
 	var $meta_prefix;
 	var $chmod_dir = 0755;
 	var $chmod_file = 0644;
@@ -763,12 +763,15 @@ class mf_base
 			replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
 			replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
 
+			// Update page index
+			#########################
 			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE meta_value IN ('noindex', 'nofollow', 'none') GROUP BY ID", $this->meta_prefix.'page_index'));
 
 			foreach($result as $r)
 			{
 				update_post_meta($r->ID, $this->meta_prefix.'page_index', 'no');
 			}
+			#########################
 
 			mf_uninstall_plugin(array(
 				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_sync_sites', 'option_github_access_token', 'option_git_updater', 'option_github_updates'),
@@ -1166,7 +1169,7 @@ class mf_base
 				$free_percent = ($free_space / $total_space) * 100;
 			}
 
-			echo "<div class='flex_flow'>
+			echo "<div".apply_filters('get_flex_flow', "").">
 				<div>";
 
 					if(!$has_required_php_version || $php_version != $mysql_version)
@@ -2114,6 +2117,40 @@ class mf_base
 		return $arr_actions;
 	}
 
+	function get_flex_flow($html, $data = [])
+	{
+		if(!isset($data['class'])){		$data['class'] = [];}
+
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+
+		$data['class'][] = "flex_flow";
+
+		if(count($data['class']) > 0)
+		{
+			$html .= " class='";
+
+				$i = 0;
+
+				foreach($data['class'] as $class_name)
+				{
+					if($i > 0)
+					{
+						$html .= " ";
+					}
+
+					$html .= $class_name;
+
+					$i++;
+				}
+
+			$html .= "'";
+		}
+
+		return $html;
+	}
+
 	function get_form_attr($html, $data = [])
 	{
 		if(!isset($data['class'])){		$data['class'] = [];}
@@ -2123,6 +2160,11 @@ class mf_base
 		mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
 		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
+
+		if(in_array('flex_flow', $data['class']))
+		{
+			mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+		}
 
 		if(strpos($html, "method=") === false)
 		{
@@ -2756,18 +2798,13 @@ class mf_base
 		$this->wp_head(array('type' => 'login'));
 	}
 
-	function load_font_awesome($data)
+	function load_font_awesome()
 	{
 		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
-			// Cannot modify header information - headers already sent by (output started at wp-content/plugins/mf_base/include/classes.php:1987) in wp-admin/includes/misc.php on line 1431
-			/*$plugin_fonts_url = str_replace("/include/", "/", $data['plugin_include_url']);
+			$plugin_include_url = plugin_dir_url(__FILE__);
 
-			echo "<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-brands-400.woff2' crossorigin>
-			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-regular-400.woff2' crossorigin>
-			<link rel='preload' as='font' type='font/woff2' href='".$plugin_fonts_url."fonts/fa-solid-900.woff2' crossorigin>";*/
-
-			mf_enqueue_style('font-awesome-5', $data['plugin_include_url']."font-awesome-5.15.4.php");
+			mf_enqueue_style('font-awesome-5', $plugin_include_url."font-awesome-5.15.4.php");
 		}
 	}
 
@@ -2778,11 +2815,9 @@ class mf_base
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
-		mf_enqueue_style('style_base', $plugin_include_url."style.php");
+		mf_enqueue_style('style_base', $plugin_include_url."style.css");
 
-		$data_temp = $data;
-		$data_temp['plugin_include_url'] = $plugin_include_url;
-		$this->load_font_awesome($data_temp);
+		$this->load_font_awesome();
 
 		if($data['type'] == 'public')
 		{
@@ -3534,7 +3569,7 @@ if(!class_exists('WP_List_Table'))
 class mf_list_table extends WP_List_Table
 {
 	var $arr_settings;
-	var $post_type = "";
+	var $post_type = '';
 	var $table;
 	var $orderby_default = "post_title";
 	var $orderby_default_order = "ASC";

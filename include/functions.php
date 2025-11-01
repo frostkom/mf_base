@@ -1598,6 +1598,13 @@ function get_form_button_classes($out = "")
 		$out .= ($out != '' ? " " : "")."form_button";
 	}
 
+	if(strpos($out, "flex_flow") !== false)
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+	}
+
 	if($out != '')
 	{
 		return " class='".$out."'";
@@ -1651,7 +1658,7 @@ function get_media_library($data)
 				$out .= "<label>".$data['label']."</label>";
 			}
 
-			$out .= "<div class='flex_flow tight'>";
+			$out .= "<div".apply_filters('get_flex_flow', "", ['class' => ['tight']]).">";
 
 				if($data['name'] != '')
 				{
@@ -4302,7 +4309,7 @@ function get_form_accents($data)
 
 		mf_enqueue_style('style_base_accents', $plugin_include_url."style_accents.css");
 
-		$out .= "<ul class='display_theme_colors flex_flow tight'>";
+		$out .= "<ul".apply_filters('get_flex_flow', "", ['class' => ['display_theme_colors', 'tight']]).">";
 
 			foreach($arr_colors as $arr_color)
 			{

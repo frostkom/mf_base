@@ -2086,7 +2086,7 @@ function get_source_version($file)
 {
 	$version = '';
 
-	if($version == '' && strpos($file, WP_CONTENT_URL))
+	if($version == '' && strpos($file, WP_CONTENT_URL) !== false)
 	{
 		$file_dir = str_replace(WP_CONTENT_URL, WP_CONTENT_DIR, $file);
 

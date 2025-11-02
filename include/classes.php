@@ -167,7 +167,25 @@ class mf_base
 
 	function HTMLToRGB($hex)
 	{
-		if($hex[0] == '#')
+		if(substr($hex, 0, 4) == "var(")
+		{
+			$arr_colors = apply_filters('get_styles_content', '', 'colors');
+
+			if(count($arr_colors) > 0)
+			{
+				foreach($arr_colors as $arr_color)
+				{
+					if($hex == "var(--wp--preset--color--".$arr_color['slug'].")")
+					{
+						$hex = $arr_color['color'];
+
+						break;
+					}
+				}
+			}
+		}
+
+		if(substr($hex, 0, 1) == '#')
 		{
 			$hex = substr($hex, 1);
 		}

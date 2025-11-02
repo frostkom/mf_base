@@ -4629,6 +4629,8 @@ class mf_font_icons
 
 			else
 			{
+				do_action('load_font_awesome');
+
 				if(substr($data['symbol'], 0, 2) != 'fa')
 				{
 					$data['symbol'] = "fa fa-".$data['symbol'];

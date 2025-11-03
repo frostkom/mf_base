@@ -4,7 +4,10 @@
 	cursor: pointer;
 	display: block;
 	line-height: 1.8;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	white-space: nowrap;
+	max-width: 100%;
 }
 
 	.mf_form .asterisk

@@ -44,7 +44,7 @@ function render_required()
 			{
 				jQuery(this).find("label").css("color", "red");
 
-				jQuery("html, body").animate({scrollTop: (jQuery(this).offset().top - 140)}, 800);
+				jQuery("html, body").animate({scrollTop: (jQuery(this).offset().top - 40)}, 800);
 
 				e.preventDefault();
 			}

@@ -14,7 +14,7 @@ html
 	outline: none;
 }
 
-.hide, [hidden]
+.hide/*, [hidden]*/
 {
 	display: none !important;
 }
@@ -32,7 +32,6 @@ html
 .row-actions
 {
 	color: #999;
-	white-space: nowrap;
 }
 
 .fa, .fab, .far, .fas, .pointer
@@ -40,40 +39,40 @@ html
 	cursor: pointer;
 }
 
-	.fa.green, .fab.green, .far.green, .fas.green, .color_green
-	{
-		color: #76e476;
-	}
+.fa.green, .fab.green, .far.green, .fas.green, .color_green
+{
+	color: #76e476;
+}
 
-	.fa.blue, .fab.blue, .far.blue, .fas.blue, .color_blue
-	{
-		color: #4887bf;
-	}
+.fa.blue, .fab.blue, .far.blue, .fas.blue, .color_blue
+{
+	color: #4887bf;
+}
 
-	.fa.yellow, .fab.yellow, .far.yellow, .fas.yellow, .color_yellow
-	{
-		color: #e4d176;
-	}
+.fa.yellow, .fab.yellow, .far.yellow, .fas.yellow, .color_yellow
+{
+	color: #e4d176;
+}
 
-	.fa.red, .fab.red, .far.red, .fas.red, .color_red
-	{
-		color: #e47676;
-	}
+.fa.red, .fab.red, .far.red, .fas.red, .color_red
+{
+	color: #e47676;
+}
 
-	.fa.white, .fab.white, .far.white, .fas.white, .color_white
-	{
-		color: #fff;
-	}
+/*.fa.white, .fab.white, .far.white, .fas.white, .color_white
+{
+	color: #fff;
+}*/
 
 .grey, .grey > a
 {
 	color: #999;
 }
 
-.light_grey, .light_grey > a
+/*.light_grey, .light_grey > a
 {
 	color: rgba(0, 0, 0, .2);
-}
+}*/
 
 .green > th, .green > td, .bg_green
 {
@@ -85,14 +84,14 @@ html
 	background: rgba(72, 135, 191, .3);
 }
 
-.red > th, .red > td, .bg_red
-{
-	background: rgba(255, 204, 204, .3);
-}
-
 .yellow > th, .yellow > td, .bg_yellow
 {
 	background: rgba(255, 254, 204, .3);
+}
+
+.red > th, .red > td, .bg_red
+{
+	background: rgba(255, 204, 204, .3);
 }
 
 tr.inactive

@@ -833,7 +833,7 @@ function get_option_or_default($key, $default = '')
 	return $option;
 }
 
-function get_the_author_meta_or_default($key, $user_id, $default = '')
+/*function get_the_author_meta_or_default($key, $user_id, $default = '')
 {
 	$option = get_the_author_meta($key, $user_id);
 
@@ -843,7 +843,7 @@ function get_the_author_meta_or_default($key, $user_id, $default = '')
 	}
 
 	return $option;
-}
+}*/
 
 function render_image_tag($data)
 {
@@ -1885,24 +1885,6 @@ function mf_format_number($in, $dec = 2)
 	return number_format($in, 0, '.', '') == $in ? number_format($in, 0, '.', ' ') : number_format($in, $dec, '.', ' ');
 }
 
-// Can be removed when not used anymore
-function mf_get_post_content($id, $field = 'post_content')
-{
-	global $wpdb;
-
-	return $wpdb->get_var($wpdb->prepare("SELECT ".$field." FROM ".$wpdb->posts." WHERE ID = '%d'", $id));
-}
-
-// This was deprecated 250720
-function require_plugin($required_path, $required_name, $require_url = "")
-{
-	if(is_admin() && function_exists('is_plugin_active') && !is_plugin_active($required_path))
-	{
-		//deactivate_plugins(plugin_basename(__FILE__));
-		wp_die(sprintf(__("You need to install the plugin %s first", 'lang_base'), $required_name));
-	}
-}
-
 function get_current_user_role($id = 0) // Change into function get_user_role()???
 {
 	global $obj_base;
@@ -1914,26 +1896,7 @@ function get_current_user_role($id = 0) // Change into function get_user_role()?
 
 	$user_data = get_userdata($id);
 
-	return isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("unknown", 'lang_base').")";
-}
-
-//main_version * 10000 + minor_version * 100 + sub_version. For example, 4.1.0 is returned as 40100
-function int2point($in)
-{
-	$out = "";
-	$in_orig = $in;
-
-	$main_version = floor($in / 10000);
-
-	$in -= $main_version * 10000;
-
-	$minor_version = floor($in / 100);
-
-	$in -= $minor_version * 100;
-
-	$sub_version = $in;
-
-	return $main_version.".".$minor_version.".".$sub_version;
+	return (isset($user_data->roles[0]) ? $user_data->roles[0] : "(".__("unknown", 'lang_base').")");
 }
 
 function get_next_cron($data = [])
@@ -2031,22 +1994,6 @@ function show_settings_fields($data)
 			'type' => 'string',
 			'sanitize_callback' => $data['callback'],
 		));
-
-		// This will be run on every registration
-		/*$this->handle_temp = $handle;
-
-		register_setting(BASE_OPTIONS_PAGE, $this->handle_temp, array(
-			'type' => 'string',
-			'sanitize_callback' => array($this, 'register_setting_sanitize_callback')
-		));
-
-		function register_setting_sanitize_callback($value)
-		{
-			do_log(__FUNCTION__.": Update ".$this->handle_temp." = ".$value." to autoload = false");
-			//update_option($this->handle_temp, $value, false);
-
-			return $value;
-		}*/
 	}
 }
 
@@ -2257,24 +2204,6 @@ function get_all_roles($data = [])
 	return $roles;
 }
 
-function get_role_first_capability($role)
-{
-	global $wp_roles;
-
-	if(isset($wp_roles->roles[$role]['capabilities']) && is_array($wp_roles->roles[$role]['capabilities']))
-	{
-		$capabilities = $wp_roles->roles[$role]['capabilities'];
-		$cap_keys = array_keys($capabilities);
-
-		return $cap_keys[0];
-	}
-
-	else
-	{
-		return false;
-	}
-}
-
 function get_yes_no_for_select($data = [])
 {
 	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']));}
@@ -2301,6 +2230,24 @@ function get_yes_no_for_select($data = [])
 	}
 
 	return $arr_data;
+}
+
+function get_role_first_capability($role)
+{
+	global $wp_roles;
+
+	if(isset($wp_roles->roles[$role]['capabilities']) && is_array($wp_roles->roles[$role]['capabilities']))
+	{
+		$capabilities = $wp_roles->roles[$role]['capabilities'];
+		$cap_keys = array_keys($capabilities);
+
+		return $cap_keys[0];
+	}
+
+	else
+	{
+		return false;
+	}
 }
 
 function get_roles_for_select($data = [])
@@ -2593,7 +2540,7 @@ function get_categories_for_select($data = [])
 	return $arr_data;
 }
 
-if(!function_exists('array_sort'))
+/*if(!function_exists('array_sort'))
 {
 	function array_sort($data)
 	{
@@ -2606,7 +2553,7 @@ if(!function_exists('array_sort'))
 
 		return $obj_base->array_sort($data);
 	}
-}
+}*/
 
 #################
 function validate_url($value, $link = true, $http = true)
@@ -4733,29 +4680,6 @@ function show_table_header($arr_header, $shorten_text = true)
 	return $out;
 }
 ########################################
-
-// Stopped using 250810
-/*function does_post_exists($data)
-{
-	global $wpdb;
-
-	if(!isset($data['post_type'])){		$data['post_type'] = 'page';}
-	if(!isset($data['post_status'])){	$data['post_status'] = ($data['post_type'] == 'attachment' ? 'inherit' : 'publish');}
-	if(!isset($data['meta'])){			$data['meta'] = [];}
-
-	$arr_data = [];
-	get_post_children(array(
-		'post_type' => $data['post_type'],
-		'post_status' => $data['post_status'],
-		//'is_trusted' => true,
-		'meta' => $data['meta'],
-		'limit' => 1,
-	), $arr_data);
-
-	do_log(__FUNCTION__.": Replace with native query (".var_export($data, true)." -> ".$wpdb->last_query.")");
-
-	return (count($arr_data) > 0);
-}*/
 
 function get_post_children($data, &$arr_data = [])
 {

@@ -3,6 +3,12 @@ html
 	overflow-y: scroll;
 }
 
+	body:not(.wp-admin)
+	{
+		overflow: hidden;
+		position: relative;
+	}
+
 :focus-visible
 {
 	outline-width: .1em;

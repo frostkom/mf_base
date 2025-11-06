@@ -11,7 +11,7 @@ if(!defined('ABSPATH'))
 
 function calc_width($columns, $gap)
 {
-    return ((100 - ($columns - 1) * $gap) / $columns);
+	return ((100 - ($columns - 1) * $gap) / $columns);
 }
 
 $arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);

@@ -1122,7 +1122,7 @@ class mf_base
 		if(IS_SUPER_ADMIN)
 		{
 			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
- 
+
 			if($date_diff > 10 || get_site_option('setting_base_use_timezone') == 'yes')
 			{
 				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
@@ -1931,7 +1931,7 @@ class mf_base
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
 			$option = get_site_option_or_default($setting_key, 'no');
- 
+
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
 		}
 
@@ -1993,7 +1993,7 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_style('style_base_wp', $plugin_include_url."style_wp.css");
-		wp_enqueue_script('jquery-ui-autocomplete');
+		//wp_enqueue_script('jquery-ui-autocomplete');
 		mf_enqueue_script('script_base_wp', $plugin_include_url."script_wp.js", array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'toggle_all_data_text' => __("Toggle All Data", 'lang_base'),
@@ -2422,9 +2422,9 @@ class mf_base
 								'name' => 'Manrope', 
 								'slug' => 'manrope', 
 								'fontFamily' => 'Manrope, sans-serif', 
-								'fontFace' => array ( 
-									0 => array ( 
-										'src' => array ( 
+								'fontFace' => array (
+									0 => array (
+										'src' => array (
 											0 => 'file:./assets/fonts/manrope/Manrope-VariableFont_wght.woff2',
 										),
 										'fontWeight' => '200 800',
@@ -2434,8 +2434,8 @@ class mf_base
 								),
 							),
 						),
-						'custom' => array ( 
-							0 => array ( 
+						'custom' => array (
+							0 => array (
 								'name' => 'Kalam',
 								'slug' => 'kalam',
 								'fontFamily' => 'Kalam,
@@ -4675,7 +4675,7 @@ class mf_export
 	var $format;
 	var $data;
 	var $upload_path;
-	var $upload_url; 
+	var $upload_url;
 	var $type_name = '';
 	var $types = [];
 	var $formats;

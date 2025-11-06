@@ -71,6 +71,8 @@ jQuery(function($)
 
 	function do_toggle(dom_obj)
 	{
+		var is_open = false;
+
 		if(dom_obj.hasClass('is_open'))
 		{
 			set_open(dom_obj, false);
@@ -95,25 +97,47 @@ jQuery(function($)
 		else
 		{
 			set_open(dom_obj, true);
+
+			is_open = true;
 		}
 
 		save_open();
+
+		return is_open;
 	}
-
-	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
-	{
-		var dom_obj = $(this);
-
-		do_toggle(dom_obj);
-	});
 
 	$(document).on('click', ".toggle_all", function()
 	{
+		/*var toggler_open = 0,
+			toggler_total = 0;*/
+
 		$(".toggler:not(.is_not_toggleable)").each(function()
 		{
-			var dom_obj = $(this);
+			var is_open = do_toggle($(this));
 
-			do_toggle(dom_obj);
+			/*if(is_open)
+			{
+				toggler_open++;
+			}
+
+			toggler_total++;*/
 		});
+
+		/*if(toggler_open > (toggler_total / 2))
+		{
+			$(this).addClass('is_open');
+		}
+
+		else
+		{
+			$(this).removeClass('is_open');
+		}
+
+		return false;*/
+	});
+
+	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
+	{
+		do_toggle($(this));
 	});
 });

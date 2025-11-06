@@ -3281,7 +3281,7 @@ function show_textfield($data)
 
 	switch($data['type'])
 	{
-		case 'month':
+		/*case 'month':
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
 			mf_enqueue_style('jquery-ui-css', $plugin_include_url."jquery-ui.css");
@@ -3290,7 +3290,7 @@ function show_textfield($data)
 
 			$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."mf_datepicker ".$data['type'];
 			$data['type'] = "text";
-		break;
+		break;*/
 
 		case 'email':
 			$data['autocapitalize'] = $data['autocorrect'] = false;
@@ -3344,13 +3344,6 @@ function show_textfield($data)
 		break;
 
 		case 'color':
-			/*$plugin_include_url = plugin_dir_url(__FILE__);
-
-			mf_enqueue_script('script_base_colorpicker', $plugin_include_url."script_colorpicker.js");
-
-			$data['suffix'] .= " <div".get_form_button_classes("display_inline")."><a href='#' class='button clear_color'>".__("Clear", 'lang_base')."</a></div>";*/
-		break;
-
 		case 'date':
 		case 'datetime-local':
 		case 'range':

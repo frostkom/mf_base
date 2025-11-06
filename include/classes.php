@@ -4727,13 +4727,14 @@ class mf_export
 		$this->fetch_request_xtra();
 	}
 
-	function set_file_name()
+	/*function set_file_name()
 	{
 		if($this->file_name == '')
 		{
-			$this->file_name = prepare_file_name($this->name).".".$this->format;
+			//$this->file_name = prepare_file_name($this->name).".".$this->format;
+			$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("ymdHis")."_".wp_hash($this->name).".".$this->format;
 		}
-	}
+	}*/
 
 	function compress_file()
 	{
@@ -4785,7 +4786,11 @@ class mf_export
 
 				if(count($this->data) > 0)
 				{
-					$this->set_file_name();
+					//$this->set_file_name();
+					if($this->file_name == '')
+					{
+						$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("ymdHis")."_".wp_hash($this->name).".".$this->format;
+					}
 
 					switch($this->format)
 					{

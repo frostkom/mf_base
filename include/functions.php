@@ -1,5 +1,60 @@
 <?php
 
+/*function cached_get_results($query, $output = OBJECT, $cache_dir = null, $cache_ttl = 3600)
+{
+	global $wpdb;
+
+	if(!$cache_dir)
+	{
+		$cache_dir = WP_CONTENT_DIR . '/cache/wpdb_query_cache/';
+	}
+
+	if(!is_dir($cache_dir))
+	{
+		wp_mkdir_p($cache_dir);
+	}
+
+	// Extract table names from query (simple regex for FROM and JOIN clauses)
+	preg_match_all('/\bFROM\s+`?(\w+)`?|\bJOIN\s+`?(\w+)`?/i', $query, $matches);
+	$tables = array_filter(array_merge($matches[1], $matches[2]));
+	$tables = array_unique($tables);
+	sort($tables); // for consistent order
+
+	// Create a short string of table names joined by underscore
+	$table_part = implode('|', $tables);
+
+	// Sanitize table_part for filename safety (remove unwanted chars)
+	$table_part = preg_replace('/[^a-zA-Z0-9_]/', '', $table_part);
+
+	// Cache file name includes tables + md5 hash of query for uniqueness
+	$cache_file = $cache_dir . $table_part . '-' . md5($query) . '.json';
+
+	if(file_exists($cache_file) && (time() - filemtime($cache_file) < $cache_ttl))
+	{
+		$cached_data = file_get_contents($cache_file);
+		$results = json_decode($cached_data, true);
+
+		if ($output === OBJECT)
+		{
+			$results = array_map(function($item)
+			{
+				return (object) $item;
+			}, $results);
+		}
+
+		return $results;
+	}
+
+	// Run query and cache results
+	$results = $wpdb->get_results($query, $output);
+
+	$cache_data = (($output === OBJECT) ? array_map('get_object_vars', $results) : $results);
+
+	file_put_contents($cache_file, json_encode($cache_data));
+
+	return $results;
+}*/
+
 function make_link_confirm()
 {
 	$plugin_include_url = plugin_dir_url(__FILE__);
@@ -314,17 +369,37 @@ function get_toggler_container($data)
 			if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
 			if(!isset($data['is_open'])){			$data['is_open'] = false;}
 			if(!isset($data['is_toggleable'])){		$data['is_toggleable'] = true;}
-			if(!isset($data['id_prefix'])){			$data['id_prefix'] = '';}
+			//if(!isset($data['id_prefix'])){		$data['id_prefix'] = '';}
 			if(!isset($data['id'])){				$data['id'] = '';}
+			if(!isset($data['xtra'])){				$data['xtra'] = '';}
+			if(!isset($data['toggler_class'])){		$data['toggler_class'] = 'toggler';}
+
+			if(!isset($data['container_class'])){	$data['container_class'] = 'toggle_container';}
 
 			if($data['id'] == '' && $data['text'] != '')
 			{
 				$data['id'] = sanitize_title_with_dashes(sanitize_title($data['text']));
 			}
 
-			$data['id'] = $data['id_prefix'].$data['id'];
+			//$data['id'] = $data['id_prefix'].$data['id'];
 
-			$out = "<".$data['label_tag'].($data['id'] != '' ? " id='toggle_".$data['id']."'" : "")." class='toggler".($data['is_open'] ? " is_open" : "").($data['is_toggleable'] ? "" : " is_not_toggleable")."'>"
+			if($data['id'] != '')
+			{
+				$data['xtra'] .= " id='toggle_".$data['id']."'";
+				$data['container_class'] .= " toggle_".$data['id'];
+			}
+
+			if($data['is_open'])
+			{
+				$data['toggler_class'] .= " is_open";
+			}
+
+			if($data['is_toggleable'] == false)
+			{
+				$data['toggler_class'] .= " is_not_toggleable";
+			}
+
+			$out = "<".$data['label_tag'].$data['xtra']." class='".$data['toggler_class']."'>"
 				."<span>".$data['text']."</span>";
 
 				if($data['is_toggleable'] == true)
@@ -333,7 +408,7 @@ function get_toggler_container($data)
 				}
 
 			$out .= "</".$data['label_tag'].">
-			<".$data['container_tag']." class='toggle_container".($data['id'] != '' ? " toggle_".$data['id'] : "")."'>";
+			<".$data['container_tag']." class='".$data['container_class']."'>";
 
 			return $out;
 		break;

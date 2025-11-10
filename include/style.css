@@ -1,13 +1,15 @@
 html
 {
+	overflow-x: clip;
 	overflow-y: scroll;
 }
 
-	body:not(.wp-admin)
+	/* position: sticky will not work */
+	/*body:not(.wp-admin)
 	{
 		overflow: hidden;
 		position: relative;
-	}
+	}*/
 
 :focus-visible
 {

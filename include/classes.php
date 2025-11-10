@@ -2993,81 +2993,97 @@ class mf_base
 			{
 				default:
 				case 'apache':
-					/*$update_with = "<Files xmlrpc.php>\r\n"
-					."	Require all denied\r\n"
-					."</Files>";*/
-
-					$update_with = "<FilesMatch \"^(".$ignore_files.")$\">\r\n" //|wp\-content/uploads/[\d]+/.*\.php
-					."	Require all denied\r\n"
-					."</FilesMatch>\r\n";
-
-					/*$update_with .= "<IfModule mod_rewrite.c>\r\n"
-					."	RewriteEngine On\r\n"
-					."	RewriteCond %{REQUEST_URI} ^/?(xmlrpc\.php)$\r\n"
-					."	RewriteRule .* /404/ [L,NC]\r\n"
-					."</IfModule>\r\n";*/
-
-					$update_with .= "ServerSignature Off\r\n"
+					$update_with .= "<FilesMatch \"^(".$ignore_files.")$\">\r\n"
+						."	Require all denied\r\n"
+					."</FilesMatch>\r\n"
+					."\r\n"
+					
+					."ServerSignature Off\r\n"
 					."DirectoryIndex index.php\r\n"
 					."Options -Indexes\r\n"
 					."\r\n"
+
 					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
 					."Header set X-Content-Type-Options nosniff\r\n"
 					."Header set X-Powered-By \"Me\"\r\n"
 					."\r\n"
-					."<IfModule mod_headers.c>\r\n"
-					."	Header always set Referrer-Policy \"same-origin\"\r\n"
+
+					."AddDefaultCharset UTF-8\r\n"
+					."\r\n"
+
+					// Force UTF-8 for a number of file formats
+					."<IfModule mod_mime.c>\r\n"
+					."	AddCharset UTF-8 .atom .css .js .json .rss .vtt .xml\r\n"
 					."</IfModule>\r\n"
 					."\r\n"
+
+					."<IfModule mod_expires.c>\r\n"
+						."	Header unset Pragma\r\n"
+						."	Header append Cache-Control 'public, must-revalidate'\r\n"
+						."	Header unset Last-Modified\r\n"
+						."\r\n"
+
+						."	<IfModule mod_headers.c>\r\n"
+						."		Header unset ETag\r\n"
+						."	</IfModule>\r\n"
+					."</IfModule>\r\n"
+					."\r\n"
+
+					."FileETag None\r\n"
+					."\r\n"
+
+					."<IfModule mod_headers.c>\r\n"
+						."	Header always set Referrer-Policy \"same-origin\"\r\n"
+					."</IfModule>\r\n"
+					."\r\n"
+
 					."<IfModule mod_rewrite.c>\r\n"
-					."	RewriteEngine On\r\n"
-					."	RewriteBase /\r\n";
+						."	RewriteEngine On\r\n"
+						."	RewriteBase /\r\n"
+						."\r\n"
 
-					$update_with .= "\r\n"
-					."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
-					."	RewriteRule .* - [F]\r\n";
+						."	RewriteCond %{REQUEST_METHOD} ^TRACE\r\n"
+						."	RewriteRule .* - [F]\r\n"
+						."\r\n"
 
-					// Always force HTTPS
-					$update_with .= "\r\n"
-					."	RewriteCond %{HTTPS} off\r\n"
-					."	RewriteCond %{HTTP:X-Forwarded-Proto} !https\r\n"
-					."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n";
+						// Always force HTTPS
+						."	RewriteCond %{HTTPS} off\r\n"
+						."	RewriteCond %{HTTP:X-Forwarded-Proto} !https\r\n"
+						."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n"
+						."\r\n";
 
-					switch(get_site_option('setting_base_prefer_www'))
-					{
-						case 'yes':
-							$update_with .= "\r\n"
-							//."	RewriteCond %{HTTPS} on\r\n"
-							."	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
-							."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n";
-						break;
+						switch(get_site_option('setting_base_prefer_www'))
+						{
+							case 'yes':
+								$update_with .= "	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
+								."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n"
+								."\r\n";
+							break;
 
-						case 'no':
-							$update_with .= "\r\n"
-							//."	RewriteCond %{HTTPS} on\r\n"
-							."	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
-							."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n";
-						break;
-					}
+							case 'no':
+								$update_with .= "	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
+								."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n"
+								."\r\n";
+							break;
+						}
 
-					$update_with .= "\r\n"
-					."	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
-					."\r\n";
+						$update_with .= "	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
+						."\r\n";
 
-					/*$update_with .= "	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n"
-					."	RewriteRule .* /404/ [L,NC]\r\n"
-					."\r\n";*/
+						/*$update_with .= "	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n"
+						."	RewriteRule .* /404/ [L,NC]\r\n"
+						."\r\n";*/
 
-					// Disable execution of PHP files in wp-includes
-					if(!is_multisite())
-					{
-						$update_with .= "	RewriteRule ^wp-admin/includes/ - [F,L]\r\n";
-					}
+						// Disable execution of PHP files in wp-includes
+						if(!is_multisite())
+						{
+							$update_with .= "	RewriteRule ^wp-admin/includes/ - [F,L]\r\n";
+						}
 
-					$update_with .= "	RewriteRule !^wp-includes/ - [S=3]\r\n"
-					."	RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]\r\n"
-					."	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]\r\n"
-					."	RewriteRule ^wp-includes/theme-compat/ - [F,L]\r\n"
+						$update_with .= "	RewriteRule !^wp-includes/ - [S=3]\r\n"
+						."	RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]\r\n"
+						."	RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]\r\n"
+						."	RewriteRule ^wp-includes/theme-compat/ - [F,L]\r\n"
 					."</IfModule>\r\n";
 
 					switch(php_sapi_name())
@@ -3076,17 +3092,20 @@ class mf_base
 						case 'litespeed':
 							if($this->memory_limit_current <= $this->memory_limit)
 							{
-								$update_with .= "\r\nphp_value memory_limit ".$this->memory_limit_base."M";
+								$update_with .= "\r\n"
+								."php_value memory_limit ".$this->memory_limit_base."M";
 							}
 
 							if($this->upload_max_filesize_current <= $this->upload_max_filesize)
 							{
-								$update_with .= "\r\nphp_value upload_max_filesize ".$this->upload_max_filesize_base."M";
+								$update_with .= "\r\n"
+								."php_value upload_max_filesize ".$this->upload_max_filesize_base."M";
 							}
 
 							if($this->post_max_size_current <= $this->post_max_size)
 							{
-								$update_with .= "\r\nphp_value post_max_size ".$this->post_max_size_base."M";
+								$update_with .= "\r\n"
+								."php_value post_max_size ".$this->post_max_size_base."M";
 							}
 						break;
 
@@ -3106,10 +3125,12 @@ class mf_base
 					."	deny all;\r\n"
 					."}\r\n"
 					."\r\n"
+
 					."index \"index.php\";\r\n"
 					."autoindex off;\r\n"
 					."server_tokens off;\r\n"
 					."\r\n"
+
 					."location = /my_ip {\r\n"
 					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip break;\r\n"
 					."}";

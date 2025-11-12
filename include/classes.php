@@ -460,7 +460,7 @@ class mf_base
 				define('IS_EDITOR', $is_editor);
 				define('IS_AUTHOR', $is_author);
 
-				if(get_site_option('setting_base_use_timezone') == 'yes')
+				/*if(get_site_option('setting_base_use_timezone') == 'yes')
 				{
 					$timezone_string = get_option('timezone_string');
 
@@ -468,7 +468,7 @@ class mf_base
 					{
 						date_default_timezone_set($timezone_string);
 					}
-				}
+				}*/
 
 				register_block_style(
 					'core/button',
@@ -1117,16 +1117,13 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
-		}
 
-		if(IS_SUPER_ADMIN)
-		{
-			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
+			/*list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
 
 			if($date_diff > 10 || get_site_option('setting_base_use_timezone') == 'yes')
 			{
 				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
-			}
+			}*/
 
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
@@ -1926,14 +1923,14 @@ class mf_base
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
 
-		function setting_base_use_timezone_callback()
+		/*function setting_base_use_timezone_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
 			$option = get_site_option_or_default($setting_key, 'no');
 
 			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-		}
+		}*/
 
 		function setting_base_optimize_callback()
 		{
@@ -1951,11 +1948,11 @@ class mf_base
 				$description = sprintf(__("The optimization has not been run yet but will be %s", 'lang_base'), get_next_cron());
 			}
 
-			echo "<div class='form_button'>"
+			echo "<div".get_form_button_classes().">"
 				.show_button(array('type' => 'button', 'name' => 'btnBaseOptimize', 'text' => __("Optimize Now", 'lang_base'), 'class' => 'button-secondary'))
 				."<p class='italic'>".$description."</p>"
 			."</div>
-			<div class='api_base_optimize'></div>";
+			<p class='api_base_optimize'></p>";
 		}
 
 		function setting_base_recommend_callback()
@@ -2998,6 +2995,11 @@ class mf_base
 					."</FilesMatch>\r\n"
 					."\r\n"
 					
+					."<FilesMatch \"\.(backup|bak|bkp|conf|dist|htaccess|ini|log|md|sh|sql)$\">\r\n"
+						."	Require all denied\r\n"
+					."</FilesMatch>\r\n"
+					."\r\n"
+					
 					."ServerSignature Off\r\n"
 					."DirectoryIndex index.php\r\n"
 					."Options -Indexes\r\n"
@@ -3069,10 +3071,6 @@ class mf_base
 
 						$update_with .= "	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 						."\r\n";
-
-						/*$update_with .= "	RewriteCond %{REQUEST_URI} ^/?(license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|wp\-content/debug\.log|wp\-content/uploads/[\d]+/.*\.php)$\r\n"
-						."	RewriteRule .* /404/ [L,NC]\r\n"
-						."\r\n";*/
 
 						// Disable execution of PHP files in wp-includes
 						if(!is_multisite())
@@ -4748,15 +4746,6 @@ class mf_export
 		$this->fetch_request_xtra();
 	}
 
-	/*function set_file_name()
-	{
-		if($this->file_name == '')
-		{
-			//$this->file_name = prepare_file_name($this->name).".".$this->format;
-			$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("ymdHis")."_".wp_hash($this->name).".".$this->format;
-		}
-	}*/
-
 	function compress_file()
 	{
 		if(class_exists('ZipArchive'))
@@ -4807,7 +4796,6 @@ class mf_export
 
 				if(count($this->data) > 0)
 				{
-					//$this->set_file_name();
 					if($this->file_name == '')
 					{
 						$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("ymdHis")."_".wp_hash($this->name).".".$this->format;
@@ -4890,12 +4878,39 @@ class mf_export
 
 									if($col_value != '')
 									{
-										$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, (is_array($col_value) ? "[".implode("|", $col_value)."]" : stripslashes($col_value)));
+										if(is_array($col_value))
+										{
+											$col_value = "[".implode("|", $col_value)."]";
+										}
+
+										else
+										{
+											$col_value = htmlspecialchars_decode($col_value);
+
+											$arr_exclude = $arr_include = [];
+											$arr_exclude[] = "&nbsp;";		$arr_include[] = " ";
+											$arr_exclude[] = "&quot;";		$arr_include[] = "";
+											$arr_exclude[] = "\r";			$arr_include[] = "";
+											//$arr_exclude[] = "\n";		$arr_include[] = "";
+											//$arr_exclude[] = "\t";		$arr_include[] = "";
+
+											$col_value = str_replace($arr_exclude, $arr_include, $col_value);
+											$col_value = strip_tags($col_value);
+											$col_value = trim($col_value);
+										}
+
+										//$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, stripslashes($col_value));
+										$objPHPExcel->getActiveSheet()->setCellValue($cell, $col_value);
+
+										if(strpos($col_value, "\n") !== false)
+										{
+											$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setWrapText(true);
+										}
 									}
 								}
 							}
 
-							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5'); //XLSX: Excel2007
+							$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 							$objWriter->save($this->upload_path.$this->file_name);
 
 							$this->compress_file();

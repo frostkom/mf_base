@@ -69,36 +69,48 @@ jQuery(function($)
 		}
 	}
 
+	function open_toggle(dom_obj)
+	{
+		set_open(dom_obj, true);
+
+		return true;
+	}
+
+	function close_toggle(dom_obj)
+	{
+		set_open(dom_obj, false);
+
+		dom_obj.siblings(".toggle_container").each(function()
+		{
+			if($(this).hasClass('is_open'))
+			{
+				set_open($(this), false);
+			}
+		});
+
+		dom_obj.children(".toggle_container").each(function()
+		{
+			if($(this).hasClass('is_open'))
+			{
+				set_open($(this), false);
+			}
+		});
+
+		return false;
+	}
+
 	function do_toggle(dom_obj)
 	{
 		var is_open = false;
 
 		if(dom_obj.hasClass('is_open'))
 		{
-			set_open(dom_obj, false);
-
-			dom_obj.siblings(".toggle_container").each(function()
-			{
-				if($(this).hasClass('is_open'))
-				{
-					set_open($(this), false);
-				}
-			});
-
-			dom_obj.children(".toggle_container").each(function()
-			{
-				if($(this).hasClass('is_open'))
-				{
-					set_open($(this), false);
-				}
-			});
+			is_open = close_toggle(dom_obj);
 		}
 
 		else
 		{
-			set_open(dom_obj, true);
-
-			is_open = true;
+			is_open = open_toggle(dom_obj);
 		}
 
 		save_open();
@@ -108,32 +120,33 @@ jQuery(function($)
 
 	$(document).on('click', ".toggle_all", function()
 	{
-		/*var toggler_open = 0,
-			toggler_total = 0;*/
+		var toggler_is_open = 0;
 
 		$(".toggler:not(.is_not_toggleable)").each(function()
 		{
-			var is_open = do_toggle($(this));
-
-			/*if(is_open)
+			if($(this).hasClass('is_open'))
 			{
-				toggler_open++;
+				toggler_is_open++;
 			}
-
-			toggler_total++;*/
 		});
 
-		/*if(toggler_open > (toggler_total / 2))
+		$(".toggler:not(.is_not_toggleable)").each(function()
 		{
-			$(this).addClass('is_open');
-		}
+			var dom_obj = $(this);
 
-		else
-		{
-			$(this).removeClass('is_open');
-		}
+			if(toggler_is_open > 0)
+			{
+				if(dom_obj.hasClass('is_open'))
+				{
+					close_toggle(dom_obj);
+				}
+			}
 
-		return false;*/
+			else
+			{
+				open_toggle(dom_obj);
+			}
+		});
 	});
 
 	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()

@@ -2994,12 +2994,12 @@ class mf_base
 						."	Require all denied\r\n"
 					."</FilesMatch>\r\n"
 					."\r\n"
-					
+
 					."<FilesMatch \"\.(backup|bak|bkp|conf|dist|htaccess|ini|log|md|sh|sql)$\">\r\n"
 						."	Require all denied\r\n"
 					."</FilesMatch>\r\n"
 					."\r\n"
-					
+
 					."ServerSignature Off\r\n"
 					."DirectoryIndex index.php\r\n"
 					."Options -Indexes\r\n"
@@ -4871,7 +4871,7 @@ class mf_export
 									{
 										$cell .= $arr_alphabet[floor($col_key / $count_temp) - 1];
 
-										$col_key = $col_key % $count_temp;
+										$col_key = ($col_key % $count_temp);
 									}
 
 									$cell .= $arr_alphabet[$col_key].($row_key + 1);
@@ -4881,6 +4881,27 @@ class mf_export
 										if(is_array($col_value))
 										{
 											$col_value = "[".implode("|", $col_value)."]";
+										}
+
+										else if(substr($col_value, 0, 5) == "logo:")
+										{
+											list($logo_name, $logo_description, $logo_path) = explode("|", str_replace("logo:", "", $col_value));
+
+											$objDrawing = new PHPExcel_Worksheet_Drawing();
+											$objDrawing->setName($logo_name);
+											$objDrawing->setDescription($logo_description);
+											$objDrawing->setPath($logo_path);
+											$objDrawing->setCoordinates($cell);
+											$objDrawing->setOffsetX(5); // Optional: horizontal offset inside cell
+											$objDrawing->setOffsetY(5); // Optional: vertical offset inside cell
+											$objDrawing->setResizeProportional(true); // Keep the aspect ratio
+											$objDrawing->setWidth(100); // Set width in pixels (optional)
+											$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
+
+											$row = preg_replace('/[A-Z]+/', '', $cell);
+											$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(45);
+
+											$col_value = "";
 										}
 
 										else
@@ -4899,12 +4920,21 @@ class mf_export
 											$col_value = trim($col_value);
 										}
 
-										//$objPHPExcel->setActiveSheetIndex(0)->setCellValue($cell, stripslashes($col_value));
+										//$objPHPExcel->getActiveSheet()->setCellValue($cell, stripslashes($col_value));
 										$objPHPExcel->getActiveSheet()->setCellValue($cell, $col_value);
+
+										$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
 
 										if(strpos($col_value, "\n") !== false)
 										{
 											$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setWrapText(true);
+
+											$column = preg_replace('/[0-9]+/', '', $cell);
+											$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(false);
+											$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setWidth(40);
+
+											$row = preg_replace('/[A-Z]+/', '', $cell);
+											$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(100);
 										}
 									}
 								}

@@ -314,7 +314,7 @@ function get_toggler_container($data)
 			if(!isset($data['label_tag'])){			$data['label_tag'] = 'label';}
 			if(!isset($data['is_open'])){			$data['is_open'] = false;}
 			if(!isset($data['is_toggleable'])){		$data['is_toggleable'] = true;}
-			//if(!isset($data['id_prefix'])){		$data['id_prefix'] = '';}
+			if(!isset($data['has_memory'])){		$data['has_memory'] = true;}
 			if(!isset($data['id'])){				$data['id'] = '';}
 			if(!isset($data['xtra'])){				$data['xtra'] = '';}
 			if(!isset($data['toggler_class'])){		$data['toggler_class'] = 'toggler';}
@@ -325,8 +325,6 @@ function get_toggler_container($data)
 			{
 				$data['id'] = sanitize_title_with_dashes(sanitize_title($data['text']));
 			}
-
-			//$data['id'] = $data['id_prefix'].$data['id'];
 
 			if($data['id'] != '')
 			{
@@ -339,9 +337,14 @@ function get_toggler_container($data)
 				$data['toggler_class'] .= " is_open";
 			}
 
-			if($data['is_toggleable'] == false)
+			if($data['is_toggleable'])
 			{
-				$data['toggler_class'] .= " is_not_toggleable";
+				$data['toggler_class'] .= " is_toggleable";
+
+				if($data['has_memory'])
+				{
+					$data['toggler_class'] .= " has_memory";
+				}
 			}
 
 			$out = "<".$data['label_tag'].$data['xtra']." class='".$data['toggler_class']."'>"

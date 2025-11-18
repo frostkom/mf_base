@@ -15,7 +15,7 @@ jQuery(function($)
 		{
 			dom_obj.addClass('is_open');
 
-			if(dom_obj_id !== undefined)
+			if(dom_obj_id !== undefined && dom_obj.hasClass('has_memory'))
 			{
 				$("." + dom_obj_id).removeClass('hide');
 
@@ -122,7 +122,7 @@ jQuery(function($)
 	{
 		var toggler_is_open = 0;
 
-		$(".toggler:not(.is_not_toggleable)").each(function()
+		$(".toggler.is_toggleable").each(function()
 		{
 			if($(this).hasClass('is_open'))
 			{
@@ -130,7 +130,7 @@ jQuery(function($)
 			}
 		});
 
-		$(".toggler:not(.is_not_toggleable)").each(function()
+		$(".toggler.is_toggleable").each(function()
 		{
 			var dom_obj = $(this);
 
@@ -149,7 +149,7 @@ jQuery(function($)
 		});
 	});
 
-	$(document).on('click', ".toggler:not(.is_not_toggleable)", function()
+	$(document).on('click', ".toggler.is_toggleable", function()
 	{
 		do_toggle($(this));
 	});

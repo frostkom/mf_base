@@ -3005,9 +3005,7 @@ class mf_base
 					."Options -Indexes\r\n"
 					."\r\n"
 
-					."Header set X-XSS-Protection \"1; mode=block\"\r\n"
-					."Header set X-Content-Type-Options nosniff\r\n"
-					."Header set X-Powered-By \"Me\"\r\n"
+					."FileETag None\r\n"
 					."\r\n"
 
 					."AddDefaultCharset UTF-8\r\n"
@@ -3023,19 +3021,20 @@ class mf_base
 						."	Header unset Pragma\r\n"
 						."	Header append Cache-Control 'public, must-revalidate'\r\n"
 						."	Header unset Last-Modified\r\n"
-						."\r\n"
-
-						."	<IfModule mod_headers.c>\r\n"
-						."		Header unset ETag\r\n"
-						."	</IfModule>\r\n"
 					."</IfModule>\r\n"
 					."\r\n"
 
-					."FileETag None\r\n"
-					."\r\n"
-
 					."<IfModule mod_headers.c>\r\n"
+						."	Header set X-XSS-Protection \"1; mode=block\"\r\n"
+						."	Header set X-Content-Type-Options nosniff\r\n"
+						."	Header set X-Powered-By \"Me\"\r\n"
+						."\r\n"
+
+						."	Header unset ETag\r\n"
+						."\r\n"
+
 						."	Header always set Referrer-Policy \"same-origin\"\r\n"
+						."	Header always set Strict-Transport-Security \"max-age=".YEAR_IN_SECONDS."; includeSubDomains; preload\"\r\n"
 					."</IfModule>\r\n"
 					."\r\n"
 

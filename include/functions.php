@@ -3827,6 +3827,10 @@ function show_select($data)
 		{
 			if($obj_base->data['required'])
 			{
+				$plugin_include_url = plugin_dir_url(__FILE__);
+
+				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+
 				$data['attributes']['required'] = '';
 			}
 

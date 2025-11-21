@@ -2533,7 +2533,7 @@ class mf_base
 		switch($column)
 		{
 			case 'page_index':
-				$index_type = apply_filters('filter_theme_core_seo_type', '');
+				$index_type = apply_filters('filter_base_page_index', '');
 
 				if($index_type == '' && $post->post_status != 'publish')
 				{

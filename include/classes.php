@@ -1021,6 +1021,16 @@ class mf_base
 		return $out;
 	}
 
+	function get_visitor_fingerprint($out, $data = [])
+	{
+		if($out == '')
+		{
+			$out = hash('sha256', $_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT_LANGUAGE'].($_SERVER['HTTP_ACCEPT_CHARSET'] ?? '').apply_filters('get_current_visitor_ip', ""));
+		}
+
+		return $out;
+	}
+
 	function has_comments()
 	{
 		global $wpdb;

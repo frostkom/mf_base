@@ -1021,7 +1021,7 @@ class mf_base
 		return $out;
 	}
 
-	function get_visitor_fingerprint($out, $data = [])
+	function get_visitor_fingerprint($out)
 	{
 		if($out == '')
 		{

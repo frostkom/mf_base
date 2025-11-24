@@ -3599,17 +3599,17 @@ class recommend_plugin
 	}
 }
 
-if(!function_exists('convert_to_screen'))
+/*if(!function_exists('convert_to_screen'))
 {
 	require_once(ABSPATH.'wp-admin/includes/template.php');
-}
+}*/
 
 // Needed when displaying tables in Front-End Admin
-if(!class_exists('WP_Screen'))
+/*if(!class_exists('WP_Screen'))
 {
 	require_once(ABSPATH.'wp-admin/includes/screen.php');
 	require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
-}
+}*/
 
 if(!class_exists('WP_List_Table'))
 {
@@ -4786,6 +4786,35 @@ class mf_export
 		}
 	}
 
+	function set_dimensions($data, $arr_dimensions)
+	{
+		switch($data['type'])
+		{
+			case 'column':
+				$number = preg_replace('/[0-9]+/', '', $data['cell']);
+			break;
+
+			case 'row':
+				$number = preg_replace('/[A-Z]+/', '', $data['cell']);
+			break;
+		}
+
+		if(isset($arr_dimensions[$data['type']][$number][$data['attribute']]))
+		{
+			if($arr_dimensions[$data['type']][$number][$data['attribute']] < $data['value'])
+			{
+				$arr_dimensions[$data['type']][$number][$data['attribute']] = $data['value'];
+			}
+		}
+
+		else
+		{
+			$arr_dimensions[$data['type']][$number][$data['attribute']] = $data['value'];
+		}
+
+		return $arr_dimensions;
+	}
+
 	function save_data()
 	{
 		global $error_text, $done_text;
@@ -4868,6 +4897,8 @@ class mf_export
 
 							$objPHPExcel = new PHPExcel();
 
+							$arr_dimensions = [];
+
 							foreach($this->data as $row_key => $row_value)
 							{
 								foreach($row_value as $col_key => $col_value)
@@ -4901,10 +4932,10 @@ class mf_export
 											$objDrawing->setDescription($logo_description);
 											$objDrawing->setPath($logo_path);
 											$objDrawing->setCoordinates($cell);
-											$objDrawing->setOffsetX(5); // Optional: horizontal offset inside cell
-											$objDrawing->setOffsetY(5); // Optional: vertical offset inside cell
-											$objDrawing->setResizeProportional(true); // Keep the aspect ratio
-											$objDrawing->setWidth(100); // Set width in pixels (optional)
+											$objDrawing->setOffsetX(5);
+											$objDrawing->setOffsetY(5);
+											$objDrawing->setResizeProportional(true);
+											$objDrawing->setWidth(100);
 											$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
 											$row = preg_replace('/[A-Z]+/', '', $cell);
@@ -4929,7 +4960,6 @@ class mf_export
 											$col_value = trim($col_value);
 										}
 
-										//$objPHPExcel->getActiveSheet()->setCellValue($cell, stripslashes($col_value));
 										$objPHPExcel->getActiveSheet()->setCellValue($cell, $col_value);
 
 										$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
@@ -4938,14 +4968,59 @@ class mf_export
 										{
 											$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setWrapText(true);
 
-											$column = preg_replace('/[0-9]+/', '', $cell);
-											$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(false);
-											$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setWidth(40);
+											$arr_dimensions = $this->set_dimensions(['cell' => $cell, 'type' => 'column', 'attribute' => 'width', 'value' => 40], $arr_dimensions);
+											$arr_dimensions = $this->set_dimensions(['cell' => $cell, 'type' => 'row', 'attribute' => 'height', 'value' => 100], $arr_dimensions);
+										}
 
-											$row = preg_replace('/[A-Z]+/', '', $cell);
-											$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight(100);
+										else
+										{
+											if(strlen($col_value) > 100)
+											{
+												$objPHPExcel->getActiveSheet()->getStyle($cell)->getAlignment()->setWrapText(true);
+
+												$arr_dimensions = $this->set_dimensions(['cell' => $cell, 'type' => 'row', 'attribute' => 'height', 'value' => 50], $arr_dimensions);
+											}
+
+											$arr_dimensions = $this->set_dimensions(['cell' => $cell, 'type' => 'column', 'attribute' => 'width', 'value' => 20], $arr_dimensions);
 										}
 									}
+								}
+							}
+
+							foreach($arr_dimensions as $key => $arr_value)
+							{
+								switch($key)
+								{
+									case 'column':
+										foreach($arr_value as $column => $arr_attributes)
+										{
+											foreach($arr_attributes as $attribute => $value)
+											{
+												switch($attribute)
+												{
+													case 'width':
+														$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setAutoSize(false);
+														$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setWidth($value);
+													break;
+												}
+											}
+										}
+									break;
+
+									case 'row':
+										foreach($arr_value as $row => $arr_attributes)
+										{
+											foreach($arr_attributes as $attribute => $value)
+											{
+												switch($attribute)
+												{
+													case 'height':
+														$objPHPExcel->getActiveSheet()->getRowDimension($row)->setRowHeight($value);
+													break;
+												}
+											}
+										}
+									break;
 								}
 							}
 

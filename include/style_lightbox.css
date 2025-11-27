@@ -1,0 +1,15 @@
+.mf_lightbox:hover:before
+{
+	color: rgba(255, 255, 255, .3);
+	content: "\2716";
+	cursor: pointer;
+	font-family: 'Font Awesome 5 Free';
+	font-size: 5em;
+	right: 50%;
+	pointer-events: none;
+	position: absolute;
+	top: 50%;
+	text-shadow: .01em .01em .3em rgba(0, 0, 0, .2);
+	transform: translate(60%, -50%) rotate(45deg);
+	z-index: 10;
+}

@@ -28,6 +28,7 @@ class mf_base
 	var $file_name = "";
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
+	var $footer_output;
 	var $github_debug;
 
 	function __construct()
@@ -2307,8 +2308,7 @@ class mf_base
 
 			if($post_type == 'wp_block')
 			{
-				$block_code = '<!-- wp:block {"ref":'.$post_id.'} /-->';
-				$arr_ids = apply_filters('get_page_from_block_code', $arr_ids, $block_code);
+				$arr_ids = apply_filters('get_page_from_block_code', $arr_ids, '<!-- wp:block {"ref":'.$post_id.'} /-->');
 			}
 
 			else
@@ -2839,10 +2839,17 @@ class mf_base
 
 	function load_lightbox()
 	{
+		do_action('load_font_awesome');
+
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
 		mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
+
+		mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
+		mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+
+		$this->footer_output = "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
 	}
 
 	function wp_head($data = [])
@@ -2890,6 +2897,26 @@ class mf_base
 					echo "<meta name='description' content='".esc_attr($post_excerpt)."'/>";
 				}
 			}
+		}
+	}
+
+	function the_content($content)
+	{
+		global $post;
+
+		if(has_block('core/image', $post))
+		{
+			do_action('load_lightbox');
+		}
+
+		return $content;
+	}
+
+	function wp_footer()
+	{
+		if($this->footer_output != '')
+		{
+			echo $this->footer_output;
 		}
 	}
 

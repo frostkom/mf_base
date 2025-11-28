@@ -1,9 +1,9 @@
 jQuery(function($)
 {
-	$(".wp-post-image").each(function()
+	$(".wp-post-image, .wp-block-image > img").each(function()
 	{
 		var srcset = $(this).attr('srcset');
-		
+
 		if(!srcset)
 		{
 			return;
@@ -25,7 +25,7 @@ jQuery(function($)
 			}
 		});
 
-		$(this).parent("figure").addClass('mf_lightbox').attr('href', largest.url);
+		$(this).parent("figure").addClass('mf_lightbox relative').attr('href', largest.url);
 	});
 
 	$(".image > a").each(function()
@@ -37,7 +37,7 @@ jQuery(function($)
 	{
 		var dom_href = $(this).attr('href');
 
-		console.log(dom_href);
+		$("#overlay_lightbox").removeClass('hide').find("div > div").html("<img src='" + dom_href + "'>");
 
 		return false;
 	});

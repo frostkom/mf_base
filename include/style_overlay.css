@@ -12,41 +12,56 @@
 
 	.overlay_container > div
 	{
-		position: absolute;
-		left: 50%;
-		top: 50vh;
-		transform: translate(-50%, -50%);
-		max-height: 85vh;
-		max-width: 90vw;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100vh;
+		width: 100vw;
 	}
 
-		.overlay_container.modal > div
+		.overlay_container.modal > div > div
 		{
 			background: #fff;
 			border-radius: .5em;
-			font-size: 1.5em;
+			display: flex;
+			flex-direction: column;
 			overflow: hidden;
-			padding: 1em;
+			padding: .3em;
+			position: relative;
+			/*max-height: 95vh;
+			max-width: 95vw;
+			height: auto;
+			width: auto;*/
 		}
 
-			.overlay_container.modal > div img
+			.overlay_container.modal:not(.disable_close) > div > div:before
 			{
-				object-fit: cover;
-				max-width: 100%;
+				background: #fff;
+				border-radius: .4em;
+				color: #000;
+				content: "\2716";
+				cursor: pointer;
+				font-family: 'Font Awesome 5 Free';
+				padding: .1em .25em;
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+
+			.overlay_container.modal > div img {
+				border-radius: .2em;
+				max-height: 90vh;
+				max-width: 90vw;
+				height: auto;
+				width: auto;
+				object-fit: contain;
+				flex: none;
 			}
 
 			.overlay_container.modal p + p
 			{
 				margin-top: .5em;
-			}
-
-			.overlay_container.modal .fa-times
-			{
-				background: #fff;
-				border-radius: .4em;
-				display: block;
-				padding: .1em .25em;
-				position: absolute;
-				right: 0;
-				top: 0;
 			}

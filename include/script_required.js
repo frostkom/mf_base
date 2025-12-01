@@ -23,7 +23,7 @@ function render_required()
 
 	jQuery(document).on('submit', "form", function(e)
 	{
-		jQuery(".form_checkbox_multiple.required, .form_radio_multiple.required").each(function()
+		jQuery(e.currentTarget).find(".form_checkbox_multiple.required, .form_radio_multiple.required").each(function()
 		{
 			var isValid = false;
 

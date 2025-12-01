@@ -4051,7 +4051,6 @@ function show_form_alternatives($data)
 
 				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 
-				//$obj_base->data['xtra'] .= " required";
 				$container_class .= " required";
 			}
 

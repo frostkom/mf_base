@@ -1975,6 +1975,7 @@ class mf_base
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 				//array("Quick Page/Post Redirect Plugin", 'quick-pagepost-redirect-plugin/page_post_redirect_plugin.php', __("to redirect pages to internal or external URLs", 'lang_base')),
 				array("Search & Replace", 'search-and-replace/inpsyde-search-replace.php', __("to search & replace text in the database", 'lang_base')),
+				array("Secure Passkeys", 'secure-passkeys/secure-passkeys.php', __("to login with passkeys", 'lang_base')),
 				array("Simple Page Ordering", 'simple-page-ordering/simple-page-ordering.php', __("to reorder posts with drag and drop", 'lang_base')),
 				array("Sucuri", 'sucuri-scanner/sucuri.php', __("to add security measures and the possibility to scan for vulnerabilities", 'lang_base')),
 				//array("TablePress", 'tablepress/tablepress.php', __("to add tables to posts", 'lang_base')),

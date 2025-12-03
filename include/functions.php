@@ -2886,6 +2886,10 @@ function get_notification($data = [])
 
 	if($out != '' && $data['add_container'] == true)
 	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_notification', $plugin_include_url."style_notification.css");
+
 		$out = "<div class='notification'>".$out."</div>";
 	}
 

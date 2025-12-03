@@ -2281,6 +2281,8 @@ class mf_base
 
 		if($html == '')
 		{
+			do_action('load_font_awesome');
+
 			$html = "<i class='fa fa-spinner fa-spin loading_animation".($args['class'] != '' ? " ".$args['class'] : "")."'".($args['style'] != '' ? " style='".$args['style']."'" : "")."></i>";
 		}
 

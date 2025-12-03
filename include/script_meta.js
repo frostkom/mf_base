@@ -1,7 +1,7 @@
 jQuery(function($)
 {
 	/* condition_field */
-	/* ######################## */
+	/* ##################### */
 	function check_condition(dom_obj, parent_selector)
 	{
 		var dom_value = dom_obj.val(),
@@ -57,10 +57,10 @@ jQuery(function($)
 	{
 		check_condition($(this), ".rwmb-field");
 	});
-	/* ######################## */
+	/* ##################### */
 
 	/* condition_selector */
-	/* ######################## */
+	/* ##################### */
 	function check_required(dom_obj, display)
 	{
 		var dom_child = dom_obj.find("input, select, textarea"),
@@ -168,7 +168,7 @@ jQuery(function($)
 	{
 		init_conditions($(this), ".rwmb-field");
 	});
-	/* ######################## */
+	/* ##################### */
 
 	$(".rwmb-custom_html-wrapper .rwmb-input:empty").each(function()
 	{

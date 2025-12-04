@@ -1,5 +1,15 @@
 <?php
 
+// Can be removed when not in use anymore
+function does_table_exist($table)
+{
+	global $wpdb;
+
+	$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+
+	return ($wpdb->num_rows > 0);
+}
+
 function make_link_confirm()
 {
 	$plugin_include_url = plugin_dir_url(__FILE__);
@@ -719,15 +729,6 @@ function mf_uninstall_post_meta($data)
 	}
 }
 
-function does_table_exist($table)
-{
-	global $wpdb;
-
-	$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
-
-	return ($wpdb->num_rows > 0);
-}
-
 function does_column_exist($table, $column)
 {
 	global $wpdb;
@@ -1301,7 +1302,7 @@ function delete_base($data)
 
 		foreach($data['child_tables'] as $child_table => $child_table_type)
 		{
-			if($child_table_type['action'] == "trash" && does_table_exist($data['table_prefix'].$child_table))
+			if($child_table_type['action'] == "trash" && apply_filters('does_table_exist', false, $data['table_prefix'].$child_table))
 			{
 				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
 

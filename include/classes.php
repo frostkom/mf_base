@@ -28,6 +28,8 @@ class mf_base
 	var $file_name = "";
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
+	var $does_table_exist = [];
+	var $arr_block_search = [];
 	var $footer_output;
 	var $github_debug;
 
@@ -1032,11 +1034,25 @@ class mf_base
 		return $out;
 	}
 
+	function does_table_exist($bool, $table)
+	{
+		if(!isset($this->does_table_exist[$table]))
+		{
+			global $wpdb;
+
+			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+
+			$this->does_table_exist[$table] = ($wpdb->num_rows > 0);
+		}
+
+		return $this->does_table_exist[$table];
+	}
+
 	function has_comments()
 	{
 		global $wpdb;
 
-		if(does_table_exist($wpdb->comments))
+		if(apply_filters('does_table_exist', false, $wpdb->comments))
 		{
 			$wpdb->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
 
@@ -3215,7 +3231,17 @@ class mf_base
 			$query_order = " ORDER BY post_modified DESC";
 		}
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
+		if(isset($this->arr_block_search[$post_id]))
+		{
+			$result = $this->arr_block_search[$post_id];
+		}
+
+		else
+		{
+			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
+
+			$this->arr_block_search[$post_id] = $result;
+		}
 
 		foreach($result as $r)
 		{

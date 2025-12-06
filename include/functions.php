@@ -4724,7 +4724,6 @@ function get_post_children($data, &$arr_data = [])
 	if(!isset($data['join'])){				$data['join'] = '';}
 	if(!isset($data['where'])){				$data['where'] = '';}
 
-	//if(!isset($data['is_trusted'])){		$data['is_trusted'] = false;}
 	if(!isset($data['meta'])){				$data['meta'] = [];}
 
 	if(!isset($data['group_by'])){			$data['group_by'] = '';}
@@ -4788,23 +4787,16 @@ function get_post_children($data, &$arr_data = [])
 				$arr_keys_used[$key] = $key;
 			}
 
-			/*if($data['is_trusted'])
-			{
-				$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".$key."' AND table_".$key.".meta_value = '".$value."'";
-			}
-
-			else
-			{*/
-				$query_join .= ($query_join != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
-				//$query_where .= ($query_where != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
-			//}
+			$query_join .= ($query_join != '' ? " AND " : "")."table_".$key.".meta_key = '".esc_sql($key)."' AND table_".$key.".meta_value = '".esc_sql($value)."'";
 		}
 
 		unset($arr_keys_used);
 	}
 
-	$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
-	$rows = $wpdb->num_rows;
+	/*$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$rows = $wpdb->num_rows;*/
+	$result = $obj_base->cache_query($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$rows = count($result);
 
 	if($data['debug'] == true)
 	{

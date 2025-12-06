@@ -29,7 +29,7 @@ class mf_base
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
 	var $does_table_exist = [];
-	var $arr_block_search = [];
+	var $arr_cache_query = [];
 	var $footer_output;
 	var $github_debug;
 
@@ -3217,6 +3217,27 @@ class mf_base
 		return $data;
 	}
 
+	function cache_query($query)
+	{
+		global $wpdb;
+
+		$query_id = md5($query);
+
+		if(isset($this->arr_cache_query[$query_id]))
+		{
+			$result = $this->arr_cache_query[$query_id];
+		}
+
+		else
+		{
+			$result = $wpdb->get_results($query);
+
+			$this->arr_cache_query[$query_id] = $result;
+		}
+
+		return $result;
+	}
+
 	function get_block_search($post_id, $handle = '')
 	{
 		global $wpdb;
@@ -3239,17 +3260,7 @@ class mf_base
 			$query_order = " ORDER BY post_modified DESC";
 		}
 
-		if(isset($this->arr_block_search[$post_id]))
-		{
-			$result = $this->arr_block_search[$post_id];
-		}
-
-		else
-		{
-			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
-
-			$this->arr_block_search[$post_id] = $result;
-		}
+		$result = $this->cache_query($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
 
 		foreach($result as $r)
 		{

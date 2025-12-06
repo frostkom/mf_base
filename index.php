@@ -93,6 +93,7 @@ add_filter('filter_is_indexed', array($obj_base, 'filter_is_indexed'), 10, 2);
 
 add_action('load_font_awesome', array($obj_base, 'load_font_awesome'));
 add_action('load_lightbox', array($obj_base, 'load_lightbox'));
+add_action('load_tabs', array($obj_base, 'load_tabs'));
 add_filter('get_flex_flow', array($obj_base, 'get_flex_flow'), 10, 2);
 add_filter('get_form_attr', array($obj_base, 'get_form_attr'), 10, 2);
 add_filter('get_table_attr', array($obj_base, 'get_table_attr'), 10, 2);

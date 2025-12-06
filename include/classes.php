@@ -2871,6 +2871,14 @@ class mf_base
 		$this->footer_output = "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
 	}
 
+	function load_tabs()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_tabs', $plugin_include_url."style_tabs.css");
+		mf_enqueue_script('script_base_tabs', $plugin_include_url."script_tabs.js");
+	}
+
 	function wp_head($data = [])
 	{
 		if(!is_array($data)){			$data = [];}

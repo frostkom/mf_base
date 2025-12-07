@@ -28,7 +28,6 @@ class mf_base
 	var $file_name = "";
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
-	var $does_table_exist = [];
 	var $arr_cache_query = [];
 	var $footer_output;
 	var $github_debug;
@@ -1036,16 +1035,11 @@ class mf_base
 
 	function does_table_exist($bool, $table)
 	{
-		if(!isset($this->does_table_exist[$table]))
-		{
-			global $wpdb;
+		global $wpdb;
 
-			$wpdb->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+		$result = $this->cache_query($wpdb->prepare("SHOW TABLES LIKE %s", $table));
 
-			$this->does_table_exist[$table] = ($wpdb->num_rows > 0);
-		}
-
-		return $this->does_table_exist[$table];
+		return (count($result) > 0);
 	}
 
 	function has_comments()
@@ -1054,9 +1048,9 @@ class mf_base
 
 		if(apply_filters('does_table_exist', false, $wpdb->comments))
 		{
-			$wpdb->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
+			$result = $this->cache_query($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
 
-			return ($wpdb->num_rows > 0);
+			return (count($result) > 0);
 		}
 
 		return false;
@@ -2347,7 +2341,7 @@ class mf_base
 
 		$theme_slug = get_stylesheet();
 
-		$styles_content = $wpdb->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'));
+		$styles_content = $this->cache_query($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'), 'get_var');
 
 		if(is_string($styles_content))
 		{
@@ -3217,7 +3211,7 @@ class mf_base
 		return $data;
 	}
 
-	function cache_query($query)
+	function cache_query($query, $type = 'get_results')
 	{
 		global $wpdb;
 
@@ -3230,7 +3224,17 @@ class mf_base
 
 		else
 		{
-			$result = $wpdb->get_results($query);
+			switch($type)
+			{
+				case 'get_var':
+					$result = $wpdb->get_var($query);
+				break;
+
+				default:
+				case 'get_results':
+					$result = $wpdb->get_results($query);
+				break;
+			}
 
 			$this->arr_cache_query[$query_id] = $result;
 		}

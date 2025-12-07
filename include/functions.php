@@ -3338,7 +3338,10 @@ function show_textfield($data)
 
 		case 'int':
 		case 'number':
-			$data['type'] = 'number';
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			mf_enqueue_script('script_base_number', $plugin_include_url."script_number.js");
+
+			$data['type'] = 'text'; // It has to be text. If we change this to 'number' the script will erase all content when the user types a non-digit
 			$data['xtra'] .= " inputmode='numeric'";
 			$data['xtra'] .= " step='any'";
 		break;
@@ -3346,7 +3349,6 @@ function show_textfield($data)
 		case 'tel':
 		case 'telno':
 			$plugin_include_url = plugin_dir_url(__FILE__);
-
 			mf_enqueue_script('script_base_tel', $plugin_include_url."script_tel.js");
 
 			$data['type'] = 'tel';
@@ -3359,7 +3361,6 @@ function show_textfield($data)
 
 		case 'url':
 			$plugin_include_url = plugin_dir_url(__FILE__);
-
 			mf_enqueue_script('script_base_url', $plugin_include_url."script_url.js");
 
 			$data['autocapitalize'] = $data['autocorrect'] = false;

@@ -1125,7 +1125,12 @@ function get_uploads_folder($subfolder = '', $force_main_uploads = true, $force_
 
 	if($force_main_uploads == true && is_multisite())
 	{
-		@list($rest, $sites_sub) = explode("/uploads/sites/", $upload_dir['basedir'], 2);
+		$sites_sub = "";
+
+		if(strpos($upload_dir['basedir'], "/uploads/sites/") !== false)
+		{
+			list($rest, $sites_sub) = explode("/uploads/sites/", $upload_dir['basedir'], 2);
+		}
 
 		if($sites_sub != '')
 		{

@@ -1037,7 +1037,7 @@ class mf_base
 	{
 		global $wpdb;
 
-		$result = $this->cache_query($wpdb->prepare("SHOW TABLES LIKE %s", $table));
+		$result = $this->get_results($wpdb->prepare("SHOW TABLES LIKE %s", $table));
 
 		return (count($result) > 0);
 	}
@@ -1048,7 +1048,7 @@ class mf_base
 
 		if(apply_filters('does_table_exist', false, $wpdb->comments))
 		{
-			$result = $this->cache_query($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
+			$result = $this->get_results($wpdb->prepare("SELECT comment_ID FROM ".$wpdb->comments." WHERE comment_approved NOT IN('spam', 'trash', 'post-trashed') AND comment_type = %s LIMIT 0, 1", 'comment'));
 
 			return (count($result) > 0);
 		}
@@ -2341,7 +2341,7 @@ class mf_base
 
 		$theme_slug = get_stylesheet();
 
-		$styles_content = $this->cache_query($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'), 'get_var');
+		$styles_content = $this->get_var($wpdb->prepare("SELECT post_content FROM ".$wpdb->posts." WHERE post_type = %s AND post_name = %s AND post_status = %s", 'wp_global_styles', 'wp-global-styles-'.$theme_slug, 'publish'));
 
 		if(is_string($styles_content))
 		{
@@ -2551,58 +2551,64 @@ class mf_base
 	{
 		global $wpdb, $post;
 
-		do_action('load_font_awesome');
-
-		switch($column)
+		switch($post->post_type)
 		{
-			case 'page_index':
-				$index_type = apply_filters('filter_base_page_index', '');
+			case 'page':
+			case 'post':
+				do_action('load_font_awesome');
 
-				if($index_type == '' && $post->post_status != 'publish')
+				switch($column)
 				{
-					$index_type = 'not_published';
-				}
+					case 'page_index':
+						$index_type = apply_filters('filter_base_page_index', '');
 
-				if($index_type == '')
-				{
-					$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
-
-					if(in_array($page_index, array('noindex', 'none', 'no')))
-					{
-						$index_type = 'not_indexed';
-					}
-				}
-
-				if($index_type == '' && $this->is_post_password_protected($post_id))
-				{
-					$index_type = 'password_protected';
-				}
-
-				switch($index_type)
-				{
-					case 'password_protected':
-						echo "<i class='fa fa-lock fa-lg grey' title='".__("The page is password protected", 'lang_base')."'></i>";
-					break;
-
-					case 'not_published':
-						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not published", 'lang_base')."'></i>";
-					break;
-
-					case 'not_indexed':
-						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not indexed", 'lang_base')."'></i>";
-					break;
-
-					default:
-						$post_excerpt = get_the_excerpt();
-
-						if($post_excerpt != '')
+						if($index_type == '' && $post->post_status != 'publish')
 						{
-							echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+							$index_type = 'not_published';
 						}
 
-						else
+						if($index_type == '')
 						{
-							echo "<i class='fa fa-check fa-lg blue' title='".__("The page has no description", 'lang_base')."'></i>";
+							$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
+
+							if(in_array($page_index, array('noindex', 'none', 'no')))
+							{
+								$index_type = 'not_indexed';
+							}
+						}
+
+						if($index_type == '' && $this->is_post_password_protected($post_id))
+						{
+							$index_type = 'password_protected';
+						}
+
+						switch($index_type)
+						{
+							case 'password_protected':
+								echo "<i class='fa fa-lock fa-lg grey' title='".__("The page is password protected", 'lang_base')."'></i>";
+							break;
+
+							case 'not_published':
+								echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not published", 'lang_base')."'></i>";
+							break;
+
+							case 'not_indexed':
+								echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not indexed", 'lang_base')."'></i>";
+							break;
+
+							default:
+								$post_excerpt = get_the_excerpt();
+
+								if($post_excerpt != '')
+								{
+									echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+								}
+
+								else
+								{
+									echo "<i class='fa fa-check fa-lg blue' title='".__("The page has no description", 'lang_base')."'></i>";
+								}
+							break;
 						}
 					break;
 				}
@@ -3211,7 +3217,7 @@ class mf_base
 		return $data;
 	}
 
-	function cache_query($query, $type = 'get_results')
+	function get_results($query)
 	{
 		global $wpdb;
 
@@ -3224,17 +3230,28 @@ class mf_base
 
 		else
 		{
-			switch($type)
-			{
-				case 'get_var':
-					$result = $wpdb->get_var($query);
-				break;
+			$result = $wpdb->get_results($query);
 
-				default:
-				case 'get_results':
-					$result = $wpdb->get_results($query);
-				break;
-			}
+			$this->arr_cache_query[$query_id] = $result;
+		}
+
+		return $result;
+	}
+
+	function get_var($query)
+	{
+		global $wpdb;
+
+		$query_id = md5($query);
+
+		if(isset($this->arr_cache_query[$query_id]))
+		{
+			$result = $this->arr_cache_query[$query_id];
+		}
+
+		else
+		{
+			$result = $wpdb->get_var($query);
 
 			$this->arr_cache_query[$query_id] = $result;
 		}
@@ -3264,7 +3281,7 @@ class mf_base
 			$query_order = " ORDER BY post_modified DESC";
 		}
 
-		$result = $this->cache_query($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
+		$result = $this->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." WHERE (post_type = %s".$query_where." OR post_type IN ('wp_template', 'wp_template_part')) AND post_status = %s".$query_order, 'page', 'publish'));
 
 		foreach($result as $r)
 		{

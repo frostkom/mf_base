@@ -4799,7 +4799,7 @@ function get_post_children($data, &$arr_data = [])
 		unset($arr_keys_used);
 	}
 
-	$result = $obj_base->cache_query($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
+	$result = $obj_base->get_results($wpdb->prepare("SELECT ID, post_title, post_status FROM ".$wpdb->posts.$query_join." WHERE post_type = %s".($query_where != '' ? " AND ".$query_where : "").($data['group_by'] != '' ? " GROUP BY ".$data['group_by'] : "")." ORDER BY ".$data['order_by']." ".$data['order'].($data['limit'] > 0 ? " LIMIT 0, ".$data['limit'] : ""), $data['post_type']));
 	$rows = count($result);
 
 	if($data['debug'] == true)

@@ -2856,17 +2856,22 @@ class mf_base
 		}
 	}
 
-	function load_lightbox()
+	function load_overlay()
 	{
 		do_action('load_font_awesome');
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
-		mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
-
 		mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
 		mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+	}
+
+	function load_lightbox()
+	{
+		$this->load_overlay();
+
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
+		mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
 
 		$this->footer_output = "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
 	}
@@ -3476,12 +3481,7 @@ class mf_base
 
 		if(in_array('lost_connection', $arr_type) && $this->template_lost_connection == false)
 		{
-			do_action('load_font_awesome');
-
-			$plugin_include_url = plugin_dir_url(__FILE__);
-
-			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
-			mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+			$this->load_overlay();
 
 			$out .= "<div id='overlay_lost_connection' class='overlay_container hide'><div>".__("Lost Connection", 'lang_base')."</div></div>";
 
@@ -3490,12 +3490,7 @@ class mf_base
 
 		if(in_array('loading', $arr_type) && $this->template_loading == false)
 		{
-			do_action('load_font_awesome');
-
-			$plugin_include_url = plugin_dir_url(__FILE__);
-
-			mf_enqueue_style('style_base_overlay', $plugin_include_url."style_overlay.css");
-			mf_enqueue_script('script_base_overlay', $plugin_include_url."script_overlay.js");
+			$this->load_overlay();
 
 			$out .= "<div id='overlay_loading' class='overlay_container hide'><div>".apply_filters('get_loading_animation', '')."</div></div>";
 

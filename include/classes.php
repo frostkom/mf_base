@@ -1105,6 +1105,9 @@ class mf_base
 
 		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
 			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
@@ -2161,7 +2164,6 @@ class mf_base
 		if(!isset($data['class'])){		$data['class'] = [];}
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
 		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
 
 		$data['class'][] = "flex_flow";

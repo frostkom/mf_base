@@ -2534,8 +2534,6 @@ class mf_base
 
 	function column_header($columns)
 	{
-		unset($columns['date']);
-
 		if(apply_filters('has_comments', true) == false)
 		{
 			unset($columns['comments']);

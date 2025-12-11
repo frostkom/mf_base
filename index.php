@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.10.41
+Version: 1.2.10.42
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -109,9 +109,9 @@ add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
 add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));
 add_action('wp_ajax_api_base_optimize', array($obj_base, 'api_base_optimize'));
 
-add_filter('auto_update_core', '__return_false');
+/*add_filter('auto_update_core', '__return_false');
 add_filter('auto_update_theme', '__return_false');
-add_filter('auto_update_plugin', '__return_false');
+add_filter('auto_update_plugin', '__return_false');*/
 
 add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 
@@ -119,6 +119,7 @@ add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 add_filter('wp_insert_post_data', array($obj_base, 'wp_insert_post_data'));
 add_filter('template_include', array($obj_base, 'template_include'));*/
 
+add_filter('site_status_test_result', array($obj_base, 'site_status_test_result'));
 add_filter('recommend_config', array($obj_base, 'recommend_config'));
 
 add_filter('get_block_search', array($obj_base, 'get_block_search'), 10, 2);

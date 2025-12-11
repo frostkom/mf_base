@@ -3063,6 +3063,35 @@ class mf_base
 		return $template;
 	}*/
 
+	function site_status_test_result($result)
+	{
+		switch($result['test'])
+		{
+			case 'is_in_debug_mode':
+			//case 'plugin_theme_auto_updates':
+				switch($result['status'])
+				{
+					// I am aware of this and have taken care of it
+					case 'critical':
+						$result['status'] = 'good';
+					break;
+				}
+			break;
+
+			default:
+				switch($result['status'])
+				{
+					case 'critical':
+					case 'recommended':
+						//do_log(__FUNCTION__.": ".var_export($result, true));
+					break;
+				}
+			break;
+		}
+
+		return $result;
+	}
+
 	function recommend_config($data)
 	{
 		if(!isset($data['file'])){		$data['file'] = '';}

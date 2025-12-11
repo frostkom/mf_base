@@ -2301,13 +2301,25 @@ class mf_base
 		return $html;
 	}
 
-	function get_image_fallback()
+	function get_image_fallback($out, $type)
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
-		mf_enqueue_style('style_base_image_fallback', $plugin_include_url."style_image_fallback.css");
+		switch($type)
+		{
+			default:
+			case 'tag':
+				mf_enqueue_style('style_base_image_fallback', $plugin_include_url."style_image_fallback.css");
 
-		return "<img src='".$plugin_include_url."images/blank.svg' class='image_fallback' alt='".__("Generic image as a placeholder", 'lang_base')."'>";
+				$out = "<img src='".$plugin_include_url."images/blank.svg' class='image_fallback' alt='".__("Generic image as a placeholder", 'lang_base')."'>";
+			break;
+
+			case 'url':
+				$out = $plugin_include_url."images/blank.svg";
+			break;
+		}
+
+		return $out;
 	}
 
 	function get_page_from_block_code($arr_ids, $block_code)

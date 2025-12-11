@@ -1442,11 +1442,36 @@ function get_file_suffix($file, $force_last = false)
 	return $suffix;
 }
 
+function filter_style_color($value)
+{
+	if(is_array($value))
+	{
+		do_log(__FUNCTION__." - Not a string: ".var_export($value, true));
+	}
+
+	else if(substr($value, 0, 1) == '#')
+	{
+		// Do nothing
+	}
+
+	else
+	{
+		$value = "var(--wp--preset--color--".$value.")";
+	}
+
+	return $value;
+}
+
 function filter_style_var($value)
 {
 	if(is_array($value))
 	{
 		do_log(__FUNCTION__." - Not a string: ".var_export($value, true));
+	}
+
+	else if(substr($value, 0, 1) == '#')
+	{
+		// Do nothing
 	}
 
 	else if(strpos($value, 'var:') !== false)
@@ -1480,6 +1505,16 @@ function parse_block_attributes($data = [])
 	if($data['class'] != '')
 	{
 		$out .= " class='".$data['class']."'";
+	}
+
+	if(isset($data['attributes']['backgroundColor']) && $data['attributes']['backgroundColor'] != '')
+	{
+		$data['style'] .= "background-color: ".filter_style_color($data['attributes']['backgroundColor']).";";
+	}
+
+	if(isset($data['attributes']['textColor']) && $data['attributes']['textColor'] != '')
+	{
+		$data['style'] .= "color: ".filter_style_color($data['attributes']['textColor']).";";
 	}
 
 	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
@@ -1541,7 +1576,8 @@ function parse_block_attributes($data = [])
 												switch($key_grandgrandchild)
 												{
 													case 'text':
-														$data['style'] .= "color: ".filter_style_var($arr_value_grandgrandchild).";";
+														// How do I get links to have this color???
+														//$data['style'] .= "color: ".filter_style_var($arr_value_grandgrandchild).";";
 													break;
 
 													default:

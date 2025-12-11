@@ -18,7 +18,7 @@
 	.display_theme_colors .form_radio input:checked + label span
 	{
 		border-color: #999;
-		box-shadow: 0 0 .2em #000;
+		box-shadow: 0 0 .5em rgba(0, 0, 0, .7);
 		transform: scale(1.2);
 	}
 

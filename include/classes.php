@@ -2301,7 +2301,7 @@ class mf_base
 		return $html;
 	}
 
-	function get_image_fallback($out, $type)
+	function get_image_fallback($out, $type = '')
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
 

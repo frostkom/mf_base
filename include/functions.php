@@ -1087,12 +1087,12 @@ function format_date($in)
 				$firstday_ts = mktime(0, 0, 0, $date_month, $date_day, $date_year);
 				$date_weekday = day_name(date("w", $firstday_ts));
 
-				$out .= $date_weekday."&nbsp;";
+				$out .= $date_weekday." ";
 			}
 
 			else if($one_day_ago == $date_short)
 			{
-				$out .= __("Yesterday", 'lang_base')."&nbsp;";
+				$out .= __("Yesterday", 'lang_base')." ";
 			}
 
 			if($date_year != date("Y") && $in < $one_week_ago)

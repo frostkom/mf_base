@@ -2155,12 +2155,17 @@ class mf_base
 		return $arr_actions;
 	}
 
+	function load_flex_flow()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+	}
+
 	function get_flex_flow($html, $data = [])
 	{
 		if(!isset($data['class'])){		$data['class'] = [];}
 
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+		do_action('load_flex_flow');
 
 		$data['class'][] = "flex_flow";
 
@@ -2188,15 +2193,20 @@ class mf_base
 		return $html;
 	}
 
-	function get_form_attr($html, $data = [])
+	function load_form_attr()
 	{
-		if(!isset($data['class'])){		$data['class'] = [];}
-
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
 		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
+	}
+
+	function get_form_attr($html, $data = [])
+	{
+		if(!isset($data['class'])){		$data['class'] = [];}
+
+		do_action('load_form_attr');
 
 		if(in_array('flex_flow', $data['class']))
 		{
@@ -2239,13 +2249,18 @@ class mf_base
 		return $html;
 	}
 
+	function load_table_attr()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+
+		mf_enqueue_style('style_base_tables', $plugin_include_url."style_tables.css");
+	}
+
 	function get_table_attr($html, $data = [])
 	{
 		if(!isset($data['class'])){		$data['class'] = [];}
 
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_style('style_base_tables', $plugin_include_url."style_tables.css");
+		do_action('load_table_attr');
 
 		if(in_array('mf_form', $data['class']))
 		{

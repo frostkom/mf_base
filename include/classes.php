@@ -5427,7 +5427,11 @@ class mf_import
 					foreach($cellIterator as $cell)
 					{
 						$value = $cell->getValue();
-						$value = trim($value);
+
+						if($value != '')
+						{
+							$value = trim($value);
+						}
 
 						$this->data[$i][$j] = $value;
 

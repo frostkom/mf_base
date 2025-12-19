@@ -1998,7 +1998,7 @@ function get_next_cron($data = [])
 			$out = format_date($date_next_schedule);
 		}
 
-		if(($mins < -1 || $mins > 1) && IS_SUPER_ADMIN)
+		if(IS_SUPER_ADMIN) //($mins < -1 || $mins > 1) && 
 		{
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');

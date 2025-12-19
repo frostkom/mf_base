@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.10.47
+Version: 1.2.10.48
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -59,7 +59,13 @@ if(is_admin())
 	add_action('rwmb_meta_boxes', array($obj_base, 'rwmb_meta_boxes'));
 	add_action('rwmb_enqueue_scripts', array($obj_base, 'rwmb_enqueue_scripts'));
 
-	add_action('wp_ajax_api_base_notifications', array($obj_base, 'api_base_notifications'));
+	if(wp_doing_ajax())
+	{
+		add_action('wp_ajax_api_base_notifications', array($obj_base, 'api_base_notifications'));
+		add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
+		add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));
+		add_action('wp_ajax_api_base_optimize', array($obj_base, 'api_base_optimize'));
+	}
 }
 
 else
@@ -78,11 +84,11 @@ else
 	add_action('wp_footer', array($obj_base, 'wp_footer'));
 
 	add_filter('block_title', array($obj_base, 'block_title'));
-}
 
-add_filter('xmlrpc_enabled', '__return_false');
-add_filter('rest_authentication_errors', array($obj_base, 'rest_authentication_errors'));
-remove_action('wp_head', 'wp_generator');
+	add_filter('xmlrpc_enabled', '__return_false');
+	add_filter('rest_authentication_errors', array($obj_base, 'rest_authentication_errors'));
+	remove_action('wp_head', 'wp_generator');
+}
 
 add_filter('get_current_visitor_ip', array($obj_base, 'get_current_visitor_ip'), 10);
 add_filter('get_visitor_fingerprint', array($obj_base, 'get_visitor_fingerprint'), 10);
@@ -107,10 +113,6 @@ add_action('get_toggler_includes', array($obj_base, 'get_toggler_includes'), 10,
 add_filter('get_page_from_block_code', array($obj_base, 'get_page_from_block_code'), 10, 2);
 add_filter('get_styles_content', array($obj_base, 'get_styles_content'), 10, 2);
 add_filter('get_layout_breakpoints', array($obj_base, 'get_layout_breakpoints'), 10);
-
-add_action('wp_ajax_api_base_info', array($obj_base, 'api_base_info'));
-add_action('wp_ajax_api_base_cron', array($obj_base, 'api_base_cron'));
-add_action('wp_ajax_api_base_optimize', array($obj_base, 'api_base_optimize'));
 
 /*add_filter('auto_update_core', '__return_false');
 add_filter('auto_update_theme', '__return_false');

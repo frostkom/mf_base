@@ -1,14 +1,16 @@
 jQuery(function($)
 {
+	var dom_obj = $(".widget .tabs");
+
 	function open_tab(hash)
 	{
-		$(".widget.list_rights .tabs a[href='" + hash + "']").parent("li").addClass('active').siblings("li").removeClass('active');
+		dom_obj.find("a[href='" + hash + "']").parent("li").addClass('active').siblings("li").removeClass('active');
 		$(hash).addClass('active').siblings(".tab_content").removeClass('active');
 
 		return false;
 	}
 
-	$(document).on('click', ".widget.list_rights .tabs a", function(e)
+	dom_obj.find("a").on('click', function(e)
 	{
 		e.preventDefault();
 
@@ -22,6 +24,6 @@ jQuery(function($)
 
 	else
 	{
-		open_tab($(".tabs li:first-child a").attr('href'));
+		open_tab(dom_obj.find("li:first-child a").attr('href'));
 	}
 });

@@ -1,17 +1,17 @@
-.tabs
+.widget .tabs
 {
 	display: flex;
 	margin-bottom: -.1em;
 	padding-left: 1em;
 }
 
-	.tabs li
+	.widget .tabs li
 	{
 		list-style: none;
 		margin-right: .5em;
 	}
 
-		.tabs li a
+		.widget .tabs li a
 		{
 			background: rgba(255, 255, 255, .5);
 			border: .1em solid #ccc;
@@ -24,17 +24,17 @@
 			text-decoration: none;
 		}
 
-			.tabs li a:hover
+			.widget .tabs li a:hover
 			{
 				opacity: 1;
 			}
 
-			.tabs li.active a
+			.widget .tabs li.active a
 			{
 				opacity: 1;
 			}
 
-.tab_content
+.widget .tab_content
 {
 	background: rgba(255, 255, 255, .5);
 	border: .1em solid #ccc;
@@ -43,12 +43,12 @@
 	padding: 0 1.2em .6em;
 }
 
-	.tab_content.active
+	.widget .tab_content.active
 	{
 		display: block;
 	}
 
-		.tab_content table
+		.widget .tab_content table
 		{
 			margin-bottom: .5em;
 		}

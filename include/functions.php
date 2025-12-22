@@ -2886,7 +2886,7 @@ function get_url_content($data = [])
 		$out = $content;
 	}
 
-	curl_close($ch);
+	//curl_close($ch);
 
 	return $out;
 }

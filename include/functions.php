@@ -2912,7 +2912,8 @@ function get_notification($data = [])
 
 	else if(isset($notice_text) && $notice_text != '')
 	{
-		$out .= "<div class='update-nag'>
+		//update-nag
+		$out .= "<div class='notice notice-warning'>
 			<p>".$notice_text."</p>
 		</div>";
 	}

@@ -3707,6 +3707,15 @@ class recommend_plugin
 		return array("<a href='".$require_url."'>", "</a>");
 	}
 
+	function admin_notices()
+	{
+		global $notice_text;
+
+		$notice_text = $this->message;
+
+		echo get_notification();
+	}
+
 	function __construct($data)
 	{
 		global $pagenow;
@@ -3723,8 +3732,8 @@ class recommend_plugin
 			{
 				$this->message = sprintf(__("We highly recommend that you install %s aswell", 'lang_base'), $a_start.$data['name'].$a_end).($data['text'] != '' ? " ".$data['text'] : "");
 
-				add_action('network_admin_notices', array($this, 'show_notice'));
-				add_action('admin_notices', array($this, 'show_notice'));
+				add_action('network_admin_notices', array($this, 'admin_notices'));
+				add_action('admin_notices', array($this, 'admin_notices'));
 			}
 
 			else if($pagenow == 'options-general.php' && $data['show_notice'] == false)
@@ -3736,32 +3745,11 @@ class recommend_plugin
 		}
 	}
 
-	function show_notice()
-	{
-		global $notice_text;
-
-		$notice_text = $this->message;
-
-		echo get_notification();
-	}
-
 	function show_info()
 	{
 		return "<p>".$this->message."</p>";
 	}
 }
-
-/*if(!function_exists('convert_to_screen'))
-{
-	require_once(ABSPATH.'wp-admin/includes/template.php');
-}*/
-
-// Needed when displaying tables in Front-End Admin
-/*if(!class_exists('WP_Screen'))
-{
-	require_once(ABSPATH.'wp-admin/includes/screen.php');
-	require_once(ABSPATH.'wp-admin/includes/class-wp-screen.php');
-}*/
 
 if(!class_exists('WP_List_Table'))
 {

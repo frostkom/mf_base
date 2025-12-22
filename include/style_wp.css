@@ -147,7 +147,7 @@
 
 @media print
 {
-	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .tablenav, #wpfooter, .row-actions, .error, .update-nag, .updated
+	#wpadminbar, #adminmenuback, #adminmenuwrap, h2, .subsubsub, .search-box, .tablenav, #wpfooter, .row-actions, .error, .notice-warning, .updated
 	{
 		display: none;
 	}

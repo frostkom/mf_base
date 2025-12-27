@@ -2338,7 +2338,7 @@ class mf_base
 	{
 		global $wpdb;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_type FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
+		$result = $this->get_results($wpdb->prepare("SELECT ID, post_type FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
 
 		foreach($result as $r)
 		{

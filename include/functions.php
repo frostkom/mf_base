@@ -2194,14 +2194,14 @@ function roles_option_to_array($option = '')
 		$option = get_option($wpdb->prefix.'user_roles');
 	}
 
-	$roles = [];
+	$arr_roles = [];
 
 	foreach($option as $key => $value)
 	{
-		$roles[$key] = $value['name'];
+		$arr_roles[$key] = $value['name'];
 	}
 
-	return $roles;
+	return $arr_roles;
 }
 
 function get_all_roles($data = [])
@@ -2212,7 +2212,7 @@ function get_all_roles($data = [])
 
 	if($data['orig'] == true)
 	{
-		$roles = roles_option_to_array(get_option($wpdb->prefix.'user_roles_orig'));
+		$arr_roles = roles_option_to_array(get_option($wpdb->prefix.'user_roles_orig'));
 	}
 
 	else
@@ -2226,10 +2226,10 @@ function get_all_roles($data = [])
 			}
 		}
 
-		$roles = $wp_roles->get_names();
+		$arr_roles = $wp_roles->get_names();
 	}
 
-	if(count($roles) == 0)
+	if(count($arr_roles) == 0)
 	{
 		do_log("I could not find any roles for this site...? (Use 'User Role Editor' to update all roles)");
 	}
@@ -2241,11 +2241,11 @@ function get_all_roles($data = [])
 			$data['allowed'] = array($data['allowed']);
 		}
 
-		foreach($roles as $key => $value)
+		foreach($arr_roles as $key => $value)
 		{
 			if(!in_array($key, $data['allowed']))
 			{
-				unset($roles[$key]);
+				unset($arr_roles[$key]);
 			}
 		}
 	}
@@ -2257,16 +2257,16 @@ function get_all_roles($data = [])
 			$data['denied'] = array($data['denied']);
 		}
 
-		foreach($roles as $key => $value)
+		foreach($arr_roles as $key => $value)
 		{
 			if(in_array($key, $data['denied']))
 			{
-				unset($roles[$key]);
+				unset($arr_roles[$key]);
 			}
 		}
 	}
 
-	return $roles;
+	return $arr_roles;
 }
 
 function get_yes_no_for_select($data = [])
@@ -2336,9 +2336,9 @@ function get_roles_for_select($data = [])
 		$data['array']['update_core'] = __("Super Admin", 'lang_base');
 	}
 
-	$roles = get_all_roles();
+	$arr_roles = get_all_roles();
 
-	foreach($roles as $key => $value)
+	foreach($arr_roles as $key => $value)
 	{
 		if($data['use_capability'] == true)
 		{

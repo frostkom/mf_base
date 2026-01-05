@@ -18,7 +18,7 @@ jQuery(function($)
 			var url = parts[0];
 			var width = parseInt(parts[1].replace('w',''), 10);
 
-			if (width > largest.width)
+			if(width > largest.width)
 			{
 				largest.url = url;
 				largest.width = width;

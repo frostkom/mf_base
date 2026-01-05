@@ -690,7 +690,7 @@ function mf_uninstall_post_types($data)
 
 		foreach($result as $r)
 		{
-			wp_delete_post($r->ID);
+			wp_trash_post($r->ID);
 
 			$i++;
 
@@ -729,6 +729,38 @@ function mf_uninstall_post_meta($data)
 	}
 }
 
+function mf_uninstall_taxoniomies($data)
+{
+	global $wpdb;
+
+	foreach($data['taxonomies'] as $taxonomy_key)
+	{
+		$i = 0;
+
+		$arr_terms = get_terms(array(
+			'taxonomy' => $taxonomy_key,
+			'hide_empty' => false,
+		));
+
+		foreach($arr_terms as $arr_term)
+		{
+			wp_delete_term($arr_term->term_id, $taxonomy_key);
+			
+			$i++;
+
+			if($i % 100 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
+		}
+
+		$wpdb->delete($wpdb->term_taxonomy, array('taxonomy' => $taxonomy_key), array('%s'));
+
+		do_log(__FUNCTION__." I removed ".$taxonomy_key);
+	}
+}
+
 function does_column_exist($table, $column)
 {
 	global $wpdb;
@@ -755,14 +787,8 @@ function mf_uninstall_plugin($data)
 	if(!isset($data['user_meta'])){			$data['user_meta'] = [];}
 	if(!isset($data['post_types'])){		$data['post_types'] = [];}
 	if(!isset($data['post_meta'])){			$data['post_meta'] = [];}
+	if(!isset($data['taxonomies'])){		$data['taxonomies'] = [];}
 	if(!isset($data['tables'])){			$data['tables'] = [];}
-
-	if(isset($data['meta']))
-	{
-		do_log(__FUNCTION__.": 'meta' still exists in a plugin (".var_export($data, true).")");
-
-		//$data['user_meta'] = $data['meta'];
-	}
 
 	if(is_multisite())
 	{
@@ -776,6 +802,7 @@ function mf_uninstall_plugin($data)
 			mf_uninstall_options($data);
 			mf_uninstall_post_types($data);
 			mf_uninstall_post_meta($data);
+			mf_uninstall_taxoniomies($data);
 			mf_uninstall_tables($data);
 
 			restore_current_blog();
@@ -787,6 +814,7 @@ function mf_uninstall_plugin($data)
 		mf_uninstall_options($data);
 		mf_uninstall_post_types($data);
 		mf_uninstall_post_meta($data);
+		mf_uninstall_taxoniomies($data);
 		mf_uninstall_tables($data);
 	}
 

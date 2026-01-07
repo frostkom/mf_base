@@ -7,6 +7,8 @@ jQuery(function($)
 		dom_obj.find("a[href='" + hash + "']").parent("li").addClass('active').siblings("li").removeClass('active');
 		$(hash).addClass('active').siblings(".tab_content").removeClass('active');
 
+		history.replaceState(null, null, (location.hash != '' ? '' : '') + hash);
+
 		return false;
 	}
 

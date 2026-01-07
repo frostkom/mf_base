@@ -745,7 +745,7 @@ function mf_uninstall_taxoniomies($data)
 		foreach($arr_terms as $arr_term)
 		{
 			wp_delete_term($arr_term->term_id, $taxonomy_key);
-			
+
 			$i++;
 
 			if($i % 100 == 0)
@@ -2923,10 +2923,6 @@ function get_notification($data = [])
 {
 	global $error_text, $notice_text, $done_text;
 
-	$plugin_include_url = plugin_dir_url(__FILE__);
-
-	mf_enqueue_style('style_base_notification', $plugin_include_url."style_notification.css");
-
 	if(!isset($data['add_container'])){		$data['add_container'] = false;}
 
 	$out = "";
@@ -2940,7 +2936,6 @@ function get_notification($data = [])
 
 	else if(isset($notice_text) && $notice_text != '')
 	{
-		//update-nag
 		$out .= "<div class='notice notice-warning'>
 			<p>".$notice_text."</p>
 		</div>";
@@ -2953,16 +2948,17 @@ function get_notification($data = [])
 		</div>";
 	}
 
-	$error_text = $notice_text = $done_text = "";
-
-	if($out != '' && $data['add_container'] == true)
+	if($out != '')
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
+		do_action('load_notification');
 
-		mf_enqueue_style('style_base_notification', $plugin_include_url."style_notification.css");
-
-		$out = "<div class='notification'>".$out."</div>";
+		if($data['add_container'] == true)
+		{
+			$out = "<div class='notification'>".$out."</div>";
+		}
 	}
+
+	$error_text = $notice_text = $done_text = "";
 
 	return $out;
 }

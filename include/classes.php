@@ -2903,9 +2903,14 @@ class mf_base
 	function load_tabs()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
 		mf_enqueue_style('style_base_tabs', $plugin_include_url."style_tabs.css");
 		mf_enqueue_script('script_base_tabs', $plugin_include_url."script_tabs.js");
+	}
+
+	function load_notification()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_notification', $plugin_include_url."style_notification.css");
 	}
 
 	function wp_head($data = [])

@@ -2875,9 +2875,14 @@ class mf_base
 		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
-
 			mf_enqueue_style('font-awesome-5', $plugin_include_url."font-awesome-5.15.4.php");
 		}
+	}
+
+	function load_script_confirm()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_script('script_base_confirm', $plugin_include_url."script_confirm.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
 	}
 
 	function load_overlay()
@@ -2919,7 +2924,6 @@ class mf_base
 		if(!isset($data['type'])){		$data['type'] = 'public';}
 
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
 		mf_enqueue_style('style_base', $plugin_include_url."style.css");
 
 		if($data['type'] == 'public')

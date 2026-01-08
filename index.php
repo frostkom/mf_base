@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description:
-Version: 1.2.10.56
+Version: 1.2.10.57
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -98,6 +98,7 @@ add_filter('filter_meta_input', array($obj_base, 'filter_meta_input'), 10, 2);
 add_filter('filter_is_indexed', array($obj_base, 'filter_is_indexed'), 10, 2);
 
 add_action('load_font_awesome', array($obj_base, 'load_font_awesome'));
+add_action('load_script_confirm', array($obj_base, 'load_script_confirm'));
 add_action('load_lightbox', array($obj_base, 'load_lightbox'));
 add_action('load_notification', array($obj_base, 'load_notification'));
 add_action('load_tabs', array($obj_base, 'load_tabs'));

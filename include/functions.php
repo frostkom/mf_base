@@ -12,9 +12,7 @@ function does_table_exist($table)
 
 function make_link_confirm()
 {
-	$plugin_include_url = plugin_dir_url(__FILE__);
-
-	mf_enqueue_script('script_base_confirm', $plugin_include_url."script_confirm.js");
+	do_action('load_script_confirm');
 
 	return " rel='confirm'";
 }
@@ -4458,9 +4456,7 @@ function show_button($data)
 
 	if(strpos($data['xtra'], "rel='confirm'") !== false)
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_script('script_base_confirm', $plugin_include_url."script_confirm.js");
+		do_action('load_script_confirm');
 	}
 
 	return "<button type='".$data['type']."'"

@@ -1105,8 +1105,7 @@ class mf_base
 
 		add_settings_section($options_area, "",	array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+		do_action('load_flex_flow');
 
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
@@ -2211,7 +2210,7 @@ class mf_base
 
 		if(in_array('flex_flow', $data['class']))
 		{
-			mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+			do_action('load_flex_flow');
 		}
 
 		if(strpos($html, "method=") === false)

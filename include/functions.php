@@ -1697,9 +1697,7 @@ function get_form_button_classes($out = "")
 
 	if(strpos($out, "flex_flow") !== false)
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+		do_action('load_flex_flow');
 	}
 
 	if($out != '')

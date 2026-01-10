@@ -709,12 +709,12 @@ function mf_uninstall_post_meta($data)
 	{
 		$i = 0;
 
-		$result = $wpdb->get_results($wpdb->prepare("SELECT post_id, meta_key FROM ".$wpdb->postmeta." WHERE meta_key = %s", $meta_key));
+		$result = $wpdb->get_results($wpdb->prepare("SELECT post_id FROM ".$wpdb->postmeta." WHERE meta_key = %s", $meta_key));
 
 		foreach($result as $r)
 		{
-			//delete_post_meta($r->post_id, $r->meta_key);
-			do_log(__FUNCTION__.": Delete post_meta: ".$post_id." -> ".$meta_key);
+			delete_post_meta($r->post_id, $meta_key);
+			//do_log(__FUNCTION__.": Delete post_meta: ".$r->post_id." -> ".$meta_key);
 
 			$i++;
 

@@ -725,7 +725,7 @@ class mf_base
 
 		// Duplicate comments
 		####################
-		$wpdb->get_results($wpdb->prepare("SELECT *, COUNT(meta_id) AS count FROM ".$wpdb->commentmeta." GROUP BY comment_id, meta_key, meta_value HAVING count > %d", 1));
+		$wpdb->get_results("SELECT *, COUNT(meta_id) AS count FROM ".$wpdb->commentmeta." GROUP BY comment_id, meta_key, meta_value HAVING count > 1");
 
 		if($wpdb->num_rows > 0)
 		{

@@ -4,10 +4,11 @@
 	cursor: pointer;
 	display: block;
 	line-height: 1.8;
-	overflow: hidden;
+	/* Registration notice in Custom Login will extend beyond the screen with this */
+	/*overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	max-width: 100%;
+	max-width: 100%;*/
 }
 
 	.mf_form .asterisk

@@ -2370,28 +2370,28 @@ class mf_base
 
 		if(is_string($styles_content))
 		{
-			$arr_json_styles = json_decode($styles_content, true);
+			$arr_json = json_decode($styles_content, true);
 
 			switch($type)
 			{
 				case 'max_width':
-					if(isset($arr_json_styles['settings']['layout']['wideSize']))
+					if(isset($arr_json['settings']['layout']['wideSize']))
 					{
-						$out = $arr_json_styles['settings']['layout']['wideSize'];
+						$out = $arr_json['settings']['layout']['wideSize'];
 					}
 				break;
 
 				case 'colors':
 					$out = [];
 
-					if(isset($arr_json_styles['settings']['color']['palette']['theme']))
+					if(isset($arr_json['settings']['color']['palette']['theme']))
 					{
-						$out = array_merge($out, $arr_json_styles['settings']['color']['palette']['theme']);
+						$out = array_merge($out, $arr_json['settings']['color']['palette']['theme']);
 					}
 
-					if(isset($arr_json_styles['settings']['color']['palette']['custom']))
+					if(isset($arr_json['settings']['color']['palette']['custom']))
 					{
-						$out = array_merge($out, $arr_json_styles['settings']['color']['palette']['custom']);
+						$out = array_merge($out, $arr_json['settings']['color']['palette']['custom']);
 					}
 				break;
 

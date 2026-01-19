@@ -4688,7 +4688,7 @@ function get_file_info($data)
 	if(!isset($data['limit'])){				$data['limit'] = 0;}
 	if(!isset($data['allow_depth'])){		$data['allow_depth'] = true;}
 
-	if($dp = @opendir($data['path']))
+	if(is_dir($data['path']) && $dp = opendir($data['path']))
 	{
 		$count = 0;
 

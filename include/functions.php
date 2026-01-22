@@ -618,12 +618,10 @@ function replace_user_meta($data)
 {
 	if(!isset($data['single'])){	$data['single'] = true;}
 
-	$arr_users = get_users(array('fields' => array('ID')));
+	$arr_users = get_users(array('fields' => 'ID'));
 
-	foreach($arr_users as $user)
+	foreach($arr_users as $user_id)
 	{
-		$user_id = (isset($user->ID) ? $user->ID : $user);
-
 		$meta_old = get_user_meta($user_id, $data['old'], $data['single']);
 
 		if($meta_old != '')
@@ -661,16 +659,13 @@ function mf_uninstall_user_meta($data)
 {
 	if(count($data['user_meta']) > 0)
 	{
-		$arr_users = get_users(array('fields' => array('ID')));
+		$arr_users = get_users(array('fields' => 'ID'));
 
-		foreach($arr_users as $user)
+		foreach($arr_users as $user_id)
 		{
 			foreach($data['user_meta'] as $meta_key)
 			{
-				if(isset($user->ID))
-				{
-					delete_user_meta($user->ID, $meta_key);
-				}
+				delete_user_meta($user_id, $meta_key);
 			}
 		}
 	}
@@ -2391,7 +2386,8 @@ function get_users_for_select($data = [])
 	$data_temp = array(
 		'orderby' => 'display_name',
 		'order' => 'ASC',
-		'fields' => array('ID', 'display_name', 'user_email'),
+		//'fields' => array('ID', 'display_name', 'user_email'),
+		'fields' => 'ID',
 	);
 
 	if(is_array($data['include']) && count($data['include']) > 0)
@@ -2408,13 +2404,13 @@ function get_users_for_select($data = [])
 		$arr_data[''] = "-- ".$data['choose_here_text']." --";
 	}
 
-	foreach($arr_users as $user)
+	foreach($arr_users as $user_id)
 	{
-		$user_data = get_userdata($user->ID);
+		$user_data = get_userdata($user_id);
 
 		//$user = apply_filters('filter_user_for_select', $user, $user_data);
 
-		if($data['exclude_inactive'] == false || (isset($user_data->roles[0]) && $user_data->roles[0] != '')) // && !isset($user->exclude_from_list)
+		if($data['exclude_inactive'] == false || (isset($user_data->roles[0]) && $user_data->roles[0] != '')) // && !isset($user_data->exclude_from_list)
 		{
 			if($data['callback'] != '' && is_callable($data['callback']))
 			{
@@ -2425,12 +2421,12 @@ function get_users_for_select($data = [])
 			{
 				if($user_data->display_name != '')
 				{
-					$arr_data[$user->ID] = $user_data->display_name;
+					$arr_data[$user_data->ID] = $user_data->display_name;
 				}
 
 				else if($user_data->first_name != '' && $user_data->last_name != '')
 				{
-					$arr_data[$user->ID] = $user_data->first_name." ".$user_data->last_name;
+					$arr_data[$user_data->ID] = $user_data->first_name." ".$user_data->last_name;
 				}
 			}
 		}
@@ -2685,12 +2681,47 @@ function get_url_content($data = [])
 	if(!isset($data['debug'])){						$data['debug'] = false;}
 	if(!isset($data['headers'])){					$data['headers'] = [];}
 	if(!isset($data['request'])){					$data['request'] = 'get';}
-	if(!isset($data['content_type'])){				$data['content_type'] = '';}
 	if(!isset($data['password'])){					$data['password'] = '';}
 	if(!isset($data['post_data'])){					$data['post_data'] = '';}
 	if(!isset($data['ca_path'])){					$data['ca_path'] = '';}
 	if(!isset($data['ssl_cert_path'])){				$data['ssl_cert_path'] = '';}
 	if(!isset($data['ssl_key_path'])){				$data['ssl_key_path'] = '';}
+
+	if(!isset($data['content_type']))
+	{
+		$arr_file_type = array(
+			'html' => "text/html",
+			'txt' => "text/plain",
+			'xml' => "application/xml",
+			'css' => "text/css",
+			'js' => "application/javascript",
+			'json' => "application/json",
+			'avif' => "image/avif",
+			'gif' => "image/gif",
+			'jpg' => "image/jpeg",
+			'jpeg' => "image/jpeg",
+			'png' => "image/png",
+			'webp' => "image/webp",
+			'ico' => "image/x-icon",
+			'svg' => "image/svg+xml",
+			'otf' => "font/otf",
+			'ttf' => "font/ttf",
+			'woff' => "font/woff",
+			'woff2' => "font/woff2",
+		);
+
+		$file_suffix = get_file_suffix($data['url']);
+
+		if(isset($arr_file_type[$file_suffix]))
+		{
+			$data['content_type'] = $arr_file_type[$file_suffix];
+		}
+
+		else
+		{
+			$data['content_type'] = '';
+		}
+	}
 
 	$data['url'] = validate_url($data['url'], false);
 
@@ -2909,8 +2940,6 @@ function get_url_content($data = [])
 	{
 		$out = $content;
 	}
-
-	//curl_close($ch);
 
 	return $out;
 }

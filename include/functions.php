@@ -2408,13 +2408,11 @@ function get_users_for_select($data = [])
 	{
 		$user_data = get_userdata($user_id);
 
-		//$user = apply_filters('filter_user_for_select', $user, $user_data);
-
 		if($data['exclude_inactive'] == false || (isset($user_data->roles[0]) && $user_data->roles[0] != '')) // && !isset($user_data->exclude_from_list)
 		{
 			if($data['callback'] != '' && is_callable($data['callback']))
 			{
-				$arr_data = call_user_func($data['callback'], $data, $user, $arr_data);
+				$arr_data = call_user_func($data['callback'], $data, $user_data, $arr_data);
 			}
 
 			else
@@ -2710,7 +2708,9 @@ function get_url_content($data = [])
 			'woff2' => "font/woff2",
 		);
 
-		$file_suffix = get_file_suffix($data['url']);
+		$arr_path = parse_url($data['url'], PHP_URL_PATH);
+		$file_suffix = pathinfo($arr_path, PATHINFO_EXTENSION);
+		//$file_suffix = get_file_suffix($data['url']);
 
 		if(isset($arr_file_type[$file_suffix]))
 		{

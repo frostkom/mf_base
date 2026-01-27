@@ -6,7 +6,7 @@ jQuery(function($)
 	{
 		var dom_obj_id = dom_obj.attr('id');
 
-		if(dom_obj_id !== undefined)
+		if(dom_obj_id !== undefined && dom_obj.hasClass('has_memory'))
 		{
 			var index = togglers_open.indexOf(dom_obj_id);
 		}
@@ -15,11 +15,11 @@ jQuery(function($)
 		{
 			dom_obj.addClass('is_open');
 
-			if(dom_obj_id !== undefined && dom_obj.hasClass('has_memory'))
+			if(dom_obj_id !== undefined)
 			{
 				$("." + dom_obj_id).removeClass('hide');
 
-				if(index === -1)
+				if(dom_obj_id !== undefined && index === -1 && dom_obj.hasClass('has_memory'))
 				{
 					togglers_open.push(dom_obj_id);
 				}
@@ -34,7 +34,7 @@ jQuery(function($)
 			{
 				$("." + dom_obj_id).addClass('hide');
 
-				if(index !== -1)
+				if(dom_obj_id !== undefined && index !== -1 && dom_obj.hasClass('has_memory'))
 				{
 					togglers_open.splice(index, 1);
 				}

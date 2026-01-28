@@ -132,12 +132,7 @@
 		.mf_form .form_checkbox label, .mf_form .form_radio label
 		{
 			display: inline;
-		}
-
-		.mf_form .form_checkbox input, .mf_form .form_radio input
-		{
-			display: inline-block;
-			margin-right: .6em;
+			padding-left: .6em;
 		}
 
 			.mf_form .input-buttons.input-button-size-2

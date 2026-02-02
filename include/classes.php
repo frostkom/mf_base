@@ -29,6 +29,7 @@ class mf_base
 	var $arr_post_types = [];
 	var $arr_public_posts = [];
 	var $arr_cache_query = [];
+	var $last_query;
 	var $footer_output;
 	var $github_debug;
 
@@ -3222,6 +3223,7 @@ class mf_base
 		global $wpdb;
 
 		$query_id = md5($query);
+		$this->last_query = $query;
 
 		if(isset($this->arr_cache_query[$query_id]))
 		{

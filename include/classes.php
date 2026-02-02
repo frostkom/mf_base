@@ -3246,7 +3246,7 @@ class mf_base
 
 		$query_id = md5($query);
 
-		if(isset($this->arr_cache_query[$query_id]))
+		if(array_key_exists($query_id, $this->arr_cache_query))
 		{
 			$result = $this->arr_cache_query[$query_id];
 		}

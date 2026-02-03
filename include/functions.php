@@ -4326,7 +4326,7 @@ function show_checkbox($data)
 		mf_enqueue_style('style_base_switch', $plugin_include_url."style_switch.css");
 
 		$data['xtra_class'] .= ($data['xtra_class'] != '' ? " " : "")."form_switch";
-		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i>".apply_filters('get_loading_animation', '')."</span>".$data['text'];
+		$data['text'] = "<span><i class='".$data['switch_icon_on']." checked'></i><i class='".$data['switch_icon_off']." unchecked'></i>".apply_filters('get_loading_animation', '', ['class' => ""])."</span>".$data['text'];
 	}
 
 	if($data['suffix'] != '')

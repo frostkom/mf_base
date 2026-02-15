@@ -24,8 +24,16 @@ jQuery(function($)
 		open_tab(location.hash);
 	}
 
-	else
+	/*else
 	{
 		open_tab(dom_obj.find("li:first-child a").attr('href'));
-	}
+	}*/
+
+	dom_obj.each(function()
+	{
+		if($(this).children("li.active").length == 0)
+		{
+			open_tab($(this).find("li:first-child a").attr('href'));
+		}
+	});
 });

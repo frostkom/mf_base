@@ -3975,7 +3975,6 @@ function show_select($data)
 						if(strpos($obj_base->data['xtra'], "rel='submit_change'") !== false)
 						{
 							$plugin_include_url = plugin_dir_url(__FILE__);
-
 							mf_enqueue_script('script_base_submit_change', $plugin_include_url."script_submit_change.js");
 						}
 

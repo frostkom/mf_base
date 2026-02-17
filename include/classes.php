@@ -1774,16 +1774,13 @@ class mf_base
 
 							foreach($option_cron_progress as $key => $arr_value)
 							{
+								if(!isset($arr_value['start'])){	$arr_value['start'] = DEFAULT_DATE;}
+
 								$li_class = "";
 
 								if($key == 'mf_base_parent')
 								{
 									$li_class .= ($li_class != '' ? " " : "")."strong";
-								}
-
-								if(!isset($arr_value['start']))
-								{
-									do_log(__FUNCTION__.": No start time (".var_export($arr_value, true).")");
 								}
 
 								if($arr_value['end'] <= $arr_value['start'])

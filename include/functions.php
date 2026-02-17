@@ -2132,7 +2132,7 @@ function get_source_version($file)
 		$version = date("YmdHis");
 	}
 
-	if($version != '' && strpos($file, $version))
+	if($version != '' && !is_array($version) && strpos($file, $version))
 	{
 		$version = null;
 	}

@@ -1316,58 +1316,61 @@ function delete_base($data)
 	$data['field_prefix'] = esc_sql($data['field_prefix']);
 	$data['table'] = esc_sql($data['table']);
 
-	$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND (".$data['field_prefix']."DeletedDate IS null OR ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)) LIMIT 0, 1000");
-
-	foreach($result as $r)
+	if(apply_filters('does_table_exist', false, $data['table_prefix'].$data['table']))
 	{
-		$intID = $r->ID;
+		$result = $wpdb->get_results("SELECT ".$data['field_prefix']."ID AS ID FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."Deleted = '1' AND (".$data['field_prefix']."DeletedDate IS null OR ".$data['field_prefix']."DeletedDate < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)) LIMIT 0, 1000");
 
-		$rows = 0;
-
-		$debug = "Checking ".$data['table_prefix'].$data['table']." #".$intID;
-
-		foreach($data['child_tables'] as $child_table => $child_table_type)
+		foreach($result as $r)
 		{
-			if($child_table_type['action'] == "trash" && apply_filters('does_table_exist', false, $data['table_prefix'].$child_table))
+			$intID = $r->ID;
+
+			$rows = 0;
+
+			$debug = "Checking ".$data['table_prefix'].$data['table']." #".$intID;
+
+			foreach($data['child_tables'] as $child_table => $child_table_type)
 			{
-				$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
-
-				if($wpdb->num_rows > 0)
+				if($child_table_type['action'] == "trash" && apply_filters('does_table_exist', false, $data['table_prefix'].$child_table))
 				{
-					$wpdb->query($wpdb->prepare("UPDATE ".$data['table_prefix'].$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
+					$wpdb->get_results($wpdb->prepare("SELECT ".$data['field_prefix']."ID FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d' LIMIT 0, 1", $intID));
 
-					$rows += $wpdb->rows_affected;
+					if($wpdb->num_rows > 0)
+					{
+						$wpdb->query($wpdb->prepare("UPDATE ".$data['table_prefix'].$child_table." SET ".$child_table_type['field_prefix']."Deleted = '1', ".$child_table_type['field_prefix']."DeletedDate = NOW() WHERE ".$data['field_prefix']."ID = '%d' AND ".$child_table_type['field_prefix']."Deleted = '0'", $intID));
 
-					$debug .= ", Trashed ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
+						$rows += $wpdb->rows_affected;
+
+						$debug .= ", Trashed ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
+					}
+
+					else
+					{
+						$debug .= ", No rows to delete in ".$data['table_prefix'].$child_table;
+					}
 				}
 
 				else
 				{
-					$debug .= ", No rows to delete in ".$data['table_prefix'].$child_table;
+					$debug .= ", No action (".$child_table_type['action'].") or table ".$data['table_prefix'].$child_table;
 				}
 			}
 
-			else
+			if($rows == 0)
 			{
-				$debug .= ", No action (".$child_table_type['action'].") or table ".$data['table_prefix'].$child_table;
-			}
-		}
-
-		if($rows == 0)
-		{
-			foreach($data['child_tables'] as $child_table => $child_table_type)
-			{
-				if($child_table_type['action'] == "delete")
+				foreach($data['child_tables'] as $child_table => $child_table_type)
 				{
-					$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+					if($child_table_type['action'] == "delete")
+					{
+						$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$child_table." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
 
-					$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
+						$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$child_table;
+					}
 				}
+
+				$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
+
+				$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$data['table'];
 			}
-
-			$wpdb->query($wpdb->prepare("DELETE FROM ".$data['table_prefix'].$data['table']." WHERE ".$data['field_prefix']."ID = '%d'", $intID));
-
-			$debug .= ", Deleted ".$wpdb->rows_affected." from ".$data['table_prefix'].$data['table'];
 		}
 	}
 }

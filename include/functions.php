@@ -4934,7 +4934,7 @@ function get_post_children($data, &$arr_data = [])
 			{
 				for($i = 0; $i < $data['depth']; $i++)
 				{
-					$post_title = "&nbsp;&nbsp;&nbsp;".$post_title;
+					$post_title = " - ".$post_title;
 				}
 
 				$arr_data[$post_id] = $post_title;
@@ -4946,7 +4946,7 @@ function get_post_children($data, &$arr_data = [])
 
 					for($i = 0; $i < $data['depth']; $i++)
 					{
-						$out .= "&nbsp;&nbsp;&nbsp;";
+						$out .= " - ";
 					}
 
 					$out .= $post_title

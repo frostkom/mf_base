@@ -36,6 +36,11 @@ echo ".widget ul.grid_columns
 		column-count: ".$setting_desktop_columns.";
 	}
 
+		.wp-block-column .widget.masonry ul.grid_columns
+		{
+			column-count: 1;
+		}
+
 	.widget.square ul.grid_columns
 	{
 		display: flex;
@@ -66,11 +71,16 @@ echo ".widget ul.grid_columns
 			width: ".$column_width_desktop."%;
 		}
 
+			.wp-block-column .widget.square ul.grid_columns > li
+			{
+				width: 100%;
+			}
+
 		.widget ul.grid_columns > li .image
 		{
 			background: rgba(0, 0, 0, .03);
 			border-radius: .3em;
-			margin: .2em .2em 0;
+			margin: .2em;
 			overflow: hidden;
 		}
 
@@ -87,18 +97,36 @@ echo ".widget ul.grid_columns
 					transform: scale(1.1);
 				}
 
-		.widget ul.grid_columns .content
+				.widget ul.grid_columns > li .image .content
+				{
+					background: rgba(255, 255, 255, .5);
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					position: absolute;
+					top: 0;
+					right: 0;
+					bottom: 0;
+					left: 0;
+				}
+
+					.widget ul.grid_columns > li .image .content span
+					{
+						text-align: center;
+					}
+
+		.widget ul.grid_columns > li > .content
 		{
-			padding: .6em .8em .8em;
+			padding: .6em .8em;
 			position: relative;
 		}
 
-			.widget ul.grid_columns .content .text
+			.widget ul.grid_columns > li > .content .text
 			{
 				font-size: .9em;
 			}
 
-				.widget ul.grid_columns .content .text > p
+				.widget ul.grid_columns > li > .content .text > p
 				{
 					margin-top: 0;
 				}
@@ -108,7 +136,7 @@ echo ".widget ul.grid_columns
 				font-size: .7em;
 				opacity: 1;
 				position: absolute;
-				top: -2.4em;
+				top: -2.6em;
 				transition: all 1s ease;
 				left: .6em;
 			}
@@ -126,23 +154,23 @@ echo ".widget ul.grid_columns
 					padding: .5em 1em;
 				}
 
-			.widget ul.grid_columns .content a
+			.widget ul.grid_columns > li > .content a
 			{
 				text-decoration: none;
 			}
 
-			.widget ul.grid_columns .content > a
+			.widget ul.grid_columns > li > .content > a
 			{
 				font-weight: bold;
 			}
 
-			.widget ul.grid_columns .content .wp-block-button
+			.widget ul.grid_columns > li > .content .wp-block-button
 			{
 				margin-top: .5em;
 				text-align: right;
 			}
 
-				.widget ul.grid_columns .content .wp-block-button__link
+				.widget ul.grid_columns > li > .content .wp-block-button__link
 				{
 					padding: .5em 1em;
 				}";

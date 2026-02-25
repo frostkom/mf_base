@@ -795,7 +795,7 @@ class mf_base
 			#########################
 
 			mf_uninstall_plugin(array(
-				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_sync_sites', 'option_github_access_token', 'option_git_updater', 'option_github_updates'),
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates'),
 				'post_meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 

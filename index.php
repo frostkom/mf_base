@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: Add base functionality and security improvements
-Version: 1.2.10.77
+Version: 1.2.11.0
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -122,6 +122,7 @@ add_action('phpmailer_init', array($obj_base, 'phpmailer_init'));
 
 add_filter('site_status_test_result', array($obj_base, 'site_status_test_result'));
 add_filter('recommend_config', array($obj_base, 'recommend_config'));
+add_filter('recommend_config_uploads', array($obj_base, 'recommend_config_uploads'));
 
 add_filter('get_block_search', array($obj_base, 'get_block_search'), 10, 2);
 

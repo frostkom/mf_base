@@ -1907,7 +1907,14 @@ class mf_base
 						echo "<p><a href='".get_admin_url(get_main_site_id(), "options-general.php?page=".BASE_OPTIONS_PAGE)."'>".__("You can only change this setting on the main site", 'lang_base')."</a></p><br>";
 					}
 
-					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => '')); //get_home_path()
+					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => ''));
+
+					if($config['html'] != '')
+					{
+						echo $config['html'];
+					}
+
+					$config = apply_filters('recommend_config_uploads', array('file' => ABSPATH."wp-content/uploads/.htaccess", 'html' => ''));
 
 					if($config['html'] != '')
 					{
@@ -1925,7 +1932,7 @@ class mf_base
 				break;
 
 				default:
-					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => '')); //get_home_path()
+					$config = apply_filters('recommend_config', array('file' => ABSPATH.".htaccess", 'html' => ''));
 
 					if($config['html'] != '')
 					{
@@ -3064,7 +3071,7 @@ class mf_base
 					."</FilesMatch>\r\n"
 					."\r\n"
 
-					."<FilesMatch \"\.(backup|bak|bkp|conf|dist|htaccess|ini|log|md|sh|sql)$\">\r\n"
+					."<FilesMatch \"\.(backup|bak|bkp|cert|conf|dist|htaccess|ini|key|log|md|pem|sh|sql)$\">\r\n"
 						."	Require all denied\r\n"
 					."</FilesMatch>\r\n"
 					."\r\n"
@@ -3082,7 +3089,7 @@ class mf_base
 
 					// Force UTF-8 for a number of file formats
 					."<IfModule mod_mime.c>\r\n"
-					."	AddCharset UTF-8 .atom .css .js .json .rss .vtt .xml\r\n"
+						."	AddCharset UTF-8 .atom .css .js .json .rss .vtt .xml\r\n"
 					."</IfModule>\r\n"
 					."\r\n"
 
@@ -3188,7 +3195,7 @@ class mf_base
 
 				case 'nginx':
 					$update_with .= "location ~* ^/(".$ignore_files.")$ {\r\n"
-					."	deny all;\r\n"
+						."	deny all;\r\n"
 					."}\r\n"
 					."\r\n"
 
@@ -3198,7 +3205,42 @@ class mf_base
 					."\r\n"
 
 					."location = /my_ip {\r\n"
-					."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip break;\r\n"
+						."	rewrite ^(.*)$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip break;\r\n"
+					."}";
+				break;
+			}
+		}
+
+		$data['html'] .= $this->update_config(array(
+			'plugin_name' => "MF Base",
+			'file' => $data['file'],
+			'update_with' => $update_with,
+			'auto_update' => true,
+		));
+
+		return $data;
+	}
+
+	function recommend_config_uploads($data)
+	{
+		if(!isset($data['file'])){		$data['file'] = '';}
+
+		$update_with = "";
+
+		if(!is_multisite() || is_main_site())
+		{
+			switch($this->get_server_type())
+			{
+				default:
+				case 'apache':
+					$update_with .= "<FilesMatch \"\.php\">\r\n"
+						."	Require all denied\r\n"
+					."</FilesMatch>";
+				break;
+
+				case 'nginx':
+					$update_with .= "location ~* \.php {\r\n"
+					."	deny all;\r\n"
 					."}";
 				break;
 			}

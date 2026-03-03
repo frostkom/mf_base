@@ -175,6 +175,22 @@ echo ".widget ul.grid_columns
 					padding: .5em 1em;
 				}";
 
+if($arr_breakpoints['tablet'] > 0)
+{
+	echo "@media screen and (min-width: ".$arr_breakpoints['tablet'].$arr_breakpoints['suffix'].")
+	{
+		.widget.masonry ul.grid_columns.grid_grow
+		{
+			column-count: ".$setting_tablet_columns.";
+		}
+
+		.widget.square ul.grid_columns.grid_grow > li
+		{
+			flex-grow: 1;
+		}
+	}";
+}
+
 if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoints['mobile'])
 {
 	echo "@media screen and (min-width: ".$arr_breakpoints['mobile'].$arr_breakpoints['suffix'].") and (max-width: ".($arr_breakpoints['tablet'] - 1).$arr_breakpoints['suffix'].")

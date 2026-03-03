@@ -509,7 +509,7 @@ class mf_base
 				echo "Running cron manually...";
 			}*/
 
-			update_option('option_cron_started', date("Y-m-d H:i:s"), false);
+			update_option('option_cron_started', current_time('mysql'), false);
 		}
 	}
 
@@ -610,7 +610,7 @@ class mf_base
 
 		foreach($option_base_time_limited as $key => $value)
 		{
-			if($value < date("Y-m-d H:i:s"))
+			if($value < current_time('mysql'))
 			{
 				delete_site_option($key);
 				delete_option($key);
@@ -767,7 +767,7 @@ class mf_base
 		}
 		####################
 
-		update_option('option_base_optimized', date("Y-m-d H:i:s"), false);
+		update_option('option_base_optimized', current_time('mysql'), false);
 
 		return __("I have optimized the site for you", 'lang_base');
 	}
@@ -842,7 +842,7 @@ class mf_base
 		$obj_cron = new mf_cron();
 		$obj_cron->end(__CLASS__."_parent");
 
-		update_option('option_cron_ended', date("Y-m-d H:i:s"), false);
+		update_option('option_cron_ended', current_time('mysql'), false);
 	}
 
 	function has_page_template($data = [])
@@ -1168,7 +1168,7 @@ class mf_base
 			global $wpdb;
 
 			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
-			$ftp_date = strtotime(date("Y-m-d H:i:s"));
+			$ftp_date = strtotime(current_time('mysql'));
 			$date_diff = abs($db_date - $ftp_date);
 
 			return array($date_diff, $ftp_date, $db_date);
@@ -3549,7 +3549,7 @@ class mf_cron
 	{
 		$this->schedules = wp_get_schedules();
 
-		$this->date_start = date("Y-m-d H:i:s");
+		$this->date_start = current_time('mysql');
 
 		list($this->upload_path, $upload_url) = get_uploads_folder(__CLASS__);
 	}
@@ -3581,12 +3581,12 @@ class mf_cron
 				$arr_progress = get_option('option_cron_progress');
 			}
 
-			$arr_progress[$this->type] = array('start' => date("Y-m-d H:i:s"), 'end' => "");
+			$arr_progress[$this->type] = array('start' => current_time('mysql'), 'end' => "");
 
 			update_option('option_cron_progress', $arr_progress, false);
 		}
 
-		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'log' => false, 'content' => date("Y-m-d H:i:s")));
+		$success = set_file_content(array('file' => $this->file, 'mode' => 'w', 'log' => false, 'content' => current_time('mysql')));
 
 		if(!$success)
 		{
@@ -3621,7 +3621,7 @@ class mf_cron
 	function has_expired($data = [])
 	{
 		if(!isset($data['start'])){			$data['start'] = $this->date_start;}
-		if(!isset($data['end'])){			$data['end'] = date("Y-m-d H:i:s");}
+		if(!isset($data['end'])){			$data['end'] = current_time('mysql');}
 		if(!isset($data['margin'])){		$data['margin'] = 1;}
 
 		$time_difference = time_between_dates(array('start' => $data['start'], 'end' => $data['end'], 'type' => 'ceil', 'return' => 'seconds'));
@@ -3642,13 +3642,13 @@ class mf_cron
 
 		$arr_progress = get_option('option_cron_progress');
 
-		$arr_progress[$this->type]['end'] = date("Y-m-d H:i:s");
+		$arr_progress[$this->type]['end'] = current_time('mysql');
 
 		update_option('option_cron_progress', $arr_progress, false);
 
 		/*if(get_site_option('setting_base_cron_debug') == 'yes')
 		{
-			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => date("Y-m-d H:i:s"), 'type' => 'ceil', 'return' => 'seconds'));
+			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => current_time('mysql'), 'type' => 'ceil', 'return' => 'seconds'));
 
 			do_log("Cron: ".$this->type." started", 'trash');
 

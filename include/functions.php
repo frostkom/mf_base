@@ -67,7 +67,7 @@ function setting_time_limit($data)
 
 		if(isset($option_base_time_limited[$data['key']]))
 		{
-			$hours_left = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $option_base_time_limited[$data['key']], 'type' => 'round', 'return' => 'hours'));
+			$hours_left = time_between_dates(array('start' => current_time('mysql'), 'end' => $option_base_time_limited[$data['key']], 'type' => 'round', 'return' => 'hours'));
 
 			if($hours_left > 0)
 			{
@@ -537,7 +537,7 @@ function send_email($data)
 
 		else
 		{
-			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true));
+			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true), 'publish', false);
 
 			do_action('sent_email_error', $phpmailer->From);
 		}
@@ -1486,6 +1486,26 @@ function filter_style_color($value)
 	return $value;
 }
 
+function filter_style_font_size($value)
+{
+	if(is_array($value))
+	{
+		do_log(__FUNCTION__." - Not a string: ".var_export($value, true));
+	}
+
+	else if(preg_match('/\d/', $value))
+	{
+		// Do nothing
+	}
+
+	else
+	{
+		$value = "var(--wp--preset--font-size--".$value.")";
+	}
+
+	return $value;
+}
+
 function filter_style_var($value)
 {
 	if(is_array($value))
@@ -1541,6 +1561,11 @@ function parse_block_attributes($data = [])
 		$data['style'] .= "color: ".filter_style_color($data['attributes']['textColor']).";";
 	}
 
+	if(isset($data['attributes']['fontSize']) && $data['attributes']['fontSize'] != '')
+	{
+		$data['style'] .= "font-size: ".filter_style_font_size($data['attributes']['fontSize']).";";
+	}
+
 	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
 	{
 		foreach($data['attributes']['style'] as $key_parent => $arr_value_parent)
@@ -1581,6 +1606,10 @@ function parse_block_attributes($data = [])
 							break;
 						}
 					}
+				break;
+
+				case 'fontSize':
+					$data['style'] .= "font-size: ".filter_style_font_size($value).";";
 				break;
 
 				case 'elements':
@@ -1996,7 +2025,7 @@ function get_next_cron($data = [])
 
 	$date_next_schedule = date("Y-m-d H:i:s", wp_next_scheduled('cron_base'));
 
-	$mins = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
+	$mins = time_between_dates(array('start' => current_time('mysql'), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
 
 	if($data['raw'] == true)
 	{
@@ -2025,7 +2054,7 @@ function get_next_cron($data = [])
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');
 
-			if($option_cron_ended < date("Y-m-d H:i:s") && $option_cron_ended >= $option_cron_started)
+			if($option_cron_ended < current_time('mysql') && $option_cron_ended >= $option_cron_started)
 			{
 				$out .= "&nbsp;(<a href='".admin_url("options-general.php?page=".BASE_OPTIONS_PAGE."&action=run_cron_now#settings_base")."'>".__("Run Now", 'lang_base')."</a>";
 

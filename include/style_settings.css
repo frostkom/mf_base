@@ -111,3 +111,10 @@
 			list-style-position: inside;
 			margin: 0;
 		}
+		
+		.settings-wrap .settings-tabs pre
+		{
+			background: rgba(0, 0, 0, .1);
+			border-radius: .5em;
+			padding: 1em;
+		}

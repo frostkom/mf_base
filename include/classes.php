@@ -3481,28 +3481,11 @@ class mf_base
 					.htmlspecialchars($data['update_with'])."\r\n"
 				."# END ".$data['plugin_name'];
 
-				switch($this->get_server_type())
-				{
-					case 'apache':
-						$config_file = ".htaccess";
-					break;
-
-					case 'nginx':
-						$config_file = "nginx.conf";
-					break;
-
-					case 'iis':
-						$config_file = "web.config";
-					break;
-				}
-
-				$out .= "<div class='mf_form'>"
-					."<h3 class='display_warning'>
-						<i class='fa fa-exclamation-triangle yellow'></i> "
-						.sprintf(__("Add this to the beginning of %s", 'lang_base'), $config_file)
-					."</h3>"
-					."<p class='input'>".nl2br($new_content)."</p>"
-				."</div>";
+				$out .= "<h3 class='display_warning'>
+					<i class='fa fa-exclamation-triangle yellow'></i> "
+					.sprintf(__("Add this to the beginning of %s", 'lang_base'), str_replace(ABSPATH, "", $data['file']))
+				."</h3>"
+				."<pre>".$new_content."</pre>";
 			}
 		}
 

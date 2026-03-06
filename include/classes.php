@@ -434,44 +434,45 @@ class mf_base
 				define('DEFAULT_DATE', "1982-08-04 23:15:00");
 				define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 
-				$is_super_admin = $is_admin = $is_editor = $is_author = false;
+				$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = false;
 
 				if(current_user_can('update_core'))
 				{
-					$is_super_admin = $is_admin = $is_editor = $is_author = true;
+					$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = true;
 
 					define('ALLOW_UNFILTERED_UPLOADS', true);
 				}
 
 				else if(current_user_can('manage_options'))
 				{
-					$is_admin = $is_editor = $is_author = true;
+					$is_admin = $is_editor = $is_author = $is_contributor = true;
 				}
 
 				else if(current_user_can('edit_pages'))
 				{
-					$is_editor = $is_author = true;
+					$is_editor = $is_author = $is_contributor = true;
 				}
 
-				else if(current_user_can('upload_files'))
+				else if(current_user_can('publish_posts'))
 				{
-					$is_author = true;
+					$is_author = $is_contributor = true;
 				}
+
+				else if(current_user_can('edit_posts'))
+				{
+					$is_contributor = true;
+				}
+
+				/*else if(current_user_can('read'))
+				{
+					$is_subscriber = true;
+				}*/
 
 				define('IS_SUPER_ADMIN', $is_super_admin);
 				define('IS_ADMINISTRATOR', $is_admin);
 				define('IS_EDITOR', $is_editor);
 				define('IS_AUTHOR', $is_author);
-
-				/*if(get_site_option('setting_base_use_timezone') == 'yes')
-				{
-					$timezone_string = get_option('timezone_string');
-
-					if($timezone_string != '')
-					{
-						date_default_timezone_set($timezone_string);
-					}
-				}*/
+				define('IS_CONTRIBUTOR', $is_author);
 
 				register_block_style(
 					'core/button',
@@ -795,7 +796,7 @@ class mf_base
 			#########################
 
 			mf_uninstall_plugin(array(
-				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates'),
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates', 'setting_base_use_timezone'),
 				'post_meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 
@@ -1141,14 +1142,6 @@ class mf_base
 			}
 
 			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
-
-			/*list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
-
-			if($date_diff > 10 || get_site_option('setting_base_use_timezone') == 'yes')
-			{
-				$arr_settings['setting_base_use_timezone'] = __("Use Timezone to adjust time", 'lang_base');
-			}*/
-
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
@@ -1163,16 +1156,14 @@ class mf_base
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
 
-		function get_date_diff()
+		/*function get_date_diff()
 		{
-			global $wpdb;
-
-			$db_date = strtotime($wpdb->get_var("SELECT LOCALTIME()"));
-			$ftp_date = strtotime(current_time('mysql'));
+			$db_date = strtotime(current_time('mysql'));
+			$ftp_date = strtotime(date("Y-m-d H:i:s"));
 			$date_diff = abs($db_date - $ftp_date);
 
 			return array($date_diff, $ftp_date, $db_date);
-		}
+		}*/
 
 		function api_base_info()
 		{
@@ -1197,7 +1188,7 @@ class mf_base
 
 			$mysql_title = __("DB", 'lang_base').": ".DB_NAME.", ".__("Prefix", 'lang_base').": ".$wpdb->prefix;
 
-			list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
+			//list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
 
 			$total_space = (function_exists('disk_total_space') ? disk_total_space(ABSPATH) : 0);
 
@@ -1262,7 +1253,7 @@ class mf_base
 						break;
 					}
 
-					if($date_diff > 60)
+					/*if($date_diff > 60)
 					{
 						echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Time Difference", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
 					}
@@ -1270,7 +1261,7 @@ class mf_base
 					else
 					{
 						echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
-					}
+					}*/
 
 					if(isset($free_percent))
 					{
@@ -1950,15 +1941,6 @@ class mf_base
 
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
 		}
-
-		/*function setting_base_use_timezone_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, 'no');
-
-			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
-		}*/
 
 		function setting_base_optimize_callback()
 		{
@@ -3444,7 +3426,7 @@ class mf_base
 				{
 					if(copy($file_temp, $data['file']))
 					{
-						$done_text = sprintf(__("I successfully updated %s with %s", 'lang_base'), ".htaccess", $data['plugin_name']);
+						$done_text = sprintf(__("I successfully updated %s with %s", 'lang_base'), str_replace(ABSPATH, "", $data['file']), $data['plugin_name']);
 						//$done_text .= " (".ABSPATH.")";
 						//$done_text .= " (".$new_md5." != ".$old_md5.")";
 						//$done_text .= " (".$old_content." -> ".$new_content." -> ".$content.")";
@@ -3454,7 +3436,7 @@ class mf_base
 
 					else
 					{
-						$error_text = sprintf(__("I could not update %s with %s from the temp file", 'lang_base'), $data['file'], $data['plugin_name']);
+						$error_text = sprintf(__("I could not update %s with %s from the temp file", 'lang_base'), str_replace(ABSPATH, "", $data['file']), $data['plugin_name']);
 
 						$out .= get_notification();
 					}
@@ -3462,7 +3444,7 @@ class mf_base
 
 				else
 				{
-					$error_text = sprintf(__("I could not successfully update %s with %s", 'lang_base'), $data['file'], $data['plugin_name']);
+					$error_text = sprintf(__("I could not successfully update %s with %s", 'lang_base'), str_replace(ABSPATH, "", $data['file']), $data['plugin_name']);
 					//$error_text .= " (".ABSPATH.")";
 					//$error_text .= " (".$success." != ".strlen($content).")";
 

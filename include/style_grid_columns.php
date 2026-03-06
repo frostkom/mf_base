@@ -131,6 +131,11 @@ echo ".widget ul.grid_columns
 					margin-top: 0;
 				}
 
+					.widget ul.grid_columns > li > .content .text > p:last-child
+					{
+						margin-bottom: 0;
+					}
+
 			.widget ul.grid_columns .meta
 			{
 				font-size: .7em;
@@ -154,7 +159,7 @@ echo ".widget ul.grid_columns
 					padding: .5em 1em;
 				}
 
-			.widget ul.grid_columns > li > .content a
+			.widget ul.grid_columns > li > .content > a
 			{
 				text-decoration: none;
 			}

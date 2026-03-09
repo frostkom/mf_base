@@ -3042,7 +3042,7 @@ class mf_base
 		{
 			$subfolder = get_url_part(array('type' => 'path'));
 
-			$ignore_files = "xmlrpc\.php|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|debug\.log";
+			$ignore_files = "debug\.log|install\.php|license\.txt|readme\.html|wp\-config\.php|wp\-config\-sample\.php|xmlrpc\.php";
 
 			switch($this->get_server_type())
 			{

@@ -99,15 +99,18 @@ echo ".widget ul.grid_columns
 
 				.widget ul.grid_columns > li .image .content
 				{
-					background: rgba(255, 255, 255, .5);
+					background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .3));
+					border-radius: .3em;
+					color: #fff;
 					display: flex;
-					align-items: center;
-					justify-content: center;
+					align-items: flex-end;
 					position: absolute;
 					top: 0;
 					right: 0;
 					bottom: 0;
 					left: 0;
+					margin: .2em;
+					padding: .5em 1em;
 				}
 
 					.widget ul.grid_columns > li .image .content span
@@ -193,6 +196,11 @@ if($arr_breakpoints['tablet'] > 0)
 		{
 			flex-grow: 1;
 		}
+
+		.widget ul.grid_columns > li .image
+		{
+			max-height: 20vw;
+		}
 	}";
 }
 
@@ -208,6 +216,11 @@ if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoin
 		.widget.square ul.grid_columns > li
 		{
 			width: ".$column_width_tablet."%;
+		}
+
+		.widget ul.grid_columns > li .image
+		{
+			max-height: 50vw;
 		}
 	}";
 }

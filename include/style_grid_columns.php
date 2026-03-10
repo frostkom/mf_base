@@ -124,6 +124,11 @@ echo ".widget ul.grid_columns
 			position: relative;
 		}
 
+			.widget ul.grid_columns > li > .content .grid_title
+			{
+				margin-bottom: .5em;
+			}
+
 			.widget ul.grid_columns > li > .content .text
 			{
 				font-size: .9em;

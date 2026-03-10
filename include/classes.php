@@ -802,7 +802,7 @@ class mf_base
 
 			// Optimize
 			#########################
-			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime("-4 hour")))
+			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime(current_time('mysql')." -4 hour")))
 			{
 				$this->do_optimize();
 			}
@@ -1705,7 +1705,7 @@ class mf_base
 
 			$cron_interval = ($obj_cron->get_interval() / 60);
 
-			$last_run_threshold = date("Y-m-d H:i:s", strtotime("-".$cron_interval." minute"));
+			$last_run_threshold = date("Y-m-d H:i:s", strtotime(current_time('mysql')." -".$cron_interval." minute"));
 
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');
@@ -1948,7 +1948,7 @@ class mf_base
 
 			if($option_base_optimized > DEFAULT_DATE)
 			{
-				$populate_next = format_date(date("Y-m-d H:i:s", strtotime($option_base_optimized." +4 hour")));
+				$populate_next = format_date(date("Y-m-d H:i:s", strtotime(current_time('mysql')." - ".$option_base_optimized." +4 hour")));
 
 				$description = sprintf(__("The optimization was last run %s and will be run again %s", 'lang_base'), format_date($option_base_optimized), $populate_next);
 			}

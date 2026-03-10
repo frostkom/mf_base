@@ -99,7 +99,7 @@ function setting_time_limit($data)
 		{
 			$description = get_time_limit_description($data['time_limit']);
 
-			$option_base_time_limited[$data['key']] = date("Y-m-d H:i:s", strtotime("+".$data['time_limit']." hour"));
+			$option_base_time_limited[$data['key']] = date("Y-m-d H:i:s", strtotime(current_time('mysql')." +".$data['time_limit']." hour"));
 
 			$has_changed = true;
 		}
@@ -2025,7 +2025,7 @@ function get_next_cron($data = [])
 
 	$date_next_schedule = date("Y-m-d H:i:s", wp_next_scheduled('cron_base'));
 
-	$mins = time_between_dates(array('start' => current_time('mysql'), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
+	$mins = time_between_dates(array('start' => date("Y-m-d H:i:s"), 'end' => $date_next_schedule, 'type' => 'round', 'return' => 'minutes'));
 
 	if($data['raw'] == true)
 	{
@@ -2049,7 +2049,7 @@ function get_next_cron($data = [])
 			$out = format_date($date_next_schedule);
 		}
 
-		if(IS_SUPER_ADMIN) //($mins < -1 || $mins > 1) && 
+		if(IS_SUPER_ADMIN)
 		{
 			$option_cron_started = get_option('option_cron_started');
 			$option_cron_ended = get_option('option_cron_ended');

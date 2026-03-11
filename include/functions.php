@@ -2742,7 +2742,6 @@ function get_url_content($data = [])
 
 		$arr_path = parse_url($data['url'], PHP_URL_PATH);
 		$file_suffix = pathinfo($arr_path, PATHINFO_EXTENSION);
-		//$file_suffix = get_file_suffix($data['url']);
 
 		if(isset($arr_file_type[$file_suffix]))
 		{
@@ -2825,7 +2824,12 @@ function get_url_content($data = [])
 		$data['headers'][] = 'Content-Type: '.$data['content_type'];
 	}
 
-	if($data['request'] == 'post' || $data['post_data'] != '')
+	if($data['request'] == 'delete')
+	{
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+	}
+
+	else if($data['request'] == 'post' || $data['post_data'] != '')
 	{
 		curl_setopt($ch, CURLOPT_POST, true);
 	}

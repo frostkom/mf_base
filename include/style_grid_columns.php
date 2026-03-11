@@ -57,6 +57,9 @@ echo ".widget ul.grid_columns
 		margin: 0 0 .6em;
 		overflow: hidden;
 		position: relative;
+
+		display: flex;
+		flex-direction: column;
 	}
 
 		.widget.masonry ul.grid_columns > li
@@ -118,13 +121,34 @@ echo ".widget ul.grid_columns
 						text-align: center;
 					}
 
-		.widget ul.grid_columns > li > .content
+		.widget ul.grid_columns .grid_meta
 		{
-			padding: .6em .8em;
-			position: relative;
+			font-size: .7em;
+			opacity: 1;
+			margin: -2.6em 0 1em .7em;
+			transition: all 1s ease;
 		}
 
-			.widget ul.grid_columns > li > .content .grid_title
+			.widget ul.grid_columns > li:hover .grid_meta
+			{
+				opacity: .3;
+			}
+
+			.widget ul.grid_columns .grid_meta > span, .widget ul.grid_columns .grid_meta > a
+			{
+				background: #fff;
+				border-radius: .2em;
+				margin-right: .3em;
+				padding: .5em 1em;
+			}
+
+		.widget ul.grid_columns > li > .content
+		{
+			flex-grow: 1;
+			padding: .6em .8em;
+		}
+
+			.widget ul.grid_columns .grid_title
 			{
 				margin-bottom: .5em;
 			}
@@ -144,29 +168,6 @@ echo ".widget ul.grid_columns
 						margin-bottom: 0;
 					}
 
-			.widget ul.grid_columns .meta
-			{
-				font-size: .7em;
-				opacity: 1;
-				position: absolute;
-				top: -2.6em;
-				transition: all 1s ease;
-				left: .6em;
-			}
-
-				.widget ul.grid_columns > li:hover .meta
-				{
-					opacity: 0;
-				}
-
-				.widget ul.grid_columns .meta > span, .widget ul.grid_columns .meta > a
-				{
-					background: #fff;
-					border-radius: .2em;
-					margin-right: .3em;
-					padding: .5em 1em;
-				}
-
 			.widget ul.grid_columns > li > .content > a
 			{
 				text-decoration: none;
@@ -177,13 +178,18 @@ echo ".widget ul.grid_columns
 				font-weight: bold;
 			}
 
-			.widget ul.grid_columns > li > .content .wp-block-button
+			.widget ul.grid_columns .grid_buttons
+			{
+				margin: 0 .8em .4em;
+			}
+
+			.widget ul.grid_columns .wp-block-button
 			{
 				margin-top: .5em;
 				text-align: right;
 			}
 
-				.widget ul.grid_columns > li > .content .wp-block-button__link
+				.widget ul.grid_columns .wp-block-button__link
 				{
 					padding: .5em 1em;
 				}";

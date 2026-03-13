@@ -79,7 +79,7 @@ echo ".widget ul.grid_columns
 				width: 100%;
 			}
 
-		.widget ul.grid_columns > li .image
+		.widget ul.grid_columns .grid_image
 		{
 			background: rgba(0, 0, 0, .03);
 			border-radius: .3em;
@@ -87,7 +87,7 @@ echo ".widget ul.grid_columns
 			overflow: hidden;
 		}
 
-			.widget ul.grid_columns > li .image img
+			.widget ul.grid_columns .grid_image img
 			{
 				display: block;
 				object-fit: cover;
@@ -95,12 +95,12 @@ echo ".widget ul.grid_columns
 				width: 100%;
 			}
 
-				.widget ul.grid_columns > li:hover .image img
+				.widget ul.grid_columns > li:hover .grid_image img
 				{
 					transform: scale(1.1);
 				}
 
-				.widget ul.grid_columns > li .image .content
+				.widget ul.grid_columns .grid_image .content
 				{
 					background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .3));
 					border-radius: .3em;
@@ -116,7 +116,7 @@ echo ".widget ul.grid_columns
 					padding: .5em 1em;
 				}
 
-					.widget ul.grid_columns > li .image .content span
+					.widget ul.grid_columns .grid_image .content span
 					{
 						text-align: center;
 					}
@@ -150,7 +150,9 @@ echo ".widget ul.grid_columns
 
 			.widget ul.grid_columns .grid_title
 			{
+				font-weight: bold;
 				margin-bottom: .5em;
+				text-decoration: none;
 			}
 
 			.widget ul.grid_columns > li > .content .text
@@ -167,16 +169,6 @@ echo ".widget ul.grid_columns
 					{
 						margin-bottom: 0;
 					}
-
-			.widget ul.grid_columns > li > .content > a
-			{
-				text-decoration: none;
-			}
-
-			.widget ul.grid_columns > li > .content > a
-			{
-				font-weight: bold;
-			}
 
 			.widget ul.grid_columns .grid_buttons
 			{
@@ -208,7 +200,7 @@ if($arr_breakpoints['tablet'] > 0)
 			flex-grow: 1;
 		}
 
-		.widget ul.grid_columns > li .image
+		.widget ul.grid_columns .grid_image
 		{
 			max-height: 20vw;
 		}
@@ -229,7 +221,7 @@ if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoin
 			width: ".$column_width_tablet."%;
 		}
 
-		.widget ul.grid_columns > li .image
+		.widget ul.grid_columns .grid_image
 		{
 			max-height: 50vw;
 		}

@@ -15,9 +15,12 @@
 		max-width: 100%;
 	}
 
-		:root :where(.wp-block-button__link:hover)
+		/*:root :where(*/.wp-block-button__link:hover/*)*/
 		{
 			background-color: var(--wp--preset--color--accent-2);
+			/*border-width: .1em;
+			border-style: solid;
+			border-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));*/
 			color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 		}
 

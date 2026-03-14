@@ -1581,7 +1581,7 @@ class mf_base
 
 						echo "<p>
 							<i class='fa ".($fileupload_maxk >= $this->upload_max_filesize ? "fa-check green" : "fa-times red display_warning")."'></i> "
-							.__("Upload Limit", 'lang_base')." (".__("Network", 'lang_base')."): ".show_final_size($fileupload_maxk);
+							.__("Upload Limit", 'lang_base')." (".__("Network", 'lang_base')."): <a href='".network_admin_url("settings.php")."'>".show_final_size($fileupload_maxk)."</a>";
 
 							if($fileupload_maxk < $this->upload_max_filesize)
 							{

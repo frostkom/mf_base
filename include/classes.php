@@ -997,6 +997,11 @@ class mf_base
 
 	function rest_authentication_errors($result)
 	{
+		if(apply_filters('filter_rest_authentication_errors', false) == true)
+		{
+			return $result;
+		}
+
 		if(!is_user_logged_in())
 		{
 			return new WP_Error('rest_forbidden', __("You cannot access the REST API without logging in.", 'lang_base'), array('status' => 401));

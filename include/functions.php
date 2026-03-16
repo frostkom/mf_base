@@ -4411,7 +4411,7 @@ function get_form_accents($data)
 
 	$arr_colors = apply_filters('get_styles_content', '', 'colors');
 
-	if(count($arr_colors) > 0)
+	if(is_array($arr_colors) && count($arr_colors) > 0)
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
 

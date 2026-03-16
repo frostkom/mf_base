@@ -552,6 +552,16 @@ function shorten_text($data)
 	if(!isset($data['count'])){			$data['count'] = false;}
 	if(!isset($data['add_title'])){		$data['add_title'] = false;}
 
+	if($data['limit'] == 0.5)
+	{
+		$data['limit'] = floor(strlen($data['string']) / 2);
+
+		if($data['limit'] > 5)
+		{
+			$data['limit'] = 5;
+		}
+	}
+
 	$out = "";
 
 	if(is_array($data['string']))

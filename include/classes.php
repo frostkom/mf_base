@@ -2617,7 +2617,7 @@ class mf_base
 
 								if($count_temp < 15 || $count_temp > 70)
 								{
-									echo "<i class='fa fa-check fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
+									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
 								}
 
 								else
@@ -2628,7 +2628,7 @@ class mf_base
 
 									if($count_temp < 100 || $count_temp > 200)
 									{
-										echo "<i class='fa fa-check fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
+										echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
 									}
 
 									else

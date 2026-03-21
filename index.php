@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: Add base functionality and security improvements
-Version: 1.2.11.17
+Version: 1.2.11.18
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -85,6 +85,8 @@ else
 	add_filter('the_content', array($obj_base, 'the_content'), 9);
 	add_action('wp_footer', array($obj_base, 'wp_footer'));
 
+	add_filter('is_login_page', array($obj_base, 'is_login_page'), 10, 2);
+
 	add_filter('block_title', array($obj_base, 'block_title'));
 
 	add_filter('xmlrpc_enabled', '__return_false');
@@ -95,7 +97,7 @@ else
 add_filter('get_current_visitor_ip', array($obj_base, 'get_current_visitor_ip'), 10);
 add_filter('get_visitor_fingerprint', array($obj_base, 'get_visitor_fingerprint'), 10);
 add_filter('does_table_exist', array($obj_base, 'does_table_exist'), 10, 2);
-add_filter('has_comments', array($obj_base, 'has_comments'), 10);
+add_filter('has_comments', array($obj_base, 'has_comments'), 10, 2);
 add_filter('filter_meta_input', array($obj_base, 'filter_meta_input'), 10, 2);
 add_filter('filter_is_indexed', array($obj_base, 'filter_is_indexed'), 10, 2);
 

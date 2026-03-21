@@ -1221,7 +1221,7 @@ class mf_base
 					}
 
 					echo "<p title='".$mysql_title."'>
-						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version; //." (".$wpdb->db_server_info().")"
+						<i class='fa ".($has_required_mysql_version ? "fa-check green" : "fa-times red display_warning")."'></i> MySQL: ".$mysql_version;
 
 						if(!$has_required_mysql_version)
 						{
@@ -2611,16 +2611,30 @@ class mf_base
 							break;
 
 							default:
-								$post_excerpt = get_the_excerpt();
+								$post_title = get_the_title();
 
-								if($post_excerpt != '')
+								$count_temp = strlen($post_title);
+
+								if($count_temp < 15 || $count_temp > 70)
 								{
-									echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+									echo "<i class='fa fa-check fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
 								}
 
 								else
 								{
-									echo "<i class='fa fa-check fa-lg blue' title='".__("The page has no description", 'lang_base')."'></i>";
+									$post_excerpt = get_the_excerpt();
+
+									$count_temp = strlen($post_excerpt);
+
+									if($count_temp < 100 || $count_temp > 200)
+									{
+										echo "<i class='fa fa-check fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
+									}
+
+									else
+									{
+										echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+									}
 								}
 							break;
 						}
@@ -2985,6 +2999,16 @@ class mf_base
 		}
 
 		return $title;
+	}
+
+	function is_login_page($bool)
+	{
+		if($bool == false)
+		{
+			$bool = in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php'], true);
+		}
+
+		return $bool;
 	}
 
 	function phpmailer_init($phpmailer)

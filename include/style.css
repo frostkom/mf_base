@@ -4,6 +4,11 @@ html
 	overflow-y: scroll;
 }
 
+.wp-site-blocks > *
+{
+	margin-block-start: 0;
+}
+
 	/* position: sticky will not work */
 	/*body:not(.wp-admin)
 	{

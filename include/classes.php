@@ -2156,9 +2156,17 @@ class mf_base
 	{
 		if(!isset($data['class'])){		$data['class'] = [];}
 
-		do_action('load_flex_flow');
+		/*if(is_admin())
+		{*/
+			do_action('load_flex_flow');
 
-		$data['class'][] = "flex_flow";
+			$data['class'][] = "flex_flow";
+		/*}
+
+		else
+		{
+			$data['class'][] = "wp-block-columns is-layout-flex wp-block-columns-is-layout-flex"; // gap: needs to be fixed first
+		}*/
 
 		if(count($data['class']) > 0)
 		{

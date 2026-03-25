@@ -1588,7 +1588,39 @@ function parse_block_attributes($data = [])
 						switch($key_child)
 						{
 							case 'radius':
-								$data['style'] .= "border-radius: ".$value."; overflow: hidden;";
+								if(is_array($value))
+								{
+									$arr_value = $value;
+
+									foreach($arr_value as $key => $value)
+									{
+										switch($key)
+										{
+											case 'topLeft':
+												$data['style'] .= "border-top-left-radius: ".$value.";";
+											break;
+
+											case 'topRight':
+												$data['style'] .= "border-top-right-radius: ".$value.";";
+											break;
+
+											case 'bottomLeft':
+												$data['style'] .= "border-bottom-left-radius: ".$value.";";
+											break;
+
+											case 'bottomRight':
+												$data['style'] .= "border-bottom-right-radius: ".$value.";";
+											break;
+										}
+									}
+
+									$data['style'] .= "overflow: hidden;";
+								}
+
+								else
+								{
+									$data['style'] .= "border-radius: ".$value."; overflow: hidden;";
+								}
 							break;
 
 							default:

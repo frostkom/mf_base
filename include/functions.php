@@ -888,18 +888,6 @@ function get_option_or_default($key, $default = '')
 	return $option;
 }
 
-/*function get_the_author_meta_or_default($key, $user_id, $default = '')
-{
-	$option = get_the_author_meta($key, $user_id);
-
-	if(($option == '' || $option === 0) && $default != '')
-	{
-		$option = $default;
-	}
-
-	return $option;
-}*/
-
 function render_image_tag($data)
 {
 	$out = "";
@@ -927,7 +915,7 @@ function render_image_tag($data)
 		$out .= $image_tag;
 	}
 
-	else if($data['src'] != '')
+	if($out == '' && $data['src'] != '')
 	{
 		$out .= "<img src='".$data['src']."'>";
 	}

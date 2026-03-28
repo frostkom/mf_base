@@ -1,0 +1,79 @@
+.css_icon
+{
+	display: inline-block;
+	position: relative;
+	transition: all .5s ease;
+}
+
+	.css_icon > span
+	{
+		opacity: 0;
+	}
+
+	.css_icon > div
+	{
+		background: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
+		border-radius: .5em;
+		height: .2em;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transition: all .5s ease;
+		width: 1em;
+	}
+
+		.css_icon:hover > div
+		{
+			background: var(--wp--preset--color--accent-2);
+		}
+
+	.wp-block-button__link .css_icon > div
+	{
+		background: var(--wp--preset--color--accent-2);
+	}
+
+		.wp-block-button__link:hover .css_icon > div
+		{
+			background-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
+		}
+
+	.css_icon.check > div:nth-child(1)
+	{
+		transform: rotate(-135deg) translate(.2em, -.3em);
+	}
+
+	.css_icon.check > div:nth-child(2)
+	{
+		transform: rotate(135deg) translate(-.2em, -.1em);
+		width: 1.2em;
+	}
+
+	.css_icon.chevron_left > div:nth-child(1)
+	{
+		transform: rotate(-45deg) translate(0em, -.5em);
+	}
+
+	.css_icon.chevron_left > div:nth-child(2)
+	{
+		transform: rotate(45deg) translate(-.1em, .4em);
+	}
+
+	.css_icon.chevron_right > div:nth-child(1)
+	{
+		transform: rotate(45deg) translate(-.4em, 0em);
+	}
+
+	.css_icon.chevron_right > div:nth-child(2)
+	{
+		transform: rotate(-45deg) translate(-.4em, 0em);
+	}
+
+	.css_icon.plus > div:nth-child(1)
+	{
+		transform: rotate(-90deg) translate(.1em, -.4em);
+	}
+
+	.css_icon.plus > div:nth-child(2)
+	{
+		transform: translate(-.4em, -.1em);
+	}

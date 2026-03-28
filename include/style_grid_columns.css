@@ -1,31 +1,4 @@
-<?php
-
-if(!defined('ABSPATH'))
-{
-	header("Content-Type: text/css; charset=utf-8");
-
-	$folder = str_replace("/wp-content/plugins/mf_base/include", "/", dirname(__FILE__));
-
-	require_once($folder."wp-load.php");
-}
-
-function calc_width($columns, $gap)
-{
-	return ((100 - ($columns - 1) * $gap) / $columns);
-}
-
-$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
-
-$setting_desktop_columns = 3;
-$setting_tablet_columns = 2;
-$setting_mobile_columns = 1;
-$setting_column_gap = 1;
-
-$column_width_desktop = calc_width($setting_desktop_columns, $setting_column_gap);
-$column_width_tablet = calc_width($setting_tablet_columns, $setting_column_gap);
-$column_width_mobile = calc_width($setting_mobile_columns, $setting_column_gap);
-
-echo ".widget ul.grid_columns
+.widget ul.grid_columns
 {
 	list-style: none;
 	padding: 0;
@@ -33,7 +6,7 @@ echo ".widget ul.grid_columns
 
 	.widget.masonry ul.grid_columns
 	{
-		column-count: ".$setting_desktop_columns.";
+		column-count: var(--base-desktop-columns);
 	}
 
 		.wp-block-column .widget.masonry ul.grid_columns
@@ -45,7 +18,7 @@ echo ".widget ul.grid_columns
 	{
 		display: flex;
 		flex-wrap: wrap;
-		gap: ".$setting_column_gap."%;
+		gap: calc(var(--base-column-gap) * 1%);
 	}
 
 	.widget ul.grid_columns > li
@@ -53,13 +26,12 @@ echo ".widget ul.grid_columns
 		background: #fff;
 		border-radius: .5em;
 		box-shadow: 0 .2em .4em rgba(0, 0, 0, .15);
+		display: flex;
+		flex-direction: column;
 		flex: 0 1 auto;
 		margin: 0 0 .6em;
 		overflow: hidden;
 		position: relative;
-
-		display: flex;
-		flex-direction: column;
 	}
 
 		.widget.masonry ul.grid_columns > li
@@ -71,7 +43,7 @@ echo ".widget ul.grid_columns
 		.widget.square ul.grid_columns > li
 		{
 			flex: 0 1 auto;
-			width: ".$column_width_desktop."%;
+			width: calc(var(--base-column-width-desktop) * 1%);
 		}
 
 			.wp-block-column .widget.square ul.grid_columns > li
@@ -175,7 +147,7 @@ echo ".widget ul.grid_columns
 				margin: 0 .8em .4em;
 			}
 
-			.widget ul.grid_columns .wp-block-button
+			.widget ul.grid_columns .grid_buttons .wp-block-button
 			{
 				margin-top: .5em;
 				text-align: right;
@@ -184,62 +156,4 @@ echo ".widget ul.grid_columns
 				.widget ul.grid_columns .wp-block-button__link
 				{
 					padding: .5em 1em;
-				}";
-
-if($arr_breakpoints['tablet'] > 0)
-{
-	echo "@media screen and (min-width: ".$arr_breakpoints['tablet'].$arr_breakpoints['suffix'].")
-	{
-		.widget.masonry ul.grid_columns.grid_grow
-		{
-			column-count: ".$setting_tablet_columns.";
-		}
-
-		.widget.square ul.grid_columns.grid_grow > li
-		{
-			flex-grow: 1;
-		}
-
-		.widget ul.grid_columns .grid_image
-		{
-			max-height: 20vw;
-		}
-	}";
-}
-
-if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoints['mobile'])
-{
-	echo "@media screen and (min-width: ".$arr_breakpoints['mobile'].$arr_breakpoints['suffix'].") and (max-width: ".($arr_breakpoints['tablet'] - 1).$arr_breakpoints['suffix'].")
-	{
-		.widget.masonry ul.grid_columns
-		{
-			column-count: ".$setting_tablet_columns.";
-		}
-
-		.widget.square ul.grid_columns > li
-		{
-			width: ".$column_width_tablet."%;
-		}
-
-		.widget ul.grid_columns .grid_image
-		{
-			max-height: 50vw;
-		}
-	}";
-}
-
-if($arr_breakpoints['mobile'] > 0)
-{
-	echo "@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
-	{
-		.widget.masonry ul.grid_columns
-		{
-			column-count: ".$setting_mobile_columns.";
-		}
-
-		.widget.square ul.grid_columns > li
-		{
-			width: ".$column_width_mobile."%;
-		}
-	}";
-}
+				}

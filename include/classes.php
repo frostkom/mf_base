@@ -2192,10 +2192,22 @@ class mf_base
 		return $html;
 	}
 
+	function get_css_icon($type)
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_css_icon', $plugin_include_url."style_css_icon.css");
+
+		$html = "<div class='css_icon ".$type."'>
+			<div></div><div></div>
+			<span>SF</span>
+		</div>";
+
+		return $html;
+	}
+
 	function load_form_attr()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
 		mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
 		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
@@ -2922,6 +2934,109 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 		mf_enqueue_style('style_base_tabs', $plugin_include_url."style_tabs.css");
 		mf_enqueue_script('script_base_tabs', $plugin_include_url."script_tabs.js");
+	}
+
+	function calc_width($columns, $gap)
+	{
+		return ((100 - ($columns - 1) * $gap) / $columns);
+	}
+
+	function load_grid_columns()
+	{
+		global $wp_styles;
+
+		if(!isset($wp_styles->registered['style_base_grid_columns']))
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			mf_enqueue_style('style_base_grid_columns', $plugin_include_url."style_grid_columns.css");
+
+			$out_temp = "";
+
+			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
+
+			$setting_desktop_columns = 3;
+			$setting_tablet_columns = 2;
+			$setting_mobile_columns = 1;
+			$setting_column_gap = 1;
+
+			$column_width_desktop = $this->calc_width($setting_desktop_columns, $setting_column_gap);
+			$column_width_tablet = $this->calc_width($setting_tablet_columns, $setting_column_gap);
+			$column_width_mobile = $this->calc_width($setting_mobile_columns, $setting_column_gap);
+
+			$out_temp .= ":root
+			{
+				--base-desktop-columns: ".$setting_desktop_columns.";
+				--base-column-gap: ".$setting_column_gap.";
+				--base-column-width-desktop: ".$column_width_desktop.";
+				--base-tablet-columns: ".$setting_tablet_columns.";
+				--base-column-width-tablet: ".$column_width_tablet.";
+				--base-mobile-columns: ".$setting_mobile_columns.";
+				--base-column-width-mobile: ".$column_width_mobile.";
+			}";
+
+			if($arr_breakpoints['tablet'] > 0)
+			{
+				$out_temp .= "@media screen and (min-width: ".$arr_breakpoints['tablet'].$arr_breakpoints['suffix'].")
+				{
+					.widget.masonry ul.grid_columns.grid_grow
+					{
+						column-count: var(--base-tablet-columns);
+					}
+
+					.widget.square ul.grid_columns.grid_grow > li
+					{
+						flex-grow: 1;
+					}
+
+					.widget ul.grid_columns .grid_image
+					{
+						max-height: 20vw;
+					}
+				}";
+			}
+
+			if($arr_breakpoints['mobile'] > 0 && $arr_breakpoints['tablet'] > $arr_breakpoints['mobile'])
+			{
+				$out_temp .= "@media screen and (min-width: ".$arr_breakpoints['mobile'].$arr_breakpoints['suffix'].") and (max-width: ".($arr_breakpoints['tablet'] - 1).$arr_breakpoints['suffix'].")
+				{
+					.widget.masonry ul.grid_columns
+					{
+						column-count: var(--base-tablet-columns);
+					}
+
+					.widget.square ul.grid_columns > li
+					{
+						width: calc(var(--base-column-width-tablet) * 1%);
+					}
+
+					.widget ul.grid_columns .grid_image
+					{
+						max-height: 50vw;
+					}
+				}";
+			}
+
+			if($arr_breakpoints['mobile'] > 0)
+			{
+				$out_temp .= "@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+				{
+					.widget.masonry ul.grid_columns
+					{
+						column-count: var(--base-mobile_columns);
+					}
+
+					.widget.square ul.grid_columns > li
+					{
+						width: calc(var(--base-column-width-mobile) * 1%);
+					}
+				}";
+			}
+
+			if($out_temp != '')
+			{
+				$this->footer_output .= "<style>".$out_temp."</style>";
+			}
+		}
 	}
 
 	function load_notification()

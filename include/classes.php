@@ -2148,8 +2148,30 @@ class mf_base
 
 	function load_flex_flow()
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.php");
+		global $wp_styles;
+
+		if(!isset($wp_styles->registered['style_base_flex_flow']))
+		{
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			mf_enqueue_style('style_base_flex_flow', $plugin_include_url."style_flex_flow.css");
+
+			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
+
+			$this->footer_output .= "<style>
+				.flex_flow
+				{
+					display: flex;
+				}
+
+				@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+				{
+					.flex_flow
+					{
+						display: block;
+					}
+				}
+			</style>";
+		}
 	}
 
 	function get_flex_flow($html, $data = [])
@@ -2263,7 +2285,6 @@ class mf_base
 	function load_table_attr()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-
 		mf_enqueue_style('style_base_tables', $plugin_include_url."style_tables.css");
 	}
 
@@ -4898,6 +4919,8 @@ class mf_font_icons
 
 	function get_symbol_tag($data)
 	{
+		global $wp_styles;
+
 		if(!isset($data['title'])){		$data['title'] = '';}
 		if(!isset($data['class'])){		$data['class'] = '';}
 
@@ -4907,9 +4930,28 @@ class mf_font_icons
 		{
 			if(substr($data['symbol'], 0, 5) == "icon-")
 			{
-				mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.php");
+				if(!isset($wp_styles->registered['style_icomoon']))
+				{
+					$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 
-				$out = "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>";
+					$out .= "<style>
+						@font-face
+						{
+							font-family: 'icomoon';
+							src:url('".$plugin_fonts_url."icomoon.eot?p0ysti');
+							src:url('".$plugin_fonts_url."icomoon.eot?p0ysti#iefix') format('embedded-opentype'),
+								url('".$plugin_fonts_url."icomoon.ttf?p0ysti') format('truetype'),
+								url('".$plugin_fonts_url."icomoon.woff?p0ysti') format('woff'),
+								url('".$plugin_fonts_url."icomoon.svg?p0ysti#icomoon') format('svg');
+							font-weight: normal;
+							font-style: normal;
+						}
+					</style>";
+
+					mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css");
+				}
+
+				$out .= "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>";
 			}
 
 			else

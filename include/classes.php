@@ -2947,7 +2947,7 @@ class mf_base
 		mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
 		mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
 
-		$this->footer_output = "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
+		$this->footer_output .= "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
 	}
 
 	function load_tabs()

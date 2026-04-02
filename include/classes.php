@@ -2157,20 +2157,41 @@ class mf_base
 
 			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
-			$this->footer_output .= "<style>
-				.flex_flow
-				{
-					display: flex;
-				}
-
-				@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
-				{
+			if(is_admin()) // footer_output is not triggered in admin
+			{
+				echo "<style>
 					.flex_flow
 					{
-						display: block;
+						display: flex;
 					}
-				}
-			</style>";
+
+					@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+					{
+						.flex_flow
+						{
+							display: block;
+						}
+					}
+				</style>";
+			}
+
+			else
+			{
+				$this->footer_output .= "<style>
+					.flex_flow
+					{
+						display: flex;
+					}
+
+					@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+					{
+						.flex_flow
+						{
+							display: block;
+						}
+					}
+				</style>";
+			}
 		}
 	}
 

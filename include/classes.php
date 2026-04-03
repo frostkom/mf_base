@@ -2157,7 +2157,7 @@ class mf_base
 
 			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
-			if(is_admin()) // footer_output is not triggered in admin
+			if(is_admin() && !wp_doing_ajax()) // footer_output is not triggered in admin
 			{
 				echo "<style>
 					.flex_flow

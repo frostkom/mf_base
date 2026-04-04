@@ -2673,29 +2673,69 @@ class mf_base
 							break;
 
 							default:
-								$post_title = get_the_title();
+								$post_template = get_post_meta($post_id, '_wp_page_template', true);
 
-								$count_temp = strlen($post_title);
+								$post = get_post($post_id);
 
-								if($count_temp < 15 || $count_temp > 70)
+								if($post_template == 'page-no-title')
 								{
-									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
+									$html = $post->post_content;
+
+									libxml_use_internal_errors(true);
+									$doc = new DOMDocument();
+
+									$doc->loadHTML('<!doctype html><html><body>'.$html.'</body></html>');
+									libxml_clear_errors();
+
+									$arr_h1s = $doc->getElementsByTagName('h1');
+
+									$h1_amount = count($arr_h1s);
+
+									foreach($arr_h1s as $arr_h1)
+									{
+										$post_title = trim($arr_h1->textContent);
+									}
 								}
 
 								else
 								{
-									$post_excerpt = get_the_excerpt();
+									//$post_title = get_the_title();
+									$h1_amount = 1;
+									$post_title = $post->post_title;
+								}
 
-									$count_temp = strlen($post_excerpt);
+								if($h1_amount > 1)
+								{
+									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), $h1_amount)."'></i>";
+								}
 
-									if($count_temp < 100 || $count_temp > 200)
+								else
+								{
+									$count_temp = strlen($post_title);
+
+									if($count_temp < 15 || $count_temp > 70)
 									{
-										echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
+										echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
+
+										//echo " (".$post_template.")";
 									}
 
 									else
 									{
-										echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+										//$post_excerpt = get_the_excerpt();
+										$post_excerpt = $post->post_excerpt;
+
+										$count_temp = strlen($post_excerpt);
+
+										if($count_temp < 100 || $count_temp > 200)
+										{
+											echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
+										}
+
+										else
+										{
+											echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+										}
 									}
 								}
 							break;

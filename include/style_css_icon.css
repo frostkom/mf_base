@@ -39,23 +39,26 @@
 
 	.css_icon.check > div:nth-child(1)
 	{
-		transform: rotate(-135deg) translate(.2em, -.3em);
+		transform: rotate(-135deg) translate(.4em, -.5em);
+		width: .8em;
 	}
 
 	.css_icon.check > div:nth-child(2)
 	{
-		transform: rotate(135deg) translate(-.2em, -.1em);
-		width: 1.2em;
+		transform: rotate(135deg) translate(0.1em, 0.2em);
+		width: 1em;
 	}
 
 	.css_icon.chevron_left > div:nth-child(1)
 	{
-		transform: rotate(-45deg) translate(0em, -.5em);
+		transform: rotate(-45deg) translate(-.1em, -.5em);
+		width: .8em;
 	}
 
 	.css_icon.chevron_left > div:nth-child(2)
 	{
-		transform: rotate(45deg) translate(-.1em, .4em);
+		transform: rotate(45deg) translate(-.2em, .4em);
+		width: .8em;
 	}
 
 	.css_icon.chevron_right > div:nth-child(1)
@@ -70,10 +73,10 @@
 
 	.css_icon.plus > div:nth-child(1)
 	{
-		transform: rotate(-90deg) translate(.1em, -.4em);
+		transform: rotate(-90deg) translate(.1em, -.5em);
 	}
 
 	.css_icon.plus > div:nth-child(2)
 	{
-		transform: translate(-.4em, -.1em);
+		transform: translate(-.5em, -.1em);
 	}

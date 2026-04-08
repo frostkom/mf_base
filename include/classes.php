@@ -2690,6 +2690,7 @@ class mf_base
 									$arr_h1s = $doc->getElementsByTagName('h1');
 
 									$h1_amount = count($arr_h1s);
+									$post_title = "";
 
 									foreach($arr_h1s as $arr_h1)
 									{
@@ -2699,7 +2700,6 @@ class mf_base
 
 								else
 								{
-									//$post_title = get_the_title();
 									$h1_amount = 1;
 									$post_title = $post->post_title;
 								}

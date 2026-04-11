@@ -2157,41 +2157,20 @@ class mf_base
 
 			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
-			if(is_admin() && !wp_doing_ajax()) // footer_output is not triggered in admin
-			{
-				echo "<style>
+			$this->footer_output .= "<style>
+				.flex_flow
+				{
+					display: flex;
+				}
+
+				@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
+				{
 					.flex_flow
 					{
-						display: flex;
+						display: block;
 					}
-
-					@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
-					{
-						.flex_flow
-						{
-							display: block;
-						}
-					}
-				</style>";
-			}
-
-			else
-			{
-				$this->footer_output .= "<style>
-					.flex_flow
-					{
-						display: flex;
-					}
-
-					@media screen and (max-width: ".($arr_breakpoints['mobile'] - 1).$arr_breakpoints['suffix'].")
-					{
-						.flex_flow
-						{
-							display: block;
-						}
-					}
-				</style>";
-			}
+				}
+			</style>";
 		}
 	}
 
@@ -2781,6 +2760,11 @@ class mf_base
 		$plugin_include_url = plugin_dir_url(__FILE__);
 
 		mf_enqueue_script('script_base_meta', $plugin_include_url."script_meta.js");
+	}
+
+	function admin_footer()
+	{
+		$this->wp_footer();
 	}
 
 	function api_base_notifications()

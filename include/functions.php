@@ -2748,39 +2748,43 @@ function get_url_content($data = [])
 	if(!isset($data['ssl_key_path'])){				$data['ssl_key_path'] = '';}
 
 	if(!isset($data['content_type']))
-	{
-		$arr_file_type = array(
-			'html' => "text/html",
-			'txt' => "text/plain",
-			'xml' => "application/xml",
-			'css' => "text/css",
-			'js' => "application/javascript",
-			'json' => "application/json",
-			'avif' => "image/avif",
-			'gif' => "image/gif",
-			'jpg' => "image/jpeg",
-			'jpeg' => "image/jpeg",
-			'png' => "image/png",
-			'webp' => "image/webp",
-			'ico' => "image/x-icon",
-			'svg' => "image/svg+xml",
-			'otf' => "font/otf",
-			'ttf' => "font/ttf",
-			'woff' => "font/woff",
-			'woff2' => "font/woff2",
-		);
+	{		
+		$file_suffix = $data['content_type'] = '';
 
 		$arr_path = parse_url($data['url'], PHP_URL_PATH);
-		$file_suffix = pathinfo($arr_path, PATHINFO_EXTENSION);
 
-		if(isset($arr_file_type[$file_suffix]))
+		if(!empty($arr_path) && is_string($arr_path))
 		{
-			$data['content_type'] = $arr_file_type[$file_suffix];
+			$file_suffix = pathinfo($arr_path, PATHINFO_EXTENSION);
 		}
 
-		else
+		if($file_suffix != '')
 		{
-			$data['content_type'] = '';
+			$arr_file_type = array(
+				'html' => "text/html",
+				'txt' => "text/plain",
+				'xml' => "application/xml",
+				'css' => "text/css",
+				'js' => "application/javascript",
+				'json' => "application/json",
+				'avif' => "image/avif",
+				'gif' => "image/gif",
+				'jpg' => "image/jpeg",
+				'jpeg' => "image/jpeg",
+				'png' => "image/png",
+				'webp' => "image/webp",
+				'ico' => "image/x-icon",
+				'svg' => "image/svg+xml",
+				'otf' => "font/otf",
+				'ttf' => "font/ttf",
+				'woff' => "font/woff",
+				'woff2' => "font/woff2",
+			);
+
+			if(isset($arr_file_type[$file_suffix]))
+			{
+				$data['content_type'] = $arr_file_type[$file_suffix];
+			}
 		}
 	}
 

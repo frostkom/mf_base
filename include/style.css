@@ -9,13 +9,6 @@ html
 	margin-block-start: 0;
 }
 
-	/* position: sticky will not work */
-	/*body:not(.wp-admin)
-	{
-		overflow: hidden;
-		position: relative;
-	}*/
-
 :focus-visible
 {
 	outline-width: .1em;
@@ -27,7 +20,7 @@ html
 	outline: none;
 }
 
-.hide/*, [hidden]*/
+.hide
 {
 	display: none !important;
 }
@@ -72,20 +65,10 @@ html
 	color: #e47676;
 }
 
-/*.fa.white, .fab.white, .far.white, .fas.white, .color_white
-{
-	color: #fff;
-}*/
-
 .grey, .grey > a
 {
 	color: #999;
 }
-
-/*.light_grey, .light_grey > a
-{
-	color: rgba(0, 0, 0, .2);
-}*/
 
 .green > th, .green > td, .bg_green
 {
@@ -141,6 +124,16 @@ tr.inactive
 .alignright
 {
 	text-align: right;
+}
+
+.wp-block-image.size-full > img
+{
+	width: 100%;
+}
+
+.overflow iframe
+{
+	display: block;
 }
 
 @media print

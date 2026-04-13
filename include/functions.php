@@ -2748,7 +2748,7 @@ function get_url_content($data = [])
 	if(!isset($data['ssl_key_path'])){				$data['ssl_key_path'] = '';}
 
 	if(!isset($data['content_type']))
-	{		
+	{
 		$file_suffix = $data['content_type'] = '';
 
 		$arr_path = parse_url($data['url'], PHP_URL_PATH);

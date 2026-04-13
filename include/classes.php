@@ -2029,6 +2029,20 @@ class mf_base
 		{
 			remove_menu_page("edit-comments.php");
 		}
+
+		if(wp_is_block_theme())
+		{
+			$menu_capability = 'update_core';
+
+			$menu_title = " - ".__("Styles", 'lang_base');
+			add_submenu_page("themes.php", $menu_title, $menu_title, $menu_capability, admin_url("site-editor.php?p=/styles"));
+
+			$menu_title = " - ".__("Navigation", 'lang_base');
+			add_submenu_page("themes.php", $menu_title, $menu_title, $menu_capability, admin_url("site-editor.php?p=/navigation"));
+
+			$menu_title = " - ".__("Templates", 'lang_base');
+			add_submenu_page("themes.php", $menu_title, $menu_title, $menu_capability, admin_url("site-editor.php?p=/template"));
+		}
 	}
 
 	function pre_set_site_transient_update_plugins($transient = [])

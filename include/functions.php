@@ -28,6 +28,7 @@ function make_link_external()
 	return " target='_blank' rel='noopener noreferrer'";
 }
 
+// Can be removed when not in use anymore
 function get_placeholder_email()
 {
 	$site_url_clean = get_site_url_clean(array('trim' => "/"));
@@ -3485,10 +3486,10 @@ function show_textfield($data)
 			$data['autocapitalize'] = $data['autocorrect'] = false;
 			$data['xtra'] .= " inputmode='".$data['type']."'";
 
-			if($data['placeholder'] == '')
+			/*if($data['placeholder'] == '')
 			{
 				$data['placeholder'] = get_placeholder_email();
-			}
+			}*/
 		break;
 
 		case 'float':

@@ -2699,7 +2699,7 @@ class mf_base
 
 								if($h1_amount > 1)
 								{
-									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), $h1_amount)."'></i>";
+									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), "H1", $h1_amount)."'></i>";
 								}
 
 								else

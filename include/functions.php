@@ -912,7 +912,7 @@ function render_image_tag($data)
 	if($data['id'] > 0)
 	{
 		$image_tag = wp_get_attachment_image($data['id'], $data['size']);
-		$image_tag = preg_replace('/(width|height)="\d*"\s?/', '', $image_tag);
+		//$image_tag = preg_replace('/(width|height)="\d*"\s?/', '', $image_tag); // This will mess up in Chrome where it will stretch images vertically
 		$out .= $image_tag;
 	}
 

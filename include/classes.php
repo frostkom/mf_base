@@ -4605,7 +4605,7 @@ class mf_list_table extends WP_List_Table
 		{
 			if($this->num_rows > 0)
 			{
-				if($data['debug'] == true)
+				if($data['debug'] == true && $data['debug_type'] == 'echo')
 				{
 					echo __("Sorting", 'lang_base')."&hellip;<br>";
 				}
@@ -4613,7 +4613,7 @@ class mf_list_table extends WP_List_Table
 				$this->sort_data();
 				$this->num_rows = count($this->data);
 
-				if($data['debug'] == true)
+				if($data['debug'] == true && $data['debug_type'] == 'echo')
 				{
 					echo __("Rows", 'lang_base').": ".$this->num_rows."<br>";
 				}

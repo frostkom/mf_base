@@ -92,7 +92,7 @@ class mf_base
 
 		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port'
 
-		$this->phpmailer_temp = [];
+		//$this->phpmailer_temp = [];
 
 		foreach($phpmailer as $key => $value)
 		{
@@ -118,11 +118,6 @@ class mf_base
 				{
 					$this->phpmailer_temp[$key] = $value;
 				}
-
-				/*else
-				{
-					$this->phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
-				}*/
 			}
 
 			$to_temp = $phpmailer->getToAddresses();

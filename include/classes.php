@@ -2353,6 +2353,12 @@ class mf_base
 		return $html;
 	}
 
+	function load_image_fallback()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_image_fallback', $plugin_include_url."style_image_fallback.css");
+	}
+
 	function get_image_fallback($out, $type = '')
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
@@ -2361,7 +2367,7 @@ class mf_base
 		{
 			default:
 			case 'tag':
-				mf_enqueue_style('style_base_image_fallback', $plugin_include_url."style_image_fallback.css");
+				do_action('load_image_fallback');
 
 				$out = "<img src='".$plugin_include_url."images/blank.svg' class='image_fallback' alt='".__("Generic image as a placeholder", 'lang_base')."'>";
 			break;

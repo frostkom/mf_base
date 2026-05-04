@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: Add base functionality and security improvements
-Version: 1.2.11.44
+Version: 1.2.11.45
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -117,6 +117,7 @@ add_filter('get_form_attr', array($obj_base, 'get_form_attr'), 10, 2);
 add_action('load_table_attr', array($obj_base, 'load_table_attr'));
 add_filter('get_table_attr', array($obj_base, 'get_table_attr'), 10, 2);
 add_filter('get_loading_animation', array($obj_base, 'get_loading_animation'), 10, 2);
+add_filter('load_image_fallback', array($obj_base, 'load_image_fallback'));
 add_filter('get_image_fallback', array($obj_base, 'get_image_fallback'), 10, 2);
 add_action('get_toggler_includes', array($obj_base, 'get_toggler_includes'), 10, 2);
 

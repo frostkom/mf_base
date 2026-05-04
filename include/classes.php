@@ -3029,6 +3029,11 @@ class mf_base
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
 			mf_enqueue_style('style_base_grid_columns', $plugin_include_url."style_grid_columns.css");
+			mf_enqueue_script('script_base_grid_columns', $plugin_include_url."script_grid_columns.js", array(
+				'src' => $plugin_include_url."images/blank.svg",
+				'class' => 'image_fallback',
+				'alt' => __("Generic image as a placeholder", 'lang_base'),
+			));
 
 			$out_temp = "";
 

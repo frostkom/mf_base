@@ -107,11 +107,16 @@
 			outline: none;
 		}
 
-	.mf_form .form_textfield p.description, .mf_form .form_select p.description, .mf_form .form_textarea p.description, .mf_form .form_password p.description
+	.mf_form p.description
 	{
 		font-size: .7em;
 		margin: -.6em 0 1em;
 	}
+
+		.mf_form p.description > code
+		{
+			font-size: 1em;
+		}
 
 		.mf_form .form_textfield > i
 		{

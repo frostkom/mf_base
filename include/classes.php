@@ -843,11 +843,11 @@ class mf_base
 
 	function has_page_template($data = [])
 	{
-		global $wpdb;
+		global $wpdb, $obj_base;
 
 		if(isset($data['template']))
 		{
-			return $wpdb->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE post_type = %s AND meta_key = %s AND meta_value = %s GROUP BY ID LIMIT 0, 1", 'page', '_wp_page_template', $data['template']));
+			return $obj_base->get_var($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id WHERE post_type = %s AND meta_key = %s AND meta_value = %s GROUP BY ID LIMIT 0, 1", 'page', '_wp_page_template', $data['template']));
 		}
 	}
 
@@ -1141,7 +1141,7 @@ class mf_base
 				$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
 			}
 
-			$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
+			//$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
@@ -1816,10 +1816,10 @@ class mf_base
 
 			$this->reschedule_base($option);
 
-			if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
-			{
+			/*if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
+			{*/
 				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
-			}
+			//}
 
 			echo "<div class='api_base_cron'>".apply_filters('get_loading_animation', '')."</div>";
 		}
@@ -1933,14 +1933,14 @@ class mf_base
 			}
 		}
 
-		function setting_base_prefer_www_callback()
+		/*function setting_base_prefer_www_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
 			settings_save_site_wide($setting_key);
 			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key));
 
 			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
-		}
+		}*/
 
 		function setting_base_optimize_callback()
 		{
@@ -3349,7 +3349,7 @@ class mf_base
 						."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n"
 						."\r\n";
 
-						switch(get_site_option('setting_base_prefer_www'))
+						/*switch(get_site_option('setting_base_prefer_www'))
 						{
 							case 'yes':
 								$update_with .= "	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
@@ -3362,7 +3362,7 @@ class mf_base
 								."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n"
 								."\r\n";
 							break;
-						}
+						}*/
 
 						$update_with .= "	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 						."\r\n";

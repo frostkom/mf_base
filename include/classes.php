@@ -737,7 +737,7 @@ class mf_base
 
 		// Optimize Tables
 		####################
-		$result = $wpdb->get_results("SHOW TABLE STATUS");
+		/*$result = $wpdb->get_results("SHOW TABLE STATUS");
 
 		foreach($result as $r)
 		{
@@ -746,6 +746,23 @@ class mf_base
 			$i++;
 
 			if($i % 20 == 0)
+			{
+				sleep(1);
+				set_time_limit(60);
+			}
+		}*/
+
+		$arr_tables = $wpdb->get_col($wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix."%"));
+
+		$i = 0;
+
+		foreach($arr_tables as $table)
+		{
+			$wpdb->query("OPTIMIZE TABLE ".$table);
+
+			$i++;
+
+			if($i % 20 === 0)
 			{
 				sleep(1);
 				set_time_limit(60);
@@ -777,9 +794,6 @@ class mf_base
 
 		if($obj_cron->is_running == false)
 		{
-			replace_option(array('old' => 'setting_theme_optimize', 'new' => 'setting_base_optimize'));
-			replace_option(array('old' => 'option_database_optimized', 'new' => 'option_base_optimized'));
-
 			// Update page index
 			#########################
 			$result = $wpdb->get_results($wpdb->prepare("SELECT ID FROM ".$wpdb->posts." INNER JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE meta_value IN ('noindex', 'nofollow', 'none') GROUP BY ID", $this->meta_prefix.'page_index'));
@@ -795,29 +809,29 @@ class mf_base
 				'post_meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 
-			// Optimize
-			#########################
 			if(get_option('option_base_optimized') < date("Y-m-d H:i:s", strtotime(current_time('mysql')." -4 hour")))
 			{
 				$this->do_optimize();
+
+				// Save disc size and large table sizes
+				############################
+				if(!is_multisite() || is_main_site())
+				{
+					$this->ftp_size = 0;
+					$this->ftp_size_folders = [];
+
+					get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
+
+					update_site_option('option_base_ftp_size', $this->ftp_size);
+					update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
+
+					$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
+
+					update_site_option('option_base_db_size', $arr_db_info['db_size']);
+					update_site_option('option_base_large_tables', $arr_db_info['tables']);
+				}
+				############################
 			}
-			#########################
-
-			// Save disc size and large table sizes
-			############################
-			$this->ftp_size = 0;
-			$this->ftp_size_folders = [];
-
-			get_file_info(array('path' => ABSPATH, 'callback' => array($this, 'get_ftp_size')));
-
-			update_site_option('option_base_ftp_size', $this->ftp_size);
-			update_site_option('option_base_ftp_size_folders', $this->ftp_size_folders);
-
-			$arr_db_info = $this->get_db_info(array('limit' => (MB_IN_BYTES * 10)));
-
-			update_site_option('option_base_db_size', $arr_db_info['db_size']);
-			update_site_option('option_base_large_tables', $arr_db_info['tables']);
-			############################
 
 			$this->reset_time_limited();
 
@@ -1765,7 +1779,7 @@ class mf_base
 
 							foreach($option_cron_progress as $key => $arr_value)
 							{
-								if(!isset($arr_value['start'])){	$arr_value['start'] = DEFAULT_DATE;}
+								if(!isset($arr_value['start'])){	$arr_value['start'] = $option_cron_progress['mf_base_parent']['start'];}
 
 								$li_class = "";
 
@@ -1779,7 +1793,7 @@ class mf_base
 									$li_class .= ($li_class != '' ? " " : "")."grey";
 								}
 
-								echo "<li".($li_class != "" ? " class='".$li_class."'" : "").">"
+								echo "<li".($li_class != "" ? " class='".$li_class."'" : "")." title='".$arr_value['start']." - ".$arr_value['end']."'>"
 									.$key.": ";
 
 									if($arr_value['end'] >= $arr_value['start'])
@@ -1948,9 +1962,9 @@ class mf_base
 
 			if($option_base_optimized > DEFAULT_DATE)
 			{
-				$populate_next = format_date(date("Y-m-d H:i:s", strtotime(current_time('mysql')." - ".$option_base_optimized." +4 hour")));
+				$populate_next = date("Y-m-d H:i:s", strtotime($option_base_optimized." +4 hour"));
 
-				$description = sprintf(__("The optimization was last run %s and will be run again %s", 'lang_base'), format_date($option_base_optimized), $populate_next);
+				$description = sprintf(__("The optimization was last run %s and will be run again %s", 'lang_base'), format_date($option_base_optimized), format_date($populate_next));
 			}
 
 			else

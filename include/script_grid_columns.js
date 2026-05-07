@@ -1,7 +1,7 @@
 function handleError(e)
 {
 	const img = e.currentTarget;
-	
+
 	if(img.dataset.fallbackApplied)
 	{
 		return;
@@ -19,7 +19,7 @@ document.querySelectorAll(".grid_image img").forEach(img => {
 	{
 		handleError({ currentTarget: img });
 	}
-	
+
 	else
 	{
 		img.addEventListener('error', handleError);

@@ -1043,7 +1043,7 @@ class mf_base
 	{
 		if($out == '')
 		{
-			$out = hash('sha256', $_SERVER['HTTP_USER_AGENT'].$_SERVER['HTTP_ACCEPT_LANGUAGE'].($_SERVER['HTTP_ACCEPT_CHARSET'] ?? '').apply_filters('get_current_visitor_ip', ""));
+			$out = hash('sha256', $_SERVER['HTTP_USER_AGENT'].($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '').($_SERVER['HTTP_ACCEPT_CHARSET'] ?? '').apply_filters('get_current_visitor_ip', ""));
 		}
 
 		return $out;
@@ -2030,6 +2030,12 @@ class mf_base
 				'loading_animation' => apply_filters('get_loading_animation', ''),
 			));
 		}
+
+		foreach($this->get_post_types_for_metabox() as $key => $value)
+		{
+			add_filter('manage_'.$value.'_posts_columns', array($this, 'column_header'), 5);
+			add_action('manage_'.$value.'_posts_custom_column', array($this, 'column_cell'), 5, 2);
+		}
 	}
 
 	function admin_menu()
@@ -2623,7 +2629,7 @@ class mf_base
 			unset($columns['comments']);
 		}
 
-		if(check_var('post_status') != 'trash')
+		if(IS_ADMINISTRATOR && check_var('post_status') != 'trash')
 		{
 			$columns['page_index'] = __("Index", 'lang_base');
 		}
@@ -2635,118 +2641,112 @@ class mf_base
 	{
 		global $wpdb, $post;
 
-		switch($post->post_type)
+		do_action('load_font_awesome');
+
+		switch($column)
 		{
-			case 'page':
-			case 'post':
-				do_action('load_font_awesome');
+			case 'page_index':
+				$index_type = apply_filters('filter_base_page_index', '');
 
-				switch($column)
+				if($index_type == '' && $post->post_status != 'publish')
 				{
-					case 'page_index':
-						$index_type = apply_filters('filter_base_page_index', '');
+					$index_type = 'not_published';
+				}
 
-						if($index_type == '' && $post->post_status != 'publish')
+				if($index_type == '')
+				{
+					$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
+
+					if(in_array($page_index, array('noindex', 'none', 'no')))
+					{
+						$index_type = 'not_indexed';
+					}
+				}
+
+				if($index_type == '' && $this->is_post_password_protected($post_id))
+				{
+					$index_type = 'password_protected';
+				}
+
+				switch($index_type)
+				{
+					case 'password_protected':
+						echo "<i class='fa fa-lock fa-lg grey' title='".__("The page is password protected", 'lang_base')."'></i>";
+					break;
+
+					case 'not_published':
+						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not published", 'lang_base')."'></i>";
+					break;
+
+					case 'not_indexed':
+						echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not indexed", 'lang_base')."'></i>";
+					break;
+
+					default:
+						$post_template = get_post_meta($post_id, '_wp_page_template', true);
+
+						$post = get_post($post_id);
+
+						if($post_template == 'page-no-title')
 						{
-							$index_type = 'not_published';
-						}
+							$html = $post->post_content;
 
-						if($index_type == '')
-						{
-							$page_index = get_post_meta($post_id, $this->meta_prefix.$column, true);
+							libxml_use_internal_errors(true);
+							$doc = new DOMDocument();
 
-							if(in_array($page_index, array('noindex', 'none', 'no')))
+							$doc->loadHTML('<!doctype html><html><body>'.$html.'</body></html>');
+							libxml_clear_errors();
+
+							$arr_h1s = $doc->getElementsByTagName('h1');
+
+							$h1_amount = count($arr_h1s);
+							$post_title = "";
+
+							foreach($arr_h1s as $arr_h1)
 							{
-								$index_type = 'not_indexed';
+								$post_title = trim($arr_h1->textContent);
 							}
 						}
 
-						if($index_type == '' && $this->is_post_password_protected($post_id))
+						else
 						{
-							$index_type = 'password_protected';
+							$h1_amount = 1;
+							$post_title = $post->post_title;
 						}
 
-						switch($index_type)
+						if($h1_amount > 1)
 						{
-							case 'password_protected':
-								echo "<i class='fa fa-lock fa-lg grey' title='".__("The page is password protected", 'lang_base')."'></i>";
-							break;
+							echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), "H1", $h1_amount)."'></i>";
+						}
 
-							case 'not_published':
-								echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not published", 'lang_base')."'></i>";
-							break;
+						else
+						{
+							$count_temp = strlen($post_title);
 
-							case 'not_indexed':
-								echo "<i class='fa fa-eye-slash fa-lg grey' title='".__("The page is not indexed", 'lang_base')."'></i>";
-							break;
+							if($count_temp < 15 || $count_temp > 70)
+							{
+								echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
 
-							default:
-								$post_template = get_post_meta($post_id, '_wp_page_template', true);
+								//echo " (".$post_template.")";
+							}
 
-								$post = get_post($post_id);
+							else
+							{
+								//$post_excerpt = get_the_excerpt();
+								$post_excerpt = $post->post_excerpt;
 
-								if($post_template == 'page-no-title')
+								$count_temp = strlen($post_excerpt);
+
+								if($count_temp < 100 || $count_temp > 200)
 								{
-									$html = $post->post_content;
-
-									libxml_use_internal_errors(true);
-									$doc = new DOMDocument();
-
-									$doc->loadHTML('<!doctype html><html><body>'.$html.'</body></html>');
-									libxml_clear_errors();
-
-									$arr_h1s = $doc->getElementsByTagName('h1');
-
-									$h1_amount = count($arr_h1s);
-									$post_title = "";
-
-									foreach($arr_h1s as $arr_h1)
-									{
-										$post_title = trim($arr_h1->textContent);
-									}
+									echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
 								}
 
 								else
 								{
-									$h1_amount = 1;
-									$post_title = $post->post_title;
+									echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
 								}
-
-								if($h1_amount > 1)
-								{
-									echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), "H1", $h1_amount)."'></i>";
-								}
-
-								else
-								{
-									$count_temp = strlen($post_title);
-
-									if($count_temp < 15 || $count_temp > 70)
-									{
-										echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
-
-										//echo " (".$post_template.")";
-									}
-
-									else
-									{
-										//$post_excerpt = get_the_excerpt();
-										$post_excerpt = $post->post_excerpt;
-
-										$count_temp = strlen($post_excerpt);
-
-										if($count_temp < 100 || $count_temp > 200)
-										{
-											echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
-										}
-
-										else
-										{
-											echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
-										}
-									}
-								}
-							break;
+							}
 						}
 					break;
 				}
@@ -2758,12 +2758,10 @@ class mf_base
 	{
 		if(IS_ADMINISTRATOR)
 		{
-			$arr_post_types_for_metabox = $this->get_post_types_for_metabox();
-
 			$meta_boxes[] = array(
 				'id' => $this->meta_prefix.'settings',
 				'title' => __("Settings", 'lang_base'),
-				'post_types' => $arr_post_types_for_metabox,
+				'post_types' => $this->get_post_types_for_metabox(),
 				'context' => 'side',
 				'priority' => 'low',
 				'fields' => array(

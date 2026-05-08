@@ -4016,7 +4016,6 @@ function show_select($data)
 					if($key == 'condition_selector')
 					{
 						$plugin_include_url = plugin_dir_url(__FILE__);
-
 						mf_enqueue_script('script_base_conditions', $plugin_include_url."script_conditions.js");
 					}
 				}
@@ -4141,16 +4140,6 @@ function show_select($data)
 									{
 										$out .= " selected";
 									}
-
-									/*else
-									{
-										$value1 = implode(", ", $obj_base->data['value']);
-
-										if(preg_match("/is_singular/", $value1) && preg_match("/is_singular/", $data_value))
-										{
-											do_log("Select or not to select: ".var_export($obj_base->data['value'], true)." --- ".$data_value);
-										}
-									}*/
 
 								$out .= ">".$data_text."</option>";
 							}

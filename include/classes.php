@@ -1105,7 +1105,6 @@ class mf_base
 		global $wp_admin_bar;
 
 		$wp_admin_bar->remove_menu('wp-logo');
-		//$wp_admin_bar->remove_menu('view');
 
 		if(apply_filters('has_comments', true) == false)
 		{
@@ -1125,31 +1124,31 @@ class mf_base
 
 		$arr_settings = array(
 			'setting_base_info' => __("Status", 'lang_base'),
-			'setting_base_cron' => __("Scheduled to run", 'lang_base'),
-			//'setting_base_cron_debug' => __("Debug Schedule", 'lang_base'),
 		);
-
-		switch($this->get_server_type())
-		{
-			case 'apache':
-				$config_file = ".htaccess";
-			break;
-
-			case 'nginx':
-				$config_file = "nginx.conf";
-			break;
-
-			case 'iis':
-				$config_file = "web.config";
-			break;
-
-			default:
-				$config_file = "";
-			break;
-		}
 
 		if(IS_SUPER_ADMIN)
 		{
+			$arr_settings['setting_base_cron'] = __("Scheduled to run", 'lang_base');
+
+			switch($this->get_server_type())
+			{
+				case 'apache':
+					$config_file = ".htaccess";
+				break;
+
+				case 'nginx':
+					$config_file = "nginx.conf";
+				break;
+
+				case 'iis':
+					$config_file = "web.config";
+				break;
+
+				default:
+					$config_file = "";
+				break;
+			}
+
 			if($config_file != '')
 			{
 				$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
@@ -1826,65 +1825,15 @@ class mf_base
 		function setting_base_cron_callback()
 		{
 			$setting_key = get_setting_key(__FUNCTION__);
-			$option = get_option($setting_key, 'every_ten_minutes');
+			settings_save_site_wide($setting_key);
+			$option = get_site_option($setting_key, get_option($setting_key, 'every_ten_minutes'));
 
 			$this->reschedule_base($option);
 
-			/*if((!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON == false))
-			{*/
-				echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
-			//}
+			echo show_select(array('data' => $this->get_schedules_for_select(), 'name' => 'setting_base_cron', 'value' => $option));
 
 			echo "<div class='api_base_cron'>".apply_filters('get_loading_animation', '')."</div>";
 		}
-
-		/*function setting_base_cron_debug_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key, 'no'));
-
-			list($option, $description) = setting_time_limit(array('key' => $setting_key, 'value' => $option, 'return' => 'array'));
-
-			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option, 'description' => $description));
-
-			if($option == 'yes' && IS_SUPER_ADMIN)
-			{
-				$option_cron = get_option('cron');
-
-				if(count($option_cron) > 0)
-				{
-					echo "<ul>";
-
-						foreach($option_cron as $key => $arr_jobs)
-						{
-							foreach($arr_jobs as $key => $arr_job)
-							{
-								echo "<li>"
-									.$key.": ";
-
-									foreach($arr_job as $key => $arr_data)
-									{
-										foreach($arr_data as $key => $value)
-										{
-											switch($key)
-											{
-												case 'schedule':
-												//case 'interval':
-													echo $key." => ".$value;
-												break;
-											}
-										}
-									}
-
-								echo "</li>";
-							}
-						}
-
-					echo "</ul>";
-				}
-			}
-		}*/
 
 		function setting_base_update_htaccess_callback()
 		{
@@ -3775,11 +3724,6 @@ class mf_cron
 
 		$this->type = $type;
 
-		/*if(get_site_option('setting_base_cron_debug') == 'yes')
-		{
-			do_log("Cron: ".$this->type." started ".$this->date_start);
-		}*/
-
 		$this->file = $this->upload_path.".is_running_".$wpdb->prefix.trim($this->type, "_");
 
 		$this->set_is_running();
@@ -3860,18 +3804,6 @@ class mf_cron
 		$arr_progress[$this->type]['end'] = current_time('mysql');
 
 		update_option('option_cron_progress', $arr_progress, false);
-
-		/*if(get_site_option('setting_base_cron_debug') == 'yes')
-		{
-			$time_difference = time_between_dates(array('start' => $this->date_start, 'end' => current_time('mysql'), 'type' => 'ceil', 'return' => 'seconds'));
-
-			do_log("Cron: ".$this->type." started", 'trash');
-
-			if($time_difference > 1)
-			{
-				do_log("Cron: ".$this->type." ended after ".$time_difference."s");
-			}
-		}*/
 
 		if(file_exists($this->file))
 		{

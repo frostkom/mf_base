@@ -1931,6 +1931,7 @@ class mf_base
 		function setting_base_recommend_callback()
 		{
 			$arr_recommendations = array(
+				array("Blocks Animation: CSS Animations for Gutenberg Blocks", 'blocks-animation/blocks-animation.php', __("to add animations to text or blocks", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
 				array("Modern Image Formats", 'webp-uploads/load.php', __("to convert images to modern formats when uploaded", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
@@ -2941,7 +2942,7 @@ class mf_base
 		if(!wp_style_is('font-awesome') && !wp_style_is('font-awesome-5'))
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
-			mf_enqueue_style('font-awesome-5', $plugin_include_url."font-awesome-5.15.4.php");
+			mf_enqueue_style('font-awesome-5', $plugin_include_url."font-awesome-5.15.4.css");
 		}
 	}
 
@@ -4941,7 +4942,7 @@ class mf_font_icons
 			{
 				if(!isset($wp_styles->registered['style_icomoon']))
 				{
-					$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
+					/*$plugin_fonts_url = str_replace("/include/", "/fonts/", plugin_dir_url(__FILE__));
 
 					$out .= "<style>
 						@font-face
@@ -4955,9 +4956,10 @@ class mf_font_icons
 							font-weight: normal;
 							font-style: normal;
 						}
-					</style>";
+					</style>";*/
 
-					mf_enqueue_style('style_icomoon', plugin_dir_url(__FILE__)."style_icomoon.css");
+					$plugin_include_url = plugin_dir_url(__FILE__);
+					mf_enqueue_style('style_icomoon', $plugin_include_url."style_icomoon.css");
 				}
 
 				$out .= "<span class='".$data['symbol'].($data['class'] != '' ? " ".$data['class'] : '')."'".($data['title'] != '' ? " title='".$data['title']."'" : "")."></span>";

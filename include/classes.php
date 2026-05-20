@@ -1802,7 +1802,7 @@ class mf_base
 
 									else
 									{
-										echo format_date($arr_value['start'])." -> &hellip;";
+										echo format_date($arr_value['start'])." -> &hellip; (".time_between_dates(array('start' => $arr_value['start'], 'end' => date("Y-m-d H:i:s", strtotime(current_time('mysql'))))).")";
 									}
 
 								echo "</li>";

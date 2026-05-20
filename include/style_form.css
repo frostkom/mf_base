@@ -178,6 +178,7 @@
 
 			.mf_form .button-primary:disabled, .mf_form .button-secondary:disabled, .mf_form .button:disabled
 			{
+				cursor: no-drop;
 				filter: grayscale(1);
 				opacity: .3;
 			}

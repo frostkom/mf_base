@@ -1933,6 +1933,7 @@ class mf_base
 			$arr_recommendations = array(
 				array("Blocks Animation: CSS Animations for Gutenberg Blocks", 'blocks-animation/blocks-animation.php', __("to add animations to text or blocks", 'lang_base')),
 				array("Enable Media Replace", 'enable-media-replace/enable-media-replace.php', __("to replace existing files by uploading a replacement", 'lang_base')),
+				array("Font Awesome", 'font-awesome/index.php', __("to add icons to text and buttons", 'lang_base')),
 				array("Modern Image Formats", 'webp-uploads/load.php', __("to convert images to modern formats when uploaded", 'lang_base')),
 				//array("Post Notification by Email", 'notify-users-e-mail/notify-users-e-mail.php', __("to send notifications to users when new posts are published", 'lang_base')),
 				array("Query Monitor", 'query-monitor/query-monitor.php', __("to locate bottlenecks", 'lang_base')),

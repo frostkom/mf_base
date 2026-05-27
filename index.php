@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: Add base functionality and security improvements
-Version: 1.2.12.6
+Version: 1.2.12.7
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -81,6 +81,7 @@ else
 	add_action('wp_head', array($obj_base, 'wp_head'), 0);
 	add_filter('the_content', array($obj_base, 'the_content'), 9);
 	add_action('wp_footer', array($obj_base, 'wp_footer'));
+	add_action('login_footer', array($obj_base, 'wp_footer'));
 
 	add_filter('is_login_page', array($obj_base, 'is_login_page'), 10, 2);
 

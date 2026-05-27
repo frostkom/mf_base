@@ -2149,6 +2149,11 @@ class mf_base
 					{
 						display: block;
 					}
+
+						.flex_flow.tight > * + *
+						{
+							margin-top: .5em;
+						}
 				}
 			</style>";
 		}

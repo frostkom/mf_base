@@ -3638,9 +3638,7 @@ function show_textfield($data)
 
 			if($data['required'])
 			{
-				$plugin_include_url = plugin_dir_url(__FILE__);
-
-				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+				do_action('load_script_required');
 
 				$out .= " required";
 			}
@@ -3779,9 +3777,7 @@ function show_password_field($data)
 
 			if($data['required'])
 			{
-				$plugin_include_url = plugin_dir_url(__FILE__);
-
-				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+				do_action('load_script_required');
 
 				$out .= " required";
 			}
@@ -3849,9 +3845,7 @@ function show_textarea($data)
 
 				if($data['required'])
 				{
-					$plugin_include_url = plugin_dir_url(__FILE__);
-
-					mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+					do_action('load_script_required');
 
 					$out .= " required";
 				}
@@ -4039,9 +4033,7 @@ function show_select($data)
 		{
 			if($obj_base->data['required'])
 			{
-				$plugin_include_url = plugin_dir_url(__FILE__);
-
-				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+				do_action('load_script_required');
 
 				$data['attributes']['required'] = '';
 			}
@@ -4247,9 +4239,7 @@ function show_form_alternatives($data)
 		{
 			if($obj_base->data['required'])
 			{
-				$plugin_include_url = plugin_dir_url(__FILE__);
-
-				mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+				do_action('load_script_required');
 
 				$container_class .= " required";
 			}
@@ -4415,9 +4405,7 @@ function show_checkbox($data)
 
 	if($data['required'])
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+		do_action('load_script_required');
 
 		$data['xtra'] .= " required";
 	}
@@ -4555,9 +4543,7 @@ function show_file_field($data)
 
 	if($data['required'])
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-
-		mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js", array('confirm_question' => __("Are you sure?", 'lang_base')));
+		do_action('load_script_required');
 
 		$data['xtra'] .= " required";
 	}

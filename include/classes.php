@@ -2952,6 +2952,12 @@ class mf_base
 		}
 	}
 
+	function load_script_required()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_script('script_base_required', $plugin_include_url."script_required.js");
+	}
+
 	function load_script_confirm()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);

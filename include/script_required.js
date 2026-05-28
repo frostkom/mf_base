@@ -2,21 +2,31 @@ function render_required()
 {
 	jQuery(".mf_form [required]").each(function()
 	{
+		var dom_label;
+
 		if(jQuery(this).is("label"))
 		{
-			jQuery(this).append("<span class='asterisk'>*</span>");
+			dom_label = jQuery(this);
 		}
 
 		else
 		{
 			if(jQuery(this).siblings("label").length > 0)
 			{
-				jQuery(this).siblings("label").append("<span class='asterisk'>*</span>");
+				dom_label = jQuery(this).siblings("label");
 			}
 
 			else if(jQuery(this).parent("label").length > 0)
 			{
-				jQuery(this).parent("label").append("<span class='asterisk'>*</span>");
+				dom_label = jQuery(this).parent("label");
+			}
+		}
+
+		if(typeof dom_label !== 'null')
+		{
+			if(dom_label.children(".asterisk").length == 0)
+			{
+				dom_label.append("<span class='asterisk'>*</span>");
 			}
 		}
 	});

@@ -547,6 +547,63 @@ function send_email($data)
 	}
 }
 
+function safe_html_substr(string $html, int $limit): string
+{
+    if (strlen(strip_tags($html)) <= $limit) {
+        return $html;
+    }
+
+    $out        = '';
+    $textCount  = 0;
+    $openTags   = [];
+    $offset     = 0;
+    $length     = strlen($html);
+
+    while ($offset < $length && $textCount < $limit)
+    {
+        if ($html[$offset] === '<')
+        {
+            // Find the end of the tag
+            $tagEnd = strpos($html, '>', $offset);
+            if ($tagEnd === false) { break; } // Malformed HTML — bail out
+
+            $tag = substr($html, $offset, $tagEnd - $offset + 1);
+            $out .= $tag;
+
+            // Track open/close tags so we can balance them later
+            if (preg_match('/<\/(\w+)/', $tag, $m))
+            {
+                // Closing tag — pop from stack
+                $key = array_search($m[1], array_reverse($openTags, true));
+                if ($key !== false) { unset($openTags[$key]); }
+            }
+            elseif (!preg_match('/<[^>]+\/>/', $tag) &&
+                     preg_match('/<(\w+)/', $tag, $m))
+            {
+                // Opening tag (not self-closing)
+                $openTags[] = $m[1];
+            }
+
+            $offset = $tagEnd + 1;
+        }
+        else
+        {
+            // Plain text character — counts toward the limit
+            $out .= $html[$offset];
+            $textCount++;
+            $offset++;
+        }
+    }
+
+    // Close any tags that were left open
+    foreach (array_reverse($openTags) as $tag)
+    {
+        $out .= "</$tag>";
+    }
+
+    return $out;
+}
+
 function shorten_text($data)
 {
 	if(!isset($data['string'])){		$data['string'] = '';}
@@ -577,7 +634,8 @@ function shorten_text($data)
 			$out .= "<span title='".$data['string']."'>";
 		}
 
-			$out .= trim(mb_substr($data['string'], 0, $data['limit']))."&hellip;";
+			//$out .= trim(mb_substr($data['string'], 0, $data['limit']))."&hellip;";
+			$out .= safe_html_substr($data['string'], $data['limit'])."&hellip;";
 
 			if($data['count'] == true)
 			{
@@ -2686,21 +2744,6 @@ function get_categories_for_select($data = [])
 
 	return $arr_data;
 }
-
-/*if(!function_exists('array_sort'))
-{
-	function array_sort($data)
-	{
-		global $obj_base;
-
-		if(!isset($obj_base))
-		{
-			$obj_base = new mf_base();
-		}
-
-		return $obj_base->array_sort($data);
-	}
-}*/
 
 #################
 function validate_url($value, $link = true, $http = true)

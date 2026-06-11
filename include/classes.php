@@ -3318,9 +3318,12 @@ class mf_base
 						."\r\n"
 
 						// Always force HTTPS
-						."	RewriteCond %{HTTPS} off\r\n"
-						."	RewriteCond %{HTTP:X-Forwarded-Proto} !https\r\n"
-						."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n"
+						// Does not work on one.com
+						//."	RewriteCond %{HTTPS} off\r\n"
+						//."	RewriteCond %{HTTP:X-Forwarded-Proto} !https\r\n"
+						//."	RewriteRule ^(.*)$ https://%{HTTP_HOST} [L,R=301]\r\n"
+						."	RewriteCond %{HTTP:X-Forwarded-Proto} =http\r\n"
+						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]\r\n"
 						."\r\n";
 
 						/*switch(get_site_option('setting_base_prefer_www'))

@@ -5419,6 +5419,7 @@ class mf_import
 	var $current_column;
 	var $columns_for_select;
 	var $data;
+	var $file_name;
 	var $file_location;
 	var $action;
 	var $skip_header;

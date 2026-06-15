@@ -2615,15 +2615,15 @@ function get_post_types_for_select($data = [])
 
 		if(in_array('types', $data['include']))
 		{
-			foreach(get_post_types(array('exclude_from_search' => false), 'objects') as $post_type) //'public' => true, 'publicly_queryable' => true,
+			foreach(get_post_types(array('exclude_from_search' => false), 'objects') as $arr_post_type) //'public' => true, 'publicly_queryable' => true,
 			{
-				if(!in_array($post_type->name, array('attachment')))
+				if(!in_array($arr_post_type->name, array('attachment')))
 				{
 					if($data['add_is'] == true)
 					{
-						$arr_data['is_singular("'.$post_type->name.'")'] = $post_type->label;
+						$arr_data['is_singular("'.$arr_post_type->name.'")'] = $arr_post_type->label;
 
-						$arr_tax = get_object_taxonomies($post_type->name, 'objects');
+						$arr_tax = get_object_taxonomies($arr_post_type->name, 'objects');
 
 						foreach($arr_tax as $taxonomy)
 						{
@@ -2636,7 +2636,7 @@ function get_post_types_for_select($data = [])
 
 					else
 					{
-						$arr_data[$post_type->name] = $post_type->label;
+						$arr_data[$arr_post_type->name] = $arr_post_type->label;
 					}
 				}
 			}

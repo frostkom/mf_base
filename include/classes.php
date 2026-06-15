@@ -147,11 +147,11 @@ class mf_base
 
 		$arr_post_types_ignore = apply_filters('get_post_types_for_metabox', array('attachment'));
 
-		foreach(get_post_types($data, 'objects') as $post_type)
+		foreach(get_post_types($data, 'objects') as $arr_post_type)
 		{
-			if(!in_array($post_type->name, $arr_post_types_ignore))
+			if(!in_array($arr_post_type->name, $arr_post_types_ignore))
 			{
-				$arr_data[] = $post_type->name;
+				$arr_data[] = $arr_post_type->name;
 			}
 		}
 

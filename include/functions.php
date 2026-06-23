@@ -2284,7 +2284,7 @@ function mf_enqueue_style($handle, $file = "", $dep = [])
 	}
 }
 
-function mf_enqueue_script($handle, $file = "", $translation = [])
+function mf_enqueue_script($handle, $file = "", $translation = [], $dependency = array('jquery'))
 {
 	global $wp_scripts;
 
@@ -2304,7 +2304,7 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 
 		else if(is_array($translation) && count($translation) > 0)
 		{
-			wp_register_script($handle, $file, array('jquery'), $version, true);
+			wp_register_script($handle, $file, $dependency, $version, true);
 
 			if(!wp_script_is($handle, 'done'))
 			{
@@ -2316,7 +2316,7 @@ function mf_enqueue_script($handle, $file = "", $translation = [])
 
 		else
 		{
-			wp_enqueue_script($handle, $file, array('jquery'), $version, true);
+			wp_enqueue_script($handle, $file, $dependency, $version, true);
 		}
 	}
 

@@ -63,12 +63,14 @@
 
 	.css_icon.chevron_right > div:nth-child(1)
 	{
-		transform: rotate(45deg) translate(-.4em, 0em);
+		transform: rotate(45deg) translate(-.4em, .1em);
+		width: .8em;
 	}
 
 	.css_icon.chevron_right > div:nth-child(2)
 	{
-		transform: rotate(-45deg) translate(-.4em, 0em);
+		transform: rotate(-45deg) translate(-.4em, -.1em);
+		width: .8em;
 	}
 
 	.css_icon.plus > div:nth-child(1)

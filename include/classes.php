@@ -2267,6 +2267,12 @@ class mf_base
 		return $html;
 	}
 
+	function get_form_radio_multiple()
+	{
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
+	}
+
 	function load_table_attr()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);

@@ -4217,8 +4217,7 @@ function show_form_alternatives($data)
 
 	if($count_datalist > 0)
 	{
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_radio_multiple', $plugin_include_url."style_radio_multiple.css");
+		do_action('get_form_radio_multiple');
 
 		if($data['multiple'])
 		{

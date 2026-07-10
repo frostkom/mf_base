@@ -6214,17 +6214,17 @@ class mf_import
 						'' => "-- ".__("Choose Here", 'lang_base')." --",
 					);
 
-					if(count($this->actions) == 0 || in_array('delete', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('delete', $this->arr_actions))
 					{
 						$arr_data['delete'] = __("Delete", 'lang_base');
 					}
 
-					if(count($this->actions) == 0 || in_array('import', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('import', $this->arr_actions))
 					{
 						$arr_data['import'] = __("Import", 'lang_base');
 					}
 
-					if(count($this->actions) == 0 || in_array('search', $this->actions))
+					if(count($this->arr_actions) == 0 || in_array('search', $this->arr_actions))
 					{
 						$arr_data['search'] = __("Search", 'lang_base');
 					}

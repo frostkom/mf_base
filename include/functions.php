@@ -518,7 +518,7 @@ function send_email($data)
 			unset($data_temp['save_log']);
 			unset($data_temp['save_log_type']);
 
-			$obj_base->filter_phpmailer_data();
+			$obj_base->filter_phpmailer_data($phpmailer);
 		}
 
 		if($sent)

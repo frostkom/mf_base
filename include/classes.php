@@ -86,13 +86,9 @@ class mf_base
 		return $arr_data;
 	}
 
-	function filter_phpmailer_data()
+	function filter_phpmailer_data($phpmailer)
 	{
-		global $phpmailer;
-
 		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port'
-
-		//$this->phpmailer_temp = [];
 
 		foreach($phpmailer as $key => $value)
 		{

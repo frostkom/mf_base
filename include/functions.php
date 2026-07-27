@@ -2868,7 +2868,7 @@ function get_url_content($data = [])
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 		curl_setopt($ch, CURLOPT_CAINFO, $data['ca_path']); // The name of a file holding one or more certificates to verify the peer with.
-		curl_setopt($ch, CURLOPT_CAPATH, $data['ca_path']); // A directory that holds multiple CA certificates
+		//curl_setopt($ch, CURLOPT_CAPATH, $data['ca_path']); // A directory that holds multiple CA certificates
 	}
 
 	else
@@ -2906,6 +2906,11 @@ function get_url_content($data = [])
 	if($data['request'] == 'delete')
 	{
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+	}
+
+	else if($data['request'] == 'put')
+	{
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 	}
 
 	else if($data['request'] == 'post' || $data['post_data'] != '')

@@ -88,7 +88,7 @@ class mf_base
 
 	function filter_phpmailer_data($phpmailer)
 	{
-		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'Password', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port'
+		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port', 'Password'
 
 		foreach($phpmailer as $key => $value)
 		{
@@ -112,7 +112,15 @@ class mf_base
 			{
 				if(!in_array($key, $arr_exclude) && trim($value) != '')
 				{
-					$this->phpmailer_temp[$key] = $value;
+					if($key == 'Password')
+					{
+						$this->phpmailer_temp[$key] = shorten_text(array('string' => htmlspecialchars($value), 'limit' => 4));
+					}
+
+					else
+					{
+						$this->phpmailer_temp[$key] = $value;
+					}
 				}
 			}
 

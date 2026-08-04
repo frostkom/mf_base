@@ -1773,6 +1773,10 @@ function parse_block_attributes($data = [])
 								$data['style'] .= "font-size: ".$value.";";
 							break;
 
+							case 'lineHeight':
+								$data['style'] .= "line-height: ".$value.";";
+							break;
+
 							default:
 								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
 							break;

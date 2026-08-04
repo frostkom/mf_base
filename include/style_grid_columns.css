@@ -112,6 +112,11 @@
 				padding: .5em 1em;
 			}
 
+			.widget ul.grid_columns .grid_meta > a i
+			{
+				margin-right: .3em;
+			}
+
 		.widget ul.grid_columns > li > .content
 		{
 			flex-grow: 1;

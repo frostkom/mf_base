@@ -88,8 +88,24 @@
 					bottom: 0;
 					left: 0;
 					margin: .2em;
-					padding: .5em 1em;
+					padding: 1em;
 				}
+
+					.widget ul.grid_columns .grid_image .content span
+					{
+						text-align: left;
+						width: 100%;
+					}
+
+						.widget.aligncenter ul.grid_columns .grid_image .content span
+						{
+							text-align: center;
+						}
+
+						.widget.alignright ul.grid_columns .grid_image .content span
+						{
+							text-align: right;
+						}
 
 		.widget ul.grid_columns .grid_meta
 		{
@@ -129,6 +145,11 @@
 				margin-bottom: .5em;
 				text-decoration: none;
 			}
+
+				.widget ul.grid_columns .grid_title p:first-child
+				{
+					margin-top: 0;
+				}
 
 			.widget ul.grid_columns > li > .content .text
 			{

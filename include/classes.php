@@ -88,7 +88,7 @@ class mf_base
 
 	function filter_phpmailer_data($phpmailer)
 	{
-		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'MessageDate', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port', 'Password'
+		$arr_exclude = array('Priority', 'Body', 'AltBody', 'MIMEBody', 'boundary', 'Timeout', 'Debugoutput', 'Version', 'CharSet', 'ContentType', 'Encoding', 'WordWrap', 'SMTPAutoTLS', 'SMTPDebug', 'UseSendmailOptions', 'Mailer', 'Sendmail', 'Sender', 'DKIM_copyHeaderFields'); //, 'Hostname', 'Host', 'Port', 'Password', 'MessageDate'
 
 		foreach($phpmailer as $key => $value)
 		{

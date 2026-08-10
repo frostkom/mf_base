@@ -538,7 +538,7 @@ function send_email($data)
 
 		else
 		{
-			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($data_temp, true).", ".var_export($obj_base->phpmailer_temp, true), 'publish', false);
+			do_log(__("Message NOT Sent", 'lang_base')." (".$data['save_log_type']."): ".var_export($obj_base->phpmailer_temp, true), 'publish', false); //".var_export($data_temp, true).", 
 
 			do_action('sent_email_error', $phpmailer->From);
 		}
@@ -2140,7 +2140,15 @@ function get_next_cron($data = [])
 
 		else
 		{
-			$out = format_date($date_next_schedule);
+			if($date_next_schedule > DEFAULT_DATE)
+			{
+				$out = format_date($date_next_schedule);
+			}
+
+			else
+			{
+				$out = __("unknown", 'lang_base');
+			}
 		}
 
 		if(IS_SUPER_ADMIN)

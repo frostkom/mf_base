@@ -873,8 +873,25 @@ class mf_base
 	{
 		$value = ini_get($type);
 
-		$number = substr($value, 0, -1);
+		// Handle unlimited (-1) explicitly
+		if($value === '-1' || $value === -1)
+		{
+			return -1;
+		}
+
 		$suffix = strtoupper(substr($value, -1));
+
+		// Only strip the last character if it's actually a unit suffix
+		if(in_array($suffix, ['G', 'M', 'K']))
+		{
+			$number = substr($value, 0, -1);
+		}
+		
+		else
+		{
+			$number = $value; // plain number, e.g. "134217728" — keep it whole
+			$suffix = ''; // so it falls to default below
+		}
 
 		if($number > 0)
 		{

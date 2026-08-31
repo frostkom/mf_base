@@ -1051,10 +1051,22 @@ function time_between_dates($data)
 
 	switch($data['return'])
 	{
-		/*case 'years': break;
-		case 'months': break;
-		case 'weeks': break;
-		case 'days': break;*/
+		case 'years':
+			$out = $interval->y;
+		break;
+
+		case 'months':
+			// total months, including full years converted to months
+			$out = (($interval->y * 12) + $interval->m);
+		break;
+
+		case 'weeks':
+			$out = ($interval->days / 7);
+		break;
+
+		case 'days':
+			$out = $interval->days;
+		break;
 
 		case 'hours':
 			$out = $interval->h + ($interval->days * 24);

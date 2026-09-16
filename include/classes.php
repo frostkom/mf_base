@@ -886,7 +886,7 @@ class mf_base
 		{
 			$number = substr($value, 0, -1);
 		}
-		
+
 		else
 		{
 			$number = $value; // plain number, e.g. "134217728" — keep it whole

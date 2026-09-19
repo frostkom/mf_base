@@ -30,6 +30,11 @@
 		padding: .4em;
 		width: 100%;
 	}
+	
+		.mf_form .form_textarea .mf_form_field
+		{
+			min-height: 8em;
+		}
 
 		.mf_form .mf_form_field.green
 		{

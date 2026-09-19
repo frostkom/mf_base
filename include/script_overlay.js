@@ -1,6 +1,6 @@
 jQuery(function($)
 {
-	$(document).on('click', ".overlay_container.modal", function()
+	$(document).on('click', ".overlay_container.modal:not(.disable_close)", function()
 	{
 		$(this).addClass('hide');
 	});

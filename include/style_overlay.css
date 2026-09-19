@@ -32,10 +32,6 @@
 			overflow: hidden;
 			padding: .3em;
 			position: relative;
-			/*max-height: 95vh;
-			max-width: 95vw;
-			height: auto;
-			width: auto;*/
 		}
 
 			.overlay_container.modal:not(.disable_close) > div > div:before

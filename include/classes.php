@@ -145,11 +145,14 @@ class mf_base
 
 	function get_post_types_for_metabox($data = [])
 	{
-		if(!isset($data['public'])){		$data['public'] = true;}
+		if(!isset($data['public'])){	$data['public'] = true;}
+		if(!isset($data['type'])){		$data['type'] = '';}
 
 		$arr_data = [];
 
-		$arr_post_types_ignore = apply_filters('get_post_types_for_metabox', array('attachment'));
+		$arr_post_types_ignore = apply_filters('get_post_types_ignore', array('attachment'), $data['type']);
+
+		unset($data['type']);
 
 		foreach(get_post_types($data, 'objects') as $arr_post_type)
 		{
@@ -2744,7 +2747,7 @@ class mf_base
 			$meta_boxes[] = array(
 				'id' => $this->meta_prefix.'settings',
 				'title' => __("Settings", 'lang_base'),
-				'post_types' => $this->get_post_types_for_metabox(),
+				'post_types' => $this->get_post_types_for_metabox(['type' => 'index']),
 				'context' => 'side',
 				'priority' => 'low',
 				'fields' => array(

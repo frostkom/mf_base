@@ -2239,7 +2239,7 @@ class mf_base
 	function load_form_attr()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
+		//mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
 		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
 	}
@@ -2313,7 +2313,7 @@ class mf_base
 		{
 			$plugin_include_url = plugin_dir_url(__FILE__);
 
-			mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
+			//mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
 			mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
 		}
 

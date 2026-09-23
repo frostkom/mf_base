@@ -5,8 +5,10 @@
 
 	:root :where(.wp-block-button__link)
 	{
-		background-color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
-		border: .1em solid var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
+		background: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
+		background-clip: border-box;
+		border: .1em solid transparent !important;
+		/*border: .1em solid var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));*/
 		color: var(--wp--preset--color--accent-2);
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -16,31 +18,15 @@
 		/*:root :where(*/.wp-block-button__link:hover/*)*/
 		{
 			background: var(--wp--preset--color--accent-2);
+			/*border-color: var(--wp--preset--color--accent-2);*/
 			color: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
 		}
-
-	/*:root :where(.is-style-outline .wp-block-button__link)
-	{
-		background: none;
-		border: .1em solid var(--wp--preset--color--accent-2);
-		color: inherit;
-	}
-
-		:root :where(.is-style-outline .wp-block-button__link:hover)
-		{
-			background: var(--wp--preset--color--accent, var(--wp--preset--color--accent-1));
-			color: var(--wp--preset--color--accent-2);
-		}*/
 
 	:root :where(.wp-block-button.is-style-outline .wp-block-button__link)
 	{
 		background: transparent none !important;
 		border: .1em solid var(--wp--preset--color--accent-2) !important;
 		color: inherit !important;
-		padding-top: calc(1rem - 1px) !important;
-		padding-right: calc(2.25rem - 1px) !important;
-		padding-bottom: calc(1rem - 1px) !important;
-		padding-left: calc(2.25rem - 1px) !important;
 	}
 
 		:root :where(.wp-block-button.is-style-outline .wp-block-button__link.wp-block-button__link:not(.has-background):hover)

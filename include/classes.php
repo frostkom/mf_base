@@ -2610,12 +2610,14 @@ class mf_base
 
 	function column_header($columns)
 	{
+		global $post_type;
+
 		if(apply_filters('has_comments', true) == false)
 		{
 			unset($columns['comments']);
 		}
 
-		if(IS_ADMINISTRATOR && check_var('post_status') != 'trash')
+		if(IS_ADMINISTRATOR && check_var('post_status') != 'trash' && in_array($post_type, $this->get_post_types_for_metabox(['type' => 'index'])))
 		{
 			$columns['page_index'] = __("Index", 'lang_base');
 		}

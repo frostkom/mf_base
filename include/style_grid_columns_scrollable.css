@@ -1,0 +1,59 @@
+.widget.news.is_scrollable {
+	position: relative;
+}
+
+.widget.news.is_scrollable .grid_columns {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); /* 3 visible per row, adjust gap to match */
+	gap: 1.5rem;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none; /* hide native scrollbar, we use arrows instead */
+	padding: 0.25rem; /* small buffer so focus rings/shadows don't clip */
+}
+
+.widget.news.is_scrollable .grid_columns::-webkit-scrollbar {
+	display: none;
+}
+
+.widget.news.is_scrollable .grid_columns li {
+	scroll-snap-align: start;
+	min-width: 0; /* prevents content from forcing extra width */
+	width: auto;
+}
+
+/* Arrows */
+.widget.news.is_scrollable .scroll-arrow {
+	position: absolute;
+	top: 45%;
+	z-index: 2;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 50%;
+	border: none;
+	background: #fff;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+	font-size: 1.5rem;
+	cursor: pointer;
+	transition: opacity .5s ease;
+}
+
+	.widget.news.is_scrollable .scroll-arrow.is-hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.widget.news.is_scrollable .scroll-arrow--prev
+	{
+		left: -1.25rem;
+		padding-right: .3em;
+	}
+
+	.widget.news.is_scrollable .scroll-arrow--next
+	{
+		right: -1.25rem;
+		padding-left: .3em;
+	}

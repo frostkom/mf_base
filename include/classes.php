@@ -3131,6 +3131,16 @@ class mf_base
 		}
 	}
 
+	function load_grid_columns_scrollable()
+	{
+		do_action('load_font_awesome');
+		do_action('load_grid_columns');
+
+		$plugin_include_url = plugin_dir_url(__FILE__);
+		mf_enqueue_style('style_base_grid_columns_scrollable', $plugin_include_url."style_grid_columns_scrollable.css");
+		mf_enqueue_script('script_base_grid_columns_scrollable', $plugin_include_url."script_grid_columns_scrollable.js");
+	}
+
 	function load_notification()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);

@@ -2382,14 +2382,7 @@ function get_all_roles($data = [])
 
 	else
 	{
-		if(!function_exists('is_plugin_active') || function_exists('is_plugin_active') && is_plugin_active("mf_users/index.php"))
-		{
-			if(class_exists('mf_users'))
-			{
-				$obj_users = new mf_users();
-				$obj_users->hide_roles();
-			}
-		}
+		do_action('filter_user_roles');
 
 		$arr_roles = $wp_roles->get_names();
 	}
@@ -2485,7 +2478,7 @@ function get_roles_for_select($data = [])
 	global $obj_base;
 
 	if(!isset($data['array'])){				$data['array'] = [];}
-	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = false;}
+	if(!isset($data['add_choose_here'])){	$data['add_choose_here'] = (isset($data['choose_here_text']) && $data['choose_here_text'] != '');}
 	if(!isset($data['choose_here_text'])){	$data['choose_here_text'] = __("Choose Here", 'lang_base');}
 	if(!isset($data['strict_key'])){		$data['strict_key'] = false;}
 	if(!isset($data['use_capability'])){	$data['use_capability'] = true;}
@@ -2496,7 +2489,7 @@ function get_roles_for_select($data = [])
 		$data['array'][''] = "-- ".$data['choose_here_text']." --";
 	}
 
-	if(is_multisite() && $data['use_capability'] == true)
+	if(is_multisite() && $data['use_capability'] == true && !in_array('update_core', $data['exclude']))
 	{
 		$data['array']['update_core'] = __("Super Admin", 'lang_base');
 	}
@@ -2505,13 +2498,13 @@ function get_roles_for_select($data = [])
 
 	foreach($arr_roles as $key => $value)
 	{
-		if($data['use_capability'] == true)
+		if($key != '' && !isset($data['array'][$key]) && !in_array($key, $data['exclude']))
 		{
-			$key = get_role_first_capability($key);
-		}
+			if($data['use_capability'] == true)
+			{
+				$key = get_role_first_capability($key);
+			}
 
-		if(!isset($data['array'][$key]) && $key != '' && !in_array($key, $data['exclude']))
-		{
 			$data['array'][$key] = $value;
 		}
 	}

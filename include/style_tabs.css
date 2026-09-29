@@ -1,10 +1,15 @@
+.widget:has(> .tabs)
+{
+	position: relative;
+}
+
 .widget .tabs
 {
 	display: flex;
 	flex-wrap: wrap;
 	gap: .5em;
 	margin-bottom: -.1em;
-	padding-left: 1em;
+	padding: 0;
 }
 
 	.widget .tabs li
@@ -81,3 +86,52 @@
 			padding-left: 0 !important;
 			padding-right: 0 !important;
 		}
+
+.widget > .tabs
+{
+	flex-wrap: nowrap;
+	margin-left: 1em;
+	margin-right: 1em;
+	overflow-x: auto;
+	position: relative;             /* keeps li.offsetLeft relative to the list */
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+	.widget > .tabs::-webkit-scrollbar
+	{
+		display: none;
+	}
+
+	.widget > .tabs li
+	{
+		flex: 0 0 auto;
+	}
+
+.widget > .tabs_arrow
+{
+	background: #fff;               /* solid, set to your page background colour */
+	border: .1em solid #ccc;
+	border-bottom-color: transparent;
+	border-radius: .3em .3em 0 0;
+	cursor: pointer;
+	font-size: 1.4em;
+	left: .3em;
+	line-height: 1;
+	padding: 0 .5em;
+	position: absolute;
+	top: 0;
+	z-index: 2;
+}
+
+	.widget > .tabs_arrow[hidden]
+	{
+		display: none;
+	}
+
+	.widget > .tabs_arrow_right
+	{
+		left: auto;
+		right: .3em;
+	}

@@ -4038,11 +4038,19 @@ class mf_list_table extends WP_List_Table
 		{
 			$empty_trash_days = (defined('EMPTY_TRASH_DAYS') ? EMPTY_TRASH_DAYS : 30);
 
-			$wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY) LIMIT 0, 1");
+			$result = $wpdb->get_results("SELECT ".$this->arr_settings['query_select_id']." AS ID FROM ".$this->arr_settings['query_from']." WHERE ".$db_field." = '1' AND ".$db_field."Date < DATE_SUB(NOW(), INTERVAL ".$empty_trash_days." DAY)");
 
 			if($wpdb->num_rows > 0)
 			{
-				do_log(__FUNCTION__.": ".$wpdb->last_query);
+				//do_log(__FUNCTION__.": ".$wpdb->last_query);
+
+				foreach($result as $r)
+				{
+					$query = $wpdb->prepare("DELETE FROM ".$this->arr_settings['query_from']." WHERE ".$this->arr_settings['query_select_id']." = '%d'", $r->ID);
+
+					do_log(__FUNCTION__.": ".$query);
+					//$wpdb->query($query);
+				}
 			}
 		}
 	}

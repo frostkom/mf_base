@@ -17,22 +17,14 @@ document.querySelectorAll('.widget.news.is_scrollable').forEach(function(widget)
 	widget.appendChild(prev);
 	widget.appendChild(next);
 
-	const EPSILON = 6; // covers padding-induced offset + rounding
+	const EPSILON = 6;            // covers padding-induced offset + rounding
+	const AUTO_INTERVAL = 4000;   // ms between automatic steps
+	let autoTimer = null;
 
 	function updateArrows() {
 		const maxScroll = track.scrollWidth - track.clientWidth;
-
-		if (track.scrollLeft <= EPSILON) {
-			prev.classList.add('is-hidden');
-		} else {
-			prev.classList.remove('is-hidden');
-		}
-
-		if (track.scrollLeft >= maxScroll - EPSILON) {
-			next.classList.add('is-hidden');
-		} else {
-			next.classList.remove('is-hidden');
-		}
+		prev.classList.toggle('is-hidden', track.scrollLeft <= EPSILON);
+		next.classList.toggle('is-hidden', track.scrollLeft >= maxScroll - EPSILON);
 	}
 
 	function scrollByCard(direction) {
@@ -42,11 +34,37 @@ document.querySelectorAll('.widget.news.is_scrollable').forEach(function(widget)
 		track.scrollBy({ left: direction * distance, behavior: 'smooth' });
 	}
 
-	prev.addEventListener('click', () => scrollByCard(-1));
-	next.addEventListener('click', () => scrollByCard(1));
+	function stopAutoScroll() {
+		if (autoTimer !== null) {
+			clearInterval(autoTimer);
+			autoTimer = null;
+		}
+	}
+
+	function startAutoScroll() {
+		// Respect users who prefer reduced motion
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+		autoTimer = setInterval(function () {
+			const maxScroll = track.scrollWidth - track.clientWidth;
+			if (track.scrollLeft >= maxScroll - EPSILON) {
+				// Reached the end: return to the beginning
+				track.scrollTo({ left: 0, behavior: 'smooth' });
+				return;
+			}
+			scrollByCard(1);
+		}, AUTO_INTERVAL);
+	}
+
+	// Arrow interaction stops auto scroll for good
+	prev.addEventListener('click', function () { stopAutoScroll(); scrollByCard(-1); });
+	next.addEventListener('click', function () { stopAutoScroll(); scrollByCard(1); });
 
 	track.addEventListener('scroll', updateArrows);
 	window.addEventListener('resize', updateArrows);
 
-	updateArrows(); // set correct initial state
+	// Start from the beginning
+	track.scrollLeft = 0;
+	updateArrows();
+	startAutoScroll();
 });

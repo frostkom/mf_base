@@ -2,27 +2,33 @@
 	position: relative;
 }
 
-.widget.news.is_scrollable .grid_columns {
+.widget.news.is_scrollable ul.grid_columns.grid_columns
+{
 	display: grid;
 	grid-auto-flow: column;
-	grid-auto-columns: calc((100% - 2 * 1.5rem) / 3); /* 3 visible per row, adjust gap to match */
-	gap: 1.5rem;
+	grid-auto-columns: calc(var(--base-column-width-desktop) * 1%);
+	gap: calc(var(--base-column-gap) * 1%);
+	column-count: auto;
+	flex-wrap: nowrap;
 	overflow-x: auto;
 	overflow-y: hidden;
 	scroll-snap-type: x mandatory;
 	-webkit-overflow-scrolling: touch;
-	scrollbar-width: none; /* hide native scrollbar, we use arrows instead */
-	padding: 0.25rem; /* small buffer so focus rings/shadows don't clip */
+	scrollbar-width: none;
+	padding: 0 0 .8rem; /* no side padding, see note below */
 }
 
-.widget.news.is_scrollable .grid_columns::-webkit-scrollbar {
+.widget.news.is_scrollable ul.grid_columns.grid_columns::-webkit-scrollbar
+{
 	display: none;
 }
 
-.widget.news.is_scrollable .grid_columns li {
+.widget.news.is_scrollable ul.grid_columns > li
+{
 	scroll-snap-align: start;
-	min-width: 0; /* prevents content from forcing extra width */
-	width: auto;
+	min-width: 0;
+	width: auto; /* the grid column sets the width, not the li */
+	margin: 0;
 }
 
 /* Arrows */

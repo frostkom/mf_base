@@ -812,7 +812,7 @@ class mf_base
 			#########################
 
 			mf_uninstall_plugin(array(
-				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates', 'setting_base_use_timezone'),
+				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates', 'setting_base_use_timezone', 'setting_base_prefer_www', 'setting_base_column_gap'),
 				'post_meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),
 			));
 
@@ -1178,12 +1178,25 @@ class mf_base
 				$arr_settings['setting_base_update_htaccess'] = sprintf(__("Automatically Update %s", 'lang_base'), $config_file);
 			}
 
-			//$arr_settings['setting_base_prefer_www'] = sprintf(__("Prefer %s in front domain", 'lang_base'), "www");
 			$arr_settings['setting_base_optimize'] = __("Optimize", 'lang_base');
 			$arr_settings['setting_base_recommend'] = __("Recommendations", 'lang_base');
 		}
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
+
+		// Design
+		############################
+		$options_area = $options_area_orig."_layout";
+
+		add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
+
+		$arr_settings = [];
+		$arr_settings['setting_base_desktop_columns'] = __("Desktop Columns", 'lang_auth');
+		$arr_settings['setting_base_tablet_columns'] = __("Tablet Columns", 'lang_auth');
+		$arr_settings['setting_base_mobile_columns'] = __("Mobile Columns", 'lang_auth');
+
+		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
+		############################
 	}
 
 	function settings_base_callback()
@@ -1192,15 +1205,6 @@ class mf_base
 
 		echo settings_header($setting_key, __("Common", 'lang_base'));
 	}
-
-		/*function get_date_diff()
-		{
-			$db_date = strtotime(current_time('mysql'));
-			$ftp_date = strtotime(date("Y-m-d H:i:s"));
-			$date_diff = abs($db_date - $ftp_date);
-
-			return array($date_diff, $ftp_date, $db_date);
-		}*/
 
 		function api_base_info()
 		{
@@ -1224,8 +1228,6 @@ class mf_base
 			$has_required_mysql_version = version_compare($mysql_version, $mysql_required, ">");
 
 			$mysql_title = __("DB", 'lang_base').": ".DB_NAME.", ".__("Prefix", 'lang_base').": ".$wpdb->prefix;
-
-			//list($date_diff, $ftp_date, $db_date) = $this->get_date_diff();
 
 			$total_space = (function_exists('disk_total_space') ? disk_total_space(ABSPATH) : 0);
 
@@ -1289,16 +1291,6 @@ class mf_base
 							}
 						break;
 					}
-
-					/*if($date_diff > 60)
-					{
-						echo "<p><i class='fa ".($date_diff < 60 ? "fa-check green" : "fa-times red display_warning")."'></i> ".__("Time Difference", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))." (PHP), ".format_date(date("Y-m-d H:i:s", $db_date))." (MySQL)</p>";
-					}
-
-					else
-					{
-						echo "<p><i class='fa fa-check green'></i> ".__("Time on Server", 'lang_base').": ".format_date(date("Y-m-d H:i:s", $ftp_date))."</p>";
-					}*/
 
 					if(isset($free_percent))
 					{
@@ -1920,15 +1912,6 @@ class mf_base
 			}
 		}
 
-		/*function setting_base_prefer_www_callback()
-		{
-			$setting_key = get_setting_key(__FUNCTION__);
-			settings_save_site_wide($setting_key);
-			$option = get_site_option_or_default($setting_key, get_option_or_default($setting_key));
-
-			echo show_select(array('data' => get_yes_no_for_select(array('add_choose_here' => true)), 'name' => $setting_key, 'value' => $option));
-		}*/
-
 		function setting_base_optimize_callback()
 		{
 			$option_base_optimized = get_option('option_base_optimized');
@@ -1976,6 +1959,37 @@ class mf_base
 
 				new recommend_plugin(array('path' => $path, 'name' => $name, 'text' => $text, 'show_notice' => false));
 			}
+		}
+
+	function settings_base_layout_callback()
+	{
+		$setting_key = get_setting_key(__FUNCTION__);
+
+		echo settings_header($setting_key, __("Common", 'lang_base')." - ".__("Layout", 'lang_base'));
+	}
+
+		function setting_base_desktop_columns_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 3);
+
+			echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'xtra' => "step='1' min='1' max='10'"));
+		}
+
+		function setting_base_tablet_columns_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 2);
+
+			echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'xtra' => "step='1' min='1' max='10'"));
+		}
+
+		function setting_base_mobile_columns_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 1);
+
+			echo show_textfield(array('type' => 'number', 'name' => $setting_key, 'value' => $option, 'xtra' => "step='1' min='1' max='10'"));
 		}
 
 	function admin_init()
@@ -3046,9 +3060,9 @@ class mf_base
 
 			$arr_breakpoints = apply_filters('get_layout_breakpoints', ['tablet' => 1200, 'mobile' => 930, 'suffix' => "px"]);
 
-			$setting_desktop_columns = 3;
-			$setting_tablet_columns = 2;
-			$setting_mobile_columns = 1;
+			$setting_desktop_columns = get_option('setting_base_desktop_columns', 3);
+			$setting_tablet_columns = get_option('setting_base_tablet_columns', 2);
+			$setting_mobile_columns = get_option('setting_base_mobile_columns', 1);
 			$setting_column_gap = 1;
 
 			$column_width_desktop = $this->calc_width($setting_desktop_columns, $setting_column_gap);
@@ -3367,21 +3381,6 @@ class mf_base
 						."	RewriteCond %{HTTP:X-Forwarded-Proto} =http\r\n"
 						."	RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [L,R=301]\r\n"
 						."\r\n";
-
-						/*switch(get_site_option('setting_base_prefer_www'))
-						{
-							case 'yes':
-								$update_with .= "	RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]\r\n"
-								."	RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]\r\n"
-								."\r\n";
-							break;
-
-							case 'no':
-								$update_with .= "	RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\r\n"
-								."	RewriteRule ^(.*)$ https://%1/$1 [R=301,L]\r\n"
-								."\r\n";
-							break;
-						}*/
 
 						$update_with .= "	RewriteRule ^my_ip$ ".$subfolder."wp-content/plugins/mf_base/include/api/?type=my_ip [L]\r\n"
 						."\r\n";

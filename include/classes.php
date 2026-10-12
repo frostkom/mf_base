@@ -5064,6 +5064,8 @@ class mf_export
 	var $types = [];
 	var $formats;
 	var $file_name;
+	var $add_date = true;
+	var $add_hash = true;
 
 	function __construct($data = [])
 	{
@@ -5118,23 +5120,39 @@ class mf_export
 			$zip = new ZipArchive();
 
 			$file_source = $this->upload_path.$this->file_name;
-			$file_name = basename($file_source);
-			$file_destination = $this->upload_path.$file_name.".zip";
+
+			// Name of the file inside the ZIP: no date, no hash
+			$file_name_inside = sanitize_title_with_dashes(sanitize_title($this->name));
+
+			if($file_name_inside != '')
+			{
+				$file_name_inside .= ".".$this->format;
+			}
+
+			else
+			{
+				$file_name_inside = basename($file_source);
+			}
+
+			// Name of the ZIP itself: keeps date and hash, but without the extra .xls/.csv/.json
+			$file_name_zip = pathinfo($this->file_name, PATHINFO_FILENAME).".zip";
+
+			$file_destination = $this->upload_path.$file_name_zip;
 
 			if(file_exists($file_destination))
 			{
 				unlink($file_destination);
 			}
 
-			if($zip->open($file_destination, ZIPARCHIVE::CREATE))
+			if($zip->open($file_destination, ZipArchive::CREATE))
 			{
 				if(file_exists($file_source) && is_file($file_source))
 				{
-					$zip->addFile($file_source, $file_name);
+					$zip->addFile($file_source, $file_name_inside);
 
 					if($zip->close())
 					{
-						$this->file_name = $file_name.".zip";
+						$this->file_name = $file_name_zip;
 						unlink($file_source);
 					}
 				}
@@ -5192,7 +5210,19 @@ class mf_export
 				{
 					if($this->file_name == '')
 					{
-						$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name))."_".date("ymdHis")."_".wp_hash($this->name).".".$this->format;
+						$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name));
+						
+						if($this->add_date == true)
+						{
+							$this->file_name .= "_".date("ymdHis");
+						}
+						
+						if($this->add_hash == true)
+						{
+							$this->file_name .= "_".wp_hash($this->name);
+						}
+						
+						$this->file_name .= ".".$this->format;
 					}
 
 					switch($this->format)

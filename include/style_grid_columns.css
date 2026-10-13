@@ -57,6 +57,7 @@
 			border-radius: .3em;
 			margin: .2em;
 			overflow: hidden;
+			position: relative;
 		}
 
 			.widget ul.grid_columns .grid_image img

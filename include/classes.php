@@ -378,9 +378,9 @@ class mf_base
 	function enqueue_block_editor_assets()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		$plugin_version = get_plugin_version(__FILE__);
-
-		wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
+		//$plugin_version = get_plugin_version(__FILE__);
+		mf_enqueue_style('style_base_block_wp', $plugin_include_url."block/style_wp.css");
+		//wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
 	}
 
 	function init()

@@ -1631,6 +1631,11 @@ function parse_block_attributes($data = [])
 		$data['style'] .= "color: ".filter_style_color($data['attributes']['textColor']).";";
 	}
 
+	if(isset($data['attributes']['fontFamily']) && $data['attributes']['fontFamily'] != '')
+	{
+		$data['style'] .= "font-family: var(--wp--preset--font-family--".$data['attributes']['fontFamily'].");";
+	}
+
 	if(isset($data['attributes']['fontSize']) && $data['attributes']['fontSize'] != '')
 	{
 		$data['style'] .= "font-size: ".filter_style_font_size($data['attributes']['fontSize']).";";

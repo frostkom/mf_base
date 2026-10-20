@@ -5211,17 +5211,17 @@ class mf_export
 					if($this->file_name == '')
 					{
 						$this->file_name = sanitize_title_with_dashes(sanitize_title($this->name));
-						
+
 						if($this->add_date == true)
 						{
 							$this->file_name .= "_".date("ymdHis");
 						}
-						
+
 						if($this->add_hash == true)
 						{
 							$this->file_name .= "_".wp_hash($this->name);
 						}
-						
+
 						$this->file_name .= ".".$this->format;
 					}
 

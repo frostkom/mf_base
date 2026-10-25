@@ -378,9 +378,9 @@ class mf_base
 	function enqueue_block_editor_assets()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		//$plugin_version = get_plugin_version(__FILE__);
+
 		mf_enqueue_style('style_base_block_wp', $plugin_include_url."block/style_wp.css");
-		//wp_register_style('style_base_block_wp', $plugin_include_url."block/style_wp.css", [], $plugin_version);
+		mf_enqueue_script('script_base_block_wp', $plugin_include_url."block/script_wp.js");
 	}
 
 	function init()
@@ -2253,9 +2253,9 @@ class mf_base
 	function load_form_attr()
 	{
 		$plugin_include_url = plugin_dir_url(__FILE__);
-		//mf_enqueue_style('style_base_button', $plugin_include_url."style_button.css");
+
 		mf_enqueue_style('style_base_form', $plugin_include_url."style_form.css");
-		mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
+		//mf_enqueue_script('script_base_previous_field', $plugin_include_url."script_previous_field.js");
 	}
 
 	function get_form_attr($html, $data = [])

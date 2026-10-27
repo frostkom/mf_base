@@ -811,6 +811,16 @@ class mf_base
 			}
 			#########################
 
+			// Change comment status on posts
+			#########################
+			$option = 'closed';
+
+			if(get_option('default_comment_status') == $option)
+			{
+				$wpdb->query($wpdb->prepare("UPDATE ".$wpdb->posts." SET comment_status = %s, ping_status = %s WHERE (comment_status != %s OR ping_status != %s)", $option, $option, $option, $option));
+			}
+			#########################
+
 			mf_uninstall_plugin(array(
 				'options' => array('option_cron_run', 'setting_base_php_info', 'setting_base_empty_trash_days', 'setting_base_automatic_updates', 'setting_base_cron_debug', 'option_github_access_token', 'option_git_updater', 'option_github_updates', 'setting_base_use_timezone', 'setting_base_prefer_www', 'setting_base_column_gap'),
 				'post_meta' => array($this->meta_prefix.'publish_date', $this->meta_prefix.'unpublish_date'),

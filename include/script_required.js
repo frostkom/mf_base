@@ -22,7 +22,7 @@ function render_required()
 			}
 		}
 
-		if(typeof dom_label !== 'null')
+		if(dom_label && dom_label.length > 0)
 		{
 			if(dom_label.children(".asterisk").length == 0)
 			{

@@ -2632,6 +2632,89 @@ class mf_base
 		return true;
 	}
 
+	function get_or_set_table_filter($data)
+	{
+		if(!isset($data['prefix'])){	$data['prefix'] = '';}
+		if(!isset($data['save'])){		$data['save'] = false;}
+		if(!isset($data['default'])){	$data['default'] = '';}
+
+		$meta_value = '';
+
+		$user_id = get_current_user_id();
+		$meta_key = 'meta_table_filter_'.$data['prefix'].$data['key'];
+
+		if(isset($_GET['filter_action']) || isset($_REQUEST[$data['key']]))
+		{
+			$meta_value = check_var($data['key']);
+
+			if($data['save'] == true)
+			{
+				if($meta_value != '')
+				{
+					update_user_meta($user_id, $meta_key, $meta_value);
+				}
+
+				else
+				{
+					delete_user_meta($user_id, $meta_key, $meta_value);
+				}
+			}
+		}
+
+		else
+		{
+			$meta_value = get_the_author_meta($meta_key, $user_id);
+		}
+
+		if($meta_value == '')
+		{
+			$meta_value = $data['default'];
+		}
+
+		return $meta_value;
+	}
+
+	function restrict_manage_posts($post_type)
+	{
+		if(!is_post_type_hierarchical($post_type))
+		{
+			return;
+		}
+
+		$strParentsOnly = $this->get_or_set_table_filter(array('key' => 'strParentsOnly', 'save' => true));
+
+		$arr_data = [
+			'' => "-- ".__("All Levels", 'lang_base')." --",
+			1 => __("Parents Only", 'lang_base'),
+		];
+
+		echo show_select(array('data' => $arr_data, 'name' => 'strParentsOnly', 'value' => $strParentsOnly));
+	}
+
+	function pre_get_posts($query)
+	{
+		global $pagenow;
+
+		if( ! is_admin() || 'edit.php' !== $pagenow || ! $query->is_main_query() )
+		{
+			return;
+		}
+
+		$post_type = $query->get( 'post_type' ) ?: 'post';
+
+		if( ! is_post_type_hierarchical( $post_type ) )
+		{
+			return;
+		}
+
+		$strParentsOnly = $this->get_or_set_table_filter(array('key' => 'strParentsOnly', 'save' => false));
+
+		if('1' === $strParentsOnly)
+		{
+			$query->set( 'post_parent', 0 );
+		}
+	}
+
 	function column_header($columns)
 	{
 		global $post_type;

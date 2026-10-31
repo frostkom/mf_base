@@ -3,7 +3,7 @@
 Plugin Name: MF Base
 Plugin URI: https://github.com/frostkom/mf_base
 Description: Add base functionality and security improvements
-Version: 1.2.13.8
+Version: 1.2.13.9
 Licence: GPLv2 or later
 Author: Martin Fors
 Author URI: https://martinfors.se
@@ -52,6 +52,9 @@ if(is_admin())
 	add_filter('network_admin_plugin_action_links', array($obj_base, 'plugin_action_links'), 10, 2);
 
 	add_filter('disable_months_dropdown', array($obj_base, 'disable_months_dropdown'), 10, 2);
+
+	add_action('restrict_manage_posts', array($obj_base, 'restrict_manage_posts'));
+	add_action('pre_get_posts', array($obj_base, 'pre_get_posts'));
 
 	add_action('rwmb_meta_boxes', array($obj_base, 'rwmb_meta_boxes'));
 	add_action('rwmb_enqueue_scripts', array($obj_base, 'rwmb_enqueue_scripts'));

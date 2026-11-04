@@ -3630,19 +3630,36 @@ class mf_base
 		return $result;
 	}
 
-	function get_block_search($post_id, $handle = '')
+	function get_block_search($post_id, $handle = '', $multiple = false)
 	{
 		global $wpdb;
 
-		if($handle == '') // Previous version was get_block_search($handle)
+		if($multiple == true)
 		{
+			$arr_post_id = [];
+
+			if($post_id > 0)
+			{
+				$arr_post_id[] = $post_id;
+			}
+		}
+
+		else if($handle == '') // Previous version was get_block_search($handle)
+		{
+			do_log(__FUNCTION__.": This is still used (Backtrace: ".var_export(debug_backtrace(), true).")");
+
 			$handle = $post_id;
 			$post_id = 0;
 		}
 
 		$query_where = $query_order = "";
 
-		if($post_id > 0)
+		if($multiple == true && count($arr_post_id) > 0)
+		{
+			$query_where .= " AND ID IN ('".implode("','", $arr_post_id)."')";
+		}
+
+		else if($post_id > 0)
 		{
 			$query_where .= " AND ID = '".esc_sql($post_id)."'";
 		}
@@ -3658,12 +3675,28 @@ class mf_base
 		{
 			if(has_block($handle, get_post($r->ID)))
 			{
-				$post_id = $r->ID;
-				break;
+				if($multiple == true)
+				{
+					$arr_post_id[] = $r->ID;
+				}
+
+				else
+				{
+					$post_id = $r->ID;
+					break;
+				}
 			}
 		}
 
-		return $post_id;
+		if($multiple == true)
+		{
+			return $arr_post_id;
+		}
+
+		else
+		{
+			return $post_id;
+		}
 	}
 
 	/* Form */

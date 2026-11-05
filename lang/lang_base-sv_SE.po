@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 11:08+0100\n"
+"POT-Creation-Date: 2026-11-05 12:19+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Martin Fors\n"
 "Language-Team: \n"
@@ -16,9 +16,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: ..\n"
 
 #: ../include/classes.php:79
-#: ../include/classes.php:5177
-#: ../include/classes.php:6380
-#: ../include/classes.php:6431
+#: ../include/classes.php:5230
+#: ../include/classes.php:6433
+#: ../include/classes.php:6484
 #: ../include/functions.php:2438
 #: ../include/functions.php:2487
 #: ../include/functions.php:2525
@@ -304,287 +304,291 @@ msgstr ""
 msgid "Toggle All Data"
 msgstr "Visa/dölj all data"
 
-#: ../include/classes.php:2051
+#: ../include/classes.php:2052
 msgid "Styles"
 msgstr "Stilar"
 
-#: ../include/classes.php:2054
+#: ../include/classes.php:2055
 msgid "Navigation"
 msgstr ""
 
-#: ../include/classes.php:2057
+#: ../include/classes.php:2058
 msgid "Templates"
 msgstr "Mallar"
 
-#: ../include/classes.php:2402
-#: ../include/classes.php:3149
+#: ../include/classes.php:2403
+#: ../include/classes.php:3169
 msgid "Generic image as a placeholder"
 msgstr "Generisk bild som platshållare"
 
-#: ../include/classes.php:2687
+#: ../include/classes.php:2688
 msgid "All Levels"
 msgstr "Alla nivåer"
 
-#: ../include/classes.php:2688
+#: ../include/classes.php:2689
 msgid "Parents Only"
 msgstr "Endast föräldrar"
 
-#: ../include/classes.php:2729
-#: ../include/classes.php:2864
+#: ../include/classes.php:2730
+#: ../include/classes.php:2884
 msgid "Index"
 msgstr ""
 
-#: ../include/classes.php:2769
+#: ../include/classes.php:2735
+msgid "Date"
+msgstr "Datum"
+
+#: ../include/classes.php:2776
 msgid "The page is password protected"
 msgstr "Sidan är lösenordsskyddad"
 
-#: ../include/classes.php:2773
+#: ../include/classes.php:2780
 msgid "The page is not published"
 msgstr "Sidan är inte publicerad"
 
-#: ../include/classes.php:2777
+#: ../include/classes.php:2784
 msgid "The page is not indexed"
 msgstr "Sidan är inte indexerad"
 
-#: ../include/classes.php:2814
+#: ../include/classes.php:2821
 #, php-format
 msgid "There should only be one %s on the page. On this there are %d"
 msgstr "Det bör endast finnas en %s på sidan. På denna finns det %d"
 
-#: ../include/classes.php:2823
+#: ../include/classes.php:2830
 #, php-format
 msgid "The title should have between %d and %d characters. The one on this page has %d characters."
 msgstr "Titeln bör ha mellan %d och %d tecken. På denna sida har den %d tecken."
 
-#: ../include/classes.php:2837
+#: ../include/classes.php:2844
 #, php-format
 msgid "The excerpt should have between %d and %d characters. The one on this page has %d characters."
 msgstr "Utdraget bör ha mellan %d och %d tecken. På denna sida har den %d tecken."
 
-#: ../include/classes.php:2842
+#: ../include/classes.php:2849
 msgid "The page is published and indexed"
 msgstr "Sidan är publicerad och indexerad"
 
-#: ../include/classes.php:2858
-#: ../include/classes.php:5536
+#: ../include/classes.php:2878
+#: ../include/classes.php:5589
 msgid "Settings"
 msgstr "Inställningar"
 
-#: ../include/classes.php:2868
+#: ../include/classes.php:2888
 #: ../include/functions.php:2450
 #: ../include/functions.php:2456
 msgid "Yes"
 msgstr "Ja"
 
-#: ../include/classes.php:2869
+#: ../include/classes.php:2889
 #: ../include/functions.php:2451
 #: ../include/functions.php:2457
 msgid "No"
 msgstr "Nej"
 
-#: ../include/classes.php:2870
+#: ../include/classes.php:2890
 msgid "Promote"
 msgstr "Prioritera"
 
-#: ../include/classes.php:3103
+#: ../include/classes.php:3123
 #: ../include/functions.php:1966
 msgid "Are you sure?"
 msgstr "Är du säker?"
 
-#: ../include/classes.php:3778
+#: ../include/classes.php:3831
 #, php-format
 msgid "I successfully updated %s with %s"
 msgstr "Jag uppdaterade %s med %s"
 
-#: ../include/classes.php:3788
+#: ../include/classes.php:3841
 #, php-format
 msgid "I could not update %s with %s from the temp file"
 msgstr "Jag kunde inte uppdatera %s med %s från den temporära filen"
 
-#: ../include/classes.php:3796
+#: ../include/classes.php:3849
 #, php-format
 msgid "I could not successfully update %s with %s"
 msgstr "Jag lyckades inte uppdatera %s med %s"
 
-#: ../include/classes.php:3817
+#: ../include/classes.php:3870
 #, php-format
 msgid "Add this to the beginning of %s"
 msgstr "Lägg till detta i början av %s"
 
-#: ../include/classes.php:3835
+#: ../include/classes.php:3888
 msgid "Lost Connection"
 msgstr "Tappade uppkopplingen"
 
-#: ../include/classes.php:4012
+#: ../include/classes.php:4065
 #, php-format
 msgid "We highly recommend that you install %s aswell"
 msgstr "Vi rekommenderar att du installerar %s också"
 
-#: ../include/classes.php:4325
+#: ../include/classes.php:4378
 msgid "Restore"
 msgstr "Återställ"
 
-#: ../include/classes.php:4326
+#: ../include/classes.php:4379
 msgid "Permanently Delete"
 msgstr "Radera permanent"
 
-#: ../include/classes.php:4331
-#: ../include/classes.php:6385
+#: ../include/classes.php:4384
+#: ../include/classes.php:6438
 #: ../include/functions.php:1903
 msgid "Delete"
 msgstr "Radera"
 
-#: ../include/classes.php:4444
+#: ../include/classes.php:4497
 msgid "Filter"
 msgstr "Filtrera"
 
-#: ../include/classes.php:4450
+#: ../include/classes.php:4503
 msgid "Empty Trash"
 msgstr "Töm papperskorgen"
 
-#: ../include/classes.php:4544
-#: ../include/classes.php:6395
+#: ../include/classes.php:4597
+#: ../include/classes.php:6448
 msgid "Search"
 msgstr "Sök"
 
-#: ../include/classes.php:4718
+#: ../include/classes.php:4771
 msgid "Sorting"
 msgstr "Sortering"
 
-#: ../include/classes.php:4726
-#: ../include/classes.php:6460
+#: ../include/classes.php:4779
+#: ../include/classes.php:6513
 msgid "Rows"
 msgstr "Rader"
 
-#: ../include/classes.php:4801
+#: ../include/classes.php:4854
 msgid "001-888-342-324"
 msgstr "0701-23 45 67"
 
-#: ../include/classes.php:4849
-#: ../include/classes.php:4850
-#: ../include/classes.php:4894
+#: ../include/classes.php:4902
+#: ../include/classes.php:4903
+#: ../include/classes.php:4947
 msgid "My Settings"
 msgstr "Mina inställningar"
 
-#: ../include/classes.php:5349
-#: ../include/classes.php:5365
-#: ../include/classes.php:5511
+#: ../include/classes.php:5402
+#: ../include/classes.php:5418
+#: ../include/classes.php:5564
 msgid "Download the exported file here"
 msgstr "Ladda ner den exporterade filen här"
 
-#: ../include/classes.php:5354
-#: ../include/classes.php:5370
+#: ../include/classes.php:5407
+#: ../include/classes.php:5423
 msgid "It was not possible to export"
 msgstr "Det gick inte att exportera"
 
-#: ../include/classes.php:5518
+#: ../include/classes.php:5571
 msgid "There was nothing to export"
 msgstr "Det finns inget att exportera"
 
-#: ../include/classes.php:5524
+#: ../include/classes.php:5577
 msgid "You have to choose a file type to export to"
 msgstr "Du måste välja en filtyp att exportera till"
 
-#: ../include/classes.php:5546
+#: ../include/classes.php:5599
 msgid "File type"
 msgstr "Filtyp"
 
-#: ../include/classes.php:5550
-#: ../include/classes.php:6458
-#: ../include/classes.php:6500
+#: ../include/classes.php:5603
+#: ../include/classes.php:6511
+#: ../include/classes.php:6553
 msgid "Run"
 msgstr "Kör"
 
-#: ../include/classes.php:6214
+#: ../include/classes.php:6267
 msgid "Set and Where were not set"
 msgstr "Set och Where var inte angivna"
 
-#: ../include/classes.php:6294
+#: ../include/classes.php:6347
 #, php-format
 msgid "%d updated"
 msgstr "%d uppdaterade"
 
-#: ../include/classes.php:6299
+#: ../include/classes.php:6352
 #, php-format
 msgid "%d up to date"
 msgstr "%d redan uppdaterade"
 
-#: ../include/classes.php:6304
+#: ../include/classes.php:6357
 #, php-format
 msgid "%d inserted"
 msgstr "%d inlagda"
 
-#: ../include/classes.php:6309
+#: ../include/classes.php:6362
 #, php-format
 msgid "%d not inserted"
 msgstr "%d inte inlagda"
 
-#: ../include/classes.php:6319
+#: ../include/classes.php:6372
 #, php-format
 msgid "%d deleted"
 msgstr "%d raderade"
 
-#: ../include/classes.php:6324
+#: ../include/classes.php:6377
 #, php-format
 msgid "%d not deleted"
 msgstr "%d inte raderade"
 
-#: ../include/classes.php:6329
+#: ../include/classes.php:6382
 #, php-format
 msgid "%d do exist"
 msgstr "%d finns"
 
-#: ../include/classes.php:6334
+#: ../include/classes.php:6387
 #, php-format
 msgid "%d do not exist"
 msgstr "%d finns inte"
 
-#: ../include/classes.php:6349
+#: ../include/classes.php:6402
 msgid "The information that you are trying to import has been changed since checked. Please re-check and then run"
 msgstr "Informationen som du försöker importera har ändrats sedan du kollade. Var vänlig kolla igen och därefter kan du köra"
 
-#: ../include/classes.php:6376
-#: ../include/classes.php:6412
+#: ../include/classes.php:6429
+#: ../include/classes.php:6465
 msgid "Check"
 msgstr "Kolla"
 
-#: ../include/classes.php:6390
+#: ../include/classes.php:6443
 msgid "Import"
 msgstr "Importera"
 
-#: ../include/classes.php:6398
+#: ../include/classes.php:6451
 msgid "Action"
 msgstr "Åtgärd"
 
-#: ../include/classes.php:6402
+#: ../include/classes.php:6455
 msgid "Text"
 msgstr ""
 
-#: ../include/classes.php:6402
+#: ../include/classes.php:6455
 msgid "Value 1\tValue 2\tValue 3"
 msgstr "Värde 1\tVärde 2\tVärde 3"
 
-#: ../include/classes.php:6407
+#: ../include/classes.php:6460
 msgid "File"
 msgstr "Fil"
 
-#: ../include/classes.php:6410
+#: ../include/classes.php:6463
 msgid "Skip First Row"
 msgstr "Hoppa över första raden"
 
-#: ../include/classes.php:6411
+#: ../include/classes.php:6464
 msgid "Save Result"
 msgstr "Spara resultat"
 
-#: ../include/classes.php:6471
+#: ../include/classes.php:6524
 msgid "There are multiple columns with the same name. This might become a problem when importing data."
 msgstr "Det finns flera kolumner med samma namn. Detta kan bli ett problem vid import av data."
 
-#: ../include/classes.php:6495
+#: ../include/classes.php:6548
 msgid "Column"
 msgstr "Kolumn"
 
-#: ../include/classes.php:6506
+#: ../include/classes.php:6559
 msgid "Example"
 msgstr "Exempel"
 

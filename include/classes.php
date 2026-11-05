@@ -2034,6 +2034,7 @@ class mf_base
 		{
 			add_filter('manage_'.$value.'_posts_columns', array($this, 'column_header'), 5);
 			add_action('manage_'.$value.'_posts_custom_column', array($this, 'column_cell'), 5, 2);
+			add_filter('manage_edit-'.$value.'_sortable_columns', array($this, 'column_sortable'));
 		}
 	}
 
@@ -2727,6 +2728,12 @@ class mf_base
 		if(IS_ADMINISTRATOR && check_var('post_status') != 'trash' && in_array($post_type, $this->get_post_types_for_metabox(['type' => 'index'])))
 		{
 			$columns['page_index'] = __("Index", 'lang_base');
+
+			if(isset($columns['date']))
+			{
+				unset($columns['date']);
+				$columns['date_modified'] = __("Date", 'lang_base');
+			}
 		}
 
 		return $columns;
@@ -2846,7 +2853,20 @@ class mf_base
 					break;
 				}
 			break;
+
+			case 'date_modified':
+				//$post = get_post($post_id);
+
+				echo format_date($post->post_modified);
+			break;
 		}
+	}
+
+	function column_sortable($columns)
+	{
+		$columns['date_modified'] = array('modified', true);
+
+		return $columns;
 	}
 
 	function rwmb_meta_boxes($meta_boxes)

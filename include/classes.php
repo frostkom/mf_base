@@ -474,7 +474,7 @@ class mf_base
 				define('IS_ADMINISTRATOR', $is_admin);
 				define('IS_EDITOR', $is_editor);
 				define('IS_AUTHOR', $is_author);
-				define('IS_CONTRIBUTOR', $is_author);
+				define('IS_CONTRIBUTOR', $is_contributor);
 
 				register_block_style(
 					'core/button',

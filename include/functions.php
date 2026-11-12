@@ -2633,14 +2633,26 @@ function validate_url($value, $link = true, $http = true)
 
 		if(substr($value, 0, 1) != "/")
 		{
-			$arr_prefix = array('http:', 'https:', 'ftp:', 'mms:');
+			if(preg_match('/^(https?|ftp|mms):/i', $value))
+			{
+				// OK
+			}
 
-			if(!preg_match('/('. implode('|', $arr_prefix) .')/', $value))
+			// Any other scheme (javascript:, data:, vbscript: ...) is dropped
+			else if(preg_match('/^[a-z][a-z0-9+.\-]*:/i', $value))
+			{
+				return "";
+			}
+
+			else
 			{
 				$value = "http://".$value;
 			}
 		}
 	}
+
+	// Always encode quotes and angle brackets
+	$value = str_replace(array("'", '"', '<', '>'), array('%27', '%22', '%3C', '%3E'), $value);
 
 	return $value;
 }

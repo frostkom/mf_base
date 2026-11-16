@@ -192,7 +192,7 @@
 
 			.widget ul.grid_columns .grid_buttons
 			{
-				margin: 0 .8em .4em;
+				padding: 0 .8em .4em;
 			}
 
 			.widget ul.grid_columns .grid_buttons .wp-block-button

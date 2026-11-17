@@ -1,6 +1,6 @@
-document.querySelectorAll('.widget.news.is_scrollable').forEach(function(widget)
+document.querySelectorAll('.widget.is_scrollable').forEach(function(widget)
 {
-	const track = widget.querySelector('.grid_columns');
+	const track = widget.querySelector('.grid_columns, .scroll_columns');
 	if (!track) return;
 
 	// Build the arrow buttons with FA icons

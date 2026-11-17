@@ -1,8 +1,9 @@
-.widget.news.is_scrollable {
+.widget.is_scrollable
+{
 	position: relative;
 }
 
-.widget.news.is_scrollable ul.grid_columns.grid_columns
+.widget.is_scrollable ul.grid_columns
 {
 	display: grid;
 	grid-auto-flow: column;
@@ -18,12 +19,27 @@
 	padding: 0 0 .8rem; /* no side padding, see note below */
 }
 
-.widget.news.is_scrollable ul.grid_columns.grid_columns::-webkit-scrollbar
+.widget.is_scrollable ul.scroll_columns
+{
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: calc(var(--custom_lists-column-width-desktop) * 1%);
+	column-count: auto;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	scrollbar-width: none;
+	padding: 0 0 .8rem;
+}
+
+.widget.is_scrollable ul.grid_columns::-webkit-scrollbar, .widget.is_scrollable ul.scroll_columns::-webkit-scrollbar
 {
 	display: none;
 }
 
-.widget.news.is_scrollable ul.grid_columns > li
+.widget.is_scrollable ul.grid_columns > li, .widget.is_scrollable ul.scroll_columns > li
 {
 	scroll-snap-align: start;
 	min-width: 0;
@@ -32,7 +48,8 @@
 }
 
 /* Arrows */
-.widget.news.is_scrollable .scroll-arrow {
+.widget.is_scrollable .scroll-arrow
+{
 	position: absolute;
 	top: 45%;
 	z-index: 2;
@@ -44,21 +61,22 @@
 	box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 	font-size: 1.5rem;
 	cursor: pointer;
+	transform: translateY(-50%);
 	transition: opacity .5s ease;
 }
 
-	.widget.news.is_scrollable .scroll-arrow.is-hidden {
+	.widget.is_scrollable .scroll-arrow.is-hidden {
 		opacity: 0;
 		pointer-events: none;
 	}
 
-	.widget.news.is_scrollable .scroll-arrow--prev
+	.widget.is_scrollable .scroll-arrow--prev
 	{
 		left: -1.25rem;
 		padding-right: .3em;
 	}
 
-	.widget.news.is_scrollable .scroll-arrow--next
+	.widget.is_scrollable .scroll-arrow--next
 	{
 		right: -1.25rem;
 		padding-left: .3em;

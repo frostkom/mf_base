@@ -356,22 +356,24 @@ function get_toggler_container($data)
 				}
 			}
 
-			$out = "<".$data['label_tag'].$data['xtra']." class='".$data['toggler_class']."'>"
-				."<span>".$data['text']."</span>";
+			$out = "<div class='toggler_wrapper'>
+				<".$data['label_tag'].$data['xtra']." class='".$data['toggler_class']."'>"
+					."<span>".$data['text']."</span>";
 
-				if($data['is_toggleable'] == true)
-				{
-					$out .= "<div class='toggle_icon'><div></div><div></div></div>";
-				}
+					if($data['is_toggleable'] == true)
+					{
+						$out .= "<div class='toggle_icon'><div></div><div></div></div>";
+					}
 
-			$out .= "</".$data['label_tag'].">
-			<".$data['container_tag']." class='".$data['container_class']."'>";
+				$out .= "</".$data['label_tag'].">
+				<".$data['container_tag']." class='".$data['container_class']."'>";
 
 			return $out;
 		break;
 
 		case 'end':
-			return "</".$data['container_tag'].">";
+				return "</".$data['container_tag'].">
+			</div>";
 		break;
 	}
 }

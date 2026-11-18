@@ -6,7 +6,7 @@
 
 label.toggler
 {
-	background: rgba(255, 255, 255, .5);
+	background: rgba(255, 255, 255, .3);
 	border: .1em solid #eee;
 	border-radius: .5em;
 	display: block;
@@ -17,7 +17,7 @@ label.toggler
 
 	label.toggler.is_open
 	{
-		background: rgba(230, 230, 230, .5);
+		background: rgba(230, 230, 230, .3);
 		border-radius: .5em .5em 0 0;
 		margin-bottom: 0;
 	}
@@ -85,7 +85,7 @@ label.toggler
 
 label.toggler + div.toggle_container, label.toggler + ul.toggle_container
 {
-	background: rgba(255, 255, 255, .5);
+	background: rgba(255, 255, 255, .2);
 	border-radius: 0 0 .5em .5em;
 	border: .1em solid #eee;
 	border-top-width: 0;

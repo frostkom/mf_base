@@ -1,6 +1,6 @@
 body:not(.wp-admin) .widefat
 {
-	border: .1em solid #e5e5e5;
+	border: .1em solid rgba(229, 229, 229, .9); /*#e5e5e5*/
 	border-spacing: 0;
 	width: 100%;
 }
@@ -12,7 +12,7 @@ body:not(.wp-admin) .widefat
 
 		body:not(.wp-admin) .widefat thead tr
 		{
-			background: #fff;
+			background: rgba(255, 255, 255, .3); /*#fff*/
 		}
 
 		body:not(.wp-admin) .widefat td, body:not(.wp-admin) .widefat th
@@ -23,7 +23,7 @@ body:not(.wp-admin) .widefat
 
 		body:not(.wp-admin) .widefat th
 		{
-			border-bottom: .1em solid #e1e1e1;
+			border-bottom: .1em solid rgba(229, 229, 229, .6); /*#e1e1e1*/
 			overflow: hidden;
 			text-align: left;
 			text-overflow: ellipsis;
@@ -32,17 +32,17 @@ body:not(.wp-admin) .widefat
 
 		body:not(.wp-admin) .widefat.striped > tbody > *:nth-child(2n+1)
 		{
-			background-color: #f9f9f9;
+			background-color: rgba(255, 255, 255, .2); /*#f9f9f9*/
 		}
 
 		body:not(.wp-admin) .widefat.striped > tbody > *:nth-child(2n)
 		{
-			background-color: #fff;
+			background-color: rgba(240, 240, 240, .2); /*#fff*/
 		}
 
 			.widefat tr.active
 			{
-				background: #fff8df !important;
+				background: rgba(255, 248, 223, .5) !important; /*#fff8df*/
 			}
 
 			.widefat td
@@ -79,5 +79,5 @@ body:not(.wp-admin) .widefat
 
 		body:not(.wp-admin) .widefat tfoot th, body:not(.wp-admin) .widefat tbody + thead th
 		{
-			border-top: .1em solid #e1e1e1;
+			border-top: .1em solid rgba(229, 229, 229, .6); /*#e1e1e1*/
 		}

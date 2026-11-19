@@ -3215,7 +3215,6 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
-	//filter_var($temp, FILTER_VALIDATE_URL)
 	else if($type == 'url' || $type2 == 'url')
 	{
 		$temp = trim($temp);
@@ -3315,9 +3314,17 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 
 	else if(is_array($temp) || $type == 'array' || $type2 == 'arr')
 	{
-		if(is_array($temp))
+		/*if(is_array($temp))
 		{
 			$out = $temp; // Never do addslashes() here
+		}*/
+
+		if(is_array($temp))
+		{
+			$out = array_map(function($v)
+			{
+				return (is_scalar($v) ? htmlspecialchars(addslashes(trim($v))) : '');
+			}, $temp);
 		}
 
 		else if($temp == '')
@@ -3351,19 +3358,21 @@ function check_var($in, $type = 'char', $v2 = true, $default = '', $return_empty
 		}
 	}
 
-	//filter_var($temp, FILTER_SANITIZE_NUMBER_INT)
 	else if($type == 'int' || $type2 == 'int' || $type == 'zip' || $type2 == 'zip')
 	{
+		if(!is_scalar($temp)){	$temp = '';}
+
 		$temp = str_replace(" ", "", $temp);
 
-		if($temp == strval(intval($temp)) || $temp == '')
+		//if($temp == strval(intval($temp)) || $temp == '')
+		if($temp === '' || preg_match('/^-?\d+$/', $temp))
 		{
 			$out = $temp;
 		}
 
 		else
 		{
-			if($return_empty == false){$out = trim($temp);}
+			if($return_empty == false){$out = $default;}
 		}
 	}
 

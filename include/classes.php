@@ -4107,12 +4107,33 @@ class mf_list_table extends WP_List_Table
 	var $query_join = "";
 	var $query_where = "";
 	var $search;
+	var $search_like;
 	var $search_key = 's';
 	var $orderby;
 	var $order;
 	var $page;
 	var $total_pages = "";
 	var $debug = "";
+
+	function filter_search_before_like($string)
+	{
+		if(strpos($string, "%") !== false)
+		{
+			// Do nothing
+		}
+
+		else if(strpos($string, "*") !== false)
+		{
+			$string = str_replace("*", "%", $string);
+		}
+
+		else
+		{
+			$string = "%".$string."%";
+		}
+
+		return $string;
+	}
 
 	function __construct($data = [])
 	{
@@ -4138,6 +4159,11 @@ class mf_list_table extends WP_List_Table
 		$this->set_default();
 
 		$this->search = check_var($this->search_key, 'char', true, (isset($data['search']) ? $data['search'] : ''));
+
+		if($this->search != '')
+		{
+			$this->search_like = $this->filter_search_before_like($this->search);
+		}
 
 		// Has to be here too
 		if($this->post_type != '')
@@ -4607,26 +4633,6 @@ class mf_list_table extends WP_List_Table
 			}
 
 		echo "</form>";
-	}
-
-	function filter_search_before_like($string)
-	{
-		if(strpos($string, "%") !== false)
-		{
-			// Do nothing
-		}
-
-		else if(strpos($string, "*") !== false)
-		{
-			$string = str_replace("*", "%", $string);
-		}
-
-		else
-		{
-			$string = "%".$string."%";
-		}
-
-		return $string;
 	}
 
 	function select_data($data = [])

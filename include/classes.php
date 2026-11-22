@@ -436,45 +436,46 @@ class mf_base
 				define('DEFAULT_DATE', "1982-08-04 23:15:00");
 				define('IS_HTTPS', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on'));
 
-				$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = false;
+				$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = $is_subscriber = false;
 
 				if(current_user_can('update_core'))
 				{
-					$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = true;
+					$is_super_admin = $is_admin = $is_editor = $is_author = $is_contributor = $is_subscriber = true;
 
 					define('ALLOW_UNFILTERED_UPLOADS', true);
 				}
 
 				else if(current_user_can('manage_options'))
 				{
-					$is_admin = $is_editor = $is_author = $is_contributor = true;
+					$is_admin = $is_editor = $is_author = $is_contributor = $is_subscriber = true;
 				}
 
 				else if(current_user_can('edit_pages'))
 				{
-					$is_editor = $is_author = $is_contributor = true;
+					$is_editor = $is_author = $is_contributor = $is_subscriber = true;
 				}
 
 				else if(current_user_can('publish_posts'))
 				{
-					$is_author = $is_contributor = true;
+					$is_author = $is_contributor = $is_subscriber = true;
 				}
 
 				else if(current_user_can('edit_posts'))
 				{
-					$is_contributor = true;
+					$is_contributor = $is_subscriber = true;
 				}
 
-				/*else if(current_user_can('read'))
+				else if(current_user_can('read'))
 				{
 					$is_subscriber = true;
-				}*/
+				}
 
 				define('IS_SUPER_ADMIN', $is_super_admin);
 				define('IS_ADMINISTRATOR', $is_admin);
 				define('IS_EDITOR', $is_editor);
 				define('IS_AUTHOR', $is_author);
 				define('IS_CONTRIBUTOR', $is_contributor);
+				//define('IS_SUBSCRIBER', $is_subscriber);
 
 				register_block_style(
 					'core/button',
@@ -2725,15 +2726,15 @@ class mf_base
 			unset($columns['comments']);
 		}
 
+		if(isset($columns['date']))
+		{
+			unset($columns['date']);
+			$columns['date_modified'] = __("Date", 'lang_base');
+		}
+
 		if(IS_ADMINISTRATOR && check_var('post_status') != 'trash' && in_array($post_type, $this->get_post_types_for_metabox(['type' => 'index'])))
 		{
 			$columns['page_index'] = __("Index", 'lang_base');
-
-			if(isset($columns['date']))
-			{
-				unset($columns['date']);
-				$columns['date_modified'] = __("Date", 'lang_base');
-			}
 		}
 
 		return $columns;

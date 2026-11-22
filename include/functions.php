@@ -3436,7 +3436,11 @@ function show_textfield($data)
 		case 'float':
 			$data['type'] = 'number';
 			$data['xtra'] .= " inputmode='decimal'";
-			$data['xtra'] .= " step='any'";
+
+			if(strpos($data['xtra'], "step=") === false)
+			{
+				$data['xtra'] .= " step='any'";
+			}
 		break;
 
 		case 'int':
@@ -3446,7 +3450,11 @@ function show_textfield($data)
 
 			$data['type'] = 'text'; // It has to be text. If we change this to 'number' the script will erase all content when the user types a non-digit
 			$data['xtra'] .= " inputmode='numeric'";
-			$data['xtra'] .= " step='any'";
+
+			if(strpos($data['xtra'], "step=") === false)
+			{
+				$data['xtra'] .= " step='any'";
+			}
 		break;
 
 		case 'tel':

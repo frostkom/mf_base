@@ -1,9 +1,9 @@
-.widget:has(> .tabs)
+.tab_wrapper
 {
 	position: relative;
 }
 
-.widget .tabs
+.tab_wrapper .tabs
 {
 	display: flex;
 	flex-wrap: wrap;
@@ -12,12 +12,12 @@
 	padding: 0;
 }
 
-	.widget .tabs li
+	.tab_wrapper .tabs li
 	{
 		list-style: none;
 	}
 
-		.widget .tabs li a
+		.tab_wrapper .tabs li a
 		{
 			background: rgba(255, 255, 255, .5);
 			border: .1em solid #ccc;
@@ -31,17 +31,17 @@
 			white-space: nowrap;
 		}
 
-			.widget .tabs li a:hover
+			.tab_wrapper .tabs li a:hover
 			{
 				opacity: 1;
 			}
 
-			.widget .tabs li.active a
+			.tab_wrapper .tabs li.active a
 			{
 				opacity: 1;
 			}
 
-.widget .tab_content
+.tab_wrapper .tab_content
 {
 	background: rgba(255, 255, 255, .5);
 	border: .1em solid #ccc;
@@ -50,23 +50,23 @@
 	padding: 0 1.2em .6em;
 }
 
-	.widget .tab_content.active
+	.tab_wrapper .tab_content.active
 	{
 		display: block;
 	}
 
-		.widget .tab_content table
+		.tab_wrapper .tab_content table
 		{
 			margin-bottom: .5em;
 		}
 
-		.widget .tab_content .tabs
+		.tab_wrapper .tab_content .tabs
 		{
 			margin-top: 0;
 			padding-left: 0;
 		}
 
-			.widget .tab_content .tabs li a
+			.tab_wrapper .tab_content .tabs li a
 			{
 				background: rgba(255, 255, 255, .5);
 				border: .1em solid #ccc;
@@ -74,12 +74,12 @@
 				font-size: .9em;
 			}
 
-				.widget .tab_content .tabs li.active a
+				.tab_wrapper .tab_content .tabs li.active a
 				{
 					background: rgba(0, 0, 0, .2);
 				}
 
-		.widget .tab_content .tab_content
+		.tab_wrapper .tab_content .tab_content
 		{
 			background: transparent;
 			border: 0;
@@ -87,7 +87,7 @@
 			padding-right: 0 !important;
 		}
 
-.widget > .tabs
+.tab_wrapper > .tabs
 {
 	flex-wrap: nowrap;
 	margin-left: 1em;
@@ -99,17 +99,17 @@
 	-ms-overflow-style: none;
 }
 
-	.widget > .tabs::-webkit-scrollbar
+	.tab_wrapper > .tabs::-webkit-scrollbar
 	{
 		display: none;
 	}
 
-	.widget > .tabs li
+	.tab_wrapper > .tabs li
 	{
 		flex: 0 0 auto;
 	}
 
-.widget > .tabs_arrow
+.tab_wrapper > .tabs_arrow
 {
 	background: #fff;               /* solid, set to your page background colour */
 	border: .1em solid #ccc;
@@ -125,12 +125,12 @@
 	z-index: 2;
 }
 
-	.widget > .tabs_arrow[hidden]
+	.tab_wrapper > .tabs_arrow[hidden]
 	{
 		display: none;
 	}
 
-	.widget > .tabs_arrow_right
+	.tab_wrapper > .tabs_arrow_right
 	{
 		left: auto;
 		right: .3em;

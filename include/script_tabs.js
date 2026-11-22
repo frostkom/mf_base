@@ -1,6 +1,6 @@
 jQuery(function($)
 {
-	var dom_obj = $(".widget .tabs");
+	var dom_obj = $(".tab_wrapper .tabs");
 
 	function open_tab(hash, update_hash)
 	{
@@ -39,7 +39,7 @@ jQuery(function($)
 		}
 	});
 
-	$(".widget > .tabs").each(function()
+	$(".tab_wrapper > .tabs").each(function()
 	{
 		var list = this,
 			$list = $(list),

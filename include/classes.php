@@ -2785,6 +2785,8 @@ class mf_base
 					break;
 
 					default:
+						$out = "";
+
 						$post_template = get_post_meta($post_id, '_wp_page_template', true);
 
 						$post = get_post($post_id);
@@ -2818,7 +2820,7 @@ class mf_base
 
 						if($h1_amount > 1)
 						{
-							echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), "H1", $h1_amount)."'></i>";
+							$out .= ($out != '' ? "&nbsp;" : "")."<i class='fas fa-heading fa-lg red' title='".sprintf(__("There should only be one %s on the page. On this there are %d", 'lang_base'), "H1", $h1_amount)."'></i>";
 						}
 
 						else
@@ -2827,29 +2829,25 @@ class mf_base
 
 							if($count_temp < 15 || $count_temp > 70)
 							{
-								echo "<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
-
-								//echo " (".$post_template.")";
-							}
-
-							else
-							{
-								//$post_excerpt = get_the_excerpt();
-								$post_excerpt = $post->post_excerpt;
-
-								$count_temp = strlen($post_excerpt);
-
-								if($count_temp < 100 || $count_temp > 200)
-								{
-									echo "<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
-								}
-
-								else
-								{
-									echo "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
-								}
+								$out .= ($out != '' ? "&nbsp;" : "")."<i class='fas fa-heading fa-lg red' title='".sprintf(__("The title should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 15, 70, $count_temp)."'></i>";
 							}
 						}
+
+						$post_excerpt = $post->post_excerpt;
+
+						$count_temp = strlen($post_excerpt);
+
+						if($count_temp < 100 || $count_temp > 200)
+						{
+							$out .= ($out != '' ? "&nbsp;" : "")."<i class='far fa-comment-alt fa-lg red' title='".sprintf(__("The excerpt should have between %d and %d characters. The one on this page has %d characters.", 'lang_base'), 100, 200, $count_temp)."'></i>";
+						}
+
+						if($out == '')
+						{
+							$out .= "<i class='fa fa-check fa-lg green' title='".__("The page is published and indexed", 'lang_base')."'></i>";
+						}
+
+						echo $out;
 					break;
 				}
 			break;

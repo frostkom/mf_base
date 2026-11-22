@@ -2,6 +2,7 @@ html
 {
 	overflow-x: clip;
 	overflow-y: scroll;
+	scroll-behavior: smooth;
 }
 
 .wp-site-blocks > *

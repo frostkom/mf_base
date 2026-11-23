@@ -11,6 +11,10 @@ jQuery.fn.callAPI = function(o)
 			jQuery("#overlay_loading").removeClass('hide');
 		},
 		onSuccess: function(data){},
+		onError: function(jqXHR, textStatus, errorThrown)
+		{
+			jQuery("#overlay_lost_connection").removeClass('hide');
+		},
 		onAfterSend: function()
 		{
 			jQuery("#overlay_loading").addClass('hide');
@@ -42,9 +46,10 @@ jQuery.fn.callAPI = function(o)
 				jQuery("#overlay_lost_connection").addClass('hide');
 			}
 		},
-		error: function(data)
+		error: function(jqXHR, textStatus, errorThrown)
 		{
-			op.onError(data);
+			op.onError(jqXHR, textStatus, errorThrown);
+			op.onAfterSend();
 		}
 	});
 };

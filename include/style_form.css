@@ -35,6 +35,11 @@
 		{
 			min-height: 8em;
 		}
+		
+		.mf_form .form_file_input
+		{
+			margin: 0 0 .8em;
+		}
 
 		.mf_form .mf_form_field.green
 		{

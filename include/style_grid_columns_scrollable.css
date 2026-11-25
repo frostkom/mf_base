@@ -3,7 +3,7 @@
 	position: relative;
 }
 
-.widget.is_scrollable ul.grid_columns
+.widget.is_scrollable ul.grid_columns, .widget.is_scrollable ul.scroll_columns
 {
 	display: grid;
 	grid-auto-flow: column;
@@ -16,23 +16,13 @@
 	scroll-snap-type: x mandatory;
 	-webkit-overflow-scrolling: touch;
 	scrollbar-width: none;
-	padding: 0 0 .8rem; /* no side padding, see note below */
-}
-
-.widget.is_scrollable ul.scroll_columns
-{
-	display: grid;
-	grid-auto-flow: column;
-	grid-auto-columns: calc(var(--custom_lists-column-width-desktop) * 1%);
-	column-count: auto;
-	flex-wrap: nowrap;
-	overflow-x: auto;
-	overflow-y: hidden;
-	scroll-snap-type: x mandatory;
-	-webkit-overflow-scrolling: touch;
-	scrollbar-width: none;
 	padding: 0 0 .8rem;
 }
+
+	.widget.is_scrollable ul.scroll_columns
+	{
+		grid-auto-columns: calc(var(--custom_lists-column-width-desktop) * 1%);
+	}
 
 .widget.is_scrollable ul.grid_columns::-webkit-scrollbar, .widget.is_scrollable ul.scroll_columns::-webkit-scrollbar
 {
@@ -43,7 +33,7 @@
 {
 	scroll-snap-align: start;
 	min-width: 0;
-	width: auto; /* the grid column sets the width, not the li */
+	width: auto !important; /* the grid column sets the width, not the li */
 	margin: 0;
 }
 

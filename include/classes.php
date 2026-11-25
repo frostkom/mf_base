@@ -3239,6 +3239,16 @@ class mf_base
 						width: calc(var(--base-column-width-tablet) * 1%);
 					}
 
+					.widget.is_scrollable ul.grid_columns, .widget.is_scrollable ul.scroll_columns
+					{
+						grid-auto-columns: calc(var(--base-column-width-tablet) * 1%);
+					}
+
+						.widget.is_scrollable ul.scroll_columns
+						{
+							grid-auto-columns: calc(var(--custom_lists-column-width-tablet) * 1%);
+						}
+
 					.widget ul.grid_columns .grid_image
 					{
 						max-height: 50vw;
@@ -3259,12 +3269,22 @@ class mf_base
 					{
 						width: calc(var(--base-column-width-mobile) * 1%);
 					}
+
+					.widget.is_scrollable ul.grid_columns, .widget.is_scrollable ul.scroll_columns
+					{
+						grid-auto-columns: calc(var(--base-column-width-mobile) * 1%);
+					}
+
+						.widget.is_scrollable ul.scroll_columns
+						{
+							grid-auto-columns: calc(var(--custom_lists-column-width-mobile) * 1%);
+						}
 				}";
 			}
 
 			if($out_temp != '')
 			{
-				$this->footer_output .= "<style>".$out_temp."</style>";
+				$this->footer_output .= "<style>".wp_strip_all_tags($out_temp)."</style>";
 			}
 		}
 	}

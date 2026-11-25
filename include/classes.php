@@ -1202,9 +1202,10 @@ class mf_base
 		add_settings_section($options_area, "", array($this, $options_area."_callback"), BASE_OPTIONS_PAGE);
 
 		$arr_settings = [];
-		$arr_settings['setting_base_desktop_columns'] = __("Desktop Columns", 'lang_auth');
-		$arr_settings['setting_base_tablet_columns'] = __("Tablet Columns", 'lang_auth');
-		$arr_settings['setting_base_mobile_columns'] = __("Mobile Columns", 'lang_auth');
+		$arr_settings['setting_base_image_zoom'] = __("Image Zoom", 'lang_base');
+		$arr_settings['setting_base_desktop_columns'] = __("Desktop Columns", 'lang_base');
+		$arr_settings['setting_base_tablet_columns'] = __("Tablet Columns", 'lang_base');
+		$arr_settings['setting_base_mobile_columns'] = __("Mobile Columns", 'lang_base');
 
 		show_settings_fields(array('area' => $options_area, 'object' => $this, 'settings' => $arr_settings));
 		############################
@@ -1978,6 +1979,14 @@ class mf_base
 
 		echo settings_header($setting_key, __("Common", 'lang_base')." - ".__("Layout", 'lang_base'));
 	}
+
+		function setting_base_image_zoom_callback()
+		{
+			$setting_key = get_setting_key(__FUNCTION__);
+			$option = get_option($setting_key, 'yes');
+
+			echo show_select(array('data' => get_yes_no_for_select(), 'name' => $setting_key, 'value' => $option));
+		}
 
 		function setting_base_desktop_columns_callback()
 		{
@@ -3133,13 +3142,16 @@ class mf_base
 
 	function load_lightbox()
 	{
-		$this->load_overlay();
+		if(get_option('setting_base_image_zoom', 'yes') == 'yes')
+		{
+			$this->load_overlay();
 
-		$plugin_include_url = plugin_dir_url(__FILE__);
-		mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
-		mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
+			$plugin_include_url = plugin_dir_url(__FILE__);
+			mf_enqueue_style('style_base_lightbox', $plugin_include_url."style_lightbox.css");
+			mf_enqueue_script('script_base_lightbox', $plugin_include_url."script_lightbox.js");
 
-		$this->footer_output .= "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
+			$this->footer_output .= "<div id='overlay_lightbox' class='overlay_container modal hide'><div><div></div></div></div>";
+		}
 	}
 
 	function load_tabs()

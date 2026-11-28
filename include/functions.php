@@ -1600,6 +1600,12 @@ function filter_style_var($value)
 	return $value;
 }
 
+function sanitize_style_value($value)
+{
+	// Only characters that can be part of a CSS value, never ; { } quotes < > or backslash
+	return ((is_scalar($value) && preg_match('/^[a-zA-Z0-9\s#.,%()+*\/:|_-]*$/', (string)$value)) ? $value : "");
+}
+
 function parse_block_attributes($data = [])
 {
 	if(!isset($data['class'])){			$data['class'] = "";}
@@ -1607,6 +1613,22 @@ function parse_block_attributes($data = [])
 	if(!isset($data['style'])){			$data['style'] = "";}
 
 	$out = "";
+
+	foreach(array('backgroundColor', 'textColor', 'fontFamily', 'fontSize') as $key)
+	{
+		if(isset($data['attributes'][$key]))
+		{
+			$data['attributes'][$key] = sanitize_style_value($data['attributes'][$key]);
+		}
+	}
+
+	if(isset($data['attributes']['style']) && is_array($data['attributes']['style']))
+	{
+		array_walk_recursive($data['attributes']['style'], function(&$value)
+		{
+			$value = sanitize_style_value($value);
+		});
+	}
 
 	if(isset($data['attributes']['align']))
 	{
@@ -1620,7 +1642,7 @@ function parse_block_attributes($data = [])
 
 	if($data['class'] != '')
 	{
-		$out .= " class='".$data['class']."'";
+		$out .= " class='".esc_attr($data['class'])."'";
 	}
 
 	if(isset($data['attributes']['backgroundColor']) && $data['attributes']['backgroundColor'] != '')
@@ -1691,7 +1713,7 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of", 'publish', false);
 							break;
 						}
 					}
@@ -1711,7 +1733,7 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of", 'publish', false);
 							break;
 						}
 					}
@@ -1743,14 +1765,14 @@ function parse_block_attributes($data = [])
 													break;
 
 													default:
-														do_log(__FUNCTION__.": The key grandgrandchild '".$key_grandgrandchild."' with value '".var_export($arr_value_grandchild, true)."' has to be taken care of");
+														do_log(__FUNCTION__.": The key grandgrandchild '".$key_grandgrandchild."' with value '".var_export($arr_value_grandchild, true)."' has to be taken care of", 'publish', false);
 													break;
 												}
 											}
 										break;
 
 										default:
-											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of");
+											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of", 'publish', false);
 										break;
 									}
 								}
@@ -1770,14 +1792,18 @@ function parse_block_attributes($data = [])
 										break;
 
 										default:
-											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of");
+											do_log(__FUNCTION__.": The key grandchild '".$key_grandchild."' with value '".var_export($arr_value_child, true)."' has to be taken care of", 'publish', false);
 										break;
 									}
 								}
 							break;
 
+							case 'blockGap':
+								$data['style'] .= "margin-block-start: ".filter_style_var($arr_value_child).";";
+							break;
+
 							default:
-								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of", 'publish', false);
 							break;
 						}
 					}
@@ -1797,14 +1823,14 @@ function parse_block_attributes($data = [])
 							break;
 
 							default:
-								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+								do_log(__FUNCTION__.":".__LINE__." The key child '".$key_parent."->".$key_child."' with value '".var_export($arr_value_parent, true)."' has to be taken care of", 'publish', false);
 							break;
 						}
 					}
 				break;
 
 				default:
-					do_log(__FUNCTION__.": The key parent '".$key_parent."' with value '".var_export($arr_value_parent, true)."' has to be taken care of");
+					do_log(__FUNCTION__.": The key parent '".$key_parent."' with value '".var_export($arr_value_parent, true)."' has to be taken care of", 'publish', false);
 				break;
 			}
 		}
@@ -1812,7 +1838,7 @@ function parse_block_attributes($data = [])
 
 	if($data['style'] != '')
 	{
-		$out .= " style='".$data['style']."'";
+		$out .= " style='".esc_attr($data['style'])."'";
 	}
 
 	return $out;
@@ -4908,7 +4934,7 @@ function get_post_children($data, &$arr_data = [])
 
 			if($post_title == '')
 			{
-				$post_title = $r->post_title;
+				$post_title = esc_attr($r->post_title);
 			}
 
 			if($post_title == '')

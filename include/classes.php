@@ -395,11 +395,11 @@ class mf_base
 
 				echo "# AI Reference List\r\n";
 
-				$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND meta_value = %s ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'promote'));
+				$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND post_password = '' AND meta_value = %s ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'promote'));
 
 				if($wpdb->num_rows == 0)
 				{
-					$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND (meta_value != %s OR meta_value IS null) ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'no'));
+					$result = $wpdb->get_results($wpdb->prepare("SELECT ID, post_title FROM ".$wpdb->posts." LEFT JOIN ".$wpdb->postmeta." ON ".$wpdb->posts.".ID = ".$wpdb->postmeta.".post_id AND meta_key = %s WHERE post_type = %s AND post_status = %s AND post_password = '' AND (meta_value != %s OR meta_value IS null) ORDER BY menu_order ASC", $this->meta_prefix.'page_index', 'page', 'publish', 'no'));
 				}
 
 				if($wpdb->num_rows > 0)
@@ -2425,7 +2425,7 @@ class mf_base
 	{
 		global $wpdb;
 
-		$result = $this->get_results($wpdb->prepare("SELECT ID, post_type FROM ".$wpdb->posts." WHERE post_status = %s AND post_content LIKE %s", 'publish', "%".$block_code."%"));
+		$result = $this->get_results($wpdb->prepare("SELECT ID, post_type FROM ".$wpdb->posts." WHERE post_status = %s AND post_password = '' AND post_content LIKE %s", 'publish', "%".$block_code."%"));
 
 		foreach($result as $r)
 		{
